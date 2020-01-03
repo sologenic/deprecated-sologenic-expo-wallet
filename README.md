@@ -1,1 +1,1 @@
-# sologenic-expo-wallet
+# sologenic-wallet
