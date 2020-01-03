@@ -1,1 +1,1 @@
-# pro
+# sologenic-wallet
