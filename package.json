@@ -20,6 +20,8 @@
     "expo-constants": "~8.0.0",
     "expo-font": "~8.0.0",
     "expo-web-browser": "~8.0.0",
+    "glamorous-native": "^2.0.0",
+    "prop-types": "^15.7.2",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
@@ -29,7 +31,12 @@
     "react-native-web": "~0.11.7",
     "react-navigation": "~4.0.10",
     "react-navigation-stack": "~1.10.3",
-    "react-navigation-tabs": "~2.6.2"
+    "react-navigation-tabs": "~2.6.2",
+    "react-redux": "^7.1.3",
+    "redux": "^4.0.5",
+    "redux-persist": "^6.0.0",
+    "redux-persist-transform-filter": "0.0.20",
+    "redux-saga": "^1.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
