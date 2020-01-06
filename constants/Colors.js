@@ -40,7 +40,7 @@ const colors = {
   progressBar: 'rgba(0, 211, 204, 0.2)',
   error: 'rgba(200, 0, 0, 0.8)',
   ricePaper: 'rgba(245,246,248, 0.95)',
-  cloud: 'rgba(52, 52, 52, 0.3)',
+  cloud: 'rgba(10, 10, 10, 0.8)',
   bloodOrange: '#fb5f26',
   lightNavy: '#5A7EFF',
   smoothBlue: '#5A7EFF',

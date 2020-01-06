@@ -1,40 +1,48 @@
-import * as WebBrowser from 'expo-web-browser';
-import React from 'react';
+import * as WebBrowser from "expo-web-browser";
+import React, { useState } from "react";
 import {
   Image,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
-  View,
-} from 'react-native';
+  View
+} from "react-native";
 
-import Custom_Text from '../components/shared/Custom_Text';
-import Custom_Header from '../components/shared/Custom_Header';
-import Custom_HeaderTitle from '../components/shared/Custom_HeaderTitle';
-import Custom_HeaderButton from '../components/shared/Custom_HeaderButton';
-import Custom_Button from '../components/shared/Custom_Button';
-import Custom_IconButton from '../components/shared/Custom_IconButton';
-import Fonts from '../constants/Fonts';
-import Colors from '../constants/Colors';
-import Images from '../constants/Images';
+import Custom_Text from "../components/shared/Custom_Text";
+import Custom_Header from "../components/shared/Custom_Header";
+import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
+import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
+import Custom_Button from "../components/shared/Custom_Button";
+import Custom_IconButton from "../components/shared/Custom_IconButton";
+import Custom_RadioButton from "../components/shared/Custom_RadioButton";
+import Custom_Modal from "../components/shared/Custom_Modal";
+import Fonts from "../constants/Fonts";
+import Colors from "../constants/Colors";
+import Images from "../constants/Images";
 
 export default function HomeScreen() {
+  const [pressed, setPressed] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   return (
     <View style={styles.container}>
       <Custom_Header
         left={
-          <Custom_HeaderButton 
-            onPress={() => { console.log("Press!!") }}
+          <Custom_HeaderButton
+            onPress={() => {
+              console.log("Press!!");
+            }}
             type="icon"
             icon="md-arrow-back"
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Enable Face ID"/>}
+        center={<Custom_HeaderTitle text="Enable Face ID" />}
         right={
-          <Custom_HeaderButton 
-            onPress={() => { console.log("Press!!") }}
+          <Custom_HeaderButton
+            onPress={() => {
+              console.log("Press!!");
+            }}
             type="icon"
             icon="md-settings"
             iconColor={Colors.text}
@@ -43,25 +51,30 @@ export default function HomeScreen() {
       />
       <View>
         <Custom_Text
-          value='This is custom text component.'
+          value="This is custom text component."
           size={Fonts.size.medium}
           style={{ marginVertical: 50, marginHorizontal: 10 }}
           isBold
           color={Colors.text}
         />
-        <Image source={Images.face}/>
+        <Image source={Images.face} />
       </View>
       <View style={styles.addWalletContainer}>
         <Custom_Button
           text="Add Wallet"
-          onPress={() => { console.log("Press Add Wallet") }}
+          onPress={() => {
+            console.log("Press Add Wallet");
+            setModalVisible(true);
+          }}
           style={{ height: 40, width: 100 }}
         />
       </View>
       <View>
         <Custom_Button
           text="Next"
-          onPress={() => { console.log("Press Next") }}
+          onPress={() => {
+            console.log("Press Next");
+          }}
           style={{ height: 40, width: 80 }}
           icon="ios-arrow-forward"
         />
@@ -70,20 +83,24 @@ export default function HomeScreen() {
         <View style={styles.leftButtonContainer}>
           <Custom_Button
             text="RECEIVE"
-            onPress={() => { console.log("Press RECEIVE") }}
+            onPress={() => {
+              console.log("Press RECEIVE");
+            }}
             size={Fonts.size.large}
             style={{
               height: 40,
               backgroundColor: Colors.headerBackground,
               borderWidth: 0.5,
-              borderColor: Colors.text,
+              borderColor: Colors.text
             }}
-          />  
+          />
         </View>
         <View style={styles.rightButtonContainer}>
           <Custom_Button
             text="SEND"
-            onPress={() => { console.log("Press SEND") }}
+            onPress={() => {
+              console.log("Press SEND");
+            }}
             size={Fonts.size.large}
             style={{ height: 40 }}
           />
@@ -110,6 +127,16 @@ export default function HomeScreen() {
           style={{ height: 48, width: 48, borderRadius: 24 }}
         />
       </View>
+      <View>
+        <Custom_RadioButton
+          pressed={pressed}
+          onPress={() => (!pressed ? setPressed(true) : setPressed(false))}
+        />
+      </View>
+      <Custom_Modal
+        modalVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
       {/* <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
@@ -119,7 +146,7 @@ export default function HomeScreen() {
 }
 
 HomeScreen.navigationOptions = {
-  header: null,
+  header: null
 };
 
 function DevelopmentModeNotice() {
@@ -147,123 +174,123 @@ function DevelopmentModeNotice() {
 
 function handleLearnMorePress() {
   WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/development-mode/'
+    "https://docs.expo.io/versions/latest/workflow/development-mode/"
   );
 }
 
 function handleHelpPress() {
   WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes'
+    "https://docs.expo.io/versions/latest/workflow/up-and-running/#cant-see-your-changes"
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.background
   },
   addWalletContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center"
   },
   buttonsContainer: {
-    flexDirection: 'row',
-    marginVertical: 10,
+    flexDirection: "row",
+    marginVertical: 10
   },
   leftButtonContainer: {
     flex: 1,
-    marginHorizontal: 15,
+    marginHorizontal: 15
   },
   rightButtonContainer: {
     flex: 1,
-    marginHorizontal: 15,
+    marginHorizontal: 15
   },
   iconButtonContainer: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    justifyContent: "center",
+    alignItems: "flex-end",
     marginHorizontal: 15,
-    marginVertical: 10,
+    marginVertical: 10
   },
   developmentModeText: {
     marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
+    color: "rgba(0,0,0,0.4)",
     fontSize: 14,
     lineHeight: 19,
-    textAlign: 'center',
+    textAlign: "center"
   },
   contentContainer: {
-    paddingTop: 30,
+    paddingTop: 30
   },
   welcomeContainer: {
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 20
   },
   welcomeImage: {
     width: 100,
     height: 80,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginTop: 3,
-    marginLeft: -10,
+    marginLeft: -10
   },
   getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
+    alignItems: "center",
+    marginHorizontal: 50
   },
   homeScreenFilename: {
-    marginVertical: 7,
+    marginVertical: 7
   },
   codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
+    color: "rgba(96,100,109, 0.8)"
   },
   codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: "rgba(0,0,0,0.05)",
     borderRadius: 3,
-    paddingHorizontal: 4,
+    paddingHorizontal: 4
   },
   getStartedText: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
+    color: "rgba(96,100,109, 1)",
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: "center"
   },
   tabBarInfoContainer: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     left: 0,
     right: 0,
     ...Platform.select({
       ios: {
-        shadowColor: 'black',
+        shadowColor: "black",
         shadowOffset: { width: 0, height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 3,
+        shadowRadius: 3
       },
       android: {
-        elevation: 20,
-      },
+        elevation: 20
+      }
     }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
+    alignItems: "center",
+    backgroundColor: "#fbfbfb",
+    paddingVertical: 20
   },
   tabBarInfoText: {
     fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
+    color: "rgba(96,100,109, 1)",
+    textAlign: "center"
   },
   navigationFilename: {
-    marginTop: 5,
+    marginTop: 5
   },
   helpContainer: {
     marginTop: 15,
-    alignItems: 'center',
+    alignItems: "center"
   },
   helpLink: {
-    paddingVertical: 15,
+    paddingVertical: 15
   },
   helpLinkText: {
     fontSize: 14,
-    color: '#2e78b7',
-  },
+    color: "#2e78b7"
+  }
 });
