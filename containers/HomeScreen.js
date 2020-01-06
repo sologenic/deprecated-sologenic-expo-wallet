@@ -89,9 +89,25 @@ export default function HomeScreen() {
           />
         </View>
       </View>
-      <View>
+      <View style={styles.iconButtonContainer}>
         <Custom_IconButton
-          icon=""
+          icon="md-add"
+          color={Colors.text}
+          text="Create New Wallet"
+        />
+      </View>
+      <View style={styles.iconButtonContainer}>
+        <Custom_IconButton
+          icon="md-download"
+          color={Colors.text}
+          text="I Already Have A Wallet"
+        />
+      </View>
+      <View style={styles.iconButtonContainer}>
+        <Custom_IconButton
+          icon="ios-arrow-down"
+          color={Colors.text}
+          style={{ height: 48, width: 48, borderRadius: 24 }}
         />
       </View>
       {/* <ScrollView
@@ -162,7 +178,12 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: 15,
   },
-
+  iconButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginHorizontal: 15,
+    marginVertical: 10,
+  },
   developmentModeText: {
     marginBottom: 20,
     color: 'rgba(0,0,0,0.4)',
