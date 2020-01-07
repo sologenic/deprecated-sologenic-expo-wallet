@@ -17,6 +17,7 @@ import Custom_Button from "../components/shared/Custom_Button";
 import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Custom_RadioButton from "../components/shared/Custom_RadioButton";
 import Custom_Modal from "../components/shared/Custom_Modal";
+import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
@@ -24,6 +25,7 @@ import Images from "../constants/Images";
 export default function HomeScreen() {
   const [pressed, setPressed] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [textValue, onChangeText] = useState("");
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -49,6 +51,19 @@ export default function HomeScreen() {
           />
         }
       />
+      
+      <View style={{ marginVertical: 30 }}>
+        <Custom_TextInput
+          value={textValue}
+          onChangeText={text => {
+            onChangeText(text);
+          }}
+          label="Wallet Nickname"
+          keyboardType="default"
+          returnKeyType="done"
+        />
+      </View>
+
       <View>
         <Custom_Text
           value="This is custom text component."
