@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Image, TouchableOpacity } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function Custom_HeaderButton({
   onPress,
@@ -13,6 +13,13 @@ export default function Custom_HeaderButton({
   style,
 }) {
   if (type === "icon") {
+    if (icon === "dots-vertical") {
+      return (
+        <TouchableOpacity onPress={onPress} style={[ style, { paddingHorizontal: 15 } ]}>
+          <MaterialCommunityIcons name={icon} size={30} color={iconColor}/>
+        </TouchableOpacity>
+      );      
+    }
     return (
       <TouchableOpacity onPress={onPress} style={[ style, { paddingHorizontal: 15 } ]}>
         <Ionicons name={icon} size={30} color={iconColor}/>

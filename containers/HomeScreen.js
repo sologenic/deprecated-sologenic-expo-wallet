@@ -51,103 +51,116 @@ export default function HomeScreen() {
           />
         }
       />
-      
-      <View style={{ marginVertical: 30 }}>
-        <Custom_TextInput
-          value={textValue}
-          onChangeText={text => {
-            onChangeText(text);
-          }}
-          label="Wallet Nickname"
-          keyboardType="default"
-          returnKeyType="done"
-        />
-      </View>
+      <ScrollView>
 
-      <View>
-        <Custom_Text
-          value="This is custom text component."
-          size={Fonts.size.medium}
-          style={{ marginVertical: 50, marginHorizontal: 10 }}
-          isBold
-          color={Colors.text}
-        />
-        <Image source={Images.face} />
-      </View>
-      <View style={styles.addWalletContainer}>
-        <Custom_Button
-          text="Add Wallet"
-          onPress={() => {
-            console.log("Press Add Wallet");
-            setModalVisible(true);
-          }}
-          style={{ height: 40, width: 100 }}
-        />
-      </View>
-      <View>
-        <Custom_Button
-          text="Next"
-          onPress={() => {
-            console.log("Press Next");
-          }}
-          style={{ height: 40, width: 80 }}
-          icon="ios-arrow-forward"
-        />
-      </View>
-      <View style={styles.buttonsContainer}>
-        <View style={styles.leftButtonContainer}>
-          <Custom_Button
-            text="RECEIVE"
-            onPress={() => {
-              console.log("Press RECEIVE");
+        <View style={{ marginVertical: 30 }}>
+          <Custom_TextInput
+            value={textValue}
+            onChangeText={text => {
+              onChangeText(text);
             }}
-            size={Fonts.size.large}
-            style={{
-              height: 40,
-              backgroundColor: Colors.headerBackground,
-              borderWidth: 0.5,
-              borderColor: Colors.text
-            }}
+            label="Wallet Nickname"
+            keyboardType="default"
+            returnKeyType="done"
           />
         </View>
-        <View style={styles.rightButtonContainer}>
-          <Custom_Button
-            text="SEND"
-            onPress={() => {
-              console.log("Press SEND");
-            }}
-            size={Fonts.size.large}
-            style={{ height: 40 }}
+
+        <View>
+          <Custom_Text
+            value="This is custom text component."
+            size={Fonts.size.medium}
+            style={{ marginVertical: 50, marginHorizontal: 10 }}
+            isBold
+            color={Colors.text}
           />
         </View>
-      </View>
-      <View style={styles.iconButtonContainer}>
-        <Custom_IconButton
-          icon="md-add"
-          color={Colors.text}
-          text="Create New Wallet"
-        />
-      </View>
-      <View style={styles.iconButtonContainer}>
-        <Custom_IconButton
-          icon="md-download"
-          color={Colors.text}
-          text="I Already Have A Wallet"
-        />
-      </View>
-      <View style={styles.iconButtonContainer}>
-        <Custom_IconButton
-          icon="ios-arrow-down"
-          color={Colors.text}
-          style={{ height: 48, width: 48, borderRadius: 24 }}
-        />
-      </View>
-      <View>
-        <Custom_RadioButton
-          pressed={pressed}
-          onPress={() => (!pressed ? setPressed(true) : setPressed(false))}
-        />
-      </View>
+        <View
+          style={{
+            height: 90,
+            width: 90,
+            borderRadius: 45,
+            backgroundColor: Colors.headerBackground,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Image source={Images.face} style={{ height: 40, width: 40, tintColor: Colors.text }} />
+        </View>
+        <View style={styles.addWalletContainer}>
+          <Custom_Button
+            text="Add Wallet"
+            onPress={() => {
+              console.log("Press Add Wallet");
+              setModalVisible(true);
+            }}
+            style={{ height: 40, width: 100 }}
+          />
+        </View>
+        <View>
+          <Custom_Button
+            text="Next"
+            onPress={() => {
+              console.log("Press Next");
+            }}
+            style={{ height: 40, width: 80 }}
+            icon="ios-arrow-forward"
+          />
+        </View>
+        <View style={styles.buttonsContainer}>
+          <View style={styles.leftButtonContainer}>
+            <Custom_Button
+              text="RECEIVE"
+              onPress={() => {
+                console.log("Press RECEIVE");
+              }}
+              size={Fonts.size.large}
+              style={{
+                height: 40,
+                backgroundColor: Colors.headerBackground,
+                borderWidth: 0.5,
+                borderColor: Colors.text
+              }}
+            />
+          </View>
+          <View style={styles.rightButtonContainer}>
+            <Custom_Button
+              text="SEND"
+              onPress={() => {
+                console.log("Press SEND");
+              }}
+              size={Fonts.size.large}
+              style={{ height: 40 }}
+            />
+          </View>
+        </View>
+        <View style={styles.iconButtonContainer}>
+          <Custom_IconButton
+            icon="md-add"
+            color={Colors.text}
+            text="Create New Wallet"
+          />
+        </View>
+        <View style={styles.iconButtonContainer}>
+          <Custom_IconButton
+            icon="md-download"
+            color={Colors.text}
+            text="I Already Have A Wallet"
+          />
+        </View>
+        <View style={styles.iconButtonContainer}>
+          <Custom_IconButton
+            icon="ios-arrow-down"
+            color={Colors.text}
+            style={{ height: 48, width: 48, borderRadius: 24 }}
+          />
+        </View>
+        <View>
+          <Custom_RadioButton
+            pressed={pressed}
+            onPress={() => (!pressed ? setPressed(true) : setPressed(false))}
+          />
+        </View>
+      </ScrollView>
       <Custom_Modal
         modalVisible={modalVisible}
         onClose={() => setModalVisible(false)}
