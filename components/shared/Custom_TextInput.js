@@ -17,7 +17,7 @@ export default function Custom_TextInput({
   const handleFocus = () => handleIsFocused(true);
   const handleBlur = () => handleIsFocused(false);
   return (
-    <View>
+    <TouchableOpacity onPress={handleFocus}>
       <Text style={{
         position: 'absolute',
         left: 40,
@@ -38,7 +38,7 @@ export default function Custom_TextInput({
         onFocus={handleFocus}
         style={styles.defaultTextInput}
       />
-    </View>
+    </TouchableOpacity>
   )
 }
 
@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.headerBackground,
     paddingLeft: 25,
     marginHorizontal: 15,
-    paddingVertical: 15,
+    paddingTop: 18,
+    paddingBottom: 10,
     borderRadius: 25,
   }
 });
