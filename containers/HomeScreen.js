@@ -154,11 +154,18 @@ export default function HomeScreen() {
             style={{ height: 48, width: 48, borderRadius: 24 }}
           />
         </View>
-        <View>
-          <Custom_RadioButton
-            pressed={pressed}
-            onPress={() => (!pressed ? setPressed(true) : setPressed(false))}
-          />
+        <View style={{ flexDirection: 'row' }}>
+          <View style={{ flex: 8 }}>
+            <Custom_Text
+              value="I have written down my passphrase, and I understand that without it I will not have access to my wallet sshould I lose it."
+            />
+          </View>
+          <View style={{ flex: 2 }}>
+            <Custom_RadioButton
+              pressed={pressed}
+              onPress={() => (!pressed ? setPressed(true) : setPressed(false))}
+            />
+          </View>
         </View>
       </ScrollView>
       <Custom_Modal

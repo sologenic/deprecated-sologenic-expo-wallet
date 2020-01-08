@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Custom_Text from '../shared/Custom_Text';
 import Fonts from '../../constants/Fonts';
@@ -16,8 +16,35 @@ export default function Custom_Button({
   color,
   style,
   size,
+  isBold,
 }) {
   if (icon) {
+    if (icon === "content-copy" || icon === "qrcode") {
+      return (
+        <TouchableOpacity
+          onPress={onPress}
+          style={[styles.button, { ...style }]}
+          disabled={disabled}
+          activeOpacity={0.5}
+        >
+          <View style={styles.withIcons}>
+            <View style={styles.textContainer}>
+              <Custom_Text
+                value={text}
+                size={Fonts.size.normal}
+                color={color}
+                isBold={isBold}
+                style={textStyle}
+              />
+            </View>
+            <View style={styles.iconContainer}>
+              <MaterialCommunityIcons name={icon} size={Fonts.size.regular} color={color}/>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )      
+    }
+
     return (
       <TouchableOpacity
         onPress={onPress}
@@ -31,7 +58,7 @@ export default function Custom_Button({
               value={text}
               size={Fonts.size.normal}
               color={color}
-              isBold
+              isBold={isBold}
               style={textStyle}
             />
           </View>
@@ -53,7 +80,7 @@ export default function Custom_Button({
         value={text}
         size={size ? size : Fonts.size.normal}
         color={color}
-        isBold
+        isBold={isBold}
         style={textStyle}
       />
     </TouchableOpacity>
@@ -70,6 +97,7 @@ Custom_Button.defaultProps = {
   onPress: () => {},
   disabled: false,
   color: Colors.text,
+  isBold: true,
 };
 
 const styles = StyleSheet.create({
