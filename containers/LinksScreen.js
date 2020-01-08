@@ -29,7 +29,7 @@ export default function LinksScreen() {
   const [pressed, handlePressDots] = useState(false);
   return (
     <View style={styles.container}>
-      <MenuProvider>
+      {/* <MenuProvider> */}
         <Custom_Header
           left={
             <Custom_HeaderButton
@@ -188,7 +188,7 @@ export default function LinksScreen() {
             />
           </View>
         </ScrollView>
-      </MenuProvider>
+      {/* </MenuProvider> */}
     </View>
   );
 }

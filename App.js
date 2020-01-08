@@ -4,6 +4,7 @@ import * as Font from 'expo-font';
 import React, { useState } from 'react';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { MenuProvider } from "react-native-popup-menu";
 
 import AppNavigator from './navigation/AppNavigator';
 import Fonts from './constants/Fonts';
@@ -24,7 +25,9 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
+        <MenuProvider>
+          <AppNavigator />
+        </MenuProvider>
       </View>
     );
   }
