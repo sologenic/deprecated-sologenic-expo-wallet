@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Custom_Text from '../shared/Custom_Text';
 import Fonts from "../../constants/Fonts";
@@ -15,6 +15,7 @@ export default function Custom_IconButton({
   text,
   style,
   textStyle,
+  size,
 }) {
   if (text) {
     return (
@@ -45,6 +46,19 @@ export default function Custom_IconButton({
     )
   };
 
+  if (icon === "content-copy" || icon === "qrcode") {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        style={[styles.button, { ...style }]}
+        disabled={disabled}
+        activeOpacity={0.5}
+      >
+        <MaterialCommunityIcons name={icon} size={size ? size : Fonts.size.h5} color={color} />
+      </TouchableOpacity>
+    );  
+  }
+
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -65,7 +79,8 @@ Custom_IconButton.propTypes = {
 Custom_IconButton.defaultProps = {
   onPress: () => {},
   disabled: false,
-  color: Colors.text
+  color: Colors.text,
+  size: Fonts.size.h5,
 };
 
 const styles = StyleSheet.create({

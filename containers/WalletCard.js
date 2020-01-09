@@ -20,7 +20,16 @@ export default function WalletCard({
         onPress={() => {
           navigation.navigate({
             routeName: "WalletScreen",
-            key: "WalletName"
+            key: "WalletName",
+            params: {
+              navigation,
+              totalBalance,
+              tokenizedAssets,
+              defaultCurrency,
+              xrpBalance: "21.00",
+              soloBalance: "0.00",
+              nickname,
+            }
           });
         }}
         style={styles.upperStyle}

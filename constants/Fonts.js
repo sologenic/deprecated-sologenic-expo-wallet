@@ -28,8 +28,8 @@ const type = {
 const size = {
   h1: 38,
   h2: 34,
-  h3: 30,
-  h4: 26,
+  h3: 32,
+  h4: 24,
   h5: 20,
   h6: 19,
   input: 18,

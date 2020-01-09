@@ -29,12 +29,21 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { headerHeight } from "../constants/Layout";
+import WalletTab from "./WalletTab";
 
 export default function WalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
+  const {
+    totalBalance,
+    tokenizedAssets,
+    defaultCurrency,
+    xrpBalance,
+    soloBalance,
+    nickname
+  } = navigation.state.params;
+
   return (
     <View style={styles.container}>
-      {/* <MenuProvider> */}
       <Custom_Header
         left={
           <Custom_HeaderButton
@@ -47,7 +56,7 @@ export default function WalletScreen({ navigation }) {
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Elegant Dinosaur" />}
+        center={<Custom_HeaderTitle text={nickname} />}
         right={
           <Menu onSelect={value => alert(`Selected number: ${value}`)}>
             <MenuTrigger
@@ -126,7 +135,7 @@ export default function WalletScreen({ navigation }) {
                 : {}
             ]}
           >
-            <Image source={Images.xrp} height={24} width={24} />
+            <Image source={Images.xrpSmall} height={24} width={24} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -146,7 +155,7 @@ export default function WalletScreen({ navigation }) {
                 : {}
             ]}
           >
-            <Image source={Images.solo} height={24} width={24}/>
+            <Image source={Images.soloSmall} height={24} width={24} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -176,8 +185,13 @@ export default function WalletScreen({ navigation }) {
             />
           </TouchableOpacity>
         </View>
+        <WalletTab
+          navigation={navigation}
+          currency={"XRP"}
+          defaultCurrency={defaultCurrency}
+          xrpBalance={xrpBalance}
+        />
       </ScrollView>
-      {/* </MenuProvider> */}
     </View>
   );
 }
