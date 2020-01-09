@@ -7,14 +7,14 @@ import Colors from '../../constants/Colors';
 import { headerHeight } from '../../constants/Layout';
 
 export default function Custom_Header({
-  backgroundColor,
+  color,
   left,
   center,
   right,
   flex,
 }) {
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, { backgroundColor: color ? color : Colors.headerBackground }]}>
       <View style={[ styles.headerLeft, { flex: flex ? flex[0] : 2.25 } ]}>
         {left ? left : <View />}
       </View>

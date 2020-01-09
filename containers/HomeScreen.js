@@ -22,10 +22,11 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
   const [pressed, setPressed] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [textValue, onChangeText] = useState("");
+  console.log("navigation is", navigation)
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -100,7 +101,11 @@ export default function HomeScreen() {
           <Custom_Button
             text="Next"
             onPress={() => {
-              console.log("Press Next");
+              console.log("Press and go to LinksScreen");
+              navigation.navigate({
+                routeName: "LinksScreen",
+                key: "LinksScreen",
+              });
             }}
             style={{ height: 40, width: 80 }}
             icon="ios-arrow-forward"

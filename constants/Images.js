@@ -2,6 +2,8 @@ const images = {
   face: require('../assets/images/icons/face.png'),
   fingerprint: require('../assets/images/icons/fingerprint.png'),
   help: require('../assets/images/icons/help.png'),
+  solo: require('../assets/images/icons/solo.png'),
+  xrp: require('../assets/images/icons/xrp.png'),
 };
 
 export default images;

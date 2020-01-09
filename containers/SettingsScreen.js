@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View, Text } from "react-native";
 import {
-  MenuProvider,
   Menu,
   MenuOptions,
   MenuOption,
   MenuTrigger
 } from "react-native-popup-menu";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
 
 import Custom_Text from "../components/shared/Custom_Text";
@@ -24,7 +24,7 @@ import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { headerHeight } from "../constants/Layout";
 
-export default function SettingsScreen() {
+export default function SettingsScreen({ navigation }) {
   return (
     <View style={styles.container}>
       {/* <MenuProvider> */}
@@ -33,6 +33,7 @@ export default function SettingsScreen() {
             <Custom_HeaderButton
               onPress={() => {
                 console.log("Press!!");
+                navigation.goBack();
               }}
               type="icon"
               icon="md-arrow-back"
