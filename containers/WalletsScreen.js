@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   Platform,
@@ -7,6 +7,7 @@ import {
   Text,
   View
 } from "react-native";
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -16,8 +17,20 @@ import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import WalletCard from "./WalletCard";
+import {
+  testTodo,
+  testTodoReset,
+} from "../actions";
 
-export default function WalletsScreen({ navigation }) {
+
+function WalletsScreen({
+  navigation,
+  test,
+  testPending,
+  testTodo,
+  testTodoReset
+}) {
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -98,3 +111,15 @@ const styles = StyleSheet.create({
     marginVertical: 50
   }
 });
+
+const mapStateToProps = ({ test, testPending }) => ({
+  test,
+  testPending
+});
+
+const mapDispatchToProps = dispatch => ({
+  testTodo: () => dispatch(testTodo()),
+  testTodoReset: () => dispatch(testTodoReset())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WalletsScreen);
