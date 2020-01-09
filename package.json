@@ -21,6 +21,7 @@
     "expo-font": "~8.0.0",
     "expo-web-browser": "~8.0.0",
     "glamorous-native": "^2.0.0",
+    "moment-timezone": "^0.5.27",
     "prop-types": "^15.7.2",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",

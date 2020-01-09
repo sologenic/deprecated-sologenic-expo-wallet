@@ -109,7 +109,7 @@ export default function WalletScreen({ navigation }) {
         }
         color={Colors.background}
       />
-      <ScrollView>
+      {/* <View> */}
         <View
           style={{
             flexDirection: "row",
@@ -191,8 +191,8 @@ export default function WalletScreen({ navigation }) {
           defaultCurrency={defaultCurrency}
           xrpBalance={xrpBalance}
         />
-      </ScrollView>
-    </View>
+      </View>
+    // </View>
   );
 }
 

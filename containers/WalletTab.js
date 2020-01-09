@@ -13,6 +13,7 @@ import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Custom_Modal from "../components/shared/Custom_Modal";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
+import TransactionCard from "./TransactionCard";
 
 export default function WalletTab({
   navigation,
@@ -23,138 +24,158 @@ export default function WalletTab({
   defaultCurrency
 }) {
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.section}>
-          <Custom_Text
-            value="Your Balance:"
-            size={Fonts.size.medium}
-            color={Colors.lightGray}
-          />
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <View style={{ paddingRight: 10 }}>
-              <Custom_Text value={xrpBalance} size={Fonts.size.h3} isBold />
-            </View>
-            <View>
-              <Custom_Text value={currency} size={Fonts.size.h4} />
-            </View>
+    <ScrollView>
+
+      <View>
+        <View style={styles.container}>
+          <View style={styles.section}>
+            <Custom_Text
+              value="Your Balance:"
+              size={Fonts.size.medium}
+              color={Colors.lightGray}
+            />
           </View>
-        </View>
-        <View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <View style={{ paddingRight: 5 }}>
-              <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
-            </View>
-            <View>
-              <Custom_Text
-                value={defaultCurrency.toUpperCase()}
-                size={Fonts.size.medium}
-              />
-            </View>
-          </View>
-        </View>
-        <View style={styles.marketInfoContainer}>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center"
-            }}
-          >
-            <View style={{ paddingRight: 15 }}>
-              <Custom_Text
-                value="Market Price:"
-                size={Fonts.size.medium}
-                color={Colors.lightGray}
-              />
-              <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
-            </View>
-            <View>
-              <Custom_Text
-                value={`${-0.61}%`}
-                size={Fonts.size.small}
-                color={Colors.errorBackground}
-              />
-            </View>
-          </View>
-        </View>
-        <View style={styles.buttonsContainer}>
-          <View style={styles.leftButtonContainer}>
-            <Custom_Button
-              text="RECEIVE"
-              onPress={() => {
-                console.log("Press RECEIVE");
-              }}
-              size={Fonts.size.large}
+          <View>
+            <View
               style={{
-                height: 40,
-                backgroundColor: Colors.headerBackground,
-                borderWidth: 0.5,
-                borderColor: Colors.text
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
               }}
-            />
+            >
+              <View style={{ paddingRight: 10 }}>
+                <Custom_Text value={xrpBalance} size={Fonts.size.h3} isBold />
+              </View>
+              <View>
+                <Custom_Text value={currency} size={Fonts.size.h4} />
+              </View>
+            </View>
           </View>
-          <View style={styles.rightButtonContainer}>
-            <Custom_Button
-              text="SEND"
-              onPress={() => {
-                console.log("Press SEND");
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
               }}
-              size={Fonts.size.large}
-              style={{ height: 40 }}
-            />
+            >
+              <View style={{ paddingRight: 5 }}>
+                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
+              </View>
+              <View>
+                <Custom_Text
+                  value={defaultCurrency.toUpperCase()}
+                  size={Fonts.size.medium}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={styles.marketInfoContainer}>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center"
+              }}
+            >
+              <View style={{ paddingRight: 15 }}>
+                <Custom_Text
+                  value="Market Price:"
+                  size={Fonts.size.medium}
+                  color={Colors.lightGray}
+                />
+                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
+              </View>
+              <View>
+                <Custom_Text
+                  value={`${-0.61}%`}
+                  size={Fonts.size.small}
+                  color={Colors.errorBackground}
+                />
+              </View>
+            </View>
+          </View>
+          <View style={styles.buttonsContainer}>
+            <View style={styles.leftButtonContainer}>
+              <Custom_Button
+                text="RECEIVE"
+                onPress={() => {
+                  console.log("Press RECEIVE");
+                }}
+                size={Fonts.size.large}
+                style={{
+                  height: 40,
+                  backgroundColor: Colors.headerBackground,
+                  borderWidth: 0.5,
+                  borderColor: Colors.text
+                }}
+              />
+            </View>
+            <View style={styles.rightButtonContainer}>
+              <Custom_Button
+                text="SEND"
+                onPress={() => {
+                  console.log("Press SEND");
+                }}
+                size={Fonts.size.large}
+                style={{ height: 40 }}
+              />
+            </View>
           </View>
         </View>
-      </View>
-      <View style={{ flexDirection: 'row', alignItems: "center" }}>
-        <View style={styles.walletAddressContainer}>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={styles.walletAddressContainer}>
+            <Custom_Text
+              value="Wallet Address"
+              size={Fonts.size.small}
+              color={Colors.grayText}
+            />
+            <Custom_Text
+              value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+              size={Fonts.size.small}
+            />
+          </View>
+          <View style={{ flex: 1 }}>
+            <View style={{ paddingVertical: 2.5 }}>
+              <Custom_IconButton
+                onPress={() => {}}
+                icon="content-copy"
+                size={Fonts.size.normal}
+                style={{
+                  height: 20,
+                  width: 20,
+                  borderRadius: 0,
+                  backgroundColor: "transparent"
+                }}
+              />
+            </View>
+            <View style={{ paddingVertical: 2.5 }}>
+              <Custom_IconButton
+                onPress={() => {}}
+                icon="qrcode"
+                size={Fonts.size.normal}
+                style={{
+                  height: 20,
+                  width: 20,
+                  borderRadius: 0,
+                  backgroundColor: "transparent"
+                }}
+              />
+            </View>
+          </View>
+        </View>
+        <View style={{ marginLeft: 38, marginBottom: 5 }}>
           <Custom_Text
-            value="Wallet Address"
+            value="Recent Transactions"
             size={Fonts.size.small}
-            color={Colors.grayText}
-          />
-          <Custom_Text
-            value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
-            size={Fonts.size.small}
+            isBold
           />
         </View>
-        <View style={{ flex: 1 }}>
-          <View style={{ paddingVertical: 2.5 }}>
-            <Custom_IconButton
-              onPress={() => {}}
-              icon="content-copy"
-              size={Fonts.size.normal}
-              style={{ height: 20, width: 20, borderRadius: 0, backgroundColor: "transparent" }}
-            />
-          </View>
-          <View style={{ paddingVertical: 2.5 }}>
-            <Custom_IconButton
-              onPress={() => {}}
-              icon="qrcode"
-              size={Fonts.size.normal}
-              style={{ height: 20, width: 20, borderRadius: 0, backgroundColor: "transparent" }}
-            />
-          </View>
+        <View>
+          <TransactionCard currency="xrp" amount="1000.00"/>
         </View>
       </View>
-      <View style={{ marginLeft: 38 }}>
-        <Custom_Text value="Recent Transactions" size={Fonts.size.small} isBold/>
-      </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -194,6 +215,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24,
+    marginVertical: 24
   }
 });
