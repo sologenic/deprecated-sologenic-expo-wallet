@@ -20,6 +20,7 @@ import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationXrpSuccessfulModal from "../components/shared/ActivationXrpSuccessfulModal";
+import WalletAddressModal from "../components/shared/WalletAddressModal";
 
 export default function WalletTab({
   navigation,
@@ -32,6 +33,9 @@ export default function WalletTab({
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
+  const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
+    false
+  );
   if (!activate) {
     return (
       <ScrollView>
@@ -162,7 +166,9 @@ export default function WalletTab({
               </View>
               <View style={{ paddingVertical: 2.5 }}>
                 <Custom_IconButton
-                  onPress={() => {}}
+                  onPress={() => {
+                    setWalletAddressModalVisible(true);
+                  }}
                   icon="qrcode"
                   size={Fonts.size.normal}
                   style={{
@@ -184,17 +190,15 @@ export default function WalletTab({
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
         />
+        <WalletAddressModal
+          data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
+          modalVisible={walletAddressModalVisible}
+          onClose={() => setWalletAddressModalVisible(false)}
+        />
       </ScrollView>
     );
   }
 
-  const typeNumber = 4;
-  const errorCorrectionLevel = "L";
-  const QRCode = qrcode(typeNumber, errorCorrectionLevel);
-  QRCode.addData("http://facebook.github.io/react-native/");
-  QRCode.make();
-  // const uri = QRCode.createDataURL();
-  // console.log(uri);
   return (
     <ScrollView>
       <View>
@@ -322,7 +326,9 @@ export default function WalletTab({
             </View>
             <View style={{ paddingVertical: 2.5 }}>
               <Custom_IconButton
-                onPress={() => {}}
+                onPress={() => {
+                  setWalletAddressModalVisible(true);
+                }}
                 icon="qrcode"
                 size={Fonts.size.normal}
                 style={{
@@ -335,9 +341,6 @@ export default function WalletTab({
             </View>
           </View>
         </View>
-        {/* <View style={{ height: 100 }}>
-          <Image source={{ uri: QRCode.createDataURL(40) }} style={{ width: 100 }} />
-        </View> */}
         <View style={{ marginLeft: 38, marginBottom: 5 }}>
           <Custom_Text
             value="Recent Transactions"
@@ -349,6 +352,11 @@ export default function WalletTab({
           <TransactionCard currency="xrp" amount="1000.00" />
         </View>
       </View>
+      <WalletAddressModal
+        data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
+        modalVisible={walletAddressModalVisible}
+        onClose={() => setWalletAddressModalVisible(false)}
+      />
     </ScrollView>
   );
 }
