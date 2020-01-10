@@ -16,6 +16,7 @@ export default function Custom_Button({
   color,
   style,
   size,
+  fontSize,
   isBold,
 }) {
   if (icon) {
@@ -31,14 +32,14 @@ export default function Custom_Button({
             <View style={styles.textContainer}>
               <Custom_Text
                 value={text}
-                size={Fonts.size.normal}
+                size={fontSize ? fontSize : Fonts.size.normal}
                 color={color}
                 isBold={isBold}
                 style={textStyle}
               />
             </View>
             <View style={styles.iconContainer}>
-              <MaterialCommunityIcons name={icon} size={Fonts.size.regular} color={color}/>
+              <MaterialCommunityIcons name={icon} size={size ? size : Fonts.size.regular} color={color}/>
             </View>
           </View>
         </TouchableOpacity>

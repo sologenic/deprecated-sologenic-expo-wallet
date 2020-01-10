@@ -31,6 +31,13 @@ function WalletsScreen({
   testTodoReset
 }) {
 
+  useEffect(() => {
+    testTodo();
+    // return () => {
+    //   testTodoReset();
+    // }
+  }, [test]);
+  console.log(test)
   return (
     <View style={styles.container}>
       <Custom_Header

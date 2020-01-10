@@ -66,7 +66,7 @@ export default function Custom_IconButton({
       disabled={disabled}
       activeOpacity={0.5}
     >
-      <Ionicons name={icon} size={Fonts.size.h5} color={color} />
+      <Ionicons name={icon} size={size ? size : Fonts.size.h5} color={color} />
     </TouchableOpacity>
   );
 }

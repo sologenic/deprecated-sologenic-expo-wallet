@@ -27,7 +27,6 @@ import { headerHeight } from "../constants/Layout";
 export default function SettingsScreen({ navigation }) {
   return (
     <View style={styles.container}>
-      {/* <MenuProvider> */}
       <Custom_Header
           left={
             <Custom_HeaderButton
@@ -40,66 +39,11 @@ export default function SettingsScreen({ navigation }) {
               iconColor={Colors.text}
             />
           }
-          center={<Custom_HeaderTitle text="Elegant Dinosaur" />}
-          right={
-            <Menu onSelect={value => alert(`Selected number: ${value}`)}>
-              <MenuTrigger
-                children={
-                  <View style={{ paddingHorizontal: 15 }}>
-                    <MaterialCommunityIcons
-                      name="dots-vertical"
-                      size={30}
-                      color={Colors.text}
-                    />
-                  </View>
-                }
-              />
-              <MenuOptions
-                customStyles={{
-                  optionsContainer: {
-                    width: 170,
-                    backgroundColor: Colors.background,
-                    borderWidth: 0.5,
-                    borderColor: Colors.grayText,
-                    padding: 5,
-                    marginTop: headerHeight
-                  }
-                }}
-              >
-                <MenuOption value={1}>
-                  <Custom_Text
-                    value="Change Wallet Nickname"
-                    size={Fonts.size.small}
-                    color={Colors.text}
-                  />
-                </MenuOption>
-                <View
-                  style={{
-                    height: 0.4,
-                    backgroundColor: Colors.grayText,
-                    marginHorizontal: 3,
-                    marginVertical: 2
-                  }}
-                />
-                <MenuOption value={2}>
-                  <Custom_Text
-                    value="Delete Wallet"
-                    size={Fonts.size.small}
-                    color={Colors.text}
-                  />
-                </MenuOption>
-              </MenuOptions>
-            </Menu>
-          }
+          center={<Custom_HeaderTitle text="Settings" />}
+          right={<View/>}
         />
         <ScrollView>
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ flex: 33.3 }}></View>
-            <View style={{ flex: 33.3 }}></View>
-            <View style={{ flex: 33.3 }}></View>
-          </View>
         </ScrollView>
-      {/* </MenuProvider> */}
     </View>
   );
 }
