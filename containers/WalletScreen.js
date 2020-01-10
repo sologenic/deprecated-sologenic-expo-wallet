@@ -30,6 +30,8 @@ import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { headerHeight } from "../constants/Layout";
 import WalletTab from "./WalletTab";
+import WalletSoloTab from "./WalletSoloTab";
+import WalletTokenizedAssetTab from "./WalletTokenizedAssetTab";
 
 export default function WalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
@@ -175,22 +177,31 @@ export default function WalletScreen({ navigation }) {
                 : {}
             ]}
           >
-            <View
-              style={{
-                backgroundColor: Colors.lighterGray,
-                height: 24,
-                width: 24,
-                borderRadius: 12
-              }}
-            />
+            <Image source={Images.tokenizedAsset} height={24} width={24} />
           </TouchableOpacity>
         </View>
-        <WalletTab
-          navigation={navigation}
-          currency={"XRP"}
-          defaultCurrency={defaultCurrency}
-          xrpBalance={xrpBalance}
-        />
+        {tab === 1 && (
+          <WalletTab
+            navigation={navigation}
+            currency={"XRP"}
+            defaultCurrency={defaultCurrency}
+            xrpBalance={xrpBalance}
+            activate={true}
+          />
+        )}
+        {tab === 2 && (
+          <WalletSoloTab
+            navigation={navigation}
+            currency={"SOLO"}
+            defaultCurrency={defaultCurrency}
+            soloBalance={soloBalance}
+          />
+        )}
+        {tab === 3 && (
+          <WalletTokenizedAssetTab
+            navigation={navigation}
+          />
+        )}
       </View>
     // </View>
   );

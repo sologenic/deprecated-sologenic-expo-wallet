@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
 
 import Custom_Text from '../shared/Custom_Text';
 import Fonts from "../../constants/Fonts";
@@ -16,8 +16,38 @@ export default function Custom_IconButton({
   style,
   textStyle,
   size,
+  textSize,
 }) {
   if (text) {
+
+    if (icon === "questioncircle") {
+      return (
+        <View style={styles.iconButtonContainer}>
+          <TouchableOpacity
+            onPress={onPress}
+            style={[styles.text, { ...textStyle }]}
+            disabled={disabled}
+            activeOpacity={0.5}        
+          >
+            <Custom_Text
+              value={text}
+              size={textSize ? textSize : Fonts.size.medium}
+              isBold
+              color={Colors.text}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={onPress}
+            style={[styles.button, { ...style }]}
+            disabled={disabled}
+            activeOpacity={0.5}
+          >
+            <AntDesign name={icon} size={size ? size : Fonts.size.h5} color={color} />
+          </TouchableOpacity>        
+        </View>
+      )
+    }
+
     return (
       <View style={styles.iconButtonContainer}>
         <TouchableOpacity

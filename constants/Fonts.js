@@ -8,7 +8,10 @@ const fonts =
         "Material Icons": require("../assets/fonts/MaterialIcons.ttf"),
         Titillium: require("../assets/fonts/TitilliumWeb-Regular.ttf"),
         TitilliumSemiBold: require("../assets/fonts/TitilliumWeb-SemiBold.ttf"),
-        TitilliumBold: require("../assets/fonts/TitilliumWeb-Bold.ttf")
+        TitilliumBold: require("../assets/fonts/TitilliumWeb-Bold.ttf"),
+        DMSans: require("../assets/fonts/DMSans-Regular.ttf"),
+        DMSansBold: require("../assets/fonts/DMSans-Bold.ttf"),
+        DMSansMedium: require("../assets/fonts/DMSans-Medium.ttf"),
       }
     : {
         Roboto: require("../assets/fonts/Roboto-Regular.ttf"),
@@ -16,7 +19,10 @@ const fonts =
         MaterialIcons: require("../assets/fonts/MaterialIcons.ttf"),
         Titillium: require("../assets/fonts/TitilliumWeb-Regular.ttf"),
         TitilliumSemiBold: require("../assets/fonts/TitilliumWeb-SemiBold.ttf"),
-        TitilliumBold: require("../assets/fonts/TitilliumWeb-Bold.ttf")
+        TitilliumBold: require("../assets/fonts/TitilliumWeb-Bold.ttf"),
+        DMSans: require("../assets/fonts/DMSans-Regular.ttf"),
+        DMSansBold: require("../assets/fonts/DMSans-Bold.ttf"),
+        DMSansMedium: require("../assets/fonts/DMSans-Medium.ttf"),
       };
 
 const type = {

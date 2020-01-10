@@ -7,9 +7,6 @@ import {
   Image,
   Text
 } from "react-native";
-// import QRCode from 'react-native-qrcode-generator';
-// import QRCode from "qrcode.react";
-import qrcode from "qrcode-generator";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
@@ -21,7 +18,7 @@ import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationXrpSuccessfulModal from "../components/shared/ActivationXrpSuccessfulModal";
 
-export default function WalletTab({
+export default function WalletSoloTab({
   navigation,
   balance,
   currency,
@@ -30,11 +27,11 @@ export default function WalletTab({
   defaultCurrency,
   activate
 }) {
-  const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   if (!activate) {
     return (
       <ScrollView>
+
         <View>
           <View style={styles.container}>
             <View style={{ marginTop: 50, marginHorizontal: 45 }}>
@@ -48,21 +45,7 @@ export default function WalletTab({
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                In order to activate your XRP wallet, you must first send at
-                least
-                <Text> </Text>
-                <Text
-                  style={{
-                    fontFamily: "DMSansBold",
-                    color: Colors.text,
-                    fontSize: Fonts.size.small,
-                    textAlign: "center"
-                  }}
-                >
-                  21 XRP
-                </Text>
-                <Text> </Text>
-                to this address
+                Click below to activate your SOLO wallet. It could take up to 10 seconds
               </Text>
             </View>
             <View style={{ marginTop: 8, marginBottom: 30 }}>
@@ -73,26 +56,6 @@ export default function WalletTab({
                   setActivateModalVisible(true);
                 }}
                 style={{ height: 40, width: 100 }}
-              />
-            </View>
-            <View>
-              <Custom_IconButton
-                icon="questioncircle"
-                color={Colors.grayText}
-                text="Why 21 XRP"
-                textSize={Fonts.size.small}
-                size={13}
-                style={{
-                  height: 12,
-                  width: 12,
-                  backgroundColor: "#FFF"
-                }}
-                textStyle={{
-                  paddingRight: 5
-                }}
-                onPress={() => {
-                  setModalVisible(true);
-                }}
               />
             </View>
             <View
@@ -176,10 +139,6 @@ export default function WalletTab({
             </View>
           </View>
         </View>
-        <Why21XRPModal
-          modalVisible={modalVisible}
-          onClose={() => setModalVisible(false)}
-        />
         <ActivationXrpSuccessfulModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
@@ -188,13 +147,6 @@ export default function WalletTab({
     );
   }
 
-  const typeNumber = 4;
-  const errorCorrectionLevel = "L";
-  const QRCode = qrcode(typeNumber, errorCorrectionLevel);
-  QRCode.addData("http://facebook.github.io/react-native/");
-  QRCode.make();
-  // const uri = QRCode.createDataURL();
-  // console.log(uri);
   return (
     <ScrollView>
       <View>
@@ -335,9 +287,6 @@ export default function WalletTab({
             </View>
           </View>
         </View>
-        {/* <View style={{ height: 100 }}>
-          <Image source={{ uri: QRCode.createDataURL(40) }} style={{ width: 100 }} />
-        </View> */}
         <View style={{ marginLeft: 38, marginBottom: 5 }}>
           <Custom_Text
             value="Recent Transactions"

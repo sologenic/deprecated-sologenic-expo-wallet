@@ -45,7 +45,7 @@ export default function Custom_Text({
           styles.headerTitle,
           style,
           {
-            fontFamily: "TitilliumSemiBold",
+            fontFamily: "DMSansBold",
             color: color,
             fontSize: size,
           },
@@ -71,7 +71,7 @@ export default function Custom_Text({
           styles.defaultText,
           style,
           {
-            fontFamily: !isBold ? 'Titillium' : 'TitilliumSemiBold',
+            fontFamily: !isBold ? 'DMSans' : 'DMSansBold',
             color: color,
             fontSize: size,
           },
@@ -131,7 +131,7 @@ Custom_Text.defaultProps = {
 
 const styles = StyleSheet.create({
   defaultText: {
-    fontFamily: 'Titillium',
+    fontFamily: 'DMSans',
     fontSize: Fonts.size.medium,
     color: Colors.text,  
   },
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',  
   },
   headerTitle: {
-    fontFamily: 'Titillium',
+    fontFamily: 'DMSans',
     fontSize: Fonts.size.medium,
     color: Colors.text,
     textAlign: 'center',

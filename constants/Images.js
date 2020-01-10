@@ -6,6 +6,7 @@ const images = {
   xrp: require('../assets/images/icons/xrp.png'),
   soloSmall: require('../assets/images/icons/solo_small.png'),
   xrpSmall: require('../assets/images/icons/xrp_small.png'),
+  tokenizedAsset: require('../assets/images/icons/tokenized_asset.png'),
 };
 
 export default images;

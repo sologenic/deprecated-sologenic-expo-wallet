@@ -184,7 +184,8 @@ const styles = StyleSheet.create({
     borderRadius: 4.5
   },
   dateContainer: {
-    paddingRight: 8
+    paddingRight: 8,
+    justifyContent: "center",
   },
   verticalLine: {
     backgroundColor: Colors.lighterGray,
