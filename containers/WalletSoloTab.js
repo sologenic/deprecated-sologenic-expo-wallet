@@ -11,12 +11,10 @@ import {
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
 import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
-import Why21XRPModal from "../components/shared/Why21XrpModal";
-import ActivationXrpSuccessfulModal from "../components/shared/ActivationXrpSuccessfulModal";
+import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 
 export default function WalletSoloTab({
   navigation,
@@ -139,9 +137,10 @@ export default function WalletSoloTab({
             </View>
           </View>
         </View>
-        <ActivationXrpSuccessfulModal
+        <ActivationSuccessfulModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
+          currency="solo"
         />
       </ScrollView>
     );

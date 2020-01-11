@@ -19,7 +19,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
-import ActivationXrpSuccessfulModal from "../components/shared/ActivationXrpSuccessfulModal";
+import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
 
 export default function WalletTab({
@@ -186,9 +186,10 @@ export default function WalletTab({
           modalVisible={modalVisible}
           onClose={() => setModalVisible(false)}
         />
-        <ActivationXrpSuccessfulModal
+        <ActivationSuccessfulModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
+          currency="xrp"
         />
         <WalletAddressModal
           data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
@@ -276,6 +277,16 @@ export default function WalletTab({
                 text="RECEIVE"
                 onPress={() => {
                   console.log("Press RECEIVE");
+                  navigation.navigate({
+                    routeName: "ReceiveScreen",
+                    key: "ReceiveScreen",
+                    params: {
+                      navigation,
+                      balance: xrpBalance,
+                      currency: currency.toLowerCase(),
+                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
+                    }
+                  });
                 }}
                 size={Fonts.size.large}
                 style={{
