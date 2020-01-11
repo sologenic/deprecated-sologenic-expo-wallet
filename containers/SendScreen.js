@@ -33,6 +33,15 @@ export default function SendScreen({ navigation }) {
     currency,
     // defaultCurrency,
   } = navigation.state.params;
+
+  useEffect(() => {
+    if (amountToSend && amountToSend.length > 0 && destination && destination.length > 0) {
+      handleIsCompleted(true);
+    } else {
+      handleIsCompleted(false);
+    }
+  });
+
   return (
     <View style={styles.container}>
       <Custom_Header
