@@ -74,7 +74,15 @@ export default function WalletTab({
                 text="Activate"
                 onPress={() => {
                   console.log("Press Activate");
-                  setActivateModalVisible(true);
+                  // setActivateModalVisible(true);
+                  navigation.navigate({
+                    routeName: "ActivateWalletScreen",
+                    key: "ActivateWalletScreen",
+                    params: {
+                      currency: currency.toLowerCase(),
+                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
+                    }
+                  });
                 }}
                 style={{ height: 40, width: 100 }}
               />

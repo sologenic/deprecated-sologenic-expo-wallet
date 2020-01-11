@@ -11,6 +11,7 @@ import YourRecoveryPhraseScreen from "../containers/YourRecoveryPhraseScreen";
 import ImportExistingWalletScreen from "../containers/ImportExistingWalletScreen";
 import WalletScreen from "../containers/WalletScreen";
 import ReceiveScreen from "../containers/ReceiveScreen";
+import ActivateWalletScreen from "../containers/ActivateWalletScreen";
 
 const MainStack = createStackNavigator(
   {
@@ -24,6 +25,7 @@ const MainStack = createStackNavigator(
     YourRecoveryPhraseScreen: YourRecoveryPhraseScreen,
     ImportExistingWalletScreen: ImportExistingWalletScreen,
     ReceiveScreen: ReceiveScreen,
+    ActivateWalletScreen: ActivateWalletScreen,
   },
   {
     initialRouteName: 'WalletsScreen',
