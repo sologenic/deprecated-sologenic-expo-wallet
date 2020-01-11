@@ -310,6 +310,15 @@ export default function WalletTab({
                 text="SEND"
                 onPress={() => {
                   console.log("Press SEND");
+                  navigation.navigate({
+                    routeName: "SendScreen",
+                    key: "SendScreen",
+                    params: {
+                      navigation,
+                      balance: xrpBalance,
+                      currency: currency.toLowerCase(),
+                    }
+                  });
                 }}
                 size={Fonts.size.large}
                 style={{ height: 40 }}

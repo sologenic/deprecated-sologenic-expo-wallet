@@ -186,7 +186,7 @@ export default function WalletScreen({ navigation }) {
             currency={"XRP"}
             defaultCurrency={defaultCurrency}
             xrpBalance={xrpBalance}
-            // activate={true}
+            activate={true}
           />
         )}
         {tab === 2 && (
