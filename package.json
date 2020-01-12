@@ -1,0 +1,56 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject",
+    "test": "jest --watchAll"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "dependencies": {
+    "@expo/samples": "~36.0.0",
+    "@expo/vector-icons": "~10.0.0",
+    "@react-navigation/web": "~1.0.0-alpha.9",
+    "apisauce": "^1.1.1",
+    "expo": "~36.0.0",
+    "expo-asset": "~8.0.0",
+    "expo-constants": "~8.0.0",
+    "expo-font": "~8.0.0",
+    "expo-web-browser": "~8.0.0",
+    "glamorous-native": "^2.0.0",
+    "moment-timezone": "^0.5.27",
+    "prop-types": "^15.7.2",
+    "qrcode-generator": "^1.4.4",
+    "qrcode.react": "^1.0.0",
+    "react": "~16.9.0",
+    "react-dom": "~16.9.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-36.0.0.tar.gz",
+    "react-native-gesture-handler": "~1.5.0",
+    "react-native-picker-select": "^6.3.3",
+    "react-native-popup-menu": "^0.15.6",
+    "react-native-qrcode-generator": "^1.1.0",
+    "react-native-reanimated": "~1.4.0",
+    "react-native-screens": "2.0.0-alpha.12",
+    "react-native-web": "~0.11.7",
+    "react-native-webview": "^7.4.3",
+    "react-navigation": "~4.0.10",
+    "react-navigation-stack": "~1.10.3",
+    "react-navigation-tabs": "~2.6.2",
+    "react-navigation-transitions": "^1.0.12",
+    "react-redux": "^7.1.3",
+    "redux": "^4.0.5",
+    "redux-persist": "^6.0.0",
+    "redux-persist-transform-filter": "0.0.20",
+    "redux-saga": "^1.1.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "babel-preset-expo": "~8.0.0",
+    "jest-expo": "~36.0.1"
+  },
+  "private": true
+}
