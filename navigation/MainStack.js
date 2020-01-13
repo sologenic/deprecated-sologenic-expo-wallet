@@ -1,3 +1,4 @@
+import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 
 import { handleTransition } from "./Transitions";
@@ -10,10 +11,37 @@ import CreateNewWalletScreen from "../containers/CreateNewWalletScreen";
 import YourRecoveryPhraseScreen from "../containers/YourRecoveryPhraseScreen";
 import ImportExistingWalletScreen from "../containers/ImportExistingWalletScreen";
 import WalletScreen from "../containers/WalletScreen";
+import CreatePinScreen from "../containers/CreatePinScreen";
+import UnlockScreen from "../containers/UnlockScreen";
+import SetupUnlockScreen from "../containers/SetupUnlockScreen";
 
 const MainStack = createStackNavigator(
   {
-    HomeScreen: HomeScreen,
+    // HomeScreen: HomeScreen,
+    HomeScreen: ({ navigation, screenProps }) => {
+      console.log(screenProps.isPinCreated);
+      if (!screenProps.userIdentityConfirmed) {
+        if (!screenProps.isPinCreated) {
+          return (
+            <CreatePinScreen
+              screenProps={{
+                rootNavigation: navigation,
+              }}
+            />
+          );
+        } else {
+          return (
+            <UnlockScreen
+              screenProps={{
+                rootNavigation: navigation,
+              }}
+            />
+          );
+        }
+      } else {
+        return <HomeScreen screenProps={{ rootNavigation: navigation }} />;
+      }
+    },
     LinksScreen: LinksScreen,
     SettingsScreen: SettingsScreen,
     WalletsScreen: WalletsScreen,
@@ -22,11 +50,14 @@ const MainStack = createStackNavigator(
     CreateNewWalletScreen: CreateNewWalletScreen,
     YourRecoveryPhraseScreen: YourRecoveryPhraseScreen,
     ImportExistingWalletScreen: ImportExistingWalletScreen,
+    SetupUnlockScreen: SetupUnlockScreen,
+    CreatePinScreen: CreatePinScreen,
   },
   {
-    initialRouteName: 'WalletsScreen',
+    headerMode: "none",
+    initialRouteName: "HomeScreen",
     transitionConfig: nav => handleTransition(nav),
-  }
+  },
 );
 
 export default MainStack;
