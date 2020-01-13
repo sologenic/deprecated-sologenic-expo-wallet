@@ -1,34 +1,21 @@
+import React, { useState } from "react";
+import { connect } from "react-redux";
 import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
-import React, { useState } from "react";
-import {
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-  AsyncStorage
-} from "react-native";
+import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
-// import { createStore, applyMiddleware } from "redux";
-// import { Provider } from "react-redux";
-// import createSagaMiddleware from "redux-saga";
-// import { PersistGate } from "redux-persist/integration/react";
-// import { persistStore, persistReducer } from "redux-persist";
-
-import AppNavigator from "../navigation/AppNavigator";
+import { createAppContainer } from "react-navigation";
+import MainStack from "../navigation/MainStack";
 import Fonts from "../constants/Fonts";
 import { imagesArray } from "../constants/Images";
-// import AppNavigator from "../navigation/AppNavigator";
-// import Fonts from "./constants/Fonts";
-// import { imagesArray } from "./constants/Images";
-// import reducer from "./reducers";
-// import rootSaga from "./sagas";
+import OrientationScreen from "./OrientationScreen";
+const App = createAppContainer(MainStack);
 
-export default function RootContainer(props) {
+const RootContainer = ({ skipLoadingScreen, isOrientationComplete }) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  if (!isLoadingComplete && !skipLoadingScreen) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
@@ -37,21 +24,24 @@ export default function RootContainer(props) {
       />
     );
   } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-        <MenuProvider>
-          <AppNavigator />
-        </MenuProvider>
-      </View>
-    );
+    if (isOrientationComplete) {
+      return (
+        <View style={styles.container}>
+          {Platform.OS === "ios" && <StatusBar barStyle="light" />}
+          <MenuProvider>
+            <App screenProps={{ isPinCreated: false }} />
+          </MenuProvider>
+        </View>
+      );
+    }
+    return <OrientationScreen />;
   }
-}
+};
 
 async function loadResourcesAsync() {
   await Promise.all([
     Asset.loadAsync(imagesArray),
-    Font.loadAsync(Fonts.fonts)
+    Font.loadAsync(Fonts.fonts),
   ]);
 }
 
@@ -68,6 +58,17 @@ function handleFinishLoading(setLoadingComplete) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
-  }
+    // backgroundColor: "#fff",
+  },
 });
+
+const mapStateToProps = ({ isOrientationComplete }) => ({
+  isOrientationComplete,
+});
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RootContainer);

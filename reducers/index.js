@@ -23,6 +23,9 @@ const defaultState = {
   connectToRippleApiPending: null,
   connectToRippleApiSuccess: null,
   connectToRippleApiError: null,
+  isOrientationComplete: null,
+  isPinCreated: null,
+  pin: null,
   phraseTestValue1: "",
   phraseTestValue2: "",
   phraseTestValue3: "",
@@ -32,7 +35,7 @@ const getMarketData = (state, action) => {
   return Object.assign({}, state, {
     getMarketDataPending: true,
     getMarketDataSuccess: false,
-    getMarketDataError: false
+    getMarketDataError: false,
   });
 };
 
@@ -41,7 +44,7 @@ const getMarketDataSuccess = (state, action) => {
     marketData: action.payload,
     getMarketDataPending: false,
     getMarketDataSuccess: true,
-    getMarketDataError: false
+    getMarketDataError: false,
   });
 };
 
@@ -50,7 +53,7 @@ const getMarketDataError = (state, action) => {
     marketData: action.payload,
     getMarketDataPending: false,
     getMarketDataSuccess: false,
-    getMarketDataError: true
+    getMarketDataError: true,
   });
 };
 
@@ -58,7 +61,7 @@ const getMarketSevens = (state, action) => {
   return Object.assign({}, state, {
     getMarketSevensPending: true,
     getMarketSevensSuccess: false,
-    getMarketSevensError: false
+    getMarketSevensError: false,
   });
 };
 
@@ -67,7 +70,7 @@ const getMarketSevensSuccess = (state, action) => {
     marketSevens: action.payload,
     getMarketSevensPending: false,
     getMarketSevensSuccess: true,
-    getMarketSevensError: false
+    getMarketSevensError: false,
   });
 };
 
@@ -76,7 +79,7 @@ const getMarketSevensError = (state, action) => {
     marketData: action.payload,
     getMarketSevensPending: false,
     getMarketSevensSuccess: false,
-    getMarketSevensError: true
+    getMarketSevensError: true,
   });
 };
 
@@ -85,7 +88,7 @@ const testTodoReset = (state, action) => {
     test: "Default",
     testPending: null,
     testSuccess: null,
-    testError: null
+    testError: null,
   });
 };
 
@@ -93,25 +96,25 @@ const updatePhraseTestValue1 = (state, action) => {
   return Object.assign({}, state, {
     phraseTestValue1: action.value,
   });
-}
+};
 
 const updatePhraseTestValue2 = (state, action) => {
   return Object.assign({}, state, {
     phraseTestValue2: action.value,
   });
-}
+};
 
 const updatePhraseTestValue3 = (state, action) => {
   return Object.assign({}, state, {
     phraseTestValue3: action.value,
   });
-}
+};
 
 const getBalance = (state, action) => {
   return Object.assign({}, state, {
     getBalancePending: true,
     getBalanceSuccess: false,
-    getBalanceError: false
+    getBalanceError: false,
   });
 };
 
@@ -120,7 +123,7 @@ const getBalanceSuccess = (state, action) => {
     balance: action.payload,
     getBalancePending: false,
     getBalanceSuccess: true,
-    getBalanceError: false
+    getBalanceError: false,
   });
 };
 
@@ -129,7 +132,7 @@ const getBalanceError = (state, action) => {
     errors: action.payload,
     getBalancePending: false,
     getBalanceSuccess: false,
-    getBalanceError: true
+    getBalanceError: true,
   });
 };
 
@@ -137,7 +140,7 @@ const postPaymentTransaction = (state, action) => {
   return Object.assign({}, state, {
     postPaymentTransactionPending: true,
     postPaymentTransactionSuccess: false,
-    postPaymentTransactionError: false
+    postPaymentTransactionError: false,
   });
 };
 
@@ -146,7 +149,7 @@ const postPaymentTransactionSuccess = (state, action) => {
     postPaymentTransactionPending: false,
     postPaymentTransactionSuccess: true,
     postPaymentTransactionError: false,
-    resultPaymentTransaction: action.payload
+    resultPaymentTransaction: action.payload,
   });
 };
 
@@ -155,7 +158,7 @@ const postPaymentTransactionError = (state, action) => {
     postPaymentTransactionPending: false,
     postPaymentTransactionSuccess: false,
     postPaymentTransactionError: true,
-    errors: action.payload
+    errors: action.payload,
   });
 };
 
@@ -163,7 +166,7 @@ const getListenToTransaction = (state, action) => {
   return Object.assign({}, state, {
     getListenToTransactionPending: true,
     getListenToTransactionSuccess: false,
-    getListenToTransactionError: false
+    getListenToTransactionError: false,
   });
 };
 
@@ -172,7 +175,7 @@ const getListenToTransactionSuccess = (state, action) => {
     getListenToTransactionPending: false,
     getListenToTransactionSuccess: true,
     getListenToTransactionError: false,
-    transactions: action.payload
+    transactions: action.payload,
   });
 };
 
@@ -181,7 +184,7 @@ const getListenToTransactionError = (state, action) => {
     getListenToTransactionPending: false,
     getListenToTransactionSuccess: false,
     getListenToTransactionError: true,
-    errors: action.payload
+    errors: action.payload,
   });
 };
 
@@ -189,7 +192,7 @@ const connectToRippleApi = (state, action) => {
   return Object.assign({}, state, {
     connectToRippleApiPending: true,
     connectToRippleApiSuccess: false,
-    connectToRippleApiError: false
+    connectToRippleApiError: false,
   });
 };
 
@@ -197,7 +200,7 @@ const connectToRippleApiSuccess = (state, action) => {
   return Object.assign({}, state, {
     connectToRippleApiPending: false,
     connectToRippleApiSuccess: true,
-    connectToRippleApiError: false
+    connectToRippleApiError: false,
   });
 };
 
@@ -205,7 +208,21 @@ const connectToRippleApiError = (state, action) => {
   return Object.assign({}, state, {
     connectToRippleApiPending: false,
     connectToRippleApiSuccess: false,
-    connectToRippleApiError: true
+    connectToRippleApiError: true,
+  });
+};
+
+const updateIsOrientationComplete = (state, action) => {
+  return Object.assign({}, state, {
+    isOrientationComplete: action.payload,
+  });
+};
+
+const createPinSuccess = (state, action) => {
+  console.log("here");
+  return Object.assign({}, state, {
+    isPinCreated: true,
+    pin: action.payload,
   });
 };
 
@@ -226,8 +243,8 @@ export default (state = defaultState, action) => {
 
     case "TEST_TODO_RESET":
       return testTodoReset(state, action);
-    
-      case "UPDATE_PHRASE_TEST_VALUE_1":
+
+    case "UPDATE_PHRASE_TEST_VALUE_1":
       return updatePhraseTestValue1(state, action);
     case "UPDATE_PHRASE_TEST_VALUE_2":
       return updatePhraseTestValue2(state, action);
@@ -257,6 +274,10 @@ export default (state = defaultState, action) => {
       return connectToRippleApiSuccess(state, action);
     case "CONNECT_TO_RIPPLE_API_ERROR":
       return connectToRippleApiError(state, action);
+    case "UPDATE_ORIENTATION_COMPLETE":
+      return updateIsOrientationComplete(state, action);
+    case "CREATE_PIN":
+      return createPinSuccess(state, action);
 
     default:
       return state;

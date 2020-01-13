@@ -5,16 +5,21 @@ import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore, persistReducer } from "redux-persist";
+import { createFilter } from "redux-persist-transform-filter";
 
 import reducer from "./reducers";
 import rootSaga from "./sagas";
 import RootContainer from "./containers/RootContainer";
 
-//set up redux-persist
+// const persistedState = createFilter('root', [
+//   'updateIsOrientationComplete',
+// ]);
+
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["test"]
+  // whitelist: ["updateIsOrientationComplete"],
+  // transforms: [persistedUserState],
   // blacklist: ['test']
 };
 
@@ -33,7 +38,6 @@ const { store, persistor } = setUpStore();
 sagaMiddleware.run(rootSaga);
 
 export default function App(props) {
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
