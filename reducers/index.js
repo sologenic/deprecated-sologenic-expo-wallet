@@ -1,8 +1,12 @@
 const defaultState = {
-  test: "Default",
-  testPending: null,
-  testSuccess: null,
-  testError: null,
+  marketData: null,
+  getMarketDataPending: null,
+  getMarketDataSuccess: null,
+  getMarketDataError: null,
+  marketSevens: null,
+  getMarketSevensPending: null,
+  getMarketSevensSuccess: null,
+  getMarketSevensError: null,
   balance: null,
   getBalancePending: null,
   getBalanceSuccess: null,
@@ -18,23 +22,61 @@ const defaultState = {
   transactions: null,
   connectToRippleApiPending: null,
   connectToRippleApiSuccess: null,
-  connectToRippleApiError: null
+  connectToRippleApiError: null,
+  phraseTestValue1: "",
+  phraseTestValue2: "",
+  phraseTestValue3: "",
 };
 
-const testTodo = (state, action) => {
+const getMarketData = (state, action) => {
   return Object.assign({}, state, {
-    testPending: true,
-    testSuccess: false,
-    testError: false
+    getMarketDataPending: true,
+    getMarketDataSuccess: false,
+    getMarketDataError: false
   });
 };
 
-const testTodoSuccess = (state, action) => {
+const getMarketDataSuccess = (state, action) => {
   return Object.assign({}, state, {
-    test: action.payload,
-    testPending: false,
-    testSuccess: true,
-    testError: false
+    marketData: action.payload,
+    getMarketDataPending: false,
+    getMarketDataSuccess: true,
+    getMarketDataError: false
+  });
+};
+
+const getMarketDataError = (state, action) => {
+  return Object.assign({}, state, {
+    marketData: action.payload,
+    getMarketDataPending: false,
+    getMarketDataSuccess: false,
+    getMarketDataError: true
+  });
+};
+
+const getMarketSevens = (state, action) => {
+  return Object.assign({}, state, {
+    getMarketSevensPending: true,
+    getMarketSevensSuccess: false,
+    getMarketSevensError: false
+  });
+};
+
+const getMarketSevensSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    marketSevens: action.payload,
+    getMarketSevensPending: false,
+    getMarketSevensSuccess: true,
+    getMarketSevensError: false
+  });
+};
+
+const getMarketSevensError = (state, action) => {
+  return Object.assign({}, state, {
+    marketData: action.payload,
+    getMarketSevensPending: false,
+    getMarketSevensSuccess: false,
+    getMarketSevensError: true
   });
 };
 
@@ -46,6 +88,24 @@ const testTodoReset = (state, action) => {
     testError: null
   });
 };
+
+const updatePhraseTestValue1 = (state, action) => {
+  return Object.assign({}, state, {
+    phraseTestValue1: action.value,
+  });
+}
+
+const updatePhraseTestValue2 = (state, action) => {
+  return Object.assign({}, state, {
+    phraseTestValue2: action.value,
+  });
+}
+
+const updatePhraseTestValue3 = (state, action) => {
+  return Object.assign({}, state, {
+    phraseTestValue3: action.value,
+  });
+}
 
 const getBalance = (state, action) => {
   return Object.assign({}, state, {
@@ -151,12 +211,28 @@ const connectToRippleApiError = (state, action) => {
 
 export default (state = defaultState, action) => {
   switch (action.type) {
-    case "TEST_TODO":
-      return testTodo(state, action);
-    case "TEST_TODO_SUCCESS":
-      return testTodoSuccess(state, action);
+    case "GET_MARKET_DATA":
+      return getMarketData(state, action);
+    case "GET_MARKET_DATA_SUCCESS":
+      return getMarketDataSuccess(state, action);
+    case "GET_MARKET_DATA_ERROR":
+      return getMarketDataError(state, action);
+    case "GET_MARKET_SEVENS":
+      return getMarketSevens(state, action);
+    case "GET_MARKET_SEVENS_SUCCESS":
+      return getMarketSevensSuccess(state, action);
+    case "GET_MARKET_SEVENS_ERROR":
+      return getMarketSevensError(state, action);
+
     case "TEST_TODO_RESET":
       return testTodoReset(state, action);
+    
+      case "UPDATE_PHRASE_TEST_VALUE_1":
+      return updatePhraseTestValue1(state, action);
+    case "UPDATE_PHRASE_TEST_VALUE_2":
+      return updatePhraseTestValue2(state, action);
+    case "UPDATE_PHRASE_TEST_VALUE_3":
+      return updatePhraseTestValue3(state, action);
     case "GET_BALANCE":
       return getBalance(state, action);
     case "GET_BALANCE_SUCCESS":

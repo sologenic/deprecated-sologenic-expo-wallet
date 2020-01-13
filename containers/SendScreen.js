@@ -21,6 +21,9 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import InstructionsModal from "../components/shared/InstructionsModal";
+import TransferSummaryModal from "../components/shared/TransferSummaryModal";
+import TransferSuccessfulModal from "../components/shared/TransferSuccessfulModal";
+import TransferFailedModal from "../components/shared/TransferFailedModal";
 
 export default function SendScreen({ navigation }) {
   const [completed, handleIsCompleted] = useState(false);
@@ -28,6 +31,7 @@ export default function SendScreen({ navigation }) {
   const [destination, handleChangeDestination] = useState("");
   const [instructionsModalVisible, setInstructionsModalVisible] = useState(false);
   const [tag, handleChangeTag] = useState("");
+  const [summaryModalVisible, setSummaryModalVisible] = useState(false);
   const {
     balance,
     currency,
@@ -158,10 +162,7 @@ export default function SendScreen({ navigation }) {
             text="SEND"
             onPress={() => {
               console.log("Press Send");
-              // navigation.navigate({
-              //   routeName: "WalletsScreen",
-              //   key: "WalletsScreen"
-              // });
+              setSummaryModalVisible(true);
             }}
             style={{
               height: 40,
@@ -178,6 +179,24 @@ export default function SendScreen({ navigation }) {
       <InstructionsModal
         modalVisible={instructionsModalVisible}
         onClose={() => setInstructionsModalVisible(false)}
+      />
+      {/* <TransferSummaryModal
+        onPress={() => {}}
+        modalVisible={summaryModalVisible}
+        onClose={() => setSummaryModalVisible(false)}
+        currency={currency}
+        address={destination}
+        amountToSend={amountToSend}
+        tag={tag ? tag : ""}
+      /> */}
+      {/* <TransferSuccessfulModal
+        modalVisible={summaryModalVisible}
+        onClose={() => setSummaryModalVisible(false)}
+        currency={currency}
+      /> */}
+      <TransferFailedModal
+        modalVisible={summaryModalVisible}
+        onClose={() => setSummaryModalVisible(false)}
       />
     </View>
   );

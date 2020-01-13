@@ -15,6 +15,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
+import ActivationSoloModal from "../components/shared/ActivatingSoloModal";
 
 export default function WalletSoloTab({
   navigation,
@@ -137,10 +138,14 @@ export default function WalletSoloTab({
             </View>
           </View>
         </View>
-        <ActivationSuccessfulModal
+        {/* <ActivationSuccessfulModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
           currency="solo"
+        /> */}
+        <ActivationSoloModal
+          modalVisible={activateModalVisible}
+          onClose={() => setActivateModalVisible(false)}
         />
       </ScrollView>
     );

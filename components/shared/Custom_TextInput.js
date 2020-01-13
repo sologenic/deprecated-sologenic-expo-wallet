@@ -38,6 +38,7 @@ export default function Custom_TextInput({
         onBlur={handleBlur}
         onFocus={handleFocus}
         style={styles.defaultTextInput}
+        autoCapitalize="none"
       />
       {currency && (
         <Text
@@ -76,7 +77,7 @@ Custom_TextInput.defaultProps = {
   value: '',
   onChangeText: () => {},
   placeholder: '',
-  autoCapitalize: 'sentences',
+  autoCapitalize: 'none',
   autoCorrect: false,
   textContentType: 'none',
   keyboardType: 'default',

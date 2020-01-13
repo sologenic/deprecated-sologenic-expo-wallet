@@ -1,7 +1,6 @@
 import { call, put, takeEvery, all, take, select } from "redux-saga/effects";
 import { create } from "apisauce";
 import {
-  testTodoSuccess,
   getBalanceSuccess,
   getBalanceError,
   postPaymentTransactionSuccess,
@@ -10,8 +9,13 @@ import {
   getListenToTransactionError,
   connectToRippleApi,
   connectToRippleApiSuccess,
-  connectToRippleApiError
+  connectToRippleApiError,
+  getMarketDataSuccess,
+  getMarketDataError,
+  getMarketSevensSuccess,
+  getMarketSevensError,
 } from "../actions";
+import { createSevensObj } from "../utils";
 // import { RippleAPI } from "ripple-lib";
 
 const api = create({
@@ -24,19 +28,42 @@ const api = create({
   timeout: 10000
 });
 
-const getTest = () => api.get("tickers");
+const getMarketData = defaultCurrency => api.get(`tickers/xrp${defaultCurrency}`);
 
-function* fetchTestTodo(action) {
+function* requestGetMarketData(action) {
   try {
-    // const response = yield call(api, "https://api.coinfield.com/v1/tickers");
-    const response = yield call(getTest);
-    // if (response.status === 200) {
+    const response = yield call(getMarketData, "usd");
     if (response.ok) {
-      yield put(testTodoSuccess(response.status));
+      yield put(getMarketDataSuccess(response.data.markets[0]));
+    } else {
+      yield put(getMarketDataError(response.data));
     }
-    // yield put({ type: 'TEST_TODO', payload: response.status });
   } catch (error) {
     console.log(error);
+  }
+}
+
+const mediatorApi = create({
+  baseURL: "https://mediator.coinfield.com/",
+  headers: {
+    post: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  },
+  timeout: 10000
+});
+
+const getMarketSevens = () => mediatorApi.get('seven');
+
+export function* requestMarketSevens() {
+  const response = yield call(getMarketSevens);
+  if (response.ok) {
+    // convert sevens array into object with key value pairs where key = market id
+    const sevensObj = yield createSevensObj(response.data);
+    console.log("sevensObj", sevensObj)
+    yield put(getMarketSevensSuccess(sevensObj));
+  } else {
+    // yield put(currenciesError());
   }
 }
 
@@ -219,7 +246,8 @@ function* fetchTestTodo(action) {
 
 export default function* rootSaga() {
   yield all([
-    takeEvery("TEST_TODO", fetchTestTodo),
+    takeEvery("GET_MARKET_DATA", requestGetMarketData),
+    takeEvery("GET_MARKET_SEVENS", requestMarketSevens),
     // takeEvery("GET_BALANCE", requestGetBalance),
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),

@@ -25,6 +25,7 @@ import WalletAddressSecretTab from "./WalletAddressSecretTab";
 
 export default function ImportExistingWalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
   // const [textValue, onChangeText] = useState("");
   // const [completed, handleIsCompleted] = useState(false);
 
@@ -110,7 +111,11 @@ export default function ImportExistingWalletScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       {tab === 1 ? (
-        <PassphraseTab navigation={navigation}/>
+        <PassphraseTab 
+          navigation={navigation}
+          errorModalVisible={errorModalVisible}
+          setErrorModalVisible={setErrorModalVisible}
+        />
         // <View>
         //   <View
         //     style={[

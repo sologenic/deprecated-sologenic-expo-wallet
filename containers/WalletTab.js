@@ -7,35 +7,38 @@ import {
   Image,
   Text
 } from "react-native";
-// import QRCode from 'react-native-qrcode-generator';
-// import QRCode from "qrcode.react";
-import qrcode from "qrcode-generator";
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
 import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
+import { getPriceChange, getPriceColor } from "../utils"
+import SevenChart from "../components/shared/SevenChart";
 
-export default function WalletTab({
+function WalletTab({
   navigation,
   balance,
   currency,
   xrpBalance,
   soloBalance,
   defaultCurrency,
-  activate
+  activate,
+  marketData,
+  marketSevens,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false
   );
+  const priceChange = getPriceChange(marketData.last, marketData.open);
+  const priceColor = getPriceColor(priceChange);
   if (!activate) {
     return (
       <ScrollView>
@@ -235,7 +238,7 @@ export default function WalletTab({
               </View>
             </View>
           </View>
-          <View>
+          {/* <View>
             <View
               style={{
                 flexDirection: "row",
@@ -253,7 +256,7 @@ export default function WalletTab({
                 />
               </View>
             </View>
-          </View>
+          </View> */}
           <View style={styles.marketInfoContainer}>
             <View
               style={{
@@ -268,13 +271,18 @@ export default function WalletTab({
                   size={Fonts.size.medium}
                   color={Colors.lightGray}
                 />
-                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
+                <Custom_Text value={`$${marketData.open}`} size={Fonts.size.medium} />
               </View>
               <View>
+                <SevenChart
+                  marketSevens={marketSevens}
+                  color={priceColor}
+                />
                 <Custom_Text
-                  value={`${-0.61}%`}
+                  value={`${priceChange}`}
                   size={Fonts.size.small}
-                  color={Colors.errorBackground}
+                  // color={Colors.errorBackground}
+                  color={priceColor}
                 />
               </View>
             </View>
@@ -428,3 +436,21 @@ const styles = StyleSheet.create({
     marginVertical: 24
   }
 });
+
+const mapStateToProps = ({
+  marketData,
+  marketSevens,
+}, props) => {
+  console.log("defaultCurrency", props.defaultCurrency)
+  return {
+    marketData,
+    marketSevens: marketSevens ? marketSevens["xrpusd"] : {},
+  }
+};
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WalletTab);

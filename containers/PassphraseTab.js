@@ -12,8 +12,13 @@ import Custom_Button from "../components/shared/Custom_Button";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import { countWords } from "../utils";
+import ErrorModal from "../components/shared/ErrorModal";
 
-export default function PassphraseTab({ navigation }) {
+export default function PassphraseTab({ 
+  navigation,
+  errorModalVisible,
+  setErrorModalVisible, 
+}) {
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
 
@@ -105,10 +110,16 @@ export default function PassphraseTab({ navigation }) {
           text="Add Wallet"
           onPress={() => {
             console.log("Press Add Wallet");
-            navigation.navigate({
-              routeName: "WalletsScreen",
-              key: "WalletsScreen",
-            });
+            const result = countWords(textValue);
+            if (!result) {
+              setErrorModalVisible(true);
+            } else {
+
+              navigation.navigate({
+                routeName: "WalletsScreen",
+                key: "WalletsScreen",
+              });
+            }
           }}
           style={{
             height: 40,
@@ -121,6 +132,11 @@ export default function PassphraseTab({ navigation }) {
           disabled={!completed}
         />
       </View>
+      <ErrorModal
+        value="You have entered an invalid mnemonic passphrase. It should consist of 12 words, each separated by a space. Please check your phrase and try again."
+        modalVisible={errorModalVisible}
+        onClose={() => setErrorModalVisible(false)}
+      />
     </View>
   );
 }

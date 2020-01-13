@@ -32,9 +32,11 @@ import { headerHeight } from "../constants/Layout";
 import WalletTab from "./WalletTab";
 import WalletSoloTab from "./WalletSoloTab";
 import WalletTokenizedAssetTab from "./WalletTokenizedAssetTab";
+import DeleteWalletModal from "../components/shared/DeleteWalletModal";
 
 export default function WalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
+  const [modalVisible, setModalVisible] = useState(false);
   const {
     totalBalance,
     tokenizedAssets,
@@ -60,7 +62,18 @@ export default function WalletScreen({ navigation }) {
         }
         center={<Custom_HeaderTitle text={nickname} />}
         right={
-          <Menu onSelect={value => alert(`Selected number: ${value}`)}>
+          <Menu 
+            onSelect={value => {
+              if (value === 2) {
+                setModalVisible(true);
+              } else {
+                navigation.navigate({
+                  routeName: "ChangeWalletNicknameScreen",
+                  key: "ChangeWalletNicknameScreen",
+                });
+              }
+            }}
+          >
             <MenuTrigger
               children={
                 <View style={{ paddingHorizontal: 15 }}>
@@ -202,6 +215,10 @@ export default function WalletScreen({ navigation }) {
             navigation={navigation}
           />
         )}
+        <DeleteWalletModal
+          modalVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
       </View>
     // </View>
   );
