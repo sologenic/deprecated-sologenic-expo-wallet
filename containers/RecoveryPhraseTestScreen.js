@@ -132,7 +132,7 @@ function RecoveryPhraseTestScreen({
             </View>
           )}
         </View>
-        <View style={[styles.section, { marginLeft: 40, justifyContent: "center", alignItems: "center" }]}>
+        <View style={[styles.section, { justifyContent: "center", alignItems: "center" }]}>
           <RecoveryPhrase
             phrase={phrase}
             randomNumbers={randomNumbers}
