@@ -1,13 +1,13 @@
-import { AppLoading } from "expo";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Platform,
   StatusBar,
   StyleSheet,
   View,
-  AsyncStorage
+  AsyncStorage,
+  Text
 } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
 // import { createStore, applyMiddleware } from "redux";
@@ -27,14 +27,27 @@ import { imagesArray } from "../constants/Images";
 
 export default function RootContainer(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const setup = async () => {
+    await loadResourcesAsync();
+    await setLoadingComplete(true);
+  }
+  useEffect(() => {
+    setup();
+    // return () => {
+    //   cleanup
+    // };
+  }, [])
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
-      <AppLoading
-        startAsync={loadResourcesAsync}
-        onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
-      />
+      // <AppLoading
+      //   startAsync={loadResourcesAsync}
+      //   onError={handleLoadingError}
+      //   onFinish={() => handleFinishLoading(setLoadingComplete)}
+      // />
+      <View>
+        <Text>Loading...</Text>
+      </View>
     );
   } else {
     return (

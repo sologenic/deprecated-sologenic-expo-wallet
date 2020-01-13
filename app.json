@@ -26,6 +26,9 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
-  }
+    "description": "",
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  },
+  "displayName": "Sologenic Wallet",
+  "name": "SologenicWallet"
 }
