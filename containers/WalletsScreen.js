@@ -18,26 +18,27 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import WalletCard from "./WalletCard";
 import {
-  testTodo,
+  getMarketData,
+  getMarketSevens,
   testTodoReset,
 } from "../actions";
 
 
 function WalletsScreen({
   navigation,
-  test,
-  testPending,
-  testTodo,
-  testTodoReset
+  getMarketData,
+  getMarketSevens,
+  marketData,
 }) {
 
   useEffect(() => {
-    testTodo();
+    getMarketData();
+    getMarketSevens();
     // return () => {
     //   testTodoReset();
     // }
-  }, [test]);
-  console.log(test)
+  }, []);
+  console.log(marketData)
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -119,13 +120,15 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({ test, testPending }) => ({
-  test,
-  testPending
+const mapStateToProps = ({
+  marketData,
+}) => ({
+  marketData,
 });
 
 const mapDispatchToProps = dispatch => ({
-  testTodo: () => dispatch(testTodo()),
+  getMarketData: () => dispatch(getMarketData()),
+  getMarketSevens: () => dispatch(getMarketSevens()),
   testTodoReset: () => dispatch(testTodoReset())
 });
 

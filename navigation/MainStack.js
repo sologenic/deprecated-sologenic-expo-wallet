@@ -14,6 +14,11 @@ import WalletScreen from "../containers/WalletScreen";
 import CreatePinScreen from "../containers/CreatePinScreen";
 import UnlockScreen from "../containers/UnlockScreen";
 import SetupUnlockScreen from "../containers/SetupUnlockScreen";
+import ReceiveScreen from "../containers/ReceiveScreen";
+import SendScreen from "../containers/SendScreen";
+import ActivateWalletScreen from "../containers/ActivateWalletScreen";
+import RecoveryPhraseTestScreen from "../containers/RecoveryPhraseTestScreen";
+import ChangeWalletNicknameScreen from "../containers/ChangeWalletNicknameScreen";
 
 const MainStack = createStackNavigator(
   {
@@ -52,6 +57,11 @@ const MainStack = createStackNavigator(
     ImportExistingWalletScreen: ImportExistingWalletScreen,
     SetupUnlockScreen: SetupUnlockScreen,
     CreatePinScreen: CreatePinScreen,
+    ReceiveScreen: ReceiveScreen,
+    ActivateWalletScreen: ActivateWalletScreen,
+    SendScreen: SendScreen,
+    RecoveryPhraseTestScreen: RecoveryPhraseTestScreen,
+    ChangeWalletNicknameScreen: ChangeWalletNicknameScreen,
   },
   {
     headerMode: "none",

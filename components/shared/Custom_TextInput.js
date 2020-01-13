@@ -12,6 +12,7 @@ export default function Custom_TextInput({
   keyboardType,
   label,
   placeholder,
+  currency,
 }) {
   const [isFocused, handleIsFocused] = useState(false);
   const handleFocus = () => handleIsFocused(true);
@@ -37,7 +38,23 @@ export default function Custom_TextInput({
         onBlur={handleBlur}
         onFocus={handleFocus}
         style={styles.defaultTextInput}
+        autoCapitalize="none"
       />
+      {currency && (
+        <Text
+          style={{
+            fontFamily: "DMSansBold",
+            color: Colors.text,
+            fontSize: Fonts.size.medium,
+            textAlign: "center",
+            position: "absolute",
+            right: 30,
+            top: 15,
+          }}
+        >
+          {currency.toUpperCase()}
+        </Text>
+      )}
     </TouchableOpacity>
   )
 }
@@ -60,7 +77,7 @@ Custom_TextInput.defaultProps = {
   value: '',
   onChangeText: () => {},
   placeholder: '',
-  autoCapitalize: 'sentences',
+  autoCapitalize: 'none',
   autoCorrect: false,
   textContentType: 'none',
   keyboardType: 'default',

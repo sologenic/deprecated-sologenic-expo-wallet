@@ -7,31 +7,38 @@ import {
   Image,
   Text
 } from "react-native";
-// import QRCode from 'react-native-qrcode-generator';
-// import QRCode from "qrcode.react";
-import qrcode from "qrcode-generator";
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
 import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
-import ActivationXrpSuccessfulModal from "../components/shared/ActivationXrpSuccessfulModal";
+import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
+import WalletAddressModal from "../components/shared/WalletAddressModal";
+import { getPriceChange, getPriceColor } from "../utils"
+import SevenChart from "../components/shared/SevenChart";
 
-export default function WalletTab({
+function WalletTab({
   navigation,
   balance,
   currency,
   xrpBalance,
   soloBalance,
   defaultCurrency,
-  activate
+  activate,
+  marketData,
+  marketSevens,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
+  const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
+    false
+  );
+  const priceChange = getPriceChange(marketData.last, marketData.open);
+  const priceColor = getPriceColor(priceChange);
   if (!activate) {
     return (
       <ScrollView>
@@ -70,7 +77,15 @@ export default function WalletTab({
                 text="Activate"
                 onPress={() => {
                   console.log("Press Activate");
-                  setActivateModalVisible(true);
+                  // setActivateModalVisible(true);
+                  navigation.navigate({
+                    routeName: "ActivateWalletScreen",
+                    key: "ActivateWalletScreen",
+                    params: {
+                      currency: currency.toLowerCase(),
+                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
+                    }
+                  });
                 }}
                 style={{ height: 40, width: 100 }}
               />
@@ -162,7 +177,9 @@ export default function WalletTab({
               </View>
               <View style={{ paddingVertical: 2.5 }}>
                 <Custom_IconButton
-                  onPress={() => {}}
+                  onPress={() => {
+                    setWalletAddressModalVisible(true);
+                  }}
                   icon="qrcode"
                   size={Fonts.size.normal}
                   style={{
@@ -180,21 +197,20 @@ export default function WalletTab({
           modalVisible={modalVisible}
           onClose={() => setModalVisible(false)}
         />
-        <ActivationXrpSuccessfulModal
+        <ActivationSuccessfulModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
+          currency="xrp"
+        />
+        <WalletAddressModal
+          data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
+          modalVisible={walletAddressModalVisible}
+          onClose={() => setWalletAddressModalVisible(false)}
         />
       </ScrollView>
     );
   }
 
-  const typeNumber = 4;
-  const errorCorrectionLevel = "L";
-  const QRCode = qrcode(typeNumber, errorCorrectionLevel);
-  QRCode.addData("http://facebook.github.io/react-native/");
-  QRCode.make();
-  // const uri = QRCode.createDataURL();
-  // console.log(uri);
   return (
     <ScrollView>
       <View>
@@ -222,7 +238,7 @@ export default function WalletTab({
               </View>
             </View>
           </View>
-          <View>
+          {/* <View>
             <View
               style={{
                 flexDirection: "row",
@@ -240,7 +256,7 @@ export default function WalletTab({
                 />
               </View>
             </View>
-          </View>
+          </View> */}
           <View style={styles.marketInfoContainer}>
             <View
               style={{
@@ -255,13 +271,18 @@ export default function WalletTab({
                   size={Fonts.size.medium}
                   color={Colors.lightGray}
                 />
-                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
+                <Custom_Text value={`$${marketData.open}`} size={Fonts.size.medium} />
               </View>
               <View>
+                <SevenChart
+                  marketSevens={marketSevens}
+                  color={priceColor}
+                />
                 <Custom_Text
-                  value={`${-0.61}%`}
+                  value={`${priceChange}`}
                   size={Fonts.size.small}
-                  color={Colors.errorBackground}
+                  // color={Colors.errorBackground}
+                  color={priceColor}
                 />
               </View>
             </View>
@@ -272,6 +293,16 @@ export default function WalletTab({
                 text="RECEIVE"
                 onPress={() => {
                   console.log("Press RECEIVE");
+                  navigation.navigate({
+                    routeName: "ReceiveScreen",
+                    key: "ReceiveScreen",
+                    params: {
+                      navigation,
+                      balance: xrpBalance,
+                      currency: currency.toLowerCase(),
+                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
+                    }
+                  });
                 }}
                 size={Fonts.size.large}
                 style={{
@@ -287,6 +318,15 @@ export default function WalletTab({
                 text="SEND"
                 onPress={() => {
                   console.log("Press SEND");
+                  navigation.navigate({
+                    routeName: "SendScreen",
+                    key: "SendScreen",
+                    params: {
+                      navigation,
+                      balance: xrpBalance,
+                      currency: currency.toLowerCase(),
+                    }
+                  });
                 }}
                 size={Fonts.size.large}
                 style={{ height: 40 }}
@@ -322,7 +362,9 @@ export default function WalletTab({
             </View>
             <View style={{ paddingVertical: 2.5 }}>
               <Custom_IconButton
-                onPress={() => {}}
+                onPress={() => {
+                  setWalletAddressModalVisible(true);
+                }}
                 icon="qrcode"
                 size={Fonts.size.normal}
                 style={{
@@ -335,9 +377,6 @@ export default function WalletTab({
             </View>
           </View>
         </View>
-        {/* <View style={{ height: 100 }}>
-          <Image source={{ uri: QRCode.createDataURL(40) }} style={{ width: 100 }} />
-        </View> */}
         <View style={{ marginLeft: 38, marginBottom: 5 }}>
           <Custom_Text
             value="Recent Transactions"
@@ -349,6 +388,11 @@ export default function WalletTab({
           <TransactionCard currency="xrp" amount="1000.00" />
         </View>
       </View>
+      <WalletAddressModal
+        data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
+        modalVisible={walletAddressModalVisible}
+        onClose={() => setWalletAddressModalVisible(false)}
+      />
     </ScrollView>
   );
 }
@@ -392,3 +436,21 @@ const styles = StyleSheet.create({
     marginVertical: 24
   }
 });
+
+const mapStateToProps = ({
+  marketData,
+  marketSevens,
+}, props) => {
+  console.log("defaultCurrency", props.defaultCurrency)
+  return {
+    marketData,
+    marketSevens: marketSevens ? marketSevens["xrpusd"] : {},
+  }
+};
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WalletTab);

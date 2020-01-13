@@ -13,9 +13,11 @@ import RecoveryPhrase from "../components/shared/RecoveryPhrase";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
+import { genereateRandomNumbers } from "../utils";
 
 export default function YourRecoveryPhraseScreen({ navigation }) {
   const [pressed, handlePressDots] = useState(false);
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -138,9 +140,13 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
           <Custom_Button
             text="Next"
             onPress={() => {
+              const randomNumbers = genereateRandomNumbers();
               navigation.navigate({
-                routeName: "SettingsScreen",
-                key: "SettingsScreen"
+                routeName: "RecoveryPhraseTestScreen",
+                key: "RecoveryPhraseTestScreen",
+                params: {
+                  randomNumbers, 
+                }
               });
             }}
             style={{
@@ -150,6 +156,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
                 ? Colors.headerBackground
                 : Colors.darkRed
             }}
+            color={!pressed ? Colors.grayText : Colors.text}
             icon="ios-arrow-forward"
             disabled={!pressed}
           />

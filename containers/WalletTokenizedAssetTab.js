@@ -16,7 +16,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
-import ActivationXrpSuccessfulModal from "../components/shared/ActivationXrpSuccessfulModal";
+import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 
 export default function WalletTokenizedAssetTab({
   navigation,
@@ -130,14 +130,14 @@ export default function WalletTokenizedAssetTab({
             </View>
           </View>
         </View>
-        <Why21XRPModal
+        {/* <Why21XRPModal
           modalVisible={modalVisible}
           onClose={() => setModalVisible(false)}
         />
-        <ActivationXrpSuccessfulModal
+        <ActivationSuccessfulModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
-        />
+        /> */}
       </ScrollView>
     );
   }

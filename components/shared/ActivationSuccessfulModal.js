@@ -15,11 +15,12 @@ import Fonts from "../../constants/Fonts";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
 
-export default function ActivationXrpSuccessfulModal({
+export default function ActivationSuccessfulModal({
   onPress,
   onClose,
   modalVisible,
-  style
+  style,
+  currency,
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -43,7 +44,7 @@ export default function ActivationXrpSuccessfulModal({
               <View style={[styles.section, { marginBottom: 20, flexDirection: "row" }]}>
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Your XRP wallet has been successfully activated.`}
+                    value={`Your ${currency.toUpperCase()} wallet has been successfully activated.`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
@@ -77,14 +78,14 @@ export default function ActivationXrpSuccessfulModal({
   );
 }
 
-ActivationXrpSuccessfulModal.propTypes = {
+ActivationSuccessfulModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
   style: PropTypes.shape({})
 };
 
-ActivationXrpSuccessfulModal.defaultProps = {
+ActivationSuccessfulModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
   pressed: false

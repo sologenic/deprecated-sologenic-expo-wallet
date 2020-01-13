@@ -1,12 +1,39 @@
-export const testTodo = () => {
+export const getMarketData = () => {
   return {
-    type: "TEST_TODO",
+    type: "GET_MARKET_DATA",
   };
 };
 
-export const testTodoSuccess = data => {
+export const getMarketDataSuccess = data => {
   return {
-    type: "TEST_TODO_SUCCESS",
+    type: "GET_MARKET_DATA_SUCCESS",
+    payload: data,
+  };
+};
+
+export const getMarketDataError = data => {
+  return {
+    type: "GET_MARKET_DATA_ERROR",
+    payload: data,
+  };
+};
+
+export const getMarketSevens = () => {
+  return {
+    type: "GET_MARKET_SEVENS",
+  };
+};
+
+export const getMarketSevensSuccess = data => {
+  return {
+    type: "GET_MARKET_SEVENS_SUCCESS",
+    payload: data,
+  };
+};
+
+export const getMarketSevensError = data => {
+  return {
+    type: "GET_MARKET_SEVENS_ERROR",
     payload: data,
   };
 };
@@ -14,6 +41,27 @@ export const testTodoSuccess = data => {
 export const testTodoReset = () => {
   return {
     type: "TEST_TODO_RESET",
+  };
+};
+
+export const updatePhraseTestValue1 = value => {
+  return {
+    type: "UPDATE_PHRASE_TEST_VALUE_1",
+    value,
+  };
+};
+
+export const updatePhraseTestValue2 = value => {
+  return {
+    type: "UPDATE_PHRASE_TEST_VALUE_2",
+    value,
+  };
+};
+
+export const updatePhraseTestValue3 = value => {
+  return {
+    type: "UPDATE_PHRASE_TEST_VALUE_3",
+    value,
   };
 };
 
