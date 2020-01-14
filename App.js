@@ -28,7 +28,7 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 const setUpStore = () => {
   let store = createStore(persistedReducer, applyMiddleware(sagaMiddleware));
   let persistor = persistStore(store);
-  // let persistor = Rehydration.updateReducers(store);
+  // let persistor = persistStore(store).purge();
   return { store, persistor };
 };
 

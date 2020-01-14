@@ -32,7 +32,7 @@ const RootContainer = ({
     if (isOrientationComplete) {
       return (
         <View style={styles.container}>
-          {Platform.OS === "ios" && <StatusBar barStyle="light" />}
+          {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
           <MenuProvider>
             <App screenProps={{ authSetupComplete, isAuthenticated }} />
           </MenuProvider>

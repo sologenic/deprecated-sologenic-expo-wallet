@@ -6,6 +6,7 @@ const images = {
   fingerPrintGreen: require("../assets/images/icons/fingerPrintGreen.png"),
   fingerPrintRed: require("../assets/images/icons/fingerPrintRed.png"),
   smallErrIcon: require("../assets/images/icons/smallErrIcon.png"),
+  smallSuccessIcon: require("../assets/images/icons/smallSuccessIcon.png"),
   help: require("../assets/images/icons/help.png"),
   solo: require("../assets/images/icons/solo.png"),
   xrp: require("../assets/images/icons/xrp.png"),

@@ -19,6 +19,7 @@ const colors = {
   grayText: "#6C6B6B",
   gray: "#4D4D4D",
   darkGray: "#3A3A3A",
+  pinInputBackground: "#636464",
   iconColor: "#262626",
   darkerGray: "#262626",
   lightGray: "#AFAFAF",
