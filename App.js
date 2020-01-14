@@ -14,8 +14,8 @@ import RootContainer from "./containers/RootContainer";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  whitelist: ["test"]
-  // blacklist: ['test']
+  whitelist: ["wallets"]
+  // blacklist: ['wallets']
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);

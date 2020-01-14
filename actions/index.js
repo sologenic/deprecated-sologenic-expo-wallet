@@ -47,21 +47,21 @@ export const testTodoReset = () => {
 export const updatePhraseTestValue1 = value => {
   return {
     type: "UPDATE_PHRASE_TEST_VALUE_1",
-    value,
+    value
   };
 };
 
 export const updatePhraseTestValue2 = value => {
   return {
     type: "UPDATE_PHRASE_TEST_VALUE_2",
-    value,
+    value
   };
 };
 
 export const updatePhraseTestValue3 = value => {
   return {
     type: "UPDATE_PHRASE_TEST_VALUE_3",
-    value,
+    value
   };
 };
 
@@ -150,5 +150,34 @@ export const connectToRippleApiSuccess = () => {
 export const connectToRippleApiError = () => {
   return {
     type: "CONNECT_TO_RIPPLE_API_ERROR"
+  };
+};
+
+export const generateNewWallet = newWallet => {
+  return {
+    type: "GENERATE_NEW_WALLET",
+    newWallet
+  };
+};
+
+export const addNewWallet = (
+  newWallet,
+  nickname,
+  walletAddress,
+  rippleClassicAddress
+) => {
+  return {
+    type: "ADD_NEW_WALLET",
+    newWallet,
+    nickname,
+    walletAddress,
+    rippleClassicAddress
+  };
+};
+
+export const saveNickname = nickname => {
+  return {
+    type: "SAVE_NICKNAME",
+    nickname
   };
 };

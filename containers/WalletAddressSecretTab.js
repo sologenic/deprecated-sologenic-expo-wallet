@@ -6,27 +6,46 @@ import {
   TextInput,
   Clipboard
 } from "react-native";
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
-import Custom_Modal from "../components/shared/Custom_Modal";
 import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
+import { addNewWallet } from "../actions";
+import { isValidRippleAddress, isValidSecret, getXAddressFromRippleClassicAddress } from "../utils";
+import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 
-export default function WalletAddressSecretTab({ navigation }) {
+function WalletAddressSecretTab({
+  navigation,
+  importSuccessfulModalVisible,
+  setImportSuccessfulModalVisible,
+  addNewWallet,
+}) {
   const [addressValue, onChangeAddress] = useState("");
   const [secretValue, onChangeSecret] = useState("");
   const [nicknameValue, onChangeNickname] = useState("");
   const [completed, handleIsCompleted] = useState(false);
 
   useEffect(() => {
-    if (addressValue && addressValue.length > 0 && secretValue && secretValue.length > 0) {
+    if (
+      addressValue &&
+      addressValue.length > 0 &&
+      secretValue &&
+      secretValue.length > 0
+    ) {
       handleIsCompleted(true);
     } else {
       handleIsCompleted(false);
     }
-  });
+  }, [addressValue, secretValue]);
+
+  const handleValidation = (addressValue, secretValue) => {
+    const validationResultAddress = isValidRippleAddress(addressValue);
+    const validationResultSecret = isValidSecret(secretValue);
+    return validationResultAddress && validationResultSecret;
+  }
 
   return (
     <View>
@@ -75,10 +94,20 @@ export default function WalletAddressSecretTab({ navigation }) {
           text="Add Wallet"
           onPress={() => {
             console.log("Press Add Wallet");
-            navigation.navigate({
-              routeName: "WalletsScreen",
-              key: "WalletsScreen",
-            });
+            const result = handleValidation(addressValue, secretValue);
+            if (!result) {
+
+            } else {
+              const walletAddress = getXAddressFromRippleClassicAddress(addressValue);
+              const rippleClassicAddress = addressValue;
+              addNewWallet(
+                {},
+                nicknameValue ? nicknameValue : "",
+                walletAddress,
+                rippleClassicAddress,
+              );
+              setImportSuccessfulModalVisible(true);
+            }
           }}
           style={{
             height: 40,
@@ -91,6 +120,17 @@ export default function WalletAddressSecretTab({ navigation }) {
           disabled={!completed}
         />
       </View>
+      <ImportSuccessfulModal
+        modalVisible={importSuccessfulModalVisible}
+        // onClose={() => setImportSuccessfulModalVisible(false)}
+        onPress={() => {
+          setImportSuccessfulModalVisible(false);
+          navigation.navigate({
+            routeName: "WalletsScreen",
+            key: "WalletsScreen"
+          });
+        }}
+      />
     </View>
   );
 }
@@ -99,5 +139,18 @@ const styles = StyleSheet.create({
   addWalletContainer: {
     justifyContent: "center",
     alignItems: "center"
-  },
+  }
 });
+
+const mapStateToProps = ({}) => ({});
+const mapDispatchToProps = dispatch => ({
+  addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
+    dispatch(
+      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
+    )
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WalletAddressSecretTab);

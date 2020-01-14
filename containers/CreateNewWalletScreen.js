@@ -8,6 +8,7 @@ import {
   Text,
   View
 } from "react-native";
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -21,8 +22,15 @@ import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
+import {
+  generateNewRandomWallet,
+  getAddress,
+  getRippleClassicAddressFromXAddress,
+  generateMnemonicArray,
+} from "../utils";
+import { generateNewWallet, saveNickname } from "../actions";
 
-export default function CreateNewWallet({ navigation }) {
+function CreateNewWallet({ navigation, generateNewWallet }) {
   const [textValue, onChangeText] = useState("");
   return (
     <View style={styles.container}>
@@ -57,10 +65,43 @@ export default function CreateNewWallet({ navigation }) {
         <Custom_Button
           text="Next"
           onPress={() => {
+            const result = generateNewRandomWallet();
+            console.log("==generateWalletAddress==", result);
+            const walletAddress = getAddress(result);
+            console.log("==address==", walletAddress);
+            const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
+            console.log("==rippleClassicAddress==", rippleClassicAddress);
+
+            generateNewWallet(result);
+            const nickname = textValue;
+            console.log("nickname", nickname)
+            saveNickname(nickname);
+            const mnemonic = generateMnemonicArray(result.mnemonic);
             navigation.navigate({
               routeName: "YourRecoveryPhraseScreen",
               key: "YourRecoveryPhraseScreen",
+              params: {
+                mnemonic,
+                nickname,
+                walletAddress,
+                rippleClassicAddress,
+              },
             });
+
+
+            // const mnemonic = result.mnemonic;
+            // console.log("==mnemonic==", mnemonic);
+            // const walletFromMnemonic = getWalletFromMnemonic(mnemonic);
+            // console.log("==wallet from mnemonic==", walletFromMnemonic);
+            // console.log(
+            //   "==address from mnemonic==",
+            //   walletFromMnemonic.getAddress()
+            // );
+            // console.log(
+            //   "Is it the same as the one from mnemonic?",
+            //   address === walletFromMnemonic.getAddress()
+            // );
+
           }}
           style={{ height: 40, width: 80 }}
           icon="ios-arrow-forward"
@@ -91,3 +132,14 @@ const styles = StyleSheet.create({
     marginVertical: 50
   },
 });
+
+const mapStateToProps = ({}) => ({});
+const mapDispatchToProps = dispatch => ({
+  generateNewWallet: newWallet => dispatch(generateNewWallet(newWallet)), 
+  saveNickname: nickname => dispatch(saveNickname(nickname)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CreateNewWallet);

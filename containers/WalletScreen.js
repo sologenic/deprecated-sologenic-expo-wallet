@@ -38,13 +38,22 @@ export default function WalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const {
-    totalBalance,
-    tokenizedAssets,
+    // totalBalance,
+    // tokenizedAssets,
     defaultCurrency,
-    xrpBalance,
-    soloBalance,
-    nickname
+    // xrpBalance,
+    // soloBalance,
+    // nickname,
+    // details,
+    wallet,
   } = navigation.state.params;
+  const {
+    balance,
+    nickname,
+    walletAddress,
+    rippleClassicAddress,
+  } = wallet;
+  const { xrp, solo, tokenizedAssets } = balance;
 
   return (
     <View style={styles.container}>
@@ -198,8 +207,9 @@ export default function WalletScreen({ navigation }) {
             navigation={navigation}
             currency={"XRP"}
             defaultCurrency={defaultCurrency}
-            xrpBalance={xrpBalance}
-            activate={true}
+            xrpBalance={xrp}
+            activate={xrp > 0 ? true : false}
+            walletAddress={walletAddress}
           />
         )}
         {tab === 2 && (
@@ -207,12 +217,16 @@ export default function WalletScreen({ navigation }) {
             navigation={navigation}
             currency={"SOLO"}
             defaultCurrency={defaultCurrency}
-            soloBalance={soloBalance}
+            soloBalance={solo}
+            walletAddress={walletAddress}
           />
         )}
         {tab === 3 && (
           <WalletTokenizedAssetTab
             navigation={navigation}
+            tokenizedAssets={tokenizedAssets}
+            defaultCurrency={defaultCurrency}
+            walletAddress={walletAddress}
           />
         )}
         <DeleteWalletModal

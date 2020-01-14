@@ -29,6 +29,7 @@ function WalletsScreen({
   getMarketData,
   getMarketSevens,
   marketData,
+  wallets,
 }) {
 
   useEffect(() => {
@@ -38,7 +39,7 @@ function WalletsScreen({
     //   testTodoReset();
     // }
   }, []);
-  console.log(marketData)
+  console.log("wallets", wallets)
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -59,20 +60,41 @@ function WalletsScreen({
         }
       />
       <ScrollView>
-        <View
-          style={[
-            styles.section,
-            { justifyContent: "center", alignItems: "center" }
-          ]}
-        >
-          <Custom_Text
-            value="No Wallets Added"
-            size={Fonts.size.large}
-            color={Colors.text}
-          />
-        </View>
-        <View style={styles.section}>
-          {/* {example} */}
+        {wallets.length > 0 ? (
+          <View style={styles.section}>
+            {wallets.map(item => {
+              return (
+                <View style={{ marginBottom: 20  }}>
+                  <WalletCard
+                    navigation={navigation}
+                    // nickname={item.nickname}
+                    // details={item.details}
+                    // balance={item.balance}
+                    // transactions={item.transactions}
+                    defaultCurrency="usd"
+                    // walletAddress={item.walletAddress}
+                    // rippleClassicAddress={item.rippleClassicAddress}
+                    wallet={item}
+                  />
+                </View>
+              )
+            })}
+          </View>
+        ) : (
+          <View
+            style={[
+              styles.section,
+              { justifyContent: "center", alignItems: "center" }
+            ]}
+          >
+            <Custom_Text
+              value="No Wallets Added"
+              size={Fonts.size.large}
+              color={Colors.text}
+            />
+          </View>
+        )}
+        {/* <View style={styles.section}>
           <WalletCard
             navigation={navigation}
             nickname="Elegant Dinosaur"
@@ -80,7 +102,7 @@ function WalletsScreen({
             tokenizedAssets={0}
             defaultCurrency="usd"
           />
-        </View>
+        </View> */}
       </ScrollView>
       <View style={styles.footer}>
         <Custom_IconButton
@@ -122,8 +144,10 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({
   marketData,
+  wallets,
 }) => ({
   marketData,
+  wallets,
 });
 
 const mapDispatchToProps = dispatch => ({

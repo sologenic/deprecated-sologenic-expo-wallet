@@ -17,7 +17,7 @@ import { genereateRandomNumbers } from "../utils";
 
 export default function YourRecoveryPhraseScreen({ navigation }) {
   const [pressed, handlePressDots] = useState(false);
-
+  const { mnemonic, nickname, walletAddress, rippleClassicAddress } = navigation.state.params;
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -45,20 +45,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
         </View>
         <View style={styles.section}>
           <RecoveryPhrase
-            phrase={[
-              "tree",
-              "disco",
-              "eleven",
-              "night",
-              "treehouse",
-              "cone",
-              "trash",
-              "ticket",
-              "lamb",
-              "part",
-              "pickles",
-              "nice"
-            ]}
+            phrase={mnemonic}
           />
         </View>
         <View
@@ -145,7 +132,11 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
                 routeName: "RecoveryPhraseTestScreen",
                 key: "RecoveryPhraseTestScreen",
                 params: {
-                  randomNumbers, 
+                  randomNumbers,
+                  phrase: mnemonic,
+                  nickname,
+                  walletAddress,
+                  rippleClassicAddress,
                 }
               });
             }}

@@ -26,6 +26,9 @@ const defaultState = {
   phraseTestValue1: "",
   phraseTestValue2: "",
   phraseTestValue3: "",
+  newWallet: null,
+  wallets: [],
+  nickname: "",
 };
 
 const getMarketData = (state, action) => {
@@ -209,6 +212,42 @@ const connectToRippleApiError = (state, action) => {
   });
 };
 
+const generateNewWallet = (state, action) => {
+  return Object.assign({}, state, {
+    newWallet: action.newWallet,
+  });
+}
+
+const addNewWallet = (state, action) => {
+  const { wallets } = state;
+  const {
+    nickname,
+    newWallet,
+    walletAddress,
+    rippleClassicAddress,
+  } = action;
+  const wallet = {
+    nickname,
+    details: newWallet,
+    balance: {
+      xrp: 0,
+      solo: 0,
+      tokenizedAssets: 0,
+    },
+    walletAddress,
+    rippleClassicAddress,
+    transactions: [],
+  };
+  return Object.assign({}, state, {
+    wallets: [ ...wallets, wallet ],
+  });
+}
+
+const saveNickname = (state, action) => {
+  return Object.assign({}, state, {
+    nickname: action.nickname,
+  });
+}
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -257,7 +296,13 @@ export default (state = defaultState, action) => {
       return connectToRippleApiSuccess(state, action);
     case "CONNECT_TO_RIPPLE_API_ERROR":
       return connectToRippleApiError(state, action);
-
+    case "GENERATE_NEW_WALLET":
+      return generateNewWallet(state, action);
+    case "ADD_NEW_WALLET":
+      return addNewWallet(state, action); 
+    case "SAVE_NICKNAME":
+      return saveNickname(state, action);
+     
     default:
       return state;
   }

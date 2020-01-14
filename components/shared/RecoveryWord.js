@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   word: {
-    flex: 1,
+    flex: 8,
     justifyContent: "center",
     alignItems: "flex-start"
   },
   index: {
-    flex: 1,
+    flex: 2,
     justifyContent: "center",
     alignItems: "flex-end"
   }

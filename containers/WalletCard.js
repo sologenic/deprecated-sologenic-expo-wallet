@@ -9,11 +9,20 @@ import Images from "../constants/Images";
 
 export default function WalletCard({
   navigation,
-  nickname,
-  totalBalance,
-  tokenizedAssets,
-  defaultCurrency
+  // nickname,
+  // totalBalance,
+  // tokenizedAssets,
+  // balance,
+  // details,
+  defaultCurrency,
+  // walletAddress,
+  // rippleClassicAddress,
+  wallet,
 }) {
+  const { nickname, balance } = wallet;
+  const { xrp, solo, tokenizedAssets } = balance;
+  const totalBalance = 0;
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -23,12 +32,16 @@ export default function WalletCard({
             key: "WalletName",
             params: {
               navigation,
-              totalBalance,
-              tokenizedAssets,
-              defaultCurrency,
-              xrpBalance: "21.00",
-              soloBalance: "0.00",
-              nickname,
+              wallet,
+              // totalBalance,
+              // tokenizedAssets,
+              // defaultCurrency,
+              // xrpBalance: `${xrp}`,
+              // soloBalance: `${solo}`,
+              // nickname,
+              // details,
+              // walletAddress,
+              // rippleClassicAddress,
             }
           });
         }}
@@ -123,7 +136,7 @@ export default function WalletCard({
             <Image source={Images.xrp} />
             <View style={{ flexDirection: "row", paddingTop: 5 }}>
               <View style={{ marginRight: 5 }}>
-                <Custom_Text value={`21.00`} size={Fonts.size.normal} isBold />
+                <Custom_Text value={`${xrp}`} size={Fonts.size.normal} isBold />
               </View>
               <View>
                 <Custom_Text
@@ -144,7 +157,7 @@ export default function WalletCard({
             <Image source={Images.solo} />
             <View style={{ flexDirection: "row", paddingTop: 5 }}>
               <View style={{ marginRight: 5 }}>
-                <Custom_Text value={`100.00`} size={Fonts.size.normal} isBold />
+                <Custom_Text value={`${solo}`} size={Fonts.size.normal} isBold />
               </View>
               <View>
                 <Custom_Text

@@ -19,10 +19,9 @@ import ActivationSoloModal from "../components/shared/ActivatingSoloModal";
 
 export default function WalletSoloTab({
   navigation,
-  balance,
   currency,
-  xrpBalance,
   soloBalance,
+  walletAddress,
   defaultCurrency,
   activate
 }) {
@@ -104,7 +103,7 @@ export default function WalletSoloTab({
                 color={Colors.grayText}
               />
               <Custom_Text
-                value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+                value={walletAddress}
                 size={Fonts.size.small}
               />
             </View>
@@ -171,7 +170,7 @@ export default function WalletSoloTab({
               }}
             >
               <View style={{ paddingRight: 10 }}>
-                <Custom_Text value={xrpBalance} size={Fonts.size.h3} isBold />
+                <Custom_Text value={`${soloBalance}`} size={Fonts.size.h3} isBold />
               </View>
               <View>
                 <Custom_Text value={currency} size={Fonts.size.h4} />
@@ -258,7 +257,7 @@ export default function WalletSoloTab({
               color={Colors.grayText}
             />
             <Custom_Text
-              value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+              value={walletAddress}
               size={Fonts.size.small}
             />
           </View>

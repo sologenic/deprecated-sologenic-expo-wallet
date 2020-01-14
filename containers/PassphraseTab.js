@@ -6,18 +6,24 @@ import {
   TextInput,
   Clipboard
 } from "react-native";
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
-import { countWords } from "../utils";
+import { countWords, getWalletFromMnemonic, getRippleClassicAddressFromXAddress } from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
+import { addNewWallet } from "../actions"
+import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 
-export default function PassphraseTab({ 
+function PassphraseTab({ 
   navigation,
   errorModalVisible,
-  setErrorModalVisible, 
+  setErrorModalVisible,
+  importSuccessfulModalVisible,
+  setImportSuccessfulModalVisible,
+  addNewWallet, 
 }) {
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
@@ -34,7 +40,7 @@ export default function PassphraseTab({
     } else {
       handleIsCompleted(false);
     }
-  });
+  }, [textValue]);
 
   return (
     <View>
@@ -114,11 +120,16 @@ export default function PassphraseTab({
             if (!result) {
               setErrorModalVisible(true);
             } else {
-
-              navigation.navigate({
-                routeName: "WalletsScreen",
-                key: "WalletsScreen",
-              });
+              const importedWallet = getWalletFromMnemonic(textValue);
+              const walletAddress = importedWallet.getAddress();
+              const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
+              addNewWallet(
+                importedWallet,
+                "",
+                walletAddress,
+                rippleClassicAddress,
+              );
+              setImportSuccessfulModalVisible(true);
             }
           }}
           style={{
@@ -136,6 +147,17 @@ export default function PassphraseTab({
         value="You have entered an invalid mnemonic passphrase. It should consist of 12 words, each separated by a space. Please check your phrase and try again."
         modalVisible={errorModalVisible}
         onClose={() => setErrorModalVisible(false)}
+      />
+      <ImportSuccessfulModal
+        modalVisible={importSuccessfulModalVisible}
+        // onClose={() => setImportSuccessfulModalVisible(false)}
+        onPress={() => {
+          setImportSuccessfulModalVisible(false);
+          navigation.navigate({
+            routeName: "WalletsScreen",
+            key: "WalletsScreen",
+          });
+        }}
       />
     </View>
   );
@@ -160,3 +182,16 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1
   },
 });
+
+const mapStateToProps = ({}) => ({});
+const mapDispatchToProps = dispatch => ({
+  addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
+    dispatch(
+      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
+    )
+});
+
+export default connect(
+  mapStateToProps, 
+  mapDispatchToProps
+)(PassphraseTab);

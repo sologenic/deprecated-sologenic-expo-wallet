@@ -18,7 +18,7 @@ import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
-import { getPriceChange, getPriceColor } from "../utils"
+import { getPriceChange, getPriceColor, getAddress } from "../utils"
 import SevenChart from "../components/shared/SevenChart";
 
 function WalletTab({
@@ -26,8 +26,8 @@ function WalletTab({
   balance,
   currency,
   xrpBalance,
-  soloBalance,
   defaultCurrency,
+  walletAddress,
   activate,
   marketData,
   marketSevens,
@@ -39,6 +39,9 @@ function WalletTab({
   );
   const priceChange = getPriceChange(marketData.last, marketData.open);
   const priceColor = getPriceColor(priceChange);
+  // console.log("what is details?", details)
+  // const walletAddress = getAddress(details);
+  console.log("xrp", xrpBalance)
   if (!activate) {
     return (
       <ScrollView>
@@ -83,7 +86,7 @@ function WalletTab({
                     key: "ActivateWalletScreen",
                     params: {
                       currency: currency.toLowerCase(),
-                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
+                      walletAddress,
                     }
                   });
                 }}
@@ -157,7 +160,7 @@ function WalletTab({
                 color={Colors.grayText}
               />
               <Custom_Text
-                value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+                value={walletAddress}
                 size={Fonts.size.small}
               />
             </View>
@@ -203,7 +206,7 @@ function WalletTab({
           currency="xrp"
         />
         <WalletAddressModal
-          data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
+          data={walletAddress}
           modalVisible={walletAddressModalVisible}
           onClose={() => setWalletAddressModalVisible(false)}
         />
@@ -231,7 +234,7 @@ function WalletTab({
               }}
             >
               <View style={{ paddingRight: 10 }}>
-                <Custom_Text value={xrpBalance} size={Fonts.size.h3} isBold />
+                <Custom_Text value={`${xrpBalance}`} size={Fonts.size.h3} isBold />
               </View>
               <View>
                 <Custom_Text value={currency} size={Fonts.size.h4} />
@@ -300,7 +303,7 @@ function WalletTab({
                       navigation,
                       balance: xrpBalance,
                       currency: currency.toLowerCase(),
-                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
+                      walletAddress,
                     }
                   });
                 }}
@@ -342,7 +345,7 @@ function WalletTab({
               color={Colors.grayText}
             />
             <Custom_Text
-              value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+              value={walletAddress}
               size={Fonts.size.small}
             />
           </View>
@@ -389,7 +392,7 @@ function WalletTab({
         </View>
       </View>
       <WalletAddressModal
-        data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
+        data={walletAddress}
         modalVisible={walletAddressModalVisible}
         onClose={() => setWalletAddressModalVisible(false)}
       />
@@ -441,7 +444,6 @@ const mapStateToProps = ({
   marketData,
   marketSevens,
 }, props) => {
-  console.log("defaultCurrency", props.defaultCurrency)
   return {
     marketData,
     marketSevens: marketSevens ? marketSevens["xrpusd"] : {},

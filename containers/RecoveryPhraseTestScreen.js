@@ -16,7 +16,8 @@ import {
   updatePhraseTestValue1,
   updatePhraseTestValue2,
   updatePhraseTestValue3,
-} from "../actions"
+  addNewWallet
+} from "../actions";
 import WalletCreationSuccessfulModal from "../components/shared/WalletCreationSuccessfulModal";
 
 function RecoveryPhraseTestScreen({
@@ -27,31 +28,25 @@ function RecoveryPhraseTestScreen({
   updatePhraseTestValue1,
   updatePhraseTestValue2,
   updatePhraseTestValue3,
+  newWallet,
+  addNewWallet
+  // nickname,
 }) {
-  // const [phraseTestValue1, onChangePhraseTestValue1] = useState("");
-  // const [phraseTestValue2, onChangePhraseTestValue2] = useState("");
-  // const [phraseTestValue3, onChangePhraseTestValue3] = useState("");
-
   const [pressed, handlePressButton] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [walletCreationSuccessfulModalVisible, setWalletCreationSuccessfulModalVisible] = useState(false);
+  const [
+    walletCreationSuccessfulModalVisible,
+    setWalletCreationSuccessfulModalVisible
+  ] = useState(false);
   const [testResult, handleTestResult] = useState("");
-  
-  const { randomNumbers } = navigation.state.params;
-  const phrase = [
-    "tree",
-    "dog",
-    "eleven",
-    "night",
-    "treehouse",
-    "cone",
-    "cat",
-    "ticket",
-    "pig",
-    "part",
-    "pickles",
-    "nice"
-  ];
+
+  const {
+    randomNumbers,
+    phrase,
+    nickname,
+    walletAddress,
+    rippleClassicAddress
+  } = navigation.state.params;
   let count = 0;
 
   useEffect(() => {
@@ -60,17 +55,18 @@ function RecoveryPhraseTestScreen({
     updatePhraseTestValue3("");
   }, []);
 
-  console.log(
-    phraseTestValue1,
-    phraseTestValue2,
-    phraseTestValue3,
-  );
+  console.log(phraseTestValue1, phraseTestValue2, phraseTestValue3);
+
+  console.log("new wallet", newWallet, "nickname", nickname);
 
   useEffect(() => {
     if (
-      phraseTestValue1 && phraseTestValue1.length > 0 &&
-      phraseTestValue2 && phraseTestValue2.length > 0 &&
-      phraseTestValue3 && phraseTestValue3.length > 0
+      phraseTestValue1 &&
+      phraseTestValue1.length > 0 &&
+      phraseTestValue2 &&
+      phraseTestValue2.length > 0 &&
+      phraseTestValue3 &&
+      phraseTestValue3.length > 0
     ) {
       handlePressButton(true);
     } else {
@@ -85,10 +81,12 @@ function RecoveryPhraseTestScreen({
     phraseTestValue2,
     phraseTestValue3
   ) => {
-    const sortedRandomNumbers = randomNumbers.sort((a, b) => a < b ? -1 : 1);
-    return phrase[sortedRandomNumbers[0] - 1] === phraseTestValue1 &&
+    const sortedRandomNumbers = randomNumbers.sort((a, b) => (a < b ? -1 : 1));
+    return (
+      phrase[sortedRandomNumbers[0] - 1] === phraseTestValue1 &&
       phrase[sortedRandomNumbers[1] - 1] === phraseTestValue2 &&
       phrase[sortedRandomNumbers[2] - 1] === phraseTestValue3
+    );
   };
 
   return (
@@ -109,7 +107,12 @@ function RecoveryPhraseTestScreen({
         right={<View />}
       />
       <ScrollView>
-        <View style={[styles.section, { justifyContent: "center", alignItems: "center" }]}>
+        <View
+          style={[
+            styles.section,
+            { justifyContent: "center", alignItems: "center" }
+          ]}
+        >
           {testResult === "" && (
             <Custom_Text
               value="To ensure that you have complied with the steps as instructed, please enter the missing info of your given Recovery Phrase below."
@@ -120,7 +123,11 @@ function RecoveryPhraseTestScreen({
           {testResult === "error" && (
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <View style={{ marginTop: 35, marginBottom: 10 }}>
-                <AntDesign name="exclamationcircle" size={Fonts.size.medium} color={Colors.text} />
+                <AntDesign
+                  name="exclamationcircle"
+                  size={Fonts.size.medium}
+                  color={Colors.text}
+                />
               </View>
               <View style={{ marginHorizontal: 45 }}>
                 <Custom_Text
@@ -132,12 +139,21 @@ function RecoveryPhraseTestScreen({
             </View>
           )}
         </View>
-        <View style={[styles.section, { justifyContent: "center", alignItems: "center" }]}>
+        <View
+          style={[
+            styles.section,
+            { justifyContent: "center", alignItems: "center" }
+          ]}
+        >
           <RecoveryPhrase
             phrase={phrase}
             randomNumbers={randomNumbers}
-            color={testResult === "error" ? Colors.errorBackground : Colors.text}
-            indexColor={testResult === "error" ? Colors.errorBackground : Colors.lightGray}
+            color={
+              testResult === "error" ? Colors.errorBackground : Colors.text
+            }
+            indexColor={
+              testResult === "error" ? Colors.errorBackground : Colors.lightGray
+            }
           />
         </View>
         <View style={[styles.section, { alignItems: "center" }]}>
@@ -153,6 +169,12 @@ function RecoveryPhraseTestScreen({
               );
               if (result === true) {
                 handleTestResult("correct");
+                addNewWallet(
+                  newWallet,
+                  nickname,
+                  walletAddress,
+                  rippleClassicAddress
+                );
                 setWalletCreationSuccessfulModalVisible(true);
               } else {
                 handleTestResult("error");
@@ -216,19 +238,27 @@ const mapStateToProps = ({
   phraseTestValue1,
   phraseTestValue2,
   phraseTestValue3,
+  newWallet
+  // nickname,
 }) => ({
   phraseTestValue1,
   phraseTestValue2,
   phraseTestValue3,
+  newWallet
+  // nickname,
 });
 
 const mapDispatchToProps = dispatch => ({
   updatePhraseTestValue1: value => dispatch(updatePhraseTestValue1(value)),
   updatePhraseTestValue2: value => dispatch(updatePhraseTestValue2(value)),
   updatePhraseTestValue3: value => dispatch(updatePhraseTestValue3(value)),
+  addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
+    dispatch(
+      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
+    )
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(RecoveryPhraseTestScreen)
+  mapDispatchToProps
+)(RecoveryPhraseTestScreen);

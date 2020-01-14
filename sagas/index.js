@@ -60,7 +60,7 @@ export function* requestMarketSevens() {
   if (response.ok) {
     // convert sevens array into object with key value pairs where key = market id
     const sevensObj = yield createSevensObj(response.data);
-    console.log("sevensObj", sevensObj)
+    // console.log("sevensObj", sevensObj)
     yield put(getMarketSevensSuccess(sevensObj));
   } else {
     // yield put(currenciesError());
