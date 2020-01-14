@@ -166,3 +166,15 @@ export const createPinSuccess = data => {
     payload: data,
   };
 };
+
+export const setupAuthentication = () => {
+  return {
+    type: "SETUP_AUTH_SUCCESS",
+  };
+};
+
+export const authSuccess = () => {
+  return {
+    type: "AUTH_SUCCESS",
+  };
+};

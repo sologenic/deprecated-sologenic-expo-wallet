@@ -33,6 +33,7 @@ class CreatePinScreen extends React.Component {
       .then(res => {
         if (res) {
           LocalAuthentication.supportedAuthenticationTypesAsync().then(res => {
+            console.log(res);
             if (res.includes(1) && !res.includes(2)) {
               this.setState({
                 unlockText: "Enable Fingerprint ID",
@@ -60,8 +61,9 @@ class CreatePinScreen extends React.Component {
   render() {
     const {
       screenProps: { rootNavigation },
+      createPin,
     } = this.props;
-    const { unlockText, availableUnlockMethods } = this.state;
+    const { unlockText, availableUnlockMethods, code } = this.state;
     //   const [pressed, setPressed] = useState(false);
     //   const [modalVisible, setModalVisible] = useState(false);
     //   const [textValue, onChangeText] = useState("");
@@ -82,7 +84,8 @@ class CreatePinScreen extends React.Component {
           >
             <Custom_Button
               text="Next"
-              onPress={() =>
+              onPress={() => {
+                createPin(code);
                 rootNavigation.navigate({
                   key: "SetupUnlockScreen",
                   routeName: "SetupUnlockScreen",
@@ -90,8 +93,8 @@ class CreatePinScreen extends React.Component {
                     unlockText,
                     availableUnlockMethods,
                   },
-                })
-              }
+                });
+              }}
               color={Colors.darkRed}
               size={14}
               textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}

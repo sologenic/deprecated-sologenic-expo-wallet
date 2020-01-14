@@ -12,7 +12,12 @@ import { imagesArray } from "../constants/Images";
 import OrientationScreen from "./OrientationScreen";
 const App = createAppContainer(MainStack);
 
-const RootContainer = ({ skipLoadingScreen, isOrientationComplete }) => {
+const RootContainer = ({
+  skipLoadingScreen,
+  isOrientationComplete,
+  authSetupComplete,
+  isAuthenticated,
+}) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
 
   if (!isLoadingComplete && !skipLoadingScreen) {
@@ -29,7 +34,7 @@ const RootContainer = ({ skipLoadingScreen, isOrientationComplete }) => {
         <View style={styles.container}>
           {Platform.OS === "ios" && <StatusBar barStyle="light" />}
           <MenuProvider>
-            <App screenProps={{ isPinCreated: false }} />
+            <App screenProps={{ authSetupComplete, isAuthenticated }} />
           </MenuProvider>
         </View>
       );
@@ -62,8 +67,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ isOrientationComplete }) => ({
+const mapStateToProps = ({
   isOrientationComplete,
+  isAuthenticated,
+  authSetupComplete,
+}) => ({
+  isOrientationComplete,
+  isAuthenticated,
+  authSetupComplete,
 });
 
 const mapDispatchToProps = dispatch => ({});

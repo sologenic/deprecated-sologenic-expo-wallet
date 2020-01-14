@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { connect } from "react-redux";
+import { StackActions, NavigationActions } from "react-navigation";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -16,18 +17,37 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import Custom_Button from "../components/shared/Custom_Button";
-import { createPinSuccess } from "../actions";
+import { createPinSuccess, setupAuthentication, authSuccess } from "../actions";
 import { screenWidth } from "../constants/Layout";
 
-function CreatePinScreen({ navigation }) {
+function CreatePinScreen({ navigation, completeAuthSetup, authenticateUser }) {
   const { unlockText, availableUnlockMethods } = navigation.state.params;
 
   const getUnlockImage = () => {
     if (availableUnlockMethods === "fingerprint") {
-      return Images.fingerprint;
+      return Images.fingerPrint;
     } else if (availableUnlockMethods === "faceId") {
       return Images.face;
     }
+  };
+
+  const getUnlockText = () => {
+    if (availableUnlockMethods === "fingerprint") {
+      return `Would you like to set Fingerprint ID as your primary authorization method?`;
+    } else if (availableUnlockMethods === "faceId") {
+      return `Would you like to set Face ID as your primary authorization method?`;
+    }
+  };
+
+  const skipSetup = () => {
+    completeAuthSetup();
+    authenticateUser();
+    navigation.dispatch(
+      StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: "HomeScreen" })],
+      }),
+    );
   };
 
   return (
@@ -38,31 +58,16 @@ function CreatePinScreen({ navigation }) {
       />
       <ScrollView>
         <View style={{ marginTop: 42 }}>
-          <View
+          <Image
+            source={getUnlockImage()}
             style={{
-              width: 94,
-              height: 94,
-              borderRadius: 47,
-              backgroundColor: Colors.slabGray,
-              justifyContent: "center",
-              alignItems: "center",
               alignSelf: "center",
               marginBottom: 24,
             }}
-          >
-            <Image
-              source={getUnlockImage()}
-              style={{
-                height: 42,
-                width: 42,
-                position: "relative",
-                top: 2,
-              }}
-            />
-          </View>
+          />
 
           <Custom_Text
-            value={`Would you like to set Face ID as your\n primary authorization method?`}
+            value={getUnlockText()}
             style={{ textAlign: "center", marginBottom: 15 }}
             size={16}
           />
@@ -70,7 +75,16 @@ function CreatePinScreen({ navigation }) {
           <View style={{ alignItems: "center" }}>
             <Custom_Button
               text={unlockText}
-              //   onPress={() =>}
+              onPress={() =>
+                navigation.navigate({
+                  key: "ConfirmUnlockMethodScreen",
+                  routeName: "ConfirmUnlockMethodScreen",
+                  params: {
+                    availableUnlockMethods,
+                    unlockText,
+                  },
+                })
+              }
               color={Colors.secondaryBackground}
               size={14}
               textStyle={{
@@ -97,7 +111,7 @@ function CreatePinScreen({ navigation }) {
         </View>
       </ScrollView>
       <View style={{ position: "absolute", bottom: 60, alignSelf: "center" }}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => skipSetup()}>
           <Custom_Text value="Skip this step >" style={{}} size={14} />
         </TouchableOpacity>
       </View>
@@ -112,12 +126,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ isPinCreated }) => ({
-  isPinCreated,
-});
+const mapStateToProps = ({}) => ({});
 
 const mapDispatchToProps = dispatch => ({
-  createPin: data => dispatch(createPinSuccess(data)),
+  completeAuthSetup: () => dispatch(setupAuthentication()),
+  authenticateUser: () => dispatch(authSuccess()),
 });
 
 export default connect(

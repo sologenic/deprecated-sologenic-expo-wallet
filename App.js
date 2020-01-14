@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore, persistReducer } from "redux-persist";
-import { createFilter } from "redux-persist-transform-filter";
+import Rehydration from "./reducers/Rehydration";
 
 import reducer from "./reducers";
 import rootSaga from "./sagas";
@@ -20,7 +20,7 @@ const persistConfig = {
   storage: AsyncStorage,
   // whitelist: ["updateIsOrientationComplete"],
   // transforms: [persistedUserState],
-  // blacklist: ['test']
+  blacklist: ["isAuthenticated"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);
@@ -28,12 +28,15 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 const setUpStore = () => {
   let store = createStore(persistedReducer, applyMiddleware(sagaMiddleware));
   let persistor = persistStore(store);
+  // let persistor = Rehydration.updateReducers(store);
   return { store, persistor };
 };
 
 const sagaMiddleware = createSagaMiddleware();
 
 const { store, persistor } = setUpStore();
+
+// persist store
 
 sagaMiddleware.run(rootSaga);
 
