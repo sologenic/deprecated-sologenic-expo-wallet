@@ -29,6 +29,8 @@ const defaultState = {
   phraseTestValue1: "",
   phraseTestValue2: "",
   phraseTestValue3: "",
+  isAuthenticated: null,
+  authSetupComplete: null,
 };
 
 const getMarketData = (state, action) => {
@@ -219,10 +221,21 @@ const updateIsOrientationComplete = (state, action) => {
 };
 
 const createPinSuccess = (state, action) => {
-  console.log("here");
+  console.log(action.payload);
   return Object.assign({}, state, {
-    isPinCreated: true,
     pin: action.payload,
+  });
+};
+
+const setupAuthentication = state => {
+  return Object.assign({}, state, {
+    authSetupComplete: true,
+  });
+};
+
+const authSuccess = state => {
+  return Object.assign({}, state, {
+    isAuthenticated: true,
   });
 };
 
@@ -278,6 +291,10 @@ export default (state = defaultState, action) => {
       return updateIsOrientationComplete(state, action);
     case "CREATE_PIN":
       return createPinSuccess(state, action);
+    case "SETUP_AUTH_SUCCESS":
+      return setupAuthentication(state, action);
+    case "AUTH_SUCCESS":
+      return authSuccess(state, action);
 
     default:
       return state;

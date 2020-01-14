@@ -19,14 +19,14 @@ import SendScreen from "../containers/SendScreen";
 import ActivateWalletScreen from "../containers/ActivateWalletScreen";
 import RecoveryPhraseTestScreen from "../containers/RecoveryPhraseTestScreen";
 import ChangeWalletNicknameScreen from "../containers/ChangeWalletNicknameScreen";
+import ConfirmUnlockMethodScreen from "../containers/ConfirmUnlockMethodScreen";
 
 const MainStack = createStackNavigator(
   {
     // HomeScreen: HomeScreen,
     HomeScreen: ({ navigation, screenProps }) => {
-      console.log(screenProps.isPinCreated);
-      if (!screenProps.userIdentityConfirmed) {
-        if (!screenProps.isPinCreated) {
+      if (!screenProps.isAuthenticated) {
+        if (!screenProps.authSetupComplete) {
           return (
             <CreatePinScreen
               screenProps={{
@@ -44,7 +44,7 @@ const MainStack = createStackNavigator(
           );
         }
       } else {
-        return <HomeScreen screenProps={{ rootNavigation: navigation }} />;
+        return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
       }
     },
     LinksScreen: LinksScreen,
@@ -56,6 +56,7 @@ const MainStack = createStackNavigator(
     YourRecoveryPhraseScreen: YourRecoveryPhraseScreen,
     ImportExistingWalletScreen: ImportExistingWalletScreen,
     SetupUnlockScreen: SetupUnlockScreen,
+    ConfirmUnlockMethodScreen: ConfirmUnlockMethodScreen,
     CreatePinScreen: CreatePinScreen,
     ReceiveScreen: ReceiveScreen,
     ActivateWalletScreen: ActivateWalletScreen,
