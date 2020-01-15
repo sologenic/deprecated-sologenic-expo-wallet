@@ -183,7 +183,7 @@ class UnlockScreen extends React.Component {
                 <View
                   style={{
                     position: "absolute",
-                    top: 0,
+                    top: 40,
                     alignSelf: "center",
                   }}
                 >
@@ -205,19 +205,9 @@ class UnlockScreen extends React.Component {
                     />
                     <Image source={Images.smallErrIcon} />
                   </View>
-                  <Custom_Text
-                    value="Try again."
-                    style={{
-                      marginTop: 10,
-                      marginBottom: 20,
-                      textAlign: "center",
-                    }}
-                    color={Colors.text}
-                    size={16}
-                  />
                 </View>
               )}
-              <View style={{ marginTop: "20%" }}>
+              <View style={{ marginTop: 0 }}>
                 <PinView
                   disabled={codeMatched}
                   onComplete={(val, clear) => {

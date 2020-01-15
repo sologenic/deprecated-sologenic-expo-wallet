@@ -106,7 +106,7 @@ class CreatePinScreen extends React.Component {
               <View
                 style={{
                   position: "absolute",
-                  top: "5%",
+                  top: 82,
                   alignSelf: "center",
                 }}
               >
@@ -128,23 +128,13 @@ class CreatePinScreen extends React.Component {
                   />
                   <Image source={Images.smallErrIcon} />
                 </View>
-                <Custom_Text
-                  value="Try again."
-                  style={{
-                    marginTop: 10,
-                    marginBottom: 20,
-                    textAlign: "center",
-                  }}
-                  color={Colors.text}
-                  size={16}
-                />
               </View>
             )}
             {codeMatched && (
               <View
                 style={{
                   position: "absolute",
-                  top: "10%",
+                  top: 82,
                   alignSelf: "center",
                 }}
               >
@@ -169,7 +159,7 @@ class CreatePinScreen extends React.Component {
                 </View>
               </View>
             )}
-            <View style={{ marginTop: "27%" }}>
+            <View style={{ marginTop: 42 }}>
               {!codeCreated ? (
                 <PinView
                   onComplete={(val, clear) => {
@@ -183,6 +173,7 @@ class CreatePinScreen extends React.Component {
                   pinLength={4}
                   inputViewStyle={{
                     marginHorizontal: 20,
+                    marginBottom: 10,
                     width: 16,
                     height: 16,
                     borderRadius: 8,
@@ -250,6 +241,7 @@ class CreatePinScreen extends React.Component {
                   pinLength={4}
                   inputViewStyle={{
                     marginHorizontal: 20,
+                    marginBottom: 10,
                     width: 16,
                     height: 16,
                     borderRadius: 8,
