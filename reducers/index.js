@@ -31,6 +31,7 @@ const defaultState = {
   phraseTestValue3: "",
   isAuthenticated: null,
   authSetupComplete: null,
+  unlockMethod: null,
 };
 
 const getMarketData = (state, action) => {
@@ -221,7 +222,6 @@ const updateIsOrientationComplete = (state, action) => {
 };
 
 const createPinSuccess = (state, action) => {
-  console.log(action.payload);
   return Object.assign({}, state, {
     pin: action.payload,
   });
@@ -236,6 +236,12 @@ const setupAuthentication = state => {
 const authSuccess = state => {
   return Object.assign({}, state, {
     isAuthenticated: true,
+  });
+};
+
+const updateUnlockMethod = (state, action) => {
+  return Object.assign({}, state, {
+    unlockMethod: action.payload,
   });
 };
 
@@ -295,6 +301,8 @@ export default (state = defaultState, action) => {
       return setupAuthentication(state, action);
     case "AUTH_SUCCESS":
       return authSuccess(state, action);
+    case "UPDATE_UNLOCK_METHOD":
+      return updateUnlockMethod(state, action);
 
     default:
       return state;

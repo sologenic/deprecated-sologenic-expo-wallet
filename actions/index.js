@@ -178,3 +178,10 @@ export const authSuccess = () => {
     type: "AUTH_SUCCESS",
   };
 };
+
+export const updateUnlockMethod = data => {
+  return {
+    type: "UPDATE_UNLOCK_METHOD",
+    payload: data,
+  };
+};

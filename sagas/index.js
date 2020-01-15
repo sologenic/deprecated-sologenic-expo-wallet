@@ -22,13 +22,14 @@ const api = create({
   baseURL: "https://api.coinfield.com/v1/",
   headers: {
     post: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
   },
-  timeout: 10000
+  timeout: 10000,
 });
 
-const getMarketData = defaultCurrency => api.get(`tickers/xrp${defaultCurrency}`);
+const getMarketData = defaultCurrency =>
+  api.get(`tickers/xrp${defaultCurrency}`);
 
 function* requestGetMarketData(action) {
   try {
@@ -47,20 +48,19 @@ const mediatorApi = create({
   baseURL: "https://mediator.coinfield.com/",
   headers: {
     post: {
-      "Content-Type": "application/x-www-form-urlencoded"
-    }
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
   },
-  timeout: 10000
+  timeout: 10000,
 });
 
-const getMarketSevens = () => mediatorApi.get('seven');
+const getMarketSevens = () => mediatorApi.get("seven");
 
 export function* requestMarketSevens() {
   const response = yield call(getMarketSevens);
   if (response.ok) {
     // convert sevens array into object with key value pairs where key = market id
     const sevensObj = yield createSevensObj(response.data);
-    console.log("sevensObj", sevensObj)
     yield put(getMarketSevensSuccess(sevensObj));
   } else {
     // yield put(currenciesError());

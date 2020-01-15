@@ -1,4 +1,5 @@
 const images = {
+  fullLogo: require("../assets/images/fullLogo.png"),
   face: require("../assets/images/icons/face.png"),
   faceRed: require("../assets/images/icons/faceRed.png"),
   faceGreen: require("../assets/images/icons/faceGreen.png"),

@@ -34,7 +34,6 @@ class CreatePinScreen extends React.Component {
       .then(res => {
         if (res) {
           LocalAuthentication.supportedAuthenticationTypesAsync().then(res => {
-            console.log(res);
             if (res.includes(1) && !res.includes(2)) {
               this.setState({
                 unlockText: "Enable Fingerprint ID",
@@ -101,11 +100,16 @@ class CreatePinScreen extends React.Component {
             style={{
               justifyContent: "center",
               marginHorizontal: 15,
-              marginTop: 48,
             }}
           >
             {showCodeError && (
-              <View>
+              <View
+                style={{
+                  position: "absolute",
+                  top: "5%",
+                  alignSelf: "center",
+                }}
+              >
                 <View
                   style={{
                     flexDirection: "row",
@@ -137,12 +141,16 @@ class CreatePinScreen extends React.Component {
               </View>
             )}
             {codeMatched && (
-              <View>
+              <View
+                style={{
+                  position: "absolute",
+                  top: "10%",
+                  alignSelf: "center",
+                }}
+              >
                 <View
                   style={{
                     flexDirection: "row",
-                    justifyContent: "center",
-                    // alignItems: "center",
                   }}
                 >
                   <Custom_Text
@@ -150,167 +158,132 @@ class CreatePinScreen extends React.Component {
                     style={{
                       marginBottom: 20,
                       marginRight: 10,
-                      textAlign: "center",
                     }}
                     color={Colors.freshGreen}
                     size={16}
                   />
                   <Image
                     source={Images.smallSuccessIcon}
-                    style={{ marginTop: 2 }}
+                    style={{ marginTop: 3 }}
                   />
                 </View>
               </View>
             )}
-            {!codeCreated ? (
-              <PinView
-                onComplete={(val, clear) => {
-                  this.setState({
-                    codeCreated: true,
-                    code: val,
-                    showCodeError: false,
-                  });
-                  clear();
-                }}
-                pinLength={4}
-                inputViewStyle={{
-                  marginHorizontal: 20,
-                  width: 16,
-                  height: 16,
-                  borderRadius: 8,
-                  borderWidth: 2,
-                  borderColor: Colors.text,
-                }}
-                inputBgOpacity={1}
-                inputBgColor={Colors.buttonText}
-                inputActiveBgColor={Colors.mainBackground}
-                buttonBgColor={Colors.pinInputBackground}
-                keyboardViewTextStyle={{
-                  fontFamily: "DMSansBold",
-                  fontSize: 24,
-                  color: Colors.text,
-                  tintColor: Colors.text,
-                }}
-                keyboardViewStyle={{
-                  marginVertical: 8,
-                  height: 64,
-                  width: 64,
-                }}
-                keyboardContainerStyle={{
-                  marginTop: 48,
-                  marginBottom: 0,
-                }}
-                keyboardViewItemText={{
-                  tintColor: Colors.text,
-                }}
-              />
-            ) : (
-              <PinView
-                disabled={codeMatched}
-                onComplete={(val, clear) => {
-                  if (val === code) {
+            <View style={{ marginTop: "27%" }}>
+              {!codeCreated ? (
+                <PinView
+                  onComplete={(val, clear) => {
                     this.setState({
+                      codeCreated: true,
+                      code: val,
                       showCodeError: false,
-                      codeMatched: true,
-                    });
-                    createPin(code);
-                    if (!availableUnlockMethods) {
-                      setTimeout(this.completeAuthSetup(), 1000);
-                    } else {
-                      setTimeout(
-                        () =>
-                          rootNavigation.navigate({
-                            key: "SetupUnlockScreen",
-                            routeName: "SetupUnlockScreen",
-                            params: {
-                              unlockText,
-                              availableUnlockMethods,
-                            },
-                          }),
-                        1000,
-                      );
-                    }
-                  } else {
-                    this.setState({
-                      codeCreated: false,
-                      code: null,
-                      showCodeError: true,
                     });
                     clear();
+                  }}
+                  pinLength={4}
+                  inputViewStyle={{
+                    marginHorizontal: 20,
+                    width: 16,
+                    height: 16,
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    borderColor: Colors.text,
+                  }}
+                  inputBgOpacity={1}
+                  inputBgColor={Colors.buttonText}
+                  inputActiveBgColor={Colors.mainBackground}
+                  buttonBgColor={Colors.pinInputBackground}
+                  keyboardViewTextStyle={{
+                    fontFamily: "DMSansBold",
+                    fontSize: 24,
+                    color: Colors.text,
+                    tintColor: Colors.text,
+                  }}
+                  keyboardViewStyle={{
+                    marginVertical: 8,
+                    height: 64,
+                    width: 64,
+                  }}
+                  keyboardContainerStyle={{
+                    marginTop: 48,
+                    marginBottom: 0,
+                  }}
+                  keyboardViewItemText={{
+                    tintColor: Colors.text,
+                  }}
+                />
+              ) : (
+                <PinView
+                  disabled={codeMatched}
+                  onComplete={(val, clear) => {
+                    if (val === code) {
+                      this.setState({
+                        showCodeError: false,
+                        codeMatched: true,
+                      });
+                      createPin(code);
+                      if (!availableUnlockMethods) {
+                        setTimeout(this.completeAuthSetup(), 1000);
+                      } else {
+                        setTimeout(
+                          () =>
+                            rootNavigation.navigate({
+                              key: "SetupUnlockScreen",
+                              routeName: "SetupUnlockScreen",
+                              params: {
+                                unlockText,
+                                availableUnlockMethods,
+                              },
+                            }),
+                          1000,
+                        );
+                      }
+                    } else {
+                      this.setState({
+                        codeCreated: false,
+                        code: null,
+                        showCodeError: true,
+                      });
+                      clear();
+                    }
+                  }}
+                  pinLength={4}
+                  inputViewStyle={{
+                    marginHorizontal: 20,
+                    width: 16,
+                    height: 16,
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    borderColor: codeMatched ? Colors.freshGreen : Colors.text,
+                  }}
+                  inputBgOpacity={1}
+                  inputBgColor={Colors.buttonText}
+                  inputActiveBgColor={
+                    codeMatched ? Colors.freshGreen : Colors.text
                   }
-                }}
-                pinLength={4}
-                inputViewStyle={{
-                  marginHorizontal: 20,
-                  width: 16,
-                  height: 16,
-                  borderRadius: 8,
-                  borderWidth: 2,
-                  borderColor: codeMatched ? Colors.freshGreen : Colors.text,
-                }}
-                inputBgOpacity={1}
-                inputBgColor={Colors.buttonText}
-                inputActiveBgColor={
-                  codeMatched ? Colors.freshGreen : Colors.text
-                }
-                buttonBgColor={Colors.pinInputBackground}
-                keyboardViewTextStyle={{
-                  fontFamily: "DMSansBold",
-                  fontSize: 24,
-                  color: Colors.text,
-                  tintColor: Colors.text,
-                }}
-                keyboardViewStyle={{
-                  marginVertical: 8,
-                  height: 64,
-                  width: 64,
-                }}
-                keyboardContainerStyle={{
-                  marginTop: 48,
-                  marginBottom: 0,
-                }}
-                keyboardViewItemText={{
-                  tintColor: Colors.text,
-                }}
-              />
-            )}
+                  buttonBgColor={Colors.pinInputBackground}
+                  keyboardViewTextStyle={{
+                    fontFamily: "DMSansBold",
+                    fontSize: 24,
+                    color: Colors.text,
+                    tintColor: Colors.text,
+                  }}
+                  keyboardViewStyle={{
+                    marginVertical: 8,
+                    height: 64,
+                    width: 64,
+                  }}
+                  keyboardContainerStyle={{
+                    marginTop: 48,
+                    marginBottom: 0,
+                  }}
+                  keyboardViewItemText={{
+                    tintColor: Colors.text,
+                  }}
+                />
+              )}
+            </View>
           </View>
-          {/* <View
-            style={{
-              flex: 1,
-              marginTop: 50,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Custom_Button
-              text="Next"
-              onPress={() => {
-                createPin(code);
-                if (!availableUnlockMethods) {
-                  this.completeAuthSetup();
-                } else {
-                  rootNavigation.navigate({
-                    key: "SetupUnlockScreen",
-                    routeName: "SetupUnlockScreen",
-                    params: {
-                      unlockText,
-                      availableUnlockMethods,
-                    },
-                  });
-                }
-              }}
-              color={Colors.darkRed}
-              size={14}
-              textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
-              style={{
-                backgroundColor: Colors.secondaryBackground,
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                marginBottom: 24,
-              }}
-            />
-          </View> */}
         </ScrollView>
       </View>
     );

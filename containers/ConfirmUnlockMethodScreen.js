@@ -18,7 +18,12 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import Custom_Button from "../components/shared/Custom_Button";
-import { createPinSuccess, setupAuthentication, authSuccess } from "../actions";
+import {
+  createPinSuccess,
+  setupAuthentication,
+  authSuccess,
+  updateUnlockMethod,
+} from "../actions";
 import { screenWidth } from "../constants/Layout";
 
 class ConfirmUnlockMethodScreen extends React.Component {
@@ -105,7 +110,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
       showAuthSuccess: true,
       authSuccessStr: str,
     });
-    setTimeout(() => this.completeSetup(), 1000);
+    this.completeSetup();
   };
 
   getUnlockText = () => {
@@ -129,7 +134,13 @@ class ConfirmUnlockMethodScreen extends React.Component {
   };
 
   completeSetup = () => {
-    const { completeAuthSetup, authenticateUser, navigation } = this.props;
+    const {
+      completeAuthSetup,
+      authenticateUser,
+      navigation,
+      saveUnlockMethod,
+    } = this.props;
+    const { availableUnlockMethods } = navigation.state.params;
     completeAuthSetup();
     authenticateUser();
     navigation.dispatch(
@@ -138,6 +149,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
         actions: [NavigationActions.navigate({ routeName: "HomeScreen" })],
       }),
     );
+    setTimeout(() => saveUnlockMethod(availableUnlockMethods), 100);
   };
 
   render() {
@@ -264,6 +276,7 @@ const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
   completeAuthSetup: () => dispatch(setupAuthentication()),
   authenticateUser: () => dispatch(authSuccess()),
+  saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
 });
 
 export default connect(
