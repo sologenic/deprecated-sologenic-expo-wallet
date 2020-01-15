@@ -181,3 +181,19 @@ export const saveNickname = nickname => {
     nickname
   };
 };
+
+export const changeNickname = (id, nickname) => {
+  return {
+    type: "CHANGE_NICKNAME",
+    nickname,
+    id,
+  };
+};
+
+export const deleteWallet = id => {
+  return {
+    type: "DELETE_WALLET",
+    id,
+  };
+};
+

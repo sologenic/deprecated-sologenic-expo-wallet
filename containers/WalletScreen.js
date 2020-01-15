@@ -14,6 +14,7 @@ import {
 } from "react-native-popup-menu";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
+import { connect } from 'react-redux';
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -33,21 +34,17 @@ import WalletTab from "./WalletTab";
 import WalletSoloTab from "./WalletSoloTab";
 import WalletTokenizedAssetTab from "./WalletTokenizedAssetTab";
 import DeleteWalletModal from "../components/shared/DeleteWalletModal";
+import { deleteWallet } from "../actions"
 
-export default function WalletScreen({ navigation }) {
+function WalletScreen({ navigation, deleteWallet }) {
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const {
-    // totalBalance,
-    // tokenizedAssets,
     defaultCurrency,
-    // xrpBalance,
-    // soloBalance,
-    // nickname,
-    // details,
     wallet,
   } = navigation.state.params;
   const {
+    id,
     balance,
     nickname,
     walletAddress,
@@ -79,6 +76,9 @@ export default function WalletScreen({ navigation }) {
                 navigation.navigate({
                   routeName: "ChangeWalletNicknameScreen",
                   key: "ChangeWalletNicknameScreen",
+                  params: {
+                    id: wallet.id,
+                  }
                 });
               }
             }}
@@ -231,6 +231,14 @@ export default function WalletScreen({ navigation }) {
         )}
         <DeleteWalletModal
           modalVisible={modalVisible}
+          onPress={() => {
+            deleteWallet(id);
+            setModalVisible(false);
+            navigation.navigate({
+              routeName: "WalletsScreen",
+              key: "WalletsScreen",
+            });
+          }}
           onClose={() => setModalVisible(false)}
         />
       </View>
@@ -252,3 +260,13 @@ const styles = StyleSheet.create({
     marginTop: 20
   }
 });
+
+const mapStateToProps = ({}) => ({});
+const mapDispatchToProps = dispatch => ({
+  deleteWallet: id => dispatch(deleteWallet(id))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WalletScreen);

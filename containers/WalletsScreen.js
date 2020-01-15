@@ -62,7 +62,7 @@ function WalletsScreen({
       <ScrollView>
         {wallets.length > 0 ? (
           <View style={styles.section}>
-            {wallets.map(item => {
+            {wallets.map((item, index) => {
               return (
                 <View style={{ marginBottom: 20  }}>
                   <WalletCard
@@ -75,6 +75,7 @@ function WalletsScreen({
                     // walletAddress={item.walletAddress}
                     // rippleClassicAddress={item.rippleClassicAddress}
                     wallet={item}
+                    key={index}
                   />
                 </View>
               )
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "flex-end",
     marginHorizontal: 20,
-    marginVertical: 50
+    marginVertical: 50,
   }
 });
 

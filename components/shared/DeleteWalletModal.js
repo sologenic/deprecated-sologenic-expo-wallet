@@ -77,8 +77,8 @@ export default function DeleteWalletModal({
                 </View>
                 <View style={[styles.section, { height: 50, position: 'absolute', right: 0, bottom: 0 }]}>
                   <Custom_Button
-                    text="TRY AGAIN"
-                    onPress={onClose}
+                    text="DELETE"
+                    onPress={onPress}
                     color={Colors.errorBackground}
                     size={16}
                     textStyle={{ letterSpacing: 1.2 }}

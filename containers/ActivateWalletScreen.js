@@ -147,7 +147,7 @@ export default function ActivateWalletScreen({
             color={Colors.grayText}
           />
           <Custom_Text
-            value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+            value={walletAddress}
             size={Fonts.size.small}
           />
         </View>

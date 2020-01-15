@@ -8,22 +8,21 @@ import {
   Text,
   View
 } from "react-native";
+import { connect } from "react-redux";
 
-import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
 import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
 import Custom_Button from "../components/shared/Custom_Button";
-import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_RadioButton from "../components/shared/Custom_RadioButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
 import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
+import { changeNickname } from "../actions";
 
-export default function ChangeWalletNicknameScreen({ navigation }) {
+function ChangeWalletNicknameScreen({ navigation, changeNickname }) {
   const [textValue, onChangeText] = useState("");
+  const { id, nickname } = navigation.state.params;
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -57,6 +56,7 @@ export default function ChangeWalletNicknameScreen({ navigation }) {
         <Custom_Button
           text="Confirm"
           onPress={() => {
+            changeNickname(id, textValue);
             navigation.navigate({
               routeName: "WalletsScreen",
               key: "WalletsScreen",
@@ -96,3 +96,13 @@ const styles = StyleSheet.create({
     marginVertical: 50
   },
 });
+
+const mapStateToProps = ({}) => ({});
+const mapDispatchToProps = dispatch => ({
+  changeNickname: (id, nickname) => dispatch(changeNickname(id, nickname))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChangeWalletNicknameScreen);

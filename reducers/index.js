@@ -226,7 +226,9 @@ const addNewWallet = (state, action) => {
     walletAddress,
     rippleClassicAddress,
   } = action;
+  const id = (wallets.length - 1) + 1;
   const wallet = {
+    id,
     nickname,
     details: newWallet,
     balance: {
@@ -248,6 +250,26 @@ const saveNickname = (state, action) => {
     nickname: action.nickname,
   });
 }
+
+const changeNickname = (state, action) => {
+  const newNickname = action.nickname;
+  const { wallets } = state;
+  wallets[action.id].nickname = newNickname;
+  return Object.assign({}, state, {
+    wallets,
+  });
+}
+
+const deleteWallet = (state, action) => {
+  const { wallets } = state;
+  const currentWallets = [ ...wallets ];
+  currentWallets.splice(action.id, 1);
+
+  return Object.assign({}, state, {
+    wallets: currentWallets,
+  });
+}
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -302,7 +324,10 @@ export default (state = defaultState, action) => {
       return addNewWallet(state, action); 
     case "SAVE_NICKNAME":
       return saveNickname(state, action);
-     
+    case "CHANGE_NICKNAME":
+      return changeNickname(state, action);  
+    case "DELETE_WALLET":
+      return deleteWallet(state, action);  
     default:
       return state;
   }
