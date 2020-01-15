@@ -5,7 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -17,20 +17,15 @@ import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import WalletCard from "./WalletCard";
-import {
-  getMarketData,
-  getMarketSevens,
-  testTodoReset,
-} from "../actions";
-
+import { getMarketData, getMarketSevens, testTodoReset } from "../actions";
 
 function WalletsScreen({
+  screenProps: { rootNavigation },
   navigation,
   getMarketData,
   getMarketSevens,
   marketData,
 }) {
-
   useEffect(() => {
     getMarketData();
     getMarketSevens();
@@ -38,7 +33,6 @@ function WalletsScreen({
     //   testTodoReset();
     // }
   }, []);
-  console.log(marketData)
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -47,9 +41,9 @@ function WalletsScreen({
         right={
           <Custom_HeaderButton
             onPress={() => {
-              navigation.navigate({
+              rootNavigation.navigate({
                 routeName: "SettingsScreen",
-                key: "SettingsScreen"
+                key: "SettingsScreen",
               });
             }}
             type="icon"
@@ -62,7 +56,7 @@ function WalletsScreen({
         <View
           style={[
             styles.section,
-            { justifyContent: "center", alignItems: "center" }
+            { justifyContent: "center", alignItems: "center" },
           ]}
         >
           <Custom_Text
@@ -74,7 +68,7 @@ function WalletsScreen({
         <View style={styles.section}>
           {/* {example} */}
           <WalletCard
-            navigation={navigation}
+            navigation={rootNavigation}
             nickname="Elegant Dinosaur"
             totalBalance="$5.04"
             tokenizedAssets={0}
@@ -87,9 +81,9 @@ function WalletsScreen({
           icon="md-add"
           color={Colors.text}
           onPress={() => {
-            navigation.navigate({
+            rootNavigation.navigate({
               routeName: "AddWalletScreen",
-              key: "AddWalletScreen"
+              key: "AddWalletScreen",
             });
           }}
         />
@@ -99,37 +93,38 @@ function WalletsScreen({
 }
 
 WalletsScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   section: {
     marginHorizontal: 20,
-    marginTop: 20
+    marginTop: 20,
   },
   footer: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
     marginHorizontal: 20,
-    marginVertical: 50
-  }
+    marginVertical: 50,
+  },
 });
 
-const mapStateToProps = ({
-  marketData,
-}) => ({
+const mapStateToProps = ({ marketData }) => ({
   marketData,
 });
 
 const mapDispatchToProps = dispatch => ({
   getMarketData: () => dispatch(getMarketData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
-  testTodoReset: () => dispatch(testTodoReset())
+  testTodoReset: () => dispatch(testTodoReset()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletsScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WalletsScreen);

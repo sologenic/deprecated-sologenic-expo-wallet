@@ -20,6 +20,7 @@
     "expo-asset": "~8.0.0",
     "expo-constants": "~8.0.0",
     "expo-font": "~8.0.0",
+    "expo-local-authentication": "~8.0.0",
     "expo-web-browser": "~8.0.0",
     "glamorous-native": "^2.0.0",
     "lodash": "^4.17.15",
@@ -34,6 +35,7 @@
     "react-native-chart-kit": "github:coinfielddev/react-native-chart-kit",
     "react-native-gesture-handler": "~1.5.0",
     "react-native-picker-select": "^6.3.3",
+    "react-native-pin-view": "github:coinfielddev/react-native-pin-view",
     "react-native-popup-menu": "^0.15.6",
     "react-native-qrcode-generator": "^1.1.0",
     "react-native-reanimated": "~1.4.0",
@@ -49,8 +51,7 @@
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-persist-transform-filter": "0.0.20",
-    "redux-saga": "^1.1.3",
-    "expo-local-authentication": "~8.0.0"
+    "redux-saga": "^1.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",
