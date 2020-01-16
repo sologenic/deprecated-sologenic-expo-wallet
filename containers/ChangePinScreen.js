@@ -18,6 +18,7 @@ class ChangePinScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentCodeMatched: false,
       codeCreated: false,
       codeMatched: false,
       code: null,
@@ -26,6 +27,7 @@ class ChangePinScreen extends React.Component {
       showModal: false,
       selectedMethod: null,
       availableUnlockMethods: null,
+      showCurrentCodeError: false,
     };
   }
 
@@ -34,14 +36,16 @@ class ChangePinScreen extends React.Component {
   };
 
   render() {
-    const { navigation, createPin } = this.props;
+    const { navigation, createPin, pin } = this.props;
     const {
       unlockText,
       availableUnlockMethods,
+      currentCodeMatched,
       codeCreated,
       showCodeError,
       code,
       codeMatched,
+      showCurrentCodeError,
     } = this.state;
     return (
       <View style={styles.container}>
@@ -59,9 +63,11 @@ class ChangePinScreen extends React.Component {
           center={
             <Custom_HeaderTitle
               text={
-                codeCreated
-                  ? "Confirm your PIN Number"
-                  : "Create your PIN Number"
+                !currentCodeMatched
+                  ? "Enter your current PIN"
+                  : codeCreated
+                  ? "Confirm your new PIN"
+                  : "Enter your new PIN"
               }
             />
           }
@@ -101,7 +107,35 @@ class ChangePinScreen extends React.Component {
                 </View>
               </View>
             )}
-            {codeMatched && (
+            {showCurrentCodeError && (
+              <View
+                style={{
+                  position: "absolute",
+                  top: 82,
+                  alignSelf: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Custom_Text
+                    value="PIN is incorrect."
+                    style={{
+                      textAlign: "center",
+                      marginRight: 10,
+                    }}
+                    color={Colors.errorBackground}
+                    size={16}
+                  />
+                  <Image source={Images.smallErrIcon} />
+                </View>
+              </View>
+            )}
+            {/* {codeMatched && (
               <View
                 style={{
                   position: "absolute",
@@ -129,9 +163,63 @@ class ChangePinScreen extends React.Component {
                   />
                 </View>
               </View>
-            )}
+            )} */}
             <View style={{ marginTop: 42 }}>
-              {!codeCreated ? (
+              {!currentCodeMatched && (
+                <PinView
+                  onComplete={(val, clear) => {
+                    if (val === pin) {
+                      this.setState({
+                        showCurrentCodeError: false,
+                        currentCodeMatched: true,
+                      });
+                      clear();
+                    } else {
+                      this.setState({
+                        codeCreated: false,
+                        code: null,
+                        showCurrentCodeError: true,
+                      });
+                      clear();
+                    }
+                  }}
+                  pinLength={4}
+                  inputViewStyle={{
+                    marginHorizontal: 20,
+                    marginBottom: 10,
+                    width: 16,
+                    height: 16,
+                    borderRadius: 8,
+                    borderWidth: 2,
+                    borderColor: codeMatched ? Colors.freshGreen : Colors.text,
+                  }}
+                  inputBgOpacity={1}
+                  inputBgColor={Colors.buttonText}
+                  inputActiveBgColor={
+                    codeMatched ? Colors.freshGreen : Colors.text
+                  }
+                  buttonBgColor={Colors.pinInputBackground}
+                  keyboardViewTextStyle={{
+                    fontFamily: "DMSansBold",
+                    fontSize: 24,
+                    color: Colors.text,
+                    tintColor: Colors.text,
+                  }}
+                  keyboardViewStyle={{
+                    marginVertical: 8,
+                    height: 64,
+                    width: 64,
+                  }}
+                  keyboardContainerStyle={{
+                    marginTop: 48,
+                    marginBottom: 0,
+                  }}
+                  keyboardViewItemText={{
+                    tintColor: Colors.text,
+                  }}
+                />
+              )}
+              {currentCodeMatched && !codeCreated && (
                 <PinView
                   onComplete={(val, clear) => {
                     this.setState({
@@ -174,7 +262,8 @@ class ChangePinScreen extends React.Component {
                     tintColor: Colors.text,
                   }}
                 />
-              ) : (
+              )}
+              {currentCodeMatched && codeCreated && !codeMatched && (
                 <PinView
                   disabled={codeMatched}
                   onComplete={(val, clear) => {
@@ -184,22 +273,7 @@ class ChangePinScreen extends React.Component {
                         codeMatched: true,
                       });
                       createPin(code);
-                      if (!availableUnlockMethods) {
-                        setTimeout(this.completeAuthSetup(), 1000);
-                      } else {
-                        setTimeout(
-                          () =>
-                            rootNavigation.navigate({
-                              key: "SetupUnlockScreen",
-                              routeName: "SetupUnlockScreen",
-                              params: {
-                                unlockText,
-                                availableUnlockMethods,
-                              },
-                            }),
-                          1000,
-                        );
-                      }
+                      navigation.goBack();
                     } else {
                       this.setState({
                         codeCreated: false,
@@ -217,13 +291,11 @@ class ChangePinScreen extends React.Component {
                     height: 16,
                     borderRadius: 8,
                     borderWidth: 2,
-                    borderColor: codeMatched ? Colors.freshGreen : Colors.text,
+                    borderColor: Colors.text,
                   }}
                   inputBgOpacity={1}
                   inputBgColor={Colors.buttonText}
-                  inputActiveBgColor={
-                    codeMatched ? Colors.freshGreen : Colors.text
-                  }
+                  inputActiveBgColor={Colors.text}
                   buttonBgColor={Colors.pinInputBackground}
                   keyboardViewTextStyle={{
                     fontFamily: "DMSansBold",
@@ -260,7 +332,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({}) => ({});
+const mapStateToProps = ({ pin }) => ({ pin });
 
 const mapDispatchToProps = dispatch => ({
   createPin: data => dispatch(createPinSuccess(data)),
