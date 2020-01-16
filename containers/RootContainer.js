@@ -7,10 +7,11 @@ import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { MenuProvider } from "react-native-popup-menu";
 import { createAppContainer } from "react-navigation";
 import MainStack from "../navigation/MainStack";
+import OrientationStack from "../navigation/OrientationStack";
 import Fonts from "../constants/Fonts";
 import { imagesArray } from "../constants/Images";
-import OrientationScreen from "./OrientationScreen";
 const App = createAppContainer(MainStack);
+const Orientation = createAppContainer(OrientationStack);
 
 const RootContainer = ({
   skipLoadingScreen,
@@ -39,7 +40,12 @@ const RootContainer = ({
         </View>
       );
     }
-    return <OrientationScreen />;
+    return (
+      <View style={styles.container}>
+        {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
+        <Orientation />
+      </View>
+    );
   }
 };
 

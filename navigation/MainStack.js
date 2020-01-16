@@ -12,6 +12,7 @@ import YourRecoveryPhraseScreen from "../containers/YourRecoveryPhraseScreen";
 import ImportExistingWalletScreen from "../containers/ImportExistingWalletScreen";
 import WalletScreen from "../containers/WalletScreen";
 import CreatePinScreen from "../containers/CreatePinScreen";
+import ChangePinScreen from "../containers/ChangePinScreen";
 import UnlockScreen from "../containers/UnlockScreen";
 import SetupUnlockScreen from "../containers/SetupUnlockScreen";
 import ReceiveScreen from "../containers/ReceiveScreen";
@@ -20,6 +21,7 @@ import ActivateWalletScreen from "../containers/ActivateWalletScreen";
 import RecoveryPhraseTestScreen from "../containers/RecoveryPhraseTestScreen";
 import ChangeWalletNicknameScreen from "../containers/ChangeWalletNicknameScreen";
 import ConfirmUnlockMethodScreen from "../containers/ConfirmUnlockMethodScreen";
+import TermsScreen from "../containers/TermsScreen";
 
 const MainStack = createStackNavigator(
   {
@@ -58,11 +60,13 @@ const MainStack = createStackNavigator(
     SetupUnlockScreen: SetupUnlockScreen,
     ConfirmUnlockMethodScreen: ConfirmUnlockMethodScreen,
     CreatePinScreen: CreatePinScreen,
+    ChangePinScreen: ChangePinScreen,
     ReceiveScreen: ReceiveScreen,
     ActivateWalletScreen: ActivateWalletScreen,
     SendScreen: SendScreen,
     RecoveryPhraseTestScreen: RecoveryPhraseTestScreen,
     ChangeWalletNicknameScreen: ChangeWalletNicknameScreen,
+    TermsScreen: TermsScreen,
   },
   {
     headerMode: "none",

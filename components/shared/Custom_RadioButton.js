@@ -4,25 +4,21 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Colors from "../../constants/Colors";
 
-export default function Custom_RadioButton({
-  onPress,
-  pressed,
-  style,
-}) {
+export default function Custom_RadioButton({ onPress, pressed, style }) {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
         styles.radioButton,
         { borderColor: pressed ? Colors.darkRed : Colors.text },
-        { ...style }
+        { ...style },
       ]}
       activeOpacity={0.5}
     >
       <View
         style={[
           styles.innerButton,
-          { backgroundColor: pressed ? Colors.darkRed : "transparent" }
+          { backgroundColor: pressed ? Colors.darkRed : "transparent" },
         ]}
       />
     </TouchableOpacity>
@@ -32,7 +28,7 @@ export default function Custom_RadioButton({
 Custom_RadioButton.propTypes = {
   onPress: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 Custom_RadioButton.defaultProps = {
@@ -46,10 +42,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 12.5,
     borderColor: Colors.text,
-    borderWidth: 3,
+    borderWidth: 2,
     height: 25,
     width: 25,
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
   innerButton: {
     alignItems: "center",
@@ -57,6 +53,6 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     height: 12,
     width: 12,
-    backgroundColor: "transparent"
+    backgroundColor: "transparent",
   },
 });

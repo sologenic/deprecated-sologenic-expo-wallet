@@ -28,6 +28,7 @@ const colors = {
   mainBackground: "#f5f6f8",
   secondaryBackground: "#fff",
   footerBackground: "#000",
+  borderColor: "#707070",
   timelineActiveBackColor: "#000",
   timelineActiveTextColor: "#fff",
   timelineInactiveBackColor: "rgba(0,0,0,0)",
