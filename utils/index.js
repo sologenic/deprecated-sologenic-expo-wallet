@@ -2,9 +2,13 @@ import qrcode from "qrcode-generator";
 import Colors from "../constants/Colors";
 import { Wallet, Utils } from "xpring-common-js";
 import { RippleAPI } from "ripple-lib";
+import * as s from "sologenic-xrpl-stream-js-non-redis";
 
 export const countWords = words => {
-  const arrayOfWords = words.trim().split(" ").filter(item => item.lenght !== 0);
+  const arrayOfWords = words
+    .trim()
+    .split(" ")
+    .filter(item => item.lenght !== 0);
   return arrayOfWords.length === 12 ? true : false;
 };
 
@@ -16,7 +20,7 @@ export const generateQRCode = data => {
   QRCode.make();
   const uri = QRCode.createDataURL(2, 4);
   return uri;
-}
+};
 
 export const genereateRandomNumbers = () => {
   const randoms = [];
@@ -30,16 +34,16 @@ export const genereateRandomNumbers = () => {
     }
   }
   return randoms;
-}
+};
 
 export const getPriceChange = (tickerLast, tickerOpen) => {
   return tickerLast - tickerOpen === 0
-    ? '0%'
+    ? "0%"
     : `${(((tickerLast - tickerOpen) / tickerOpen) * 100).toFixed(2)}%`;
 };
 
 export const getPriceColor = priceChange => {
-  return priceChange.substring(0, 1) === '-'
+  return priceChange.substring(0, 1) === "-"
     ? Colors.errorBackground
     : Colors.freshGreen;
 };
@@ -62,7 +66,7 @@ export const generateNewRandomWallet = () => {
 export const generateMnemonicArray = input => {
   const result = input.trim().split(" ");
   return result;
-}
+};
 
 // Get an address from generated random wallet
 export const getAddress = input => {
@@ -78,7 +82,10 @@ export const getWalletFromMnemonic = mnemonic => {
 };
 
 // Encode an X-Address
-export const getXAddressFromRippleClassicAddress = (rippleClassicAddress, tag) => {
+export const getXAddressFromRippleClassicAddress = (
+  rippleClassicAddress,
+  tag
+) => {
   const xAddress = Utils.encodeXAddress(rippleClassicAddress, tag);
   return xAddress;
 };
@@ -90,9 +97,9 @@ export const getRippleClassicAddressFromXAddress = xAddress => {
 };
 
 //Validate ripple address or not
-//bitcoin address returns false 
+//bitcoin address returns false
 export const isValidRippleAddress = address => {
-  return address ? Utils.isValidAddress(address) : false; 
+  return address ? Utils.isValidAddress(address) : false;
 };
 
 //Validate ripple XAddress or not
@@ -110,4 +117,20 @@ export const isValidClassicAddress = address => {
 export const isValidSecret = secret => {
   const api = new RippleAPI();
   return secret ? api.isValidSecret(secret) : false;
-}
+};
+
+export const rippleApi = new RippleAPI({
+  server: "wss://s.altnet.rippletest.net:51233"
+});
+
+export const sologenic = new s.SologenicTxHandler(
+  // RippleAPI Options
+  {
+    server: "wss://testnet.xrpl-labs.com" // Kudos to Wietse Wind
+  },
+  // Sologenic Options, hash or redis
+  {
+    queueType: "hash",
+    hash: {}
+  }
+);

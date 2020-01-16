@@ -83,15 +83,6 @@ const getMarketSevensError = (state, action) => {
   });
 };
 
-const testTodoReset = (state, action) => {
-  return Object.assign({}, state, {
-    test: "Default",
-    testPending: null,
-    testSuccess: null,
-    testError: null
-  });
-};
-
 const updatePhraseTestValue1 = (state, action) => {
   return Object.assign({}, state, {
     phraseTestValue1: action.value,
@@ -119,11 +110,23 @@ const getBalance = (state, action) => {
 };
 
 const getBalanceSuccess = (state, action) => {
+  const { wallets } = state;
+  const { id, payload } = action;
+  const updatedWallets = wallets.map(item => {
+    if (item.id === id) {
+      item.balance.xrp = payload;
+      // console.log(item)
+      return item;
+    }
+    return item;
+  });
+
   return Object.assign({}, state, {
-    balance: action.payload,
+    balance: payload,
     getBalancePending: false,
     getBalanceSuccess: true,
-    getBalanceError: false
+    getBalanceError: false,
+    wallets: updatedWallets,
   });
 };
 
@@ -283,12 +286,8 @@ export default (state = defaultState, action) => {
     case "GET_MARKET_SEVENS_SUCCESS":
       return getMarketSevensSuccess(state, action);
     case "GET_MARKET_SEVENS_ERROR":
-      return getMarketSevensError(state, action);
-
-    case "TEST_TODO_RESET":
-      return testTodoReset(state, action);
-    
-      case "UPDATE_PHRASE_TEST_VALUE_1":
+      return getMarketSevensError(state, action);    
+    case "UPDATE_PHRASE_TEST_VALUE_1":
       return updatePhraseTestValue1(state, action);
     case "UPDATE_PHRASE_TEST_VALUE_2":
       return updatePhraseTestValue2(state, action);
@@ -327,7 +326,7 @@ export default (state = defaultState, action) => {
     case "CHANGE_NICKNAME":
       return changeNickname(state, action);  
     case "DELETE_WALLET":
-      return deleteWallet(state, action);  
+      return deleteWallet(state, action);
     default:
       return state;
   }

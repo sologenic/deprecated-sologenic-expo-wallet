@@ -38,12 +38,6 @@ export const getMarketSevensError = data => {
   };
 };
 
-export const testTodoReset = () => {
-  return {
-    type: "TEST_TODO_RESET"
-  };
-};
-
 export const updatePhraseTestValue1 = value => {
   return {
     type: "UPDATE_PHRASE_TEST_VALUE_1",
@@ -65,15 +59,18 @@ export const updatePhraseTestValue3 = value => {
   };
 };
 
-export const getBalance = () => {
+export const getBalance = (id, address) => {
   return {
-    type: "GET_BALANCE"
+    type: "GET_BALANCE",
+    id,
+    address,
   };
 };
 
-export const getBalanceSuccess = data => {
+export const getBalanceSuccess = (id, data) => {
   return {
     type: "GET_BALANCE_SUCCESS",
+    id,
     payload: data
   };
 };
@@ -196,4 +193,3 @@ export const deleteWallet = id => {
     id,
   };
 };
-

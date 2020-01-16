@@ -20,26 +20,30 @@ import WalletCard from "./WalletCard";
 import {
   getMarketData,
   getMarketSevens,
-  testTodoReset,
+  getBalance,
+  connectToRippleApi,
 } from "../actions";
-
 
 function WalletsScreen({
   navigation,
   getMarketData,
   getMarketSevens,
+  getBalance,
+  connectToRippleApi,
   marketData,
   wallets,
 }) {
 
   useEffect(() => {
+    connectToRippleApi();
     getMarketData();
     getMarketSevens();
     // return () => {
     //   testTodoReset();
     // }
   }, []);
-  console.log("wallets", wallets)
+  // console.log("wallets", wallets)
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -63,17 +67,13 @@ function WalletsScreen({
         {wallets.length > 0 ? (
           <View style={styles.section}>
             {wallets.map((item, index) => {
+              // getBalance(item.id, wallets[item.id].walletAddress);
+              // console.log("hey") 
               return (
                 <View style={{ marginBottom: 20  }}>
                   <WalletCard
                     navigation={navigation}
-                    // nickname={item.nickname}
-                    // details={item.details}
-                    // balance={item.balance}
-                    // transactions={item.transactions}
                     defaultCurrency="usd"
-                    // walletAddress={item.walletAddress}
-                    // rippleClassicAddress={item.rippleClassicAddress}
                     wallet={item}
                     key={index}
                   />
@@ -154,7 +154,8 @@ const mapStateToProps = ({
 const mapDispatchToProps = dispatch => ({
   getMarketData: () => dispatch(getMarketData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
-  testTodoReset: () => dispatch(testTodoReset())
+  getBalance: (id, address) => dispatch(getBalance(id, address)),
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(WalletsScreen);
