@@ -240,9 +240,9 @@ const addNewWallet = (state, action) => {
     rippleClassicAddress,
   } = action;
   console.log("what is action?", action)
-  const id = (wallets.length - 1) + 1;
+  // const id = (wallets.length - 1) + 1;
   const wallet = {
-    id,
+    id: rippleClassicAddress,
     nickname,
     details: newWallet,
     balance: {

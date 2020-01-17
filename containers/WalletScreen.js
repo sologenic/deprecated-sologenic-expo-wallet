@@ -213,7 +213,7 @@ function WalletScreen({ navigation, deleteWallet, getBalance }) {
             currency={"XRP"}
             defaultCurrency={defaultCurrency}
             xrpBalance={xrp}
-            activate={xrp > 0 ? true : false}
+            activate={xrp >= 21 ? true : false}
             walletAddress={walletAddress}
             wallet={wallet}
           />
@@ -227,6 +227,7 @@ function WalletScreen({ navigation, deleteWallet, getBalance }) {
             walletAddress={walletAddress}
             wallet={wallet}
             activate={trustline ? true : false}
+            xrpActivate={xrp >= 21 ? true : false}
           />
         )}
         {tab === 3 && (

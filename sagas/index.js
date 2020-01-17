@@ -204,30 +204,9 @@ function* requestCreateTrustline(action) {
   try {
     yield call(setAccount, address, secret, keypair);
     const tx = yield call(setTrustline, address);
-    // yield sologenic.setAccount({
-    //   address: "raMZyCKwqjZF5ZBNsMJG7PBbXGP1jwNxdc",
-    //   keypair: {
-    //     privateKey:
-    //       "00D7009BB82849EBF454A674B3C27D91579A96BA5D488081D11E118E92234AF079",
-    //     publicKey:
-    //       "03E53FFE44B0E98EE072160F9C8D4052736567E8A5EC685EECCF6FFA58BAE825B3"
-    //   }
-    // });
-
-    // const tx = yield sologenic.submit({
-    //   TransactionType: "TrustSet",
-    //   Account: "raMZyCKwqjZF5ZBNsMJG7PBbXGP1jwNxdc",
-    //   LimitAmount: {
-    //     currency: "534F4C4F00000000000000000000000000000000",
-    //     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
-    //     value: "400000000"
-    //   },
-    //   Flags: 0x00020000
-    // });
-
     console.log("tx", tx);
     const response = yield tx.promise;
-    console.log(typeof response, response);
+    console.log(response);
     if (response) {
       yield put(createTrustlineSuccess(id));
     } else {

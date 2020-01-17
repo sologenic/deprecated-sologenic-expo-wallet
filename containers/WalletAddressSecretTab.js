@@ -102,7 +102,11 @@ function WalletAddressSecretTab({
               const walletAddress = addressValue;
               const rippleClassicAddress = addressValue;
               addNewWallet(
-                {},
+                {
+                  wallet: {
+                    secret: secretValue,
+                  }
+                },
                 nicknameValue ? nicknameValue : "",
                 walletAddress,
                 rippleClassicAddress,

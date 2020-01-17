@@ -7,7 +7,7 @@ import {
   Image,
   Text
 } from "react-native";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
@@ -17,9 +17,8 @@ import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import ActivationSoloModal from "../components/shared/ActivatingSoloModal";
-import {
-  createTrustline,
-} from "../actions"
+import WalletAddressModal from "../components/shared/WalletAddressModal";
+import { createTrustline } from "../actions";
 
 function WalletSoloTab({
   navigation,
@@ -31,59 +30,106 @@ function WalletSoloTab({
   createTrustlineSuccess,
   createTrustline,
   wallet,
+  xrpActivate
 }) {
-
   useEffect(() => {
-    console.log("hey effect", createTrustlineSuccess)
+    console.log("hey effect", createTrustlineSuccess);
     if (createTrustlineSuccess) {
       setActivateModalVisible(false);
       setActivateSuccessfulModalVisible(true);
-      setActivateModalVisible(false);
+      // setActivateModalVisible(false);
     }
-    // return () => {
-    //   setActivateModalVisible(false);
-    //   setActivateModalVisible(false);
-    // };
-  }, [createTrustlineSuccess])
+    return () => {
+      setActivateModalVisible(false);
+      setActivateSuccessfulModalVisible(false);
+    };
+  }, [createTrustlineSuccess]);
   const { id } = wallet;
-  console.log("HERE id", id)
-  const { privateKey, publicKey } = wallet.details.wallet;
+  console.log("HERE id", id);
+  const { privateKey, publicKey, secret } = wallet.details.wallet;
   const keypair = {
     privateKey,
-    publicKey,
-  }; 
+    publicKey
+  };
   const [activateModalVisible, setActivateModalVisible] = useState(false);
-  const [activateSuccessfulModalVisible, setActivateSuccessfulModalVisible] = useState(false);
+  const [
+    activateSuccessfulModalVisible,
+    setActivateSuccessfulModalVisible
+  ] = useState(false);
+  const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
+    false
+  );
   if (!activate) {
     return (
       <ScrollView>
-
         <View>
           <View style={styles.container}>
             <View style={{ marginTop: 50, marginHorizontal: 45 }}>
-              <Text
-                style={{
-                  fontFamily: "DMSans",
-                  color: Colors.text,
-                  fontSize: Fonts.size.small,
-                  textAlign: "center"
-                }}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-              >
-                Click below to activate your SOLO wallet. It could take up to 10 seconds
-              </Text>
+              {xrpActivate ? (
+                <Text
+                  style={{
+                    fontFamily: "DMSans",
+                    color: Colors.text,
+                    fontSize: Fonts.size.small,
+                    textAlign: "center"
+                  }}
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                >
+                  Click below to activate your SOLO wallet. It could take up to
+                  10 seconds
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    fontFamily: "DMSans",
+                    color: Colors.text,
+                    fontSize: Fonts.size.small,
+                    textAlign: "center"
+                  }}
+                  numberOfLines={2}
+                  ellipsizeMode="tail"
+                >
+                  In order to activate your SOLO wallet, you must first send at
+                  least
+                  <Text> </Text>
+                  <Text
+                    style={{
+                      fontFamily: "DMSansBold",
+                      color: Colors.text,
+                      fontSize: Fonts.size.small,
+                      textAlign: "center"
+                    }}
+                  >
+                    21 XRP
+                  </Text>
+                  <Text> </Text>
+                  to this address
+                </Text>
+              )}
             </View>
             <View style={{ marginTop: 8, marginBottom: 30 }}>
               <Custom_Button
                 text="Activate"
                 onPress={() => {
-                  console.log("Press Activate");
                   setActivateModalVisible(true);
-                  console.log("======== id =", id)
-                  createTrustline(walletAddress, "", keypair, id);
+                  if (secret) {
+                    createTrustline(walletAddress, secret, "", id);
+                  } else if (keypair) {
+                    createTrustline(walletAddress, "", keypair, id);
+                  }
                 }}
-                style={{ height: 40, width: 100 }}
+                style={{
+                  height: 40,
+                  width: 100,
+                  backgroundColor: !xrpActivate
+                    ? Colors.headerBackground
+                    : Colors.darkRed,
+                  borderColor: !xrpActivate ? Colors.grayText : Colors.darkRed,
+                  borderWidth: !xrpActivate ? 1 : 0
+                }}
+                color={!xrpActivate ? Colors.grayText : Colors.text}
+                disabled={!xrpActivate}
               />
             </View>
             <View
@@ -132,10 +178,7 @@ function WalletSoloTab({
                 size={Fonts.size.small}
                 color={Colors.grayText}
               />
-              <Custom_Text
-                value={walletAddress}
-                size={Fonts.size.small}
-              />
+              <Custom_Text value={walletAddress} size={Fonts.size.small} />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>
@@ -153,7 +196,9 @@ function WalletSoloTab({
               </View>
               <View style={{ paddingVertical: 2.5 }}>
                 <Custom_IconButton
-                  onPress={() => {}}
+                  onPress={() => {
+                    setWalletAddressModalVisible(true);
+                  }}
                   icon="qrcode"
                   size={Fonts.size.normal}
                   style={{
@@ -167,6 +212,11 @@ function WalletSoloTab({
             </View>
           </View>
         </View>
+        <WalletAddressModal
+          data={walletAddress}
+          modalVisible={walletAddressModalVisible}
+          onClose={() => setWalletAddressModalVisible(false)}
+        />
         <ActivationSoloModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
@@ -179,7 +229,7 @@ function WalletSoloTab({
             setActivateSuccessfulModalVisible(false);
             navigation.navigate({
               routeName: "WalletsScreen",
-              key: "WalletsScreen",
+              key: "WalletsScreen"
             });
           }}
         />
@@ -207,7 +257,11 @@ function WalletSoloTab({
               }}
             >
               <View style={{ paddingRight: 10 }}>
-                <Custom_Text value={`${soloBalance}`} size={Fonts.size.h3} isBold />
+                <Custom_Text
+                  value={`${soloBalance}`}
+                  size={Fonts.size.h3}
+                  isBold
+                />
               </View>
               <View>
                 <Custom_Text value={currency} size={Fonts.size.h4} />
@@ -293,10 +347,7 @@ function WalletSoloTab({
               size={Fonts.size.small}
               color={Colors.grayText}
             />
-            <Custom_Text
-              value={walletAddress}
-              size={Fonts.size.small}
-            />
+            <Custom_Text value={walletAddress} size={Fonts.size.small} />
           </View>
           <View style={{ flex: 1 }}>
             <View style={{ paddingVertical: 2.5 }}>
@@ -314,7 +365,9 @@ function WalletSoloTab({
             </View>
             <View style={{ paddingVertical: 2.5 }}>
               <Custom_IconButton
-                onPress={() => {}}
+                onPress={() => {
+                  setWalletAddressModalVisible(true);
+                }}
                 icon="qrcode"
                 size={Fonts.size.normal}
                 style={{
@@ -338,6 +391,11 @@ function WalletSoloTab({
           <TransactionCard currency="xrp" amount="1000.00" />
         </View>
       </View>
+      <WalletAddressModal
+        data={walletAddress}
+        modalVisible={walletAddressModalVisible}
+        onClose={() => setWalletAddressModalVisible(false)}
+      />
     </ScrollView>
   );
 }
@@ -382,16 +440,12 @@ const styles = StyleSheet.create({
   }
 });
 
-const mapStateToProps = ({
-  createTrustlineSuccess
-}) => ({
+const mapStateToProps = ({ createTrustlineSuccess }) => ({
   createTrustlineSuccess
 });
 const mapDispatchToProps = dispatch => ({
-  createTrustline: (address, secret, keypair, id) => dispatch(createTrustline(address, secret, keypair, id)), 
+  createTrustline: (address, secret, keypair, id) =>
+    dispatch(createTrustline(address, secret, keypair, id))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(WalletSoloTab);
+export default connect(mapStateToProps, mapDispatchToProps)(WalletSoloTab);
