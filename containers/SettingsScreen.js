@@ -1,14 +1,9 @@
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, View, Text } from "react-native";
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from "react-native-popup-menu";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import React, { useEffect, useState } from "react";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { connect } from "react-redux";
 import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
+import * as LocalAuthentication from "expo-local-authentication";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -19,10 +14,40 @@ import Custom_NavButton from "../components/shared/Custom_NavButton";
 
 const config = Constants.manifest.extra.config;
 
-export default function SettingsScreen({ navigation }) {
-  handleOpenWithWebBrowser = url => {
+function SettingsScreen({ navigation, unlockMethod }) {
+  const [availableUnlockMethods, setAvailableUnlockMethods] = useState(null);
+  const [unlockText, setUnlockText] = useState(null);
+  useEffect(() => {
+    getAvailableUnlockMethods();
+  }, []);
+
+  const handleOpenWithWebBrowser = url => {
     WebBrowser.openBrowserAsync(url);
   };
+
+  const getAvailableUnlockMethods = async () => {
+    LocalAuthentication.hasHardwareAsync()
+      .then(res => {
+        if (res) {
+          LocalAuthentication.supportedAuthenticationTypesAsync().then(res => {
+            if (res.includes(1) && !res.includes(2)) {
+              setUnlockText("Enable Fingerprint ID");
+              setAvailableUnlockMethods("fingerprint");
+            } else if (res.includes(2) && !res.includes(1)) {
+              setUnlockText("Enable Face ID");
+              setAvailableUnlockMethods("faceId");
+            } else if (res.includes(1) && res.includes(2)) {
+              setUnlockText("Choose Unlock Method");
+              setAvailableUnlockMethods("both");
+            } else {
+              setUnlockText(null);
+            }
+          });
+        }
+      })
+      .catch(err => console.log(err));
+  };
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -55,15 +80,35 @@ export default function SettingsScreen({ navigation }) {
               });
             }}
           />
-          <Custom_NavButton
-            value="Enable / Disable Face ID / Fingerprint"
-            handleOnPress={() => {
-              navigation.navigate({
-                key: "ChangePinScreen",
-                routeName: "ChangePinScreen",
-              });
-            }}
-          />
+          {availableUnlockMethods && (
+            <Custom_NavButton
+              value="Enable / Disable Face ID / Fingerprint"
+              handleOnPress={() => {
+                if (!unlockMethod) {
+                  navigation.navigate({
+                    key: "SetupUnlockScreen",
+                    routeName: "SetupUnlockScreen",
+                    params: {
+                      unlockText,
+                      availableUnlockMethods,
+                      isChangeScreen: true,
+                    },
+                  });
+                } else {
+                  navigation.navigate({
+                    key: "ChangeUnlockScreen",
+                    routeName: "ChangeUnlockScreen",
+                    params: {
+                      unlockText:
+                        unlockMethod === "faceId" ? "FaceID" : "Fingerprint",
+                      availableUnlockMethods,
+                      isChangeScreen: true,
+                    },
+                  });
+                }
+              }}
+            />
+          )}
         </View>
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
@@ -97,6 +142,14 @@ export default function SettingsScreen({ navigation }) {
             }}
           />
         </View>
+        <View style={{ marginTop: 15, marginHorizontal: 15 }}>
+          <Custom_Text
+            value={`Version ${Constants.manifest.version}`}
+            style={{ marginTop: 20, textAlign: "center" }}
+            color={Colors.grayText}
+            isBold
+          />
+        </View>
       </ScrollView>
     </View>
   );
@@ -116,3 +169,16 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
+
+const mapStateToProps = ({ unlockMethod }) => ({ unlockMethod });
+
+const mapDispatchToProps = dispatch => ({
+  completeAuthSetup: () => dispatch(setupAuthentication()),
+  authenticateUser: () => dispatch(authSuccess()),
+  saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SettingsScreen);

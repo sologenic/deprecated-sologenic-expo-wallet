@@ -5,6 +5,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
+  Modal,
 } from "react-native";
 import { connect } from "react-redux";
 import * as LocalAuthentication from "expo-local-authentication";
@@ -24,9 +25,9 @@ import {
   authSuccess,
   updateUnlockMethod,
 } from "../actions";
-import { screenWidth } from "../constants/Layout";
+import { screenWidth, borderWidth } from "../constants/Layout";
 
-class ConfirmUnlockMethodScreen extends React.Component {
+class ChangeUnlockScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -35,6 +36,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
       showAuthSuccess: false,
       authErrorStr: "",
       authSuccessStr: "",
+      isModalVisible: false,
     };
   }
 
@@ -49,7 +51,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
 
   authenticateAsync = async () => {
     const { navigation } = this.props;
-    const { availableUnlockMethods, isChangeScreen } = navigation.state.params;
+    const { availableUnlockMethods } = navigation.state.params;
     LocalAuthentication.hasHardwareAsync()
       .then(res => {
         if (res) {
@@ -134,31 +136,15 @@ class ConfirmUnlockMethodScreen extends React.Component {
   };
 
   completeSetup = () => {
-    const {
-      completeAuthSetup,
-      authenticateUser,
-      navigation,
-      saveUnlockMethod,
-    } = this.props;
-    const { availableUnlockMethods, isChangeScreen } = navigation.state.params;
-    if (isChangeScreen) {
-      setTimeout(() => saveUnlockMethod(availableUnlockMethods), 0);
-      setTimeout(() => navigation.pop(2), 1000);
-    } else {
-      completeAuthSetup();
-      authenticateUser();
-      navigation.dispatch(
-        StackActions.reset({
-          index: 0,
-          actions: [NavigationActions.navigate({ routeName: "HomeScreen" })],
-        }),
-      );
-      setTimeout(() => saveUnlockMethod(availableUnlockMethods), 100);
-    }
+    const { navigation, saveUnlockMethod } = this.props;
+    const { availableUnlockMethods } = navigation.state.params;
+    this.setState({ isModalVisible: true });
+    // setTimeout(() => saveUnlockMethod(availableUnlockMethods), 0);
+    // setTimeout(() => navigation.goBack(), 1000);
   };
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, saveUnlockMethod } = this.props;
     const { unlockText, availableUnlockMethods } = navigation.state.params;
     const {
       text,
@@ -166,6 +152,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
       showAuthSuccess,
       authSuccessStr,
       authErrorStr,
+      isModalVisible,
     } = this.state;
 
     const getUnlockImage = () => {
@@ -189,7 +176,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
     return (
       <View style={styles.container}>
         <Custom_Header
-          center={<Custom_HeaderTitle text={unlockText} />}
+          center={<Custom_HeaderTitle text={`Authorize ${unlockText}`} />}
           left={
             <Custom_HeaderButton
               onPress={() => {
@@ -264,6 +251,93 @@ class ConfirmUnlockMethodScreen extends React.Component {
             )}
           </View>
         </ScrollView>
+        <Modal
+          visible={isModalVisible}
+          animationType={"none"}
+          transparent={true}
+          onRequestClose={() => {}}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              backgroundColor: Colors.modalBackground,
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: Colors.buttonText,
+                marginHorizontal: 40,
+                borderRadius: 10,
+                padding: 20,
+              }}
+            >
+              <View>
+                <Custom_Text
+                  value={`Disable ${unlockText}`}
+                  style={{
+                    textAlign: "center",
+                  }}
+                  color={Colors.text}
+                  size={20}
+                  isBold
+                />
+              </View>
+              <View
+                style={{
+                  marginVertical: 24,
+                  paddingBottom: 24,
+                  borderBottomWidth: borderWidth,
+                  borderColor: Colors.borderColor,
+                }}
+              >
+                <Custom_Text
+                  value="Your PIN number will be used for authorization instead"
+                  size={12}
+                />
+              </View>
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.resetAuth();
+                    this.authenticateAsync();
+                    this.setState({ isModalVisible: false });
+                  }}
+                  style={{ flex: 1 }}
+                >
+                  <Custom_Text
+                    value="CANCEL"
+                    style={{
+                      letterSpacing: 1.25,
+                      textAlign: "right",
+                    }}
+                    color={Colors.grayText}
+                    size={14}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.resetAuth();
+                    saveUnlockMethod(null);
+                    this.setState({ isModalVisible: false });
+                    navigation.goBack();
+                  }}
+                  style={{ flex: 1 }}
+                >
+                  <Custom_Text
+                    value="CONFIRM"
+                    style={{
+                      textAlign: "right",
+                      letterSpacing: 1.25,
+                    }}
+                    color={Colors.freshGreen}
+                    size={14}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
@@ -279,12 +353,10 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({ unlockMethod }) => ({ unlockMethod });
 
 const mapDispatchToProps = dispatch => ({
-  completeAuthSetup: () => dispatch(setupAuthentication()),
-  authenticateUser: () => dispatch(authSuccess()),
   saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ConfirmUnlockMethodScreen);
+)(ChangeUnlockScreen);

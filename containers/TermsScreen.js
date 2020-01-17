@@ -63,7 +63,7 @@ function TermsScreen({ navigation, completeOrientation }) {
           style={{
             textAlign: "center",
             marginRight: 15,
-            width: "75%",
+            width: "80%",
             alignSelf: "center",
           }}
           size={14}

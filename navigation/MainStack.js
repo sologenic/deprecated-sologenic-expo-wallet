@@ -15,6 +15,7 @@ import CreatePinScreen from "../containers/CreatePinScreen";
 import ChangePinScreen from "../containers/ChangePinScreen";
 import UnlockScreen from "../containers/UnlockScreen";
 import SetupUnlockScreen from "../containers/SetupUnlockScreen";
+import ChangeUnlockScreen from "../containers/ChangeUnlockScreen";
 import ReceiveScreen from "../containers/ReceiveScreen";
 import SendScreen from "../containers/SendScreen";
 import ActivateWalletScreen from "../containers/ActivateWalletScreen";
@@ -58,6 +59,7 @@ const MainStack = createStackNavigator(
     YourRecoveryPhraseScreen: YourRecoveryPhraseScreen,
     ImportExistingWalletScreen: ImportExistingWalletScreen,
     SetupUnlockScreen: SetupUnlockScreen,
+    ChangeUnlockScreen: ChangeUnlockScreen,
     ConfirmUnlockMethodScreen: ConfirmUnlockMethodScreen,
     CreatePinScreen: CreatePinScreen,
     ChangePinScreen: ChangePinScreen,
