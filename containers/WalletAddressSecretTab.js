@@ -13,8 +13,12 @@ import Custom_Button from "../components/shared/Custom_Button";
 import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
-import { addNewWallet } from "../actions";
-import { isValidRippleAddress, isValidSecret, getXAddressFromRippleClassicAddress } from "../utils";
+import { addNewWallet, getTrustlines } from "../actions";
+import {
+  isValidRippleAddress,
+  isValidSecret,
+  getXAddressFromRippleClassicAddress
+} from "../utils";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 
 function WalletAddressSecretTab({
@@ -22,6 +26,7 @@ function WalletAddressSecretTab({
   importSuccessfulModalVisible,
   setImportSuccessfulModalVisible,
   addNewWallet,
+  getTrustlinesWithAddNewWallet
 }) {
   const [addressValue, onChangeAddress] = useState("");
   const [secretValue, onChangeSecret] = useState("");
@@ -45,7 +50,7 @@ function WalletAddressSecretTab({
     const validationResultAddress = isValidRippleAddress(addressValue);
     const validationResultSecret = isValidSecret(secretValue);
     return validationResultAddress && validationResultSecret;
-  }
+  };
 
   return (
     <View>
@@ -96,20 +101,19 @@ function WalletAddressSecretTab({
             console.log("Press Add Wallet");
             const result = handleValidation(addressValue, secretValue);
             if (!result) {
-              console.log("error")
+              console.log("error");
             } else {
               // const walletAddress = getXAddressFromRippleClassicAddress(addressValue);
               const walletAddress = addressValue;
               const rippleClassicAddress = addressValue;
-              addNewWallet(
-                {
-                  wallet: {
-                    secret: secretValue,
-                  }
-                },
-                nicknameValue ? nicknameValue : "",
+              getTrustlinesWithAddNewWallet(
                 walletAddress,
                 rippleClassicAddress,
+                nicknameValue ? nicknameValue : "",
+                "",
+                {
+                  secret: secretValue
+                },
               );
               setImportSuccessfulModalVisible(true);
             }
@@ -152,6 +156,22 @@ const mapDispatchToProps = dispatch => ({
   addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
     dispatch(
       addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
+    ),
+  getTrustlinesWithAddNewWallet: (
+    walletAddress,
+    rippleClassicAddress,
+    nickname,
+    mnemonic,
+    details
+  ) =>
+    dispatch(
+      getTrustlines(
+        walletAddress,
+        rippleClassicAddress,
+        nickname,
+        mnemonic,
+        details
+      )
     )
 });
 

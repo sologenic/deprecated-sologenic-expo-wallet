@@ -10,28 +10,58 @@ import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
+import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
-import { countWords, getWalletFromMnemonic, getRippleClassicAddressFromXAddress } from "../utils";
+import {
+  countWords,
+  getWalletFromMnemonic,
+  getRippleClassicAddressFromXAddress
+} from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
-import { addNewWallet } from "../actions"
+import { addNewWallet, getTrustlines } from "../actions";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 
-function PassphraseTab({ 
+function PassphraseTab({
   navigation,
   errorModalVisible,
   setErrorModalVisible,
   importSuccessfulModalVisible,
   setImportSuccessfulModalVisible,
-  addNewWallet, 
+  addNewWallet,
+  getTrustlinesWithAddNewWallet,
 }) {
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
+  const [nicknameValue, onChangeNickname] = useState("");
 
   const getContentFromClipboard = async () => {
     const content = await Clipboard.getString();
     await onChangeText(content);
   };
+
+  // const handlePressAddWallet = () => {
+  //   console.log("Press Add Wallet");
+  //   const result = countWords(textValue);
+  //   if (!result) {
+  //     setErrorModalVisible(true);
+  //   } else {
+  //     const importedWallet = getWalletFromMnemonic(textValue);
+  //     const walletAddress = importedWallet.getAddress();
+  //     const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
+  //     addNewWallet(
+  //       {
+  //         mnemonic: textValue,
+  //         wallet: importedWallet,
+  //       },
+  //       nicknameValue ? nicknameValue : "",
+  //       walletAddress,
+  //       rippleClassicAddress,
+  //       trustline,
+  //     );
+  //     setImportSuccessfulModalVisible(true);
+  //   }
+  // }
 
   useEffect(() => {
     const result = countWords(textValue);
@@ -111,6 +141,24 @@ function PassphraseTab({
           </TouchableOpacity>
         </View>
       </View>
+      <View style={{ marginBottom: 30 }}>
+        <Custom_TextInput
+          value={nicknameValue}
+          onChangeText={text => {
+            onChangeNickname(text);
+          }}
+          label="Account Nickname"
+          keyboardType="default"
+          returnKeyType="done"
+        />
+        <View style={{ marginLeft: 30 }}>
+          <Custom_Text
+            value="Optional"
+            size={Fonts.size.normal}
+            color={Colors.freshGreen}
+          />
+        </View>
+      </View>
       <View style={styles.addWalletContainer}>
         <Custom_Button
           text="Add Wallet"
@@ -122,16 +170,17 @@ function PassphraseTab({
             } else {
               const importedWallet = getWalletFromMnemonic(textValue);
               const walletAddress = importedWallet.getAddress();
-              const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
-              addNewWallet(
-                {
-                  mnemonic: textValue,
-                  wallet: importedWallet,
-                },
-                "",
-                walletAddress,
-                rippleClassicAddress,
+              const rippleClassicAddress = getRippleClassicAddressFromXAddress(
+                walletAddress
               );
+              getTrustlinesWithAddNewWallet(
+                rippleClassicAddress,
+                rippleClassicAddress,
+                nicknameValue ? nicknameValue : "",
+                textValue,
+                importedWallet,
+              );
+
               setImportSuccessfulModalVisible(true);
             }
           }}
@@ -158,7 +207,7 @@ function PassphraseTab({
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
-            key: "WalletsScreen",
+            key: "WalletsScreen"
           });
         }}
       />
@@ -178,12 +227,12 @@ const styles = StyleSheet.create({
   passphraseTextInputContainer: {
     marginHorizontal: 40,
     marginTop: 30,
-    marginBottom: 60
+    marginBottom: 30
   },
   passphraseTextInput: {
     borderBottomColor: Colors.text,
     borderBottomWidth: 1
-  },
+  }
 });
 
 const mapStateToProps = ({}) => ({});
@@ -191,10 +240,11 @@ const mapDispatchToProps = dispatch => ({
   addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
     dispatch(
       addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
+    ),
+    getTrustlinesWithAddNewWallet: (walletAddress, rippleClassicAddress, nickname, mnemonic, details) =>
+    dispatch(
+      getTrustlines(walletAddress, rippleClassicAddress, nickname, mnemonic, details)
     )
 });
 
-export default connect(
-  mapStateToProps, 
-  mapDispatchToProps
-)(PassphraseTab);
+export default connect(mapStateToProps, mapDispatchToProps)(PassphraseTab);

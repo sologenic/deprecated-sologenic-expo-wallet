@@ -238,9 +238,8 @@ const addNewWallet = (state, action) => {
     newWallet,
     walletAddress,
     rippleClassicAddress,
+    trustline,
   } = action;
-  console.log("what is action?", action)
-  // const id = (wallets.length - 1) + 1;
   const wallet = {
     id: rippleClassicAddress,
     nickname,
@@ -253,7 +252,7 @@ const addNewWallet = (state, action) => {
     walletAddress: rippleClassicAddress,
     rippleClassicAddress,
     transactions: [],
-    trustline: false,
+    trustline,
   };
   return Object.assign({}, state, {
     wallets: [ ...wallets, wallet ],
@@ -270,7 +269,6 @@ const changeNickname = (state, action) => {
   const newNickname = action.nickname;
   const { wallets } = state;
   const copyWallets = [ ...wallets ];
-  console.log("changeNickname", action.id)
   const updatedWallets = copyWallets.map(wallet => {
     if (wallet.id === action.id) {
       wallet.nickname = newNickname;
@@ -283,13 +281,11 @@ const changeNickname = (state, action) => {
 }
 
 const deleteWallet = (state, action) => {
-  console.log("id", action.id)
   const { wallets } = state;
   const copyWallets = [ ...wallets ];
   const updatedWallets = copyWallets.filter(wallet => {
     return wallet.id !== action.id;
   });
-  console.log("copyWallets", updatedWallets)
   return Object.assign({}, state, {
     wallets: updatedWallets,
   });
@@ -381,6 +377,39 @@ const getTransactionsError = (state, action) => {
   });
 }
 
+const getTrustlines = (state, action) => {
+  return Object.assign({}, state, {
+    getTrustlinesPending: true,
+    getTrustlinesSuccess: false,
+    getTrustlinesError: false,
+  });
+}
+
+const getTrustlinesSuccess = (state, action) => {
+  const { wallets } = state;
+  const copyWallets = [ ...wallets ];
+  const updatedWallets = copyWallets.map(wallet => {
+    if (wallet.id === action.address) {
+      wallet.trustline = action.trustline;
+    };
+    return wallet;
+  });
+  return Object.assign({}, state, {
+    getTrustlinesPending: false,
+    getTrustlinesSuccess: true,
+    getTrustlinesError: false,
+    // wallets: updatedWallets,
+  });
+}
+
+const getTrustlinesError = (state, action) => {
+  return Object.assign({}, state, {
+    getTrustlinesPending: false,
+    getTrustlinesSuccess: false,
+    getTrustlinesError: true,
+  });
+}
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -453,7 +482,12 @@ export default (state = defaultState, action) => {
       return getTransactionsSuccess(state, action);
     case "GET_TRANSACTIONS_ERROR":
       return getTransactionsError(state, action);
-
+    case "GET_TRUSTLINES":
+      return getTrustlines(state, action);
+    case "GET_TRUSTLINES_SUCCESS":
+      return getTrustlinesSuccess(state, action);
+    case "GET_TRUSTLINES_ERROR":
+      return getTrustlinesError(state, action);
     default:
       return state;
   }

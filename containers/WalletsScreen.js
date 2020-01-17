@@ -23,7 +23,6 @@ import {
   getBalance,
   connectToRippleApi,
 } from "../actions";
-// import { generateSeedFromMnemonic } from "../utils/utils2"
 
 function WalletsScreen({
   navigation,
@@ -51,10 +50,6 @@ function WalletsScreen({
       getBalance(item.id, item.walletAddress);
     });
   }
-  var mnemonic =
-  "novel matter final only nice cheese address cradle civil crash great flame struggle consider crowd surface purpose saddle mango endless mixed trial tape wrap";
-
-  // generateSeedFromMnemonic(mnemonic);
 
   return (
     <View style={styles.container}>
@@ -107,15 +102,6 @@ function WalletsScreen({
             />
           </View>
         )}
-        {/* <View style={styles.section}>
-          <WalletCard
-            navigation={navigation}
-            nickname="Elegant Dinosaur"
-            totalBalance="$5.04"
-            tokenizedAssets={0}
-            defaultCurrency="usd"
-          />
-        </View> */}
       </ScrollView>
       <View style={styles.footer}>
         <Custom_IconButton

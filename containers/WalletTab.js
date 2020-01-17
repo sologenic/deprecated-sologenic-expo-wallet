@@ -48,8 +48,6 @@ function WalletTab({
     privateKey,
     publicKey,
   }; 
-  // console.log("what is details?", details)
-  // const walletAddress = getAddress(details);
   console.log("xrp", xrpBalance)
   if (!activate) {
     return (

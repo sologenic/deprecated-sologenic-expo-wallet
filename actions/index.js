@@ -161,14 +161,16 @@ export const addNewWallet = (
   newWallet,
   nickname,
   walletAddress,
-  rippleClassicAddress
+  rippleClassicAddress,
+  trustline
 ) => {
   return {
     type: "ADD_NEW_WALLET",
     newWallet,
     nickname,
     walletAddress,
-    rippleClassicAddress
+    rippleClassicAddress,
+    trustline
   };
 };
 
@@ -259,5 +261,36 @@ export const getTransactionsError = payload => {
   return {
     type: "GET_TRANSACTIONS_ERROR",
     payload
+  };
+};
+
+export const getTrustlines = (
+  walletAddress,
+  rippleClassicAddress,
+  nickname,
+  mnemonic,
+  details
+) => {
+  return {
+    type: "GET_TRUSTLINES",
+    walletAddress,
+    rippleClassicAddress,
+    nickname,
+    mnemonic,
+    details
+  };
+};
+
+export const getTrustlinesSuccess = (address, trustline) => {
+  return {
+    type: "GET_TRUSTLINES_SUCCESS",
+    address,
+    trustline
+  };
+};
+
+export const getTrustlinesError = () => {
+  return {
+    type: "GET_TRUSTLINES_ERROR"
   };
 };
