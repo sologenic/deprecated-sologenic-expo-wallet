@@ -31,6 +31,7 @@ function WalletTab({
   activate,
   marketData,
   marketSevens,
+  wallet,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
@@ -39,6 +40,14 @@ function WalletTab({
   );
   const priceChange = getPriceChange(marketData.last, marketData.open);
   const priceColor = getPriceColor(priceChange);
+
+  const { id } = wallet;
+  console.log("HERE id", id)
+  const { privateKey, publicKey } = wallet.details.wallet;
+  const keypair = {
+    privateKey,
+    publicKey,
+  }; 
   // console.log("what is details?", details)
   // const walletAddress = getAddress(details);
   console.log("xrp", xrpBalance)
@@ -328,6 +337,10 @@ function WalletTab({
                       navigation,
                       balance: xrpBalance,
                       currency: currency.toLowerCase(),
+                      walletAddress,
+                      keypair,
+                      id,
+                      wallet,
                     }
                   });
                 }}

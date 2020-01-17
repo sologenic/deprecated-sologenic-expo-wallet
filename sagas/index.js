@@ -25,7 +25,7 @@ import {
   transferXrpError,
   // getTransactions,
   getTransactionsSuccess,
-  getTransactionsError,
+  getTransactionsError
 } from "../actions";
 import { createSevensObj, sologenic } from "../utils";
 
@@ -96,21 +96,21 @@ export function* requestMarketSevens() {
 // }
 
 // const submit = () => {
-  // return sologenic.submit({
-  //   TransactionType: "Payment",
-  //   Account: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
-  //   Destination: "rHUnGTTgqoacevovPmK25hCqNJLAKx2wXh",
-  //   SendMax: {
-  //     currency: "534F4C4F00000000000000000000000000000000",
-  //     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
-  //     value: "10001"
-  //   },
-  //   Amount: {
-  //     currency: "534F4C4F00000000000000000000000000000000",
-  //     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
-  //     value: "10000"
-  //   }
-  // });
+// return sologenic.submit({
+//   TransactionType: "Payment",
+//   Account: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
+//   Destination: "rHUnGTTgqoacevovPmK25hCqNJLAKx2wXh",
+//   SendMax: {
+//     currency: "534F4C4F00000000000000000000000000000000",
+//     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
+//     value: "10001"
+//   },
+//   Amount: {
+//     currency: "534F4C4F00000000000000000000000000000000",
+//     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
+//     value: "10000"
+//   }
+// });
 //   return sologenic.submit({
 //     TransactionType: "Payment",
 //     Account: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
@@ -142,7 +142,7 @@ function* requestConnectToRippleApi() {
       console.log("TX FAILED:", id, type, tx);
     });
 
-    console.log("start")
+    console.log("start");
     // yield call(setAccount);
     // const tx =  yield call(submit);
     // console.log("tx", tx)
@@ -181,7 +181,7 @@ const setAccount = (address, secret, keypair) => {
   return sologenic.setAccount({
     address,
     // secret: secret ? secret : "",
-    keypair,
+    keypair
   });
 };
 
@@ -200,12 +200,7 @@ const setTrustline = account => {
 };
 
 function* requestCreateTrustline(action) {
-  const {
-    address,
-    secret,
-    keypair,
-    id,
-  } = action;
+  const { address, secret, keypair, id } = action;
   try {
     yield call(setAccount, address, secret, keypair);
     const tx = yield call(setTrustline, address);
@@ -236,7 +231,7 @@ function* requestCreateTrustline(action) {
     if (response) {
       yield put(createTrustlineSuccess(id));
     } else {
-      yield put(createTrustlineError());      
+      yield put(createTrustlineError());
     }
   } catch (error) {
     yield put(createTrustlineError());
@@ -253,20 +248,22 @@ const transferXrp = (account, destination, value) => {
     Destination: destination,
     Amount: `${valueAmount}`
   });
-}
+};
 
 function* requestTransferXrp(action) {
   try {
-    // yield call(setAccount, address, secret, keypair);
-    const tx =  yield call(transferXrp, account, destination, value);
-    console.log("tx", tx)
+    const { account, keypair, destination, value } = action;
+    const secret = keypair ? keypair : "";
+    yield call(setAccount, account, secret, keypair);
+    const tx = yield call(transferXrp, account, destination, value);
+    console.log("tx", tx);
     const response = yield tx.promise;
     console.log(response);
     if (response) {
       yield put(transferXrpSuccess(response));
     }
-  } catch(error) {
-    console.log("REQUEST_TRANSFER_XRP_ERROR", error)
+  } catch (error) {
+    console.log("REQUEST_TRANSFER_XRP_ERROR", error);
     yield put(transferXrpError());
   }
 }
@@ -283,8 +280,8 @@ function* requestGetTransactionsactions() {
     if (response) {
       yield put(getTransactionsSuccess(response));
     }
-  } catch(error) {
-    console.log("REQUEST_GET_TRANSACTIONS_ERROR", error)
+  } catch (error) {
+    console.log("REQUEST_GET_TRANSACTIONS_ERROR", error);
     yield put(getTransactionsError());
   }
 }
@@ -418,8 +415,8 @@ export default function* rootSaga() {
     takeEvery("GET_BALANCE", requestGetBalance),
     takeEvery("CONNECT_TO_RIPPLE_API", requestConnectToRippleApi),
     takeEvery("CREATE_TRUSTLINE", requestCreateTrustline),
-    // takeEvery("TRANSFER_XRP", requestTransferXrp),
-    // takeEvery("GET_TRANSACTIONS", requestGetTransactionsactions),
+    takeEvery("TRANSFER_XRP", requestTransferXrp),
+    takeEvery("GET_TRANSACTIONS", requestGetTransactionsactions)
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),
   ]);

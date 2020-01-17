@@ -124,7 +124,10 @@ function PassphraseTab({
               const walletAddress = importedWallet.getAddress();
               const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
               addNewWallet(
-                importedWallet,
+                {
+                  mnemonic: textValue,
+                  wallet: importedWallet,
+                },
                 "",
                 walletAddress,
                 rippleClassicAddress,

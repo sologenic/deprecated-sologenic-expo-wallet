@@ -215,6 +215,7 @@ function WalletScreen({ navigation, deleteWallet, getBalance }) {
             xrpBalance={xrp}
             activate={xrp > 0 ? true : false}
             walletAddress={walletAddress}
+            wallet={wallet}
           />
         )}
         {tab === 2 && (

@@ -63,7 +63,7 @@ export const getBalance = (id, address) => {
   return {
     type: "GET_BALANCE",
     id,
-    address,
+    address
   };
 };
 
@@ -183,80 +183,81 @@ export const changeNickname = (id, nickname) => {
   return {
     type: "CHANGE_NICKNAME",
     nickname,
-    id,
+    id
   };
 };
 
 export const deleteWallet = id => {
   return {
     type: "DELETE_WALLET",
-    id,
+    id
   };
 };
 
 export const createTrustline = (address, secret, keypair, id) => {
-  console.log("HEHERE id", id)
+  console.log("HEHERE id", id);
   return {
     type: "CREATE_TRUSTLINE",
     address,
     secret,
     keypair,
-    id,
+    id
   };
 };
 
 export const createTrustlineSuccess = id => {
-  console.log("HEHEREFFFFFF id", id)
+  console.log("HEHEREFFFFFF id", id);
   return {
     type: "CREATE_TRUSTLINE_SUCCESS",
-    id,
+    id
   };
 };
 
 export const createTrustlineError = () => {
   return {
-    type: "CREATE_TRUSTLINE_ERROR",
+    type: "CREATE_TRUSTLINE_ERROR"
   };
 };
 
-export const transferXrp = (account, secret, keypair) => {
+export const transferXrp = (account, keypair, destination, value) => {
   return {
     type: "TRANSFER_XRP",
     account,
-    secret,
     keypair,
+    destination,
+    value
   };
 };
 
 export const transferXrpSuccess = () => {
   return {
-    type: "TRANSFER_XRP_SUCCESS",
+    type: "TRANSFER_XRP_SUCCESS"
   };
 };
 
 export const transferXrpError = () => {
   return {
-    type: "TRANSFER_XRP_ERROR",
+    type: "TRANSFER_XRP_ERROR"
   };
 };
 
 export const getTransactions = address => {
   return {
     type: "GET_TRANSACTIONS",
-    address,
+    address
   };
 };
 
 export const getTransactionsSuccess = payload => {
   return {
     type: "GET_TRANSACTIONS_SUCCESS",
-    payload,
+    payload
   };
 };
 
 export const getTransactionsError = payload => {
   return {
     type: "GET_TRANSACTIONS_ERROR",
-    payload,
+    payload
   };
 };

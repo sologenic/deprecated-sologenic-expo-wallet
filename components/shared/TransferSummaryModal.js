@@ -80,7 +80,7 @@ export default function TransferSummaryModal({ onPress, onClose, modalVisible, a
                 <View style={[styles.section, { height: 50, position: 'absolute', right: 0, bottom: 0 }]}>
                   <Custom_Button
                     text="CONFIRM"
-                    onPress={onClose}
+                    onPress={onPress}
                     color={Colors.freshGreen}
                     size={16}
                     textStyle={{ letterSpacing: 1.2 }}

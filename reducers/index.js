@@ -250,7 +250,7 @@ const addNewWallet = (state, action) => {
       solo: 0,
       tokenizedAssets: 0,
     },
-    walletAddress,
+    walletAddress: rippleClassicAddress,
     rippleClassicAddress,
     transactions: [],
     trustline: false,
