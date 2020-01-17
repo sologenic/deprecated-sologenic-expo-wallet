@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -34,9 +34,9 @@ import WalletTab from "./WalletTab";
 import WalletSoloTab from "./WalletSoloTab";
 import WalletTokenizedAssetTab from "./WalletTokenizedAssetTab";
 import DeleteWalletModal from "../components/shared/DeleteWalletModal";
-import { deleteWallet } from "../actions"
+import { deleteWallet, getBalance } from "../actions"
 
-function WalletScreen({ navigation, deleteWallet }) {
+function WalletScreen({ navigation, deleteWallet, getBalance }) {
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const {
@@ -49,8 +49,13 @@ function WalletScreen({ navigation, deleteWallet }) {
     nickname,
     walletAddress,
     rippleClassicAddress,
+    trustline,
   } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
+
+  useEffect(() => {
+    getBalance(id, walletAddress);
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -219,6 +224,8 @@ function WalletScreen({ navigation, deleteWallet }) {
             defaultCurrency={defaultCurrency}
             soloBalance={solo}
             walletAddress={walletAddress}
+            wallet={wallet}
+            activate={trustline ? true : false}
           />
         )}
         {tab === 3 && (
@@ -263,7 +270,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
-  deleteWallet: id => dispatch(deleteWallet(id))
+  deleteWallet: id => dispatch(deleteWallet(id)),
+  getBalance: (id, address) => dispatch(getBalance(id, address)),
 });
 
 export default connect(

@@ -17,8 +17,17 @@ import {
   getMarketDataError,
   getMarketSevensSuccess,
   getMarketSevensError,
+  // createTrustline,
+  createTrustlineSuccess,
+  createTrustlineError,
+  // transferXrp,
+  transferXrpSuccess,
+  transferXrpError,
+  // getTransactions,
+  getTransactionsSuccess,
+  getTransactionsError,
 } from "../actions";
-import { createSevensObj, rippleApi, sologenic } from "../utils";
+import { createSevensObj, sologenic } from "../utils";
 
 const api = create({
   baseURL: "https://api.coinfield.com/v1/",
@@ -30,7 +39,8 @@ const api = create({
   timeout: 10000
 });
 
-const getMarketData = defaultCurrency => api.get(`tickers/xrp${defaultCurrency}`);
+const getMarketData = defaultCurrency =>
+  api.get(`tickers/xrp${defaultCurrency}`);
 
 function* requestGetMarketData(action) {
   try {
@@ -55,7 +65,7 @@ const mediatorApi = create({
   timeout: 10000
 });
 
-const getMarketSevens = () => mediatorApi.get('seven');
+const getMarketSevens = () => mediatorApi.get("seven");
 
 export function* requestMarketSevens() {
   const response = yield call(getMarketSevens);
@@ -69,30 +79,45 @@ export function* requestMarketSevens() {
   }
 }
 
-const setAccount = () => {
-  return sologenic.setAccount({
-    address: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
-    secret: "snqvwE9tsgjLueu735zdrKvjMy2j7"
-  });
-}
+// const setAccount = () => {
+//   // return sologenic.setAccount({
+//   //   address: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
+//   //   secret: "snqvwE9tsgjLueu735zdrKvjMy2j7"
+//   // });
+//   return sologenic.setAccount({
+//     address: "raMZyCKwqjZF5ZBNsMJG7PBbXGP1jwNxdc",
+//     keypair: {
+//       privateKey:
+//         "00D7009BB82849EBF454A674B3C27D91579A96BA5D488081D11E118E92234AF079",
+//       publicKey:
+//         "03E53FFE44B0E98EE072160F9C8D4052736567E8A5EC685EECCF6FFA58BAE825B3"
+//     }
+//   });
+// }
 
-const submit = () => {
-  return sologenic.submit({
-    TransactionType: "Payment",
-    Account: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
-    Destination: "rHUnGTTgqoacevovPmK25hCqNJLAKx2wXh",
-    SendMax: {
-      currency: "534F4C4F00000000000000000000000000000000",
-      issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
-      value: "10001"
-    },
-    Amount: {
-      currency: "534F4C4F00000000000000000000000000000000",
-      issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
-      value: "10000"
-    }
-  });
-}
+// const submit = () => {
+  // return sologenic.submit({
+  //   TransactionType: "Payment",
+  //   Account: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
+  //   Destination: "rHUnGTTgqoacevovPmK25hCqNJLAKx2wXh",
+  //   SendMax: {
+  //     currency: "534F4C4F00000000000000000000000000000000",
+  //     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
+  //     value: "10001"
+  //   },
+  //   Amount: {
+  //     currency: "534F4C4F00000000000000000000000000000000",
+  //     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
+  //     value: "10000"
+  //   }
+  // });
+//   return sologenic.submit({
+//     TransactionType: "Payment",
+//     Account: "rsKfTxnDpmu8iMT5jhmqFbqthhDfrCv39W",
+//     Destination: "raMZyCKwqjZF5ZBNsMJG7PBbXGP1jwNxdc",
+//     Amount: `${2 / 0.000001}`
+//   });
+// };
 
 function* requestConnectToRippleApi() {
   try {
@@ -118,54 +143,149 @@ function* requestConnectToRippleApi() {
     });
 
     console.log("start")
-    yield call(setAccount);
-    const tx =  yield call(submit);
-    console.log("tx", tx)
-    console.log(yield tx.promise);
-    console.log("finish")
+    // yield call(setAccount);
+    // const tx =  yield call(submit);
+    // console.log("tx", tx)
+    // const response = yield tx.promise;
+    // if (response) {
+    //   console.log(response)
+    //   console.log("finish");
+    // }
   } catch (error) {
     // yield put(connectToRippleApiError());
     console.log("REQUEST_CONNECT_RIPPLE_API_ERROR", error);
   }
 }
 
-// function* requestConnectToRippleApi() {
-//   try {
-//     yield rippleApi.connect();
-//     yield rippleApi.on("connected", () => {
-//       console.log("connected");
-//     });
-//     yield rippleApi.on("error", (errorCode, errorMessage) => {
-//       console.log(errorCode + ": " + errorMessage);
-//     });
-//     yield rippleApi.on("disconnected", code => {
-//       console.log("disconnected, code:", code);
-//     });
-//     yield put(connectToRippleApiSuccess());
-//   } catch (error) {
-//     yield put(connectToRippleApiError());
-//     console.log("REQUEST_CONNECT_RIPPLE_API_ERROR", error);
-//   }
-// }
-
 const getAccountInfo = address => {
+  const rippleApi = sologenic.getRippleApi();
   return rippleApi.getAccountInfo(address);
 };
 
 function* requestGetBalance(action) {
   try {
-    // yield rippleApi.connect();
     const { id, address } = action;
     const response = yield call(getAccountInfo, address);
-    // console.log("RESPONSE", response, "id", id);
     if (response) {
       yield put(getBalanceSuccess(id, response.xrpBalance));
-      yield rippleApi.disconnect();
+      // yield rippleApi.disconnect();
     } else {
       yield put(getBalanceError());
     }
   } catch (error) {
     console.log("REQUEST_GET_BALANCE_ERROR", error);
+  }
+}
+
+const setAccount = (address, secret, keypair) => {
+  return sologenic.setAccount({
+    address,
+    // secret: secret ? secret : "",
+    keypair,
+  });
+};
+
+const setTrustline = account => {
+  const solo = "534F4C4F00000000000000000000000000000000";
+  return sologenic.submit({
+    TransactionType: "TrustSet",
+    Account: account,
+    LimitAmount: {
+      currency: solo,
+      issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi", //this is a test issuer for solo which is generated by sologenic-issuarance
+      value: "400000000"
+    },
+    Flags: 0x00020000
+  });
+};
+
+function* requestCreateTrustline(action) {
+  const {
+    address,
+    secret,
+    keypair,
+    id,
+  } = action;
+  try {
+    yield call(setAccount, address, secret, keypair);
+    const tx = yield call(setTrustline, address);
+    // yield sologenic.setAccount({
+    //   address: "raMZyCKwqjZF5ZBNsMJG7PBbXGP1jwNxdc",
+    //   keypair: {
+    //     privateKey:
+    //       "00D7009BB82849EBF454A674B3C27D91579A96BA5D488081D11E118E92234AF079",
+    //     publicKey:
+    //       "03E53FFE44B0E98EE072160F9C8D4052736567E8A5EC685EECCF6FFA58BAE825B3"
+    //   }
+    // });
+
+    // const tx = yield sologenic.submit({
+    //   TransactionType: "TrustSet",
+    //   Account: "raMZyCKwqjZF5ZBNsMJG7PBbXGP1jwNxdc",
+    //   LimitAmount: {
+    //     currency: "534F4C4F00000000000000000000000000000000",
+    //     issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
+    //     value: "400000000"
+    //   },
+    //   Flags: 0x00020000
+    // });
+
+    console.log("tx", tx);
+    const response = yield tx.promise;
+    console.log(typeof response, response);
+    if (response) {
+      yield put(createTrustlineSuccess(id));
+    } else {
+      yield put(createTrustlineError());      
+    }
+  } catch (error) {
+    yield put(createTrustlineError());
+    console.log("REQUEST_CREATE_TRUSTLINE", error);
+  }
+}
+
+const transferXrp = (account, destination, value) => {
+  const valueAmount = value / 0.000001;
+
+  return sologenic.submit({
+    TransactionType: "Payment",
+    Account: account,
+    Destination: destination,
+    Amount: `${valueAmount}`
+  });
+}
+
+function* requestTransferXrp(action) {
+  try {
+    // yield call(setAccount, address, secret, keypair);
+    const tx =  yield call(transferXrp, account, destination, value);
+    console.log("tx", tx)
+    const response = yield tx.promise;
+    console.log(response);
+    if (response) {
+      yield put(transferXrpSuccess(response));
+    }
+  } catch(error) {
+    console.log("REQUEST_TRANSFER_XRP_ERROR", error)
+    yield put(transferXrpError());
+  }
+}
+
+const getTransactions = address => {
+  // console.log(address)
+  const rippleApi = sologenic.getRippleApi();
+  return rippleApi.getTransactions(address);
+};
+
+function* requestGetTransactionsactions() {
+  try {
+    const response = yield call(getTransactions, address);
+    if (response) {
+      yield put(getTransactionsSuccess(response));
+    }
+  } catch(error) {
+    console.log("REQUEST_GET_TRANSACTIONS_ERROR", error)
+    yield put(getTransactionsError());
   }
 }
 
@@ -297,6 +417,9 @@ export default function* rootSaga() {
     takeEvery("GET_MARKET_SEVENS", requestMarketSevens),
     takeEvery("GET_BALANCE", requestGetBalance),
     takeEvery("CONNECT_TO_RIPPLE_API", requestConnectToRippleApi),
+    takeEvery("CREATE_TRUSTLINE", requestCreateTrustline),
+    // takeEvery("TRANSFER_XRP", requestTransferXrp),
+    // takeEvery("GET_TRANSACTIONS", requestGetTransactionsactions),
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),
   ]);

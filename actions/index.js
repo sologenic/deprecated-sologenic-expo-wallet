@@ -193,3 +193,70 @@ export const deleteWallet = id => {
     id,
   };
 };
+
+export const createTrustline = (address, secret, keypair, id) => {
+  console.log("HEHERE id", id)
+  return {
+    type: "CREATE_TRUSTLINE",
+    address,
+    secret,
+    keypair,
+    id,
+  };
+};
+
+export const createTrustlineSuccess = id => {
+  console.log("HEHEREFFFFFF id", id)
+  return {
+    type: "CREATE_TRUSTLINE_SUCCESS",
+    id,
+  };
+};
+
+export const createTrustlineError = () => {
+  return {
+    type: "CREATE_TRUSTLINE_ERROR",
+  };
+};
+
+export const transferXrp = (account, secret, keypair) => {
+  return {
+    type: "TRANSFER_XRP",
+    account,
+    secret,
+    keypair,
+  };
+};
+
+export const transferXrpSuccess = () => {
+  return {
+    type: "TRANSFER_XRP_SUCCESS",
+  };
+};
+
+export const transferXrpError = () => {
+  return {
+    type: "TRANSFER_XRP_ERROR",
+  };
+};
+
+export const getTransactions = address => {
+  return {
+    type: "GET_TRANSACTIONS",
+    address,
+  };
+};
+
+export const getTransactionsSuccess = payload => {
+  return {
+    type: "GET_TRANSACTIONS_SUCCESS",
+    payload,
+  };
+};
+
+export const getTransactionsError = payload => {
+  return {
+    type: "GET_TRANSACTIONS_ERROR",
+    payload,
+  };
+};

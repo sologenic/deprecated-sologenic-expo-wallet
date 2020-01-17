@@ -23,6 +23,7 @@ import {
   getBalance,
   connectToRippleApi,
 } from "../actions";
+// import { generateSeedFromMnemonic } from "../utils/utils2"
 
 function WalletsScreen({
   navigation,
@@ -38,11 +39,22 @@ function WalletsScreen({
     connectToRippleApi();
     getMarketData();
     getMarketSevens();
+    // getBalanceAll(wallets);
     // return () => {
     //   testTodoReset();
     // }
   }, []);
-  // console.log("wallets", wallets)
+  console.log(wallets)
+  const getBalanceAll = (wallets) => {
+    wallets.map(item => {
+      console.log(".walletAddress", item.walletAddress, item.details)
+      getBalance(item.id, item.walletAddress);
+    });
+  }
+  var mnemonic =
+  "novel matter final only nice cheese address cradle civil crash great flame struggle consider crowd surface purpose saddle mango endless mixed trial tape wrap";
+
+  // generateSeedFromMnemonic(mnemonic);
 
   return (
     <View style={styles.container}>
@@ -67,8 +79,8 @@ function WalletsScreen({
         {wallets.length > 0 ? (
           <View style={styles.section}>
             {wallets.map((item, index) => {
-              // getBalance(item.id, wallets[item.id].walletAddress);
-              // console.log("hey") 
+              // console.log("hey", item.id, item.walletAddress)
+              // getBalance(item.id, item.rippleClassicAddress);
               return (
                 <View style={{ marginBottom: 20  }}>
                   <WalletCard

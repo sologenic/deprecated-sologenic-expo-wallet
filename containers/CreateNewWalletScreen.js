@@ -71,7 +71,7 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             console.log("==address==", walletAddress);
             const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
             console.log("==rippleClassicAddress==", rippleClassicAddress);
-
+            const { address } = rippleClassicAddress;
             generateNewWallet(result);
             const nickname = textValue;
             console.log("nickname", nickname)
@@ -83,8 +83,8 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
               params: {
                 mnemonic,
                 nickname,
-                walletAddress,
-                rippleClassicAddress,
+                walletAddress: address,
+                rippleClassicAddress: address,
               },
             });
 

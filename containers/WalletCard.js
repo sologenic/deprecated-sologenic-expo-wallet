@@ -35,7 +35,7 @@ export default function WalletCard({
               wallet,
               // totalBalance,
               // tokenizedAssets,
-              // defaultCurrency,
+              defaultCurrency,
               // xrpBalance: `${xrp}`,
               // soloBalance: `${solo}`,
               // nickname,

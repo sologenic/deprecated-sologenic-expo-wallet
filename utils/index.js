@@ -1,7 +1,7 @@
 import qrcode from "qrcode-generator";
 import Colors from "../constants/Colors";
-import { Wallet, Utils } from "xpring-common-js";
-import { RippleAPI } from "ripple-lib";
+// import { Wallet, Utils } from "xpring-common-js";
+// import { RippleAPI } from "ripple-lib";
 import * as s from "sologenic-xrpl-stream-js-non-redis";
 
 export const countWords = words => {
@@ -56,72 +56,72 @@ export const createSevensObj = arr => {
   return sevensObj;
 };
 
-// Generate a random wallet.
-export const generateNewRandomWallet = () => {
-  const result = Wallet.generateRandomWallet();
-  return result;
-};
+// // Generate a random wallet.
+// export const generateNewRandomWallet = () => {
+//   const result = Wallet.generateRandomWallet();
+//   return result;
+// };
 
-// Generate a mnemonic array
-export const generateMnemonicArray = input => {
-  const result = input.trim().split(" ");
-  return result;
-};
+// // Generate a mnemonic array
+// export const generateMnemonicArray = input => {
+//   const result = input.trim().split(" ");
+//   return result;
+// };
 
-// Get an address from generated random wallet
-export const getAddress = input => {
-  const wallet = input.wallet;
-  const address = wallet.getAddress();
-  return address;
-};
+// // Get an address from generated random wallet
+// export const getAddress = input => {
+//   const wallet = input.wallet;
+//   const address = wallet.getAddress();
+//   return address;
+// };
 
-// Get wallet from mnemonic
-export const getWalletFromMnemonic = mnemonic => {
-  const wallet = Wallet.generateWalletFromMnemonic(mnemonic);
-  return wallet;
-};
+// // Get wallet from mnemonic
+// export const getWalletFromMnemonic = mnemonic => {
+//   const wallet = Wallet.generateWalletFromMnemonic(mnemonic);
+//   return wallet;
+// };
 
-// Encode an X-Address
-export const getXAddressFromRippleClassicAddress = (
-  rippleClassicAddress,
-  tag
-) => {
-  const xAddress = Utils.encodeXAddress(rippleClassicAddress, tag);
-  return xAddress;
-};
+// // Encode an X-Address
+// export const getXAddressFromRippleClassicAddress = (
+//   rippleClassicAddress,
+//   tag
+// ) => {
+//   const xAddress = Utils.encodeXAddress(rippleClassicAddress, tag);
+//   return xAddress;
+// };
 
-//Decode an X-Address
-export const getRippleClassicAddressFromXAddress = xAddress => {
-  const classicAddress = Utils.decodeXAddress(xAddress);
-  return classicAddress;
-};
+// //Decode an X-Address
+// export const getRippleClassicAddressFromXAddress = xAddress => {
+//   const classicAddress = Utils.decodeXAddress(xAddress);
+//   return classicAddress.address;
+// };
 
-//Validate ripple address or not
-//bitcoin address returns false
-export const isValidRippleAddress = address => {
-  return address ? Utils.isValidAddress(address) : false;
-};
+// //Validate ripple address or not
+// //bitcoin address returns false
+// export const isValidRippleAddress = address => {
+//   return address ? Utils.isValidAddress(address) : false;
+// };
 
-//Validate ripple XAddress or not
-//XAddress only returns true
-export const isValidXAddress = address => {
-  return address ? Utils.isValidXAddress(address) : false;
-};
+// //Validate ripple XAddress or not
+// //XAddress only returns true
+// export const isValidXAddress = address => {
+//   return address ? Utils.isValidXAddress(address) : false;
+// };
 
-//Validate ripple classic address,'r' is the first letter, or not
-//classic address only returns true
-export const isValidClassicAddress = address => {
-  return address ? Utils.isValidClassicAddress(address) : false;
-};
+// //Validate ripple classic address,'r' is the first letter, or not
+// //classic address only returns true
+// export const isValidClassicAddress = address => {
+//   return address ? Utils.isValidClassicAddress(address) : false;
+// };
 
-export const isValidSecret = secret => {
-  const api = new RippleAPI();
-  return secret ? api.isValidSecret(secret) : false;
-};
+// export const isValidSecret = secret => {
+//   const api = new RippleAPI();
+//   return secret ? api.isValidSecret(secret) : false;
+// };
 
-export const rippleApi = new RippleAPI({
-  server: "wss://s.altnet.rippletest.net:51233"
-});
+// export const rippleApi = new RippleAPI({
+//   server: "wss://s.altnet.rippletest.net:51233"
+// });
 
 export const sologenic = new s.SologenicTxHandler(
   // RippleAPI Options
@@ -134,3 +134,64 @@ export const sologenic = new s.SologenicTxHandler(
     hash: {}
   }
 );
+
+export const rippleApi = sologenic.getRippleApi();
+
+export const getAccountInfo = address => {  
+  return rippleApi.getAccountInfo(address); 
+}
+
+export const setAccount = (address, secret, keypair) => {
+  return sologenic.setAccount({
+    address,
+    secret: secret ? secret : "",
+    keypair: keypair ? keypair : "",
+  });
+}
+
+export const transferSolo = (issuer, account, destination, value) => {
+  const valueSendMax = value + 1;
+  const valueAmount = value;
+  const solo = "534F4C4F00000000000000000000000000000000";
+
+  return sologenic.submit({
+    TransactionType: "Payment",
+    Account: account,
+    Destination: destination,
+    SendMax: {
+      currency: solo,
+      issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
+      value: `${valueSendMax}`
+    },
+    Amount: {
+      currency: solo,
+      issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",
+      value: `${valueAmount}`
+    }
+  });
+}
+// Create a trustline linking the account (a certain address) with issuer
+export const createTrustline = (account) => {
+  const solo = "534F4C4F00000000000000000000000000000000";
+  return sologenic.submit({
+    TransactionType: "TrustSet",
+    Account: account,
+    LimitAmount: {
+      currency: solo,
+      issuer: "rEFgkRo5BTxXJiLVYMdEnQQ9J9Kj1F3Yvi",//this is a test issuer for solo which is generated by sologenic-issuarance
+      value: "400000000"
+    },
+    Flags: 0x00020000
+  });
+}
+
+export const transferXrp = (account, destination, value) => {
+  const valueAmount = value / 0.000001;
+
+  return sologenic.submit({
+    TransactionType: "Payment",
+    Account: account,
+    Destination: destination,
+    Amount: `${valueAmount}`
+  });
+}

@@ -96,9 +96,10 @@ function WalletAddressSecretTab({
             console.log("Press Add Wallet");
             const result = handleValidation(addressValue, secretValue);
             if (!result) {
-
+              console.log("error")
             } else {
-              const walletAddress = getXAddressFromRippleClassicAddress(addressValue);
+              // const walletAddress = getXAddressFromRippleClassicAddress(addressValue);
+              const walletAddress = addressValue;
               const rippleClassicAddress = addressValue;
               addNewWallet(
                 {},

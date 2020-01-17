@@ -29,6 +29,16 @@ const defaultState = {
   newWallet: null,
   wallets: [],
   nickname: "",
+  createTrustlinePending: null,
+  createTrustlineSuccess: null,
+  createTrustlineError: null,
+  transferXrpPending: null,
+  transferXrpSuccess: null,
+  transferXrpError: null,
+  transactions: null,
+  getTransactionsPending: null,
+  getTransactionsSuccess: null,
+  getTransactionsError: null,
 };
 
 const getMarketData = (state, action) => {
@@ -229,6 +239,7 @@ const addNewWallet = (state, action) => {
     walletAddress,
     rippleClassicAddress,
   } = action;
+  console.log("what is action?", action)
   const id = (wallets.length - 1) + 1;
   const wallet = {
     id,
@@ -242,6 +253,7 @@ const addNewWallet = (state, action) => {
     walletAddress,
     rippleClassicAddress,
     transactions: [],
+    trustline: false,
   };
   return Object.assign({}, state, {
     wallets: [ ...wallets, wallet ],
@@ -257,19 +269,115 @@ const saveNickname = (state, action) => {
 const changeNickname = (state, action) => {
   const newNickname = action.nickname;
   const { wallets } = state;
-  wallets[action.id].nickname = newNickname;
+  const copyWallets = [ ...wallets ];
+  console.log("changeNickname", action.id)
+  const updatedWallets = copyWallets.map(wallet => {
+    if (wallet.id === action.id) {
+      wallet.nickname = newNickname;
+    };
+    return wallet;
+  });
   return Object.assign({}, state, {
-    wallets,
+    wallets: updatedWallets,
   });
 }
 
 const deleteWallet = (state, action) => {
+  console.log("id", action.id)
   const { wallets } = state;
-  const currentWallets = [ ...wallets ];
-  currentWallets.splice(action.id, 1);
-
+  const copyWallets = [ ...wallets ];
+  const updatedWallets = copyWallets.filter(wallet => {
+    return wallet.id !== action.id;
+  });
+  console.log("copyWallets", updatedWallets)
   return Object.assign({}, state, {
-    wallets: currentWallets,
+    wallets: updatedWallets,
+  });
+}
+
+const createTrustline = (state, action) => {
+  return Object.assign({}, state, {
+    createTrustlinePending: true,
+    createTrustlineSuccess: false,
+    createTrustlineError: false,
+  });
+}
+
+const createTrustlineSuccess = (state, action) => {
+  console.log("HERE")
+  const { id } = action;
+  console.log("id", id);
+  const { wallets } = state;
+  const copyWallets = [ ...wallets ];
+  const updatedWallets = copyWallets.map(wallet => {
+    if (wallet.id === action.id) {
+      wallet.trustline = true;
+    };
+    return wallet;
+  });
+  return Object.assign({}, state, {
+    createTrustlinePending: false,
+    createTrustlineSuccess: true,
+    createTrustlineError: false,
+    wallets: updatedWallets,
+  });
+}
+
+const createTrustlineError = (state, action) => {
+  return Object.assign({}, state, {
+    createTrustlinePending: false,
+    createTrustlineSuccess: true,
+    createTrustlineError: false,
+  });
+}
+
+const transferXrp = (state, action) => {
+  return Object.assign({}, state, {
+    transferXrpPending: true,
+    transferXrpSuccess: false,
+    transferXrpError: false,
+  });
+}
+
+const transferXrpSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    transferXrpPending: false,
+    transferXrpSuccess: true,
+    transferXrpError: false,
+  });
+}
+
+const transferXrpError = (state, action) => {
+  return Object.assign({}, state, {
+    transferXrpPending: false,
+    transferXrpSuccess: false,
+    transferXrpError: true,
+  });
+}
+
+const getTransactions = (state, action) => {
+  return Object.assign({}, state, {
+    getTransactionsPending: true,
+    getTransactionsSuccess: false,
+    getTransactionsError: false,
+  });
+}
+
+const getTransactionsSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    getTransactionsPending: false,
+    getTransactionsSuccess: true,
+    getTransactionsError: false,
+    transactions: action.payload,
+  });
+}
+
+const getTransactionsError = (state, action) => {
+  return Object.assign({}, state, {
+    getTransactionsPending: false,
+    getTransactionsSuccess: false,
+    getTransactionsError: true,
+    error: action.payload,
   });
 }
 
@@ -327,6 +435,25 @@ export default (state = defaultState, action) => {
       return changeNickname(state, action);  
     case "DELETE_WALLET":
       return deleteWallet(state, action);
+    case "CREATE_TRUSTLINE": 
+      return createTrustline(state, action);
+    case "CREATE_TRUSTLINE_SUCCESS": 
+      return createTrustlineSuccess(state, action);
+    case "CREATE_TRUSTLINE_ERROR": 
+      return createTrustlineError(state, action);
+    case "TRANSFER_XRP":
+      return transferXrp(state, action);
+    case "TRANSFER_XRP_SUCCESS":
+      return transferXrpSuccess(state, action);
+    case "TRANSFER_XRP_ERROR":
+      return transferXrpError(state, action);
+    case "GET_TRANSACTIONS":
+      return getTransactions(state, action);
+    case "GET_TRANSACTIONS_SUCCESS":
+      return getTransactionsSuccess(state, action);
+    case "GET_TRANSACTIONS_ERROR":
+      return getTransactionsError(state, action);
+
     default:
       return state;
   }

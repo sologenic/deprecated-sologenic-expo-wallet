@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   Image,
   Text
 } from "react-native";
+import { connect } from 'react-redux';
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
@@ -16,16 +17,43 @@ import Colors from "../constants/Colors";
 import TransactionCard from "./TransactionCard";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import ActivationSoloModal from "../components/shared/ActivatingSoloModal";
+import {
+  createTrustline,
+} from "../actions"
 
-export default function WalletSoloTab({
+function WalletSoloTab({
   navigation,
   currency,
   soloBalance,
   walletAddress,
   defaultCurrency,
-  activate
+  activate,
+  createTrustlineSuccess,
+  createTrustline,
+  wallet,
 }) {
+
+  useEffect(() => {
+    console.log("hey effect", createTrustlineSuccess)
+    if (createTrustlineSuccess) {
+      setActivateModalVisible(false);
+      setActivateSuccessfulModalVisible(true);
+      setActivateModalVisible(false);
+    }
+    // return () => {
+    //   setActivateModalVisible(false);
+    //   setActivateModalVisible(false);
+    // };
+  }, [createTrustlineSuccess])
+  const { id } = wallet;
+  console.log("HERE id", id)
+  const { privateKey, publicKey } = wallet.details.wallet;
+  const keypair = {
+    privateKey,
+    publicKey,
+  }; 
   const [activateModalVisible, setActivateModalVisible] = useState(false);
+  const [activateSuccessfulModalVisible, setActivateSuccessfulModalVisible] = useState(false);
   if (!activate) {
     return (
       <ScrollView>
@@ -52,6 +80,8 @@ export default function WalletSoloTab({
                 onPress={() => {
                   console.log("Press Activate");
                   setActivateModalVisible(true);
+                  console.log("======== id =", id)
+                  createTrustline(walletAddress, "", keypair, id);
                 }}
                 style={{ height: 40, width: 100 }}
               />
@@ -137,14 +167,21 @@ export default function WalletSoloTab({
             </View>
           </View>
         </View>
-        {/* <ActivationSuccessfulModal
-          modalVisible={activateModalVisible}
-          onClose={() => setActivateModalVisible(false)}
-          currency="solo"
-        /> */}
         <ActivationSoloModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
+        />
+        <ActivationSuccessfulModal
+          modalVisible={activateSuccessfulModalVisible}
+          // onClose={() => setActivateSuccessfulModalVisible(false)}
+          currency="solo"
+          onPress={() => {
+            setActivateSuccessfulModalVisible(false);
+            navigation.navigate({
+              routeName: "WalletsScreen",
+              key: "WalletsScreen",
+            });
+          }}
         />
       </ScrollView>
     );
@@ -185,7 +222,7 @@ export default function WalletSoloTab({
                 alignItems: "center"
               }}
             >
-              <View style={{ paddingRight: 5 }}>
+              {/* <View style={{ paddingRight: 5 }}>
                 <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
               </View>
               <View>
@@ -193,7 +230,7 @@ export default function WalletSoloTab({
                   value={defaultCurrency.toUpperCase()}
                   size={Fonts.size.medium}
                 />
-              </View>
+              </View> */}
             </View>
           </View>
           <View style={styles.marketInfoContainer}>
@@ -210,14 +247,14 @@ export default function WalletSoloTab({
                   size={Fonts.size.medium}
                   color={Colors.lightGray}
                 />
-                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
+                {/* <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} /> */}
               </View>
               <View>
-                <Custom_Text
+                {/* <Custom_Text
                   value={`${-0.61}%`}
                   size={Fonts.size.small}
                   color={Colors.errorBackground}
-                />
+                /> */}
               </View>
             </View>
           </View>
@@ -344,3 +381,17 @@ const styles = StyleSheet.create({
     marginVertical: 24
   }
 });
+
+const mapStateToProps = ({
+  createTrustlineSuccess
+}) => ({
+  createTrustlineSuccess
+});
+const mapDispatchToProps = dispatch => ({
+  createTrustline: (address, secret, keypair, id) => dispatch(createTrustline(address, secret, keypair, id)), 
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WalletSoloTab);
