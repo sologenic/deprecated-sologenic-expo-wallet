@@ -46,6 +46,7 @@ function WalletsScreen({
                 key: "SettingsScreen",
               });
             }}
+            size={24}
             type="icon"
             icon="md-settings"
             iconColor={Colors.text}

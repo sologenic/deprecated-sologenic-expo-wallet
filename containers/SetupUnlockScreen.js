@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Image,
   ScrollView,
@@ -12,17 +12,18 @@ import { StackActions, NavigationActions } from "react-navigation";
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
 import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
-import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
-import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import Custom_Button from "../components/shared/Custom_Button";
-import { createPinSuccess, setupAuthentication, authSuccess } from "../actions";
-import { screenWidth } from "../constants/Layout";
+import { setupAuthentication, authSuccess } from "../actions";
+import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
 
 function CreatePinScreen({ navigation, completeAuthSetup, authenticateUser }) {
-  const { unlockText, availableUnlockMethods } = navigation.state.params;
-
+  const {
+    unlockText,
+    availableUnlockMethods,
+    isChangeScreen,
+  } = navigation.state.params;
   const getUnlockImage = () => {
     if (availableUnlockMethods === "fingerprint") {
       return Images.fingerPrint;
@@ -53,7 +54,20 @@ function CreatePinScreen({ navigation, completeAuthSetup, authenticateUser }) {
   return (
     <View style={styles.container}>
       <Custom_Header
-        flex={[0, 1, 0]}
+        left={
+          isChangeScreen ? (
+            <Custom_HeaderButton
+              onPress={() => {
+                navigation.goBack();
+              }}
+              type="icon"
+              icon="md-arrow-back"
+              iconColor={Colors.text}
+            />
+          ) : (
+            <View />
+          )
+        }
         center={<Custom_HeaderTitle text={unlockText} />}
       />
       <ScrollView>
@@ -82,6 +96,7 @@ function CreatePinScreen({ navigation, completeAuthSetup, authenticateUser }) {
                   params: {
                     availableUnlockMethods,
                     unlockText,
+                    isChangeScreen,
                   },
                 })
               }
@@ -97,24 +112,16 @@ function CreatePinScreen({ navigation, completeAuthSetup, authenticateUser }) {
                 marginBottom: 24,
               }}
             />
-            {/* {unlockMethod === unlockText && (
-                <Image
-                  source={Images.check}
-                  style={{
-                    tintColor: Colors.primary,
-                    position: "absolute",
-                    right: 15,
-                  }}
-                />
-              )} */}
           </View>
         </View>
       </ScrollView>
-      <View style={{ position: "absolute", bottom: 60, alignSelf: "center" }}>
-        <TouchableOpacity onPress={() => skipSetup()}>
-          <Custom_Text value="Skip this step >" style={{}} size={14} />
-        </TouchableOpacity>
-      </View>
+      {!isChangeScreen && (
+        <View style={{ position: "absolute", bottom: 60, alignSelf: "center" }}>
+          <TouchableOpacity onPress={() => skipSetup()}>
+            <Custom_Text value="Skip this step >" style={{}} size={14} />
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }

@@ -185,3 +185,10 @@ export const updateUnlockMethod = data => {
     payload: data,
   };
 };
+
+export const updateBaseCurrency = data => {
+  return {
+    type: "UPDATE_BASE_CURRENCY",
+    payload: data,
+  };
+};

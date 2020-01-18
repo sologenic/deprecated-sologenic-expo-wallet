@@ -26,6 +26,13 @@
     "ios": {
       "supportsTablet": true
     },
-    "description": ""
+    "description": "",
+    "extra": {
+      "config": {
+        "termsUrl": "https://www.sologenic.com/terms-and-conditions",
+        "privacyUrl": "https://www.sologenic.com/privacy-policy",
+        "contactUsUrl": "https://www.coinfield.com/company/contactus"
+      }
+    }
   }
 }

@@ -14,6 +14,16 @@ const images = {
   soloSmall: require("../assets/images/icons/solo_small.png"),
   xrpSmall: require("../assets/images/icons/xrp_small.png"),
   tokenizedAsset: require("../assets/images/icons/tokenized_asset.png"),
+  arrowRight: require("../assets/images/icons/arrowRight.png"),
+  arrowDown: require("../assets/images/icons/arrowDown.png"),
+  slide1: require("../assets/images/orientation/background1.png"),
+  slide1Overlay: require("../assets/images/orientation/slide1Overlay.png"),
+  slide2: require("../assets/images/orientation/background2.png"),
+  slide2Overlay: require("../assets/images/orientation/slide2Overlay.png"),
+  slide3: require("../assets/images/orientation/background3.png"),
+  slide3Overlay: require("../assets/images/orientation/slide3Overlay.png"),
+  slide4: require("../assets/images/orientation/background4.png"),
+  slide4Overlay: require("../assets/images/orientation/slide4Overlay.png"),
 };
 
 export default images;

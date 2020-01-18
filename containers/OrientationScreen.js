@@ -8,34 +8,44 @@ import Custom_Text from "../components/shared/Custom_Text";
 import Fonts from "../constants/Fonts";
 import Custom_Button from "../components/shared/Custom_Button";
 import { updateIsOrientationComplete } from "../actions";
+import images from "../constants/Images";
+
+const width = 360;
+const height = 312;
+const widthChangeFrac = screenWidth / width;
+const newHeight = height * widthChangeFrac;
 
 const slides = [
   {
     key: "slide1",
-    title: `Decentralized XRP & \nSOLO Wallet`,
+    title: `Decentralized SOLO, XRP &\nTokenized Assets Wallet`,
     subtitle: "",
-    // image: require("./"),
+    image: images.slide1,
+    imageOverlay: images.slide1Overlay,
     style: { backgroundColor: Colors.background, flex: 1 },
   },
   {
     key: "slide2",
     title: `Add, Activate & Manage \nMultiple Wallets`,
     subtitle: "",
-    // image: require("./"),
+    image: images.slide2,
+    imageOverlay: images.slide2Overlay,
     style: { backgroundColor: Colors.background, flex: 1 },
   },
   {
     key: "slide3",
     title: `Live Market Prices, Recent \nTransactions & More`,
     subtitle: "",
-    // image: require("./"),
+    image: images.slide3,
+    imageOverlay: images.slide3Overlay,
     style: { backgroundColor: Colors.background, flex: 1 },
   },
   {
     key: "slide4",
     title: `Hodl and Transfer your XRP & SOLO \nfrom a single Wallet Address`,
     subtitle: "",
-    // image: require("./"),
+    image: images.slide4,
+    imageOverlay: images.slide4Overlay,
     style: { backgroundColor: Colors.background, flex: 1 },
   },
 ];
@@ -47,28 +57,28 @@ class OrientationScreen extends Component {
   }
 
   renderItem = ({ item }) => {
-    const { completeOrientation } = this.props;
+    const { navigation } = this.props;
     return (
       <View style={item.style}>
+        <Image style={styles.image} source={item.image} />
         <View style={styles.mainContent}>
-          {/* <Image style={styles.image} source={item.image} /> */}
+          <Image source={item.imageOverlay} />
           <Custom_Text
             value={item.title}
-            size={Fonts.size.large}
+            size={20}
             color={Colors.text}
             style={styles.title}
           />
-          <Custom_Text
-            value={item.subtitle}
-            size={Fonts.size.large}
-            color={Colors.text}
-            style={styles.subtitle}
-          />
         </View>
-        <View style={{ alignItems: "center" }}>
+        <View style={{ alignSelf: "center", position: "absolute", bottom: 24 }}>
           <Custom_Button
             text="Get Started"
-            onPress={() => completeOrientation(true)}
+            onPress={() =>
+              navigation.navigate({
+                key: "TermsScreen",
+                routeName: "TermsScreen",
+              })
+            }
             color={Colors.darkRed}
             size={14}
             textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
@@ -76,7 +86,6 @@ class OrientationScreen extends Component {
               backgroundColor: Colors.secondaryBackground,
               paddingHorizontal: 15,
               paddingVertical: 10,
-              marginBottom: 24,
               opacity: item.key !== "slide4" ? 0.3 : 1,
             }}
             disabled={item.key !== "slide4"}
@@ -110,13 +119,17 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   image: {
-    // width: screenWidth,
-    // height: screenHeight,
+    position: "absolute",
+    bottom: 0,
+    width: screenWidth,
+    height: newHeight,
   },
   title: {
     fontSize: 26,
     textAlign: "center",
     color: Colors.text,
+    fontFamily: "DMSansMedium",
+    marginTop: 30,
   },
   subtitle: {
     fontSize: 50,
