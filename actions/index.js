@@ -1,84 +1,87 @@
 export const getMarketData = () => {
   return {
-    type: "GET_MARKET_DATA"
+    type: "GET_MARKET_DATA",
   };
 };
 
 export const getMarketDataSuccess = data => {
   return {
     type: "GET_MARKET_DATA_SUCCESS",
-    payload: data
+    payload: data,
   };
 };
 
 export const getMarketDataError = data => {
   return {
     type: "GET_MARKET_DATA_ERROR",
-    payload: data
+    payload: data,
   };
 };
 
 export const getMarketSevens = () => {
   return {
-    type: "GET_MARKET_SEVENS"
+    type: "GET_MARKET_SEVENS",
   };
 };
 
 export const getMarketSevensSuccess = data => {
   return {
     type: "GET_MARKET_SEVENS_SUCCESS",
-    payload: data
+    payload: data,
   };
 };
 
 export const getMarketSevensError = data => {
   return {
     type: "GET_MARKET_SEVENS_ERROR",
-    payload: data
+    payload: data,
+  };
+};
+
+export const testTodoReset = () => {
+  return {
+    type: "TEST_TODO_RESET",
   };
 };
 
 export const updatePhraseTestValue1 = value => {
   return {
     type: "UPDATE_PHRASE_TEST_VALUE_1",
-    value
+    value,
   };
 };
 
 export const updatePhraseTestValue2 = value => {
   return {
     type: "UPDATE_PHRASE_TEST_VALUE_2",
-    value
+    value,
   };
 };
 
 export const updatePhraseTestValue3 = value => {
   return {
     type: "UPDATE_PHRASE_TEST_VALUE_3",
-    value
+    value,
   };
 };
 
 export const getBalance = (id, address) => {
   return {
     type: "GET_BALANCE",
-    id,
-    address
   };
 };
 
 export const getBalanceSuccess = (id, data) => {
   return {
     type: "GET_BALANCE_SUCCESS",
-    id,
-    payload: data
+    payload: data,
   };
 };
 
 export const getBalanceError = data => {
   return {
     type: "GET_BALANCE_ERROR",
-    payload: data
+    payload: data,
   };
 };
 
@@ -86,74 +89,114 @@ export const postPaymentTransaction = (
   address,
   destinationAddress,
   amountValue,
-  secret
+  secret,
 ) => {
   return {
     type: "POST_PAYMENT_TRANSACTION",
     address,
     secret,
     destinationAddress,
-    amountValue
+    amountValue,
   };
 };
 
 export const postPaymentTransactionSuccess = data => {
   return {
     type: "POST_PAYMENT_TRANSACTION_SUCCESS",
-    payload: data
+    payload: data,
   };
 };
 
 export const postPaymentTransactionError = data => {
   return {
     type: "POST_PAYMENT_TRANSACTION_ERROR",
-    payload: data
+    payload: data,
   };
 };
 
 export const getListenToTransaction = account => {
   return {
     type: "GET_LISTEN_TO_TRANSACTION",
-    account
+    account,
   };
 };
 
 export const getListenToTransactionSuccess = data => {
   return {
     type: "GET_LISTEN_TO_TRANSACTION_SUCCESS",
-    payload: data
+    payload: data,
   };
 };
 
 export const getListenToTransactionError = data => {
   return {
     type: "GET_LISTEN_TO_TRANSACTION_ERROR",
-    payload: data
+    payload: data,
   };
 };
 
 export const connectToRippleApi = () => {
   return {
-    type: "CONNECT_TO_RIPPLE_API"
+    type: "CONNECT_TO_RIPPLE_API",
   };
 };
 
 export const connectToRippleApiSuccess = () => {
   return {
-    type: "CONNECT_TO_RIPPLE_API_SUCCESS"
+    type: "CONNECT_TO_RIPPLE_API_SUCCESS",
   };
 };
 
 export const connectToRippleApiError = () => {
   return {
-    type: "CONNECT_TO_RIPPLE_API_ERROR"
+    type: "CONNECT_TO_RIPPLE_API_ERROR",
+  };
+};
+
+export const updateIsOrientationComplete = data => {
+  return {
+    type: "UPDATE_ORIENTATION_COMPLETE",
+    payload: data,
+  };
+};
+
+export const createPinSuccess = data => {
+  return {
+    type: "CREATE_PIN",
+    payload: data,
+  };
+};
+
+export const setupAuthentication = () => {
+  return {
+    type: "SETUP_AUTH_SUCCESS",
+  };
+};
+
+export const authSuccess = () => {
+  return {
+    type: "AUTH_SUCCESS",
+  };
+};
+
+export const updateUnlockMethod = data => {
+  return {
+    type: "UPDATE_UNLOCK_METHOD",
+    payload: data,
+  };
+};
+
+export const updateBaseCurrency = data => {
+  return {
+    type: "UPDATE_BASE_CURRENCY",
+    payload: data,
   };
 };
 
 export const generateNewWallet = newWallet => {
   return {
     type: "GENERATE_NEW_WALLET",
-    newWallet
+    newWallet,
   };
 };
 
@@ -162,7 +205,7 @@ export const addNewWallet = (
   nickname,
   walletAddress,
   rippleClassicAddress,
-  trustline
+  trustline,
 ) => {
   return {
     type: "ADD_NEW_WALLET",
@@ -170,14 +213,14 @@ export const addNewWallet = (
     nickname,
     walletAddress,
     rippleClassicAddress,
-    trustline
+    trustline,
   };
 };
 
 export const saveNickname = nickname => {
   return {
     type: "SAVE_NICKNAME",
-    nickname
+    nickname,
   };
 };
 
@@ -185,14 +228,14 @@ export const changeNickname = (id, nickname) => {
   return {
     type: "CHANGE_NICKNAME",
     nickname,
-    id
+    id,
   };
 };
 
 export const deleteWallet = id => {
   return {
     type: "DELETE_WALLET",
-    id
+    id,
   };
 };
 
@@ -203,7 +246,7 @@ export const createTrustline = (address, secret, keypair, id) => {
     address,
     secret,
     keypair,
-    id
+    id,
   };
 };
 
@@ -211,13 +254,13 @@ export const createTrustlineSuccess = id => {
   console.log("HEHEREFFFFFF id", id);
   return {
     type: "CREATE_TRUSTLINE_SUCCESS",
-    id
+    id,
   };
 };
 
 export const createTrustlineError = () => {
   return {
-    type: "CREATE_TRUSTLINE_ERROR"
+    type: "CREATE_TRUSTLINE_ERROR",
   };
 };
 
@@ -227,40 +270,40 @@ export const transferXrp = (account, keypair, destination, value) => {
     account,
     keypair,
     destination,
-    value
+    value,
   };
 };
 
 export const transferXrpSuccess = () => {
   return {
-    type: "TRANSFER_XRP_SUCCESS"
+    type: "TRANSFER_XRP_SUCCESS",
   };
 };
 
 export const transferXrpError = () => {
   return {
-    type: "TRANSFER_XRP_ERROR"
+    type: "TRANSFER_XRP_ERROR",
   };
 };
 
 export const getTransactions = address => {
   return {
     type: "GET_TRANSACTIONS",
-    address
+    address,
   };
 };
 
 export const getTransactionsSuccess = payload => {
   return {
     type: "GET_TRANSACTIONS_SUCCESS",
-    payload
+    payload,
   };
 };
 
 export const getTransactionsError = payload => {
   return {
     type: "GET_TRANSACTIONS_ERROR",
-    payload
+    payload,
   };
 };
 
@@ -269,7 +312,7 @@ export const getTrustlines = (
   rippleClassicAddress,
   nickname,
   mnemonic,
-  details
+  details,
 ) => {
   return {
     type: "GET_TRUSTLINES",
@@ -277,7 +320,7 @@ export const getTrustlines = (
     rippleClassicAddress,
     nickname,
     mnemonic,
-    details
+    details,
   };
 };
 
@@ -285,12 +328,12 @@ export const getTrustlinesSuccess = (address, trustline) => {
   return {
     type: "GET_TRUSTLINES_SUCCESS",
     address,
-    trustline
+    trustline,
   };
 };
 
 export const getTrustlinesError = () => {
   return {
-    type: "GET_TRUSTLINES_ERROR"
+    type: "GET_TRUSTLINES_ERROR",
   };
 };

@@ -1,3 +1,4 @@
+import React from "react";
 import { createStackNavigator } from "react-navigation-stack";
 
 import { handleTransition } from "./Transitions";
@@ -10,15 +11,45 @@ import CreateNewWalletScreen from "../containers/CreateNewWalletScreen";
 import YourRecoveryPhraseScreen from "../containers/YourRecoveryPhraseScreen";
 import ImportExistingWalletScreen from "../containers/ImportExistingWalletScreen";
 import WalletScreen from "../containers/WalletScreen";
+import CreatePinScreen from "../containers/CreatePinScreen";
+import ChangePinScreen from "../containers/ChangePinScreen";
+import UnlockScreen from "../containers/UnlockScreen";
+import SetupUnlockScreen from "../containers/SetupUnlockScreen";
+import ChangeUnlockScreen from "../containers/ChangeUnlockScreen";
 import ReceiveScreen from "../containers/ReceiveScreen";
 import SendScreen from "../containers/SendScreen";
 import ActivateWalletScreen from "../containers/ActivateWalletScreen";
 import RecoveryPhraseTestScreen from "../containers/RecoveryPhraseTestScreen";
 import ChangeWalletNicknameScreen from "../containers/ChangeWalletNicknameScreen";
+import ConfirmUnlockMethodScreen from "../containers/ConfirmUnlockMethodScreen";
+import TermsScreen from "../containers/TermsScreen";
 
 const MainStack = createStackNavigator(
   {
-    HomeScreen: HomeScreen,
+    // HomeScreen: HomeScreen,
+    HomeScreen: ({ navigation, screenProps }) => {
+      if (!screenProps.isAuthenticated) {
+        if (!screenProps.authSetupComplete) {
+          return (
+            <CreatePinScreen
+              screenProps={{
+                rootNavigation: navigation,
+              }}
+            />
+          );
+        } else {
+          return (
+            <UnlockScreen
+              screenProps={{
+                rootNavigation: navigation,
+              }}
+            />
+          );
+        }
+      } else {
+        return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
+      }
+    },
     LinksScreen: LinksScreen,
     SettingsScreen: SettingsScreen,
     WalletsScreen: WalletsScreen,
@@ -27,16 +58,23 @@ const MainStack = createStackNavigator(
     CreateNewWalletScreen: CreateNewWalletScreen,
     YourRecoveryPhraseScreen: YourRecoveryPhraseScreen,
     ImportExistingWalletScreen: ImportExistingWalletScreen,
+    SetupUnlockScreen: SetupUnlockScreen,
+    ChangeUnlockScreen: ChangeUnlockScreen,
+    ConfirmUnlockMethodScreen: ConfirmUnlockMethodScreen,
+    CreatePinScreen: CreatePinScreen,
+    ChangePinScreen: ChangePinScreen,
     ReceiveScreen: ReceiveScreen,
     ActivateWalletScreen: ActivateWalletScreen,
     SendScreen: SendScreen,
     RecoveryPhraseTestScreen: RecoveryPhraseTestScreen,
     ChangeWalletNicknameScreen: ChangeWalletNicknameScreen,
+    TermsScreen: TermsScreen,
   },
   {
-    initialRouteName: 'WalletsScreen',
+    headerMode: "none",
+    initialRouteName: "HomeScreen",
     transitionConfig: nav => handleTransition(nav),
-  }
+  },
 );
 
 export default MainStack;

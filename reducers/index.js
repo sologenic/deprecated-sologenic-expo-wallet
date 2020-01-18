@@ -23,6 +23,9 @@ const defaultState = {
   connectToRippleApiPending: null,
   connectToRippleApiSuccess: null,
   connectToRippleApiError: null,
+  isOrientationComplete: null,
+  isPinCreated: null,
+  pin: null,
   phraseTestValue1: "",
   phraseTestValue2: "",
   phraseTestValue3: "",
@@ -39,13 +42,21 @@ const defaultState = {
   getTransactionsPending: null,
   getTransactionsSuccess: null,
   getTransactionsError: null,
+  isAuthenticated: null,
+  authSetupComplete: null,
+  unlockMethod: null,
+  baseCurrency: {
+    label: "USD",
+    value: "usd",
+    key: "usd",
+  },
 };
 
 const getMarketData = (state, action) => {
   return Object.assign({}, state, {
     getMarketDataPending: true,
     getMarketDataSuccess: false,
-    getMarketDataError: false
+    getMarketDataError: false,
   });
 };
 
@@ -54,7 +65,7 @@ const getMarketDataSuccess = (state, action) => {
     marketData: action.payload,
     getMarketDataPending: false,
     getMarketDataSuccess: true,
-    getMarketDataError: false
+    getMarketDataError: false,
   });
 };
 
@@ -63,7 +74,7 @@ const getMarketDataError = (state, action) => {
     marketData: action.payload,
     getMarketDataPending: false,
     getMarketDataSuccess: false,
-    getMarketDataError: true
+    getMarketDataError: true,
   });
 };
 
@@ -71,7 +82,7 @@ const getMarketSevens = (state, action) => {
   return Object.assign({}, state, {
     getMarketSevensPending: true,
     getMarketSevensSuccess: false,
-    getMarketSevensError: false
+    getMarketSevensError: false,
   });
 };
 
@@ -80,7 +91,7 @@ const getMarketSevensSuccess = (state, action) => {
     marketSevens: action.payload,
     getMarketSevensPending: false,
     getMarketSevensSuccess: true,
-    getMarketSevensError: false
+    getMarketSevensError: false,
   });
 };
 
@@ -89,7 +100,16 @@ const getMarketSevensError = (state, action) => {
     marketData: action.payload,
     getMarketSevensPending: false,
     getMarketSevensSuccess: false,
-    getMarketSevensError: true
+    getMarketSevensError: true,
+  });
+};
+
+const testTodoReset = (state, action) => {
+  return Object.assign({}, state, {
+    test: "Default",
+    testPending: null,
+    testSuccess: null,
+    testError: null,
   });
 };
 
@@ -97,25 +117,25 @@ const updatePhraseTestValue1 = (state, action) => {
   return Object.assign({}, state, {
     phraseTestValue1: action.value,
   });
-}
+};
 
 const updatePhraseTestValue2 = (state, action) => {
   return Object.assign({}, state, {
     phraseTestValue2: action.value,
   });
-}
+};
 
 const updatePhraseTestValue3 = (state, action) => {
   return Object.assign({}, state, {
     phraseTestValue3: action.value,
   });
-}
+};
 
 const getBalance = (state, action) => {
   return Object.assign({}, state, {
     getBalancePending: true,
     getBalanceSuccess: false,
-    getBalanceError: false
+    getBalanceError: false,
   });
 };
 
@@ -136,7 +156,6 @@ const getBalanceSuccess = (state, action) => {
     getBalancePending: false,
     getBalanceSuccess: true,
     getBalanceError: false,
-    wallets: updatedWallets,
   });
 };
 
@@ -145,7 +164,7 @@ const getBalanceError = (state, action) => {
     errors: action.payload,
     getBalancePending: false,
     getBalanceSuccess: false,
-    getBalanceError: true
+    getBalanceError: true,
   });
 };
 
@@ -153,7 +172,7 @@ const postPaymentTransaction = (state, action) => {
   return Object.assign({}, state, {
     postPaymentTransactionPending: true,
     postPaymentTransactionSuccess: false,
-    postPaymentTransactionError: false
+    postPaymentTransactionError: false,
   });
 };
 
@@ -162,7 +181,7 @@ const postPaymentTransactionSuccess = (state, action) => {
     postPaymentTransactionPending: false,
     postPaymentTransactionSuccess: true,
     postPaymentTransactionError: false,
-    resultPaymentTransaction: action.payload
+    resultPaymentTransaction: action.payload,
   });
 };
 
@@ -171,7 +190,7 @@ const postPaymentTransactionError = (state, action) => {
     postPaymentTransactionPending: false,
     postPaymentTransactionSuccess: false,
     postPaymentTransactionError: true,
-    errors: action.payload
+    errors: action.payload,
   });
 };
 
@@ -179,7 +198,7 @@ const getListenToTransaction = (state, action) => {
   return Object.assign({}, state, {
     getListenToTransactionPending: true,
     getListenToTransactionSuccess: false,
-    getListenToTransactionError: false
+    getListenToTransactionError: false,
   });
 };
 
@@ -188,7 +207,7 @@ const getListenToTransactionSuccess = (state, action) => {
     getListenToTransactionPending: false,
     getListenToTransactionSuccess: true,
     getListenToTransactionError: false,
-    transactions: action.payload
+    transactions: action.payload,
   });
 };
 
@@ -197,7 +216,7 @@ const getListenToTransactionError = (state, action) => {
     getListenToTransactionPending: false,
     getListenToTransactionSuccess: false,
     getListenToTransactionError: true,
-    errors: action.payload
+    errors: action.payload,
   });
 };
 
@@ -205,7 +224,7 @@ const connectToRippleApi = (state, action) => {
   return Object.assign({}, state, {
     connectToRippleApiPending: true,
     connectToRippleApiSuccess: false,
-    connectToRippleApiError: false
+    connectToRippleApiError: false,
   });
 };
 
@@ -213,7 +232,7 @@ const connectToRippleApiSuccess = (state, action) => {
   return Object.assign({}, state, {
     connectToRippleApiPending: false,
     connectToRippleApiSuccess: true,
-    connectToRippleApiError: false
+    connectToRippleApiError: false,
   });
 };
 
@@ -221,7 +240,43 @@ const connectToRippleApiError = (state, action) => {
   return Object.assign({}, state, {
     connectToRippleApiPending: false,
     connectToRippleApiSuccess: false,
-    connectToRippleApiError: true
+    connectToRippleApiError: true,
+  });
+};
+
+const updateIsOrientationComplete = (state, action) => {
+  return Object.assign({}, state, {
+    isOrientationComplete: action.payload,
+  });
+};
+
+const createPinSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    pin: action.payload,
+  });
+};
+
+const setupAuthentication = state => {
+  return Object.assign({}, state, {
+    authSetupComplete: true,
+  });
+};
+
+const authSuccess = state => {
+  return Object.assign({}, state, {
+    isAuthenticated: true,
+  });
+};
+
+const updateUnlockMethod = (state, action) => {
+  return Object.assign({}, state, {
+    unlockMethod: action.payload,
+  });
+};
+
+const updateBaseCurrency = (state, action) => {
+  return Object.assign({}, state, {
+    baseCurrency: action.payload,
   });
 };
 
@@ -229,7 +284,7 @@ const generateNewWallet = (state, action) => {
   return Object.assign({}, state, {
     newWallet: action.newWallet,
   });
-}
+};
 
 const addNewWallet = (state, action) => {
   const { wallets } = state;
@@ -255,41 +310,41 @@ const addNewWallet = (state, action) => {
     trustline,
   };
   return Object.assign({}, state, {
-    wallets: [ ...wallets, wallet ],
+    wallets: [...wallets, wallet],
   });
-}
+};
 
 const saveNickname = (state, action) => {
   return Object.assign({}, state, {
     nickname: action.nickname,
   });
-}
+};
 
 const changeNickname = (state, action) => {
   const newNickname = action.nickname;
   const { wallets } = state;
-  const copyWallets = [ ...wallets ];
+  const copyWallets = [...wallets];
   const updatedWallets = copyWallets.map(wallet => {
     if (wallet.id === action.id) {
       wallet.nickname = newNickname;
-    };
+    }
     return wallet;
   });
   return Object.assign({}, state, {
     wallets: updatedWallets,
   });
-}
+};
 
 const deleteWallet = (state, action) => {
   const { wallets } = state;
-  const copyWallets = [ ...wallets ];
+  const copyWallets = [...wallets];
   const updatedWallets = copyWallets.filter(wallet => {
     return wallet.id !== action.id;
   });
   return Object.assign({}, state, {
     wallets: updatedWallets,
   });
-}
+};
 
 const createTrustline = (state, action) => {
   return Object.assign({}, state, {
@@ -297,18 +352,18 @@ const createTrustline = (state, action) => {
     createTrustlineSuccess: false,
     createTrustlineError: false,
   });
-}
+};
 
 const createTrustlineSuccess = (state, action) => {
-  console.log("HERE")
+  console.log("HERE");
   const { id } = action;
   console.log("id", id);
   const { wallets } = state;
-  const copyWallets = [ ...wallets ];
+  const copyWallets = [...wallets];
   const updatedWallets = copyWallets.map(wallet => {
     if (wallet.id === action.id) {
       wallet.trustline = true;
-    };
+    }
     return wallet;
   });
   return Object.assign({}, state, {
@@ -317,7 +372,7 @@ const createTrustlineSuccess = (state, action) => {
     createTrustlineError: false,
     wallets: updatedWallets,
   });
-}
+};
 
 const createTrustlineError = (state, action) => {
   return Object.assign({}, state, {
@@ -325,7 +380,7 @@ const createTrustlineError = (state, action) => {
     createTrustlineSuccess: true,
     createTrustlineError: false,
   });
-}
+};
 
 const transferXrp = (state, action) => {
   return Object.assign({}, state, {
@@ -333,7 +388,7 @@ const transferXrp = (state, action) => {
     transferXrpSuccess: false,
     transferXrpError: false,
   });
-}
+};
 
 const transferXrpSuccess = (state, action) => {
   return Object.assign({}, state, {
@@ -341,7 +396,7 @@ const transferXrpSuccess = (state, action) => {
     transferXrpSuccess: true,
     transferXrpError: false,
   });
-}
+};
 
 const transferXrpError = (state, action) => {
   return Object.assign({}, state, {
@@ -349,7 +404,7 @@ const transferXrpError = (state, action) => {
     transferXrpSuccess: false,
     transferXrpError: true,
   });
-}
+};
 
 const getTransactions = (state, action) => {
   return Object.assign({}, state, {
@@ -357,7 +412,7 @@ const getTransactions = (state, action) => {
     getTransactionsSuccess: false,
     getTransactionsError: false,
   });
-}
+};
 
 const getTransactionsSuccess = (state, action) => {
   return Object.assign({}, state, {
@@ -366,7 +421,7 @@ const getTransactionsSuccess = (state, action) => {
     getTransactionsError: false,
     transactions: action.payload,
   });
-}
+};
 
 const getTransactionsError = (state, action) => {
   return Object.assign({}, state, {
@@ -375,7 +430,7 @@ const getTransactionsError = (state, action) => {
     getTransactionsError: true,
     error: action.payload,
   });
-}
+};
 
 const getTrustlines = (state, action) => {
   return Object.assign({}, state, {
@@ -383,15 +438,15 @@ const getTrustlines = (state, action) => {
     getTrustlinesSuccess: false,
     getTrustlinesError: false,
   });
-}
+};
 
 const getTrustlinesSuccess = (state, action) => {
   const { wallets } = state;
-  const copyWallets = [ ...wallets ];
+  const copyWallets = [...wallets];
   const updatedWallets = copyWallets.map(wallet => {
     if (wallet.id === action.address) {
       wallet.trustline = action.trustline;
-    };
+    }
     return wallet;
   });
   return Object.assign({}, state, {
@@ -400,7 +455,7 @@ const getTrustlinesSuccess = (state, action) => {
     getTrustlinesError: false,
     // wallets: updatedWallets,
   });
-}
+};
 
 const getTrustlinesError = (state, action) => {
   return Object.assign({}, state, {
@@ -408,7 +463,7 @@ const getTrustlinesError = (state, action) => {
     getTrustlinesSuccess: false,
     getTrustlinesError: true,
   });
-}
+};
 
 export default (state = defaultState, action) => {
   switch (action.type) {
@@ -423,7 +478,11 @@ export default (state = defaultState, action) => {
     case "GET_MARKET_SEVENS_SUCCESS":
       return getMarketSevensSuccess(state, action);
     case "GET_MARKET_SEVENS_ERROR":
-      return getMarketSevensError(state, action);    
+      return getMarketSevensError(state, action);
+
+    case "TEST_TODO_RESET":
+      return testTodoReset(state, action);
+
     case "UPDATE_PHRASE_TEST_VALUE_1":
       return updatePhraseTestValue1(state, action);
     case "UPDATE_PHRASE_TEST_VALUE_2":
@@ -457,18 +516,18 @@ export default (state = defaultState, action) => {
     case "GENERATE_NEW_WALLET":
       return generateNewWallet(state, action);
     case "ADD_NEW_WALLET":
-      return addNewWallet(state, action); 
+      return addNewWallet(state, action);
     case "SAVE_NICKNAME":
       return saveNickname(state, action);
     case "CHANGE_NICKNAME":
-      return changeNickname(state, action);  
+      return changeNickname(state, action);
     case "DELETE_WALLET":
       return deleteWallet(state, action);
-    case "CREATE_TRUSTLINE": 
+    case "CREATE_TRUSTLINE":
       return createTrustline(state, action);
-    case "CREATE_TRUSTLINE_SUCCESS": 
+    case "CREATE_TRUSTLINE_SUCCESS":
       return createTrustlineSuccess(state, action);
-    case "CREATE_TRUSTLINE_ERROR": 
+    case "CREATE_TRUSTLINE_ERROR":
       return createTrustlineError(state, action);
     case "TRANSFER_XRP":
       return transferXrp(state, action);
@@ -488,6 +547,19 @@ export default (state = defaultState, action) => {
       return getTrustlinesSuccess(state, action);
     case "GET_TRUSTLINES_ERROR":
       return getTrustlinesError(state, action);
+    case "UPDATE_ORIENTATION_COMPLETE":
+      return updateIsOrientationComplete(state, action);
+    case "CREATE_PIN":
+      return createPinSuccess(state, action);
+    case "SETUP_AUTH_SUCCESS":
+      return setupAuthentication(state, action);
+    case "AUTH_SUCCESS":
+      return authSuccess(state, action);
+    case "UPDATE_UNLOCK_METHOD":
+      return updateUnlockMethod(state, action);
+    case "UPDATE_BASE_CURRENCY":
+      return updateBaseCurrency(state, action);
+
     default:
       return state;
   }

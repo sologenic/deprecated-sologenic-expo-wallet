@@ -1,44 +1,37 @@
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
 import React, { useState, useEffect } from "react";
-import {
-  Platform,
-  StatusBar,
-  StyleSheet,
-  View,
-  AsyncStorage,
-  Text
-} from "react-native";
+import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
+import { connect } from "react-redux";
 import { MenuProvider } from "react-native-popup-menu";
-// import { createStore, applyMiddleware } from "redux";
-// import { Provider } from "react-redux";
-// import createSagaMiddleware from "redux-saga";
-// import { PersistGate } from "redux-persist/integration/react";
-// import { persistStore, persistReducer } from "redux-persist";
+import { createAppContainer } from "react-navigation";
 
-import AppNavigator from "../navigation/AppNavigator";
+import MainStack from "../navigation/MainStack";
+import OrientationStack from "../navigation/OrientationStack";
 import Fonts from "../constants/Fonts";
 import { imagesArray } from "../constants/Images";
-// import AppNavigator from "../navigation/AppNavigator";
-// import Fonts from "./constants/Fonts";
-// import { imagesArray } from "./constants/Images";
-// import reducer from "./reducers";
-// import rootSaga from "./sagas";
+const App = createAppContainer(MainStack);
+const Orientation = createAppContainer(OrientationStack);
 
-export default function RootContainer(props) {
+const RootContainer = ({
+  skipLoadingScreen,
+  isOrientationComplete,
+  authSetupComplete,
+  isAuthenticated,
+}) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const setup = async () => {
     await loadResourcesAsync();
     await setLoadingComplete(true);
-  }
+  };
   useEffect(() => {
     setup();
     // return () => {
     //   cleanup
     // };
-  }, [])
+  }, []);
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+  if (!isLoadingComplete && !skipLoadingScreen) {
     return (
       // <AppLoading
       //   startAsync={loadResourcesAsync}
@@ -50,21 +43,29 @@ export default function RootContainer(props) {
       </View>
     );
   } else {
+    if (isOrientationComplete) {
+      return (
+        <View style={styles.container}>
+          {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
+          <MenuProvider>
+            <App screenProps={{ authSetupComplete, isAuthenticated }} />
+          </MenuProvider>
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
-        {Platform.OS === "ios" && <StatusBar barStyle="default" />}
-        <MenuProvider>
-          <AppNavigator />
-        </MenuProvider>
+        {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
+        <Orientation />
       </View>
     );
   }
-}
+};
 
 async function loadResourcesAsync() {
   await Promise.all([
     Asset.loadAsync(imagesArray),
-    Font.loadAsync(Fonts.fonts)
+    Font.loadAsync(Fonts.fonts),
   ]);
 }
 
@@ -81,6 +82,23 @@ function handleFinishLoading(setLoadingComplete) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff"
-  }
+    // backgroundColor: "#fff",
+  },
 });
+
+const mapStateToProps = ({
+  isOrientationComplete,
+  isAuthenticated,
+  authSetupComplete,
+}) => ({
+  isOrientationComplete,
+  isAuthenticated,
+  authSetupComplete,
+});
+
+const mapDispatchToProps = dispatch => ({});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(RootContainer);
