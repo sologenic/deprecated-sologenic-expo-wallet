@@ -13,19 +13,12 @@ import {
   MenuTrigger
 } from "react-native-popup-menu";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Constants from "expo-constants";
 import { connect } from 'react-redux';
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
 import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
-import Custom_Button from "../components/shared/Custom_Button";
-import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_RadioButton from "../components/shared/Custom_RadioButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
-import Custom_TextInput from "../components/shared/Custom_TextInput";
-import RecoveryPhrase from "../components/shared/RecoveryPhrase";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
@@ -34,9 +27,9 @@ import WalletTab from "./WalletTab";
 import WalletSoloTab from "./WalletSoloTab";
 import WalletTokenizedAssetTab from "./WalletTokenizedAssetTab";
 import DeleteWalletModal from "../components/shared/DeleteWalletModal";
-import { deleteWallet, getBalance } from "../actions"
+import { deleteWallet, getBalance, getTransactions } from "../actions"
 
-function WalletScreen({ navigation, deleteWallet, getBalance }) {
+function WalletScreen({ navigation, deleteWallet, getBalance, getTransactions }) {
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const {
@@ -55,6 +48,7 @@ function WalletScreen({ navigation, deleteWallet, getBalance }) {
 
   useEffect(() => {
     getBalance(id, walletAddress);
+    getTransactions(walletAddress);
   }, [])
 
   return (
@@ -274,6 +268,7 @@ const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
   deleteWallet: id => dispatch(deleteWallet(id)),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
+  getTransactions: address => dispatch(getTransactions(address)),
 });
 
 export default connect(

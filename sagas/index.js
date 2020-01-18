@@ -202,15 +202,22 @@ function* requestTransferXrp(action) {
   }
 }
 
-const getTransactions = address => {
-  // console.log(address)
+const getTransactions = async address => {
   const rippleApi = sologenic.getRippleApi();
-  return rippleApi.getTransactions(address);
+  const currentLedger = await rippleApi.getLedgerVersion();
+  console.log("currentLedger", currentLedger)
+  return rippleApi.getTransactions(address, {
+    minLedgerVersion: currentLedger - 500,
+    maxLedgerVersion: currentLedger
+  });
 };
 
-function* requestGetTransactionsactions() {
+function* requestGetTransactionsactions(action) {
+  const { address } = action;
   try {
     const response = yield call(getTransactions, address);
+    console.log("TRANSACTIONS");
+    console.log(response);
     if (response) {
       yield put(getTransactionsSuccess(response));
     }
