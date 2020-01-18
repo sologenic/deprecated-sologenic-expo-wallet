@@ -17,6 +17,9 @@ PODS:
     - UMCore
   - EXLinearGradient (8.0.0):
     - UMCore
+  - EXLocalAuthentication (8.0.0):
+    - UMConstantsInterface
+    - UMCore
   - EXLocation (8.0.0):
     - UMCore
     - UMPermissionsInterface
@@ -281,6 +284,7 @@ DEPENDENCIES:
   - EXFont (from `../node_modules/expo-font/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - EXLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
+  - EXLocalAuthentication (from `../node_modules/expo-local-authentication/ios`)
   - EXLocation (from `../node_modules/expo-location/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - EXSQLite (from `../node_modules/expo-sqlite/ios`)
@@ -358,6 +362,9 @@ EXTERNAL SOURCES:
   EXLinearGradient:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-linear-gradient/ios"
+  EXLocalAuthentication:
+    :path: !ruby/object:Pathname
+    path: "../node_modules/expo-local-authentication/ios"
   EXLocation:
     :path: !ruby/object:Pathname
     path: "../node_modules/expo-location/ios"
@@ -475,6 +482,7 @@ SPEC CHECKSUMS:
   EXFont: 5e3c087bc09461075a070457fa7c9df3c2bf17cf
   EXKeepAwake: 5f96bd91d4d3be5ef12c59ef7efafeac0f50ad2f
   EXLinearGradient: d5c7fa637f82566318261b7614d325b334ceed08
+  EXLocalAuthentication: 358e197ab7d6db5c8ea72856ede51f4bb5eb5021
   EXLocation: e994c186f94340caf1a9ace96b3458a72472553c
   EXPermissions: 3e58e0fbb2e9539ad1ef5617ff02c2356447421e
   EXSQLite: 3297f74a9d36eb1eb1c2cd9b9037fe01170db15a

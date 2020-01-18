@@ -15,8 +15,6 @@ import Custom_MultiSelectInput from "../components/shared/Custom_MultiSelectInpu
 import currencies from "../constants/currencies";
 import { updateBaseCurrency } from "../actions";
 
-const config = Constants.manifest.extra.config;
-
 function SettingsScreen({
   navigation,
   unlockMethod,
@@ -139,13 +137,13 @@ function SettingsScreen({
           <Custom_NavButton
             value="Terms & Conditions"
             handleOnPress={() => {
-              handleOpenWithWebBrowser(config.termsUrl);
+              // handleOpenWithWebBrowser(config.termsUrl);
             }}
           />
           <Custom_NavButton
             value="Privacy Policy"
             handleOnPress={() => {
-              handleOpenWithWebBrowser(config.privacyUrl);
+              // handleOpenWithWebBrowser(config.privacyUrl);
             }}
           />
         </View>
@@ -158,7 +156,7 @@ function SettingsScreen({
           <Custom_NavButton
             value="Contact Us"
             handleOnPress={() => {
-              handleOpenWithWebBrowser(config.contactUsUrl);
+              // handleOpenWithWebBrowser(config.contactUsUrl);
             }}
           />
         </View>

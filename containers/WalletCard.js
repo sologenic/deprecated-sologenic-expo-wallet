@@ -18,6 +18,7 @@ export default function WalletCard({
   // walletAddress,
   // rippleClassicAddress,
   wallet,
+  baseCurrency,
 }) {
   const { nickname, balance } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
@@ -36,15 +37,13 @@ export default function WalletCard({
               // totalBalance,
               // tokenizedAssets,
               defaultCurrency,
-              // xrpBalance: `${xrp}`,
-              // soloBalance: `${solo}`,
-              // nickname,
-              // details,
-              // walletAddress,
-              // rippleClassicAddress,
-            }
+              xrpBalance: "21.00",
+              soloBalance: "0.00",
+              nickname,
+            },
           });
         }}
+        activeOpacity={0.5}
         style={styles.upperStyle}
       >
         <View
@@ -58,7 +57,7 @@ export default function WalletCard({
                 backgroundColor: Colors.lighterGray,
                 height: 24,
                 width: 24,
-                borderRadius: 12
+                borderRadius: 12,
               }}
             />
           </View>
@@ -67,7 +66,7 @@ export default function WalletCard({
               flex: 8,
               justifyContent: "center",
               alignItems: "flex-start",
-              paddingLeft: 12
+              paddingLeft: 12,
             }}
           >
             <Custom_Text value={nickname} size={Fonts.size.medium} isBold />
@@ -82,7 +81,7 @@ export default function WalletCard({
           <View
             style={{
               flex: 1,
-              paddingLeft: 47
+              paddingLeft: 47,
             }}
           >
             <Custom_Text
@@ -100,11 +99,16 @@ export default function WalletCard({
           </View>
           <View
             style={{
-              flex: 1
+              flex: 1,
             }}
           >
             <View style={{ flexDirection: "row" }}>
-              <View style={{ marginRight: 5 }}>
+              <View style={{ marginRight: 5, flexDirection: "row" }}>
+                <Custom_Text
+                  value={`${baseCurrency.symbol}`}
+                  size={Fonts.size.small}
+                  isBold
+                />
                 <Custom_Text
                   value={`${totalBalance}`}
                   size={Fonts.size.small}
@@ -113,7 +117,7 @@ export default function WalletCard({
               </View>
               <View>
                 <Custom_Text
-                  value={`${defaultCurrency.toUpperCase()}`}
+                  value={`${baseCurrency.label}`}
                   size={Fonts.size.small}
                   color={Colors.lighterGray}
                   isBold
@@ -157,7 +161,11 @@ export default function WalletCard({
             <Image source={Images.solo} />
             <View style={{ flexDirection: "row", paddingTop: 5 }}>
               <View style={{ marginRight: 5 }}>
-                <Custom_Text value={`${solo}`} size={Fonts.size.normal} isBold />
+                <Custom_Text
+                  value={`${solo}`}
+                  size={Fonts.size.normal}
+                  isBold
+                />
               </View>
               <View>
                 <Custom_Text
@@ -177,19 +185,19 @@ export default function WalletCard({
 
 const styles = StyleSheet.create({
   container: {
-    height: 176
+    height: 176,
   },
   upperStyle: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     height: 88,
-    backgroundColor: Colors.gray
+    backgroundColor: Colors.gray,
   },
   lowerStyle: {
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     height: 88,
     backgroundColor: Colors.headerBackground,
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
