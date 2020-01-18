@@ -11,10 +11,18 @@ import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
 import Colors from "../constants/Colors";
 import Custom_NavButton from "../components/shared/Custom_NavButton";
+import Custom_MultiSelectInput from "../components/shared/Custom_MultiSelectInput";
+import currencies from "../constants/currencies";
+import { updateBaseCurrency } from "../actions";
 
 const config = Constants.manifest.extra.config;
 
-function SettingsScreen({ navigation, unlockMethod }) {
+function SettingsScreen({
+  navigation,
+  unlockMethod,
+  baseCurrency,
+  updateAccountBaseCurrency,
+}) {
   const [availableUnlockMethods, setAvailableUnlockMethods] = useState(null);
   const [unlockText, setUnlockText] = useState(null);
   useEffect(() => {
@@ -65,6 +73,18 @@ function SettingsScreen({ navigation, unlockMethod }) {
         right={<View />}
       />
       <ScrollView>
+        <View style={{ marginTop: 15, marginHorizontal: 15 }}>
+          <Custom_Text
+            value="Set Default Fiat Currency"
+            style={{ marginLeft: 15, marginBottom: 10 }}
+            isBold
+          />
+          <Custom_MultiSelectInput
+            value={baseCurrency}
+            options={currencies}
+            onValueChange={updateAccountBaseCurrency}
+          />
+        </View>
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
             value="Security"
@@ -170,12 +190,16 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ unlockMethod }) => ({ unlockMethod });
+const mapStateToProps = ({ unlockMethod, baseCurrency }) => ({
+  unlockMethod,
+  baseCurrency,
+});
 
 const mapDispatchToProps = dispatch => ({
   completeAuthSetup: () => dispatch(setupAuthentication()),
   authenticateUser: () => dispatch(authSuccess()),
   saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
+  updateAccountBaseCurrency: data => dispatch(updateBaseCurrency(data)),
 });
 
 export default connect(

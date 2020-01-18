@@ -15,6 +15,7 @@ const images = {
   xrpSmall: require("../assets/images/icons/xrp_small.png"),
   tokenizedAsset: require("../assets/images/icons/tokenized_asset.png"),
   arrowRight: require("../assets/images/icons/arrowRight.png"),
+  arrowDown: require("../assets/images/icons/arrowDown.png"),
   slide1: require("../assets/images/orientation/background1.png"),
   slide1Overlay: require("../assets/images/orientation/slide1Overlay.png"),
   slide2: require("../assets/images/orientation/background2.png"),

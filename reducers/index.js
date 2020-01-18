@@ -32,6 +32,11 @@ const defaultState = {
   isAuthenticated: null,
   authSetupComplete: null,
   unlockMethod: null,
+  baseCurrency: {
+    label: "USD",
+    value: "usd",
+    key: "usd",
+  },
 };
 
 const getMarketData = (state, action) => {
@@ -245,6 +250,12 @@ const updateUnlockMethod = (state, action) => {
   });
 };
 
+const updateBaseCurrency = (state, action) => {
+  return Object.assign({}, state, {
+    baseCurrency: action.payload,
+  });
+};
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -303,6 +314,8 @@ export default (state = defaultState, action) => {
       return authSuccess(state, action);
     case "UPDATE_UNLOCK_METHOD":
       return updateUnlockMethod(state, action);
+    case "UPDATE_BASE_CURRENCY":
+      return updateBaseCurrency(state, action);
 
     default:
       return state;
