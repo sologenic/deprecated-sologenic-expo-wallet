@@ -18,9 +18,17 @@ import RootContainer from "./containers/RootContainer";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
-  // whitelist: ["updateIsOrientationComplete"],
+  whitelist: [
+    "isOrientationComplete",
+    "isPinCreated",
+    "pin",
+    "baseCurrency",
+    "authSetupComplete",
+    "unlockMethod",
+    "wallets",
+  ],
   // transforms: [persistedUserState],
-  blacklist: ["isAuthenticated"],
+  // blacklist: ["isAuthenticated"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducer);

@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Clipboard
+  Clipboard,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -16,7 +16,7 @@ import Colors from "../constants/Colors";
 import {
   countWords,
   getWalletFromMnemonic,
-  getRippleClassicAddressFromXAddress
+  getRippleClassicAddressFromXAddress,
 } from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
 import { addNewWallet, getTrustlines } from "../actions";
@@ -77,7 +77,7 @@ function PassphraseTab({
       <View
         style={[
           styles.section,
-          { marginHorizontal: 40, marginTop: 30, marginBottom: 10 }
+          { marginHorizontal: 40, marginTop: 30, marginBottom: 10 },
         ]}
       >
         <Custom_Text
@@ -89,7 +89,7 @@ function PassphraseTab({
       <View
         style={[
           styles.section,
-          { marginHorizontal: 40, marginTop: 10, marginBottom: 10 }
+          { marginHorizontal: 40, marginTop: 10, marginBottom: 10 },
         ]}
       >
         <Custom_Text
@@ -114,6 +114,7 @@ function PassphraseTab({
             multiline={true}
             numberOfLines={2}
             keyboardType="default"
+            autoCapitalize="none"
             returnKeyType="done"
             blurOnSubmit={true}
             style={{
@@ -121,7 +122,7 @@ function PassphraseTab({
               fontSize: Fonts.size.medium,
               color: Colors.text,
               height: 60,
-              marginBottom: 5
+              marginBottom: 5,
             }}
           />
         </View>
@@ -129,7 +130,7 @@ function PassphraseTab({
           style={{
             justifyContent: "center",
             alignItems: "flex-end",
-            marginVertical: 5
+            marginVertical: 5,
           }}
         >
           <TouchableOpacity onPress={getContentFromClipboard}>
@@ -171,7 +172,7 @@ function PassphraseTab({
               const importedWallet = getWalletFromMnemonic(textValue);
               const walletAddress = importedWallet.getAddress();
               const rippleClassicAddress = getRippleClassicAddressFromXAddress(
-                walletAddress
+                walletAddress,
               );
               getTrustlinesWithAddNewWallet(
                 rippleClassicAddress,
@@ -189,7 +190,7 @@ function PassphraseTab({
             width: 100,
             backgroundColor: !completed
               ? Colors.headerBackground
-              : Colors.darkRed
+              : Colors.darkRed,
           }}
           color={!completed ? Colors.grayText : Colors.text}
           disabled={!completed}
@@ -207,7 +208,7 @@ function PassphraseTab({
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
-            key: "WalletsScreen"
+            key: "WalletsScreen",
           });
         }}
       />
@@ -218,33 +219,48 @@ function PassphraseTab({
 const styles = StyleSheet.create({
   addWalletContainer: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   passphraseTextInputContainer: {
     marginHorizontal: 40,
     marginTop: 30,
-    marginBottom: 30
+    marginBottom: 30,
   },
   passphraseTextInput: {
     borderBottomColor: Colors.text,
-    borderBottomWidth: 1
-  }
+    borderBottomWidth: 1,
+  },
 });
 
 const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
   addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
     dispatch(
-      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
+      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress),
     ),
-    getTrustlinesWithAddNewWallet: (walletAddress, rippleClassicAddress, nickname, mnemonic, details) =>
+  getTrustlinesWithAddNewWallet: (
+    walletAddress,
+    rippleClassicAddress,
+    nickname,
+    mnemonic,
+    details,
+  ) =>
     dispatch(
-      getTrustlines(walletAddress, rippleClassicAddress, nickname, mnemonic, details)
-    )
+      getTrustlines(
+        walletAddress,
+        rippleClassicAddress,
+        nickname,
+        mnemonic,
+        details,
+      ),
+    ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PassphraseTab);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PassphraseTab);
