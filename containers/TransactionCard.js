@@ -20,8 +20,8 @@ export default function TransactionCard({ transactionType, amount, currency }) {
             backgroundColor:
               transactionType === "send"
                 ? Colors.freshGreen
-                : Colors.errorBackground
-          }
+                : Colors.errorBackground,
+          },
         ]}
       />
     );
@@ -60,7 +60,7 @@ export default function TransactionCard({ transactionType, amount, currency }) {
               width: 86,
               borderRadius: 16.5,
               borderWidth: 0.5,
-              borderColor: Colors.lighterGray
+              borderColor: Colors.lighterGray,
             }}
           >
             <Custom_Button
@@ -95,8 +95,8 @@ export default function TransactionCard({ transactionType, amount, currency }) {
         <View style={{ flex: 4, flexDirection: "row", paddingHorizontal: 15 }}>
           <View style={styles.circleContainer}>{Circle()}</View>
           <View style={styles.dateContainer}>
-            <Custom_Text value={date} size={Fonts.size.small} isBold />
-            <Custom_Text value={time} size={Fonts.size.small} />
+            <Custom_Text value={date} size={10} isBold />
+            <Custom_Text value={time} size={10} />
           </View>
         </View>
         <View style={styles.amountContainer}>
@@ -120,7 +120,7 @@ export default function TransactionCard({ transactionType, amount, currency }) {
             flex: 4,
             flexDirection: "row",
             justifyContent: "flex-end",
-            paddingRight: 10
+            paddingRight: 10,
           }}
         >
           <View style={styles.statusContainer}>
@@ -147,7 +147,7 @@ export default function TransactionCard({ transactionType, amount, currency }) {
                 height: 20,
                 width: 20,
                 borderRadius: 0,
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
               }}
             />
           </View>
@@ -163,25 +163,25 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.headerBackground,
     marginHorizontal: 24,
     height: 40,
-    borderRadius: 20
+    borderRadius: 20,
   },
   upperViewContainer: {
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   lowerViewContainer: {
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   circleContainer: {
     height: 40,
     justifyContent: "center",
-    paddingRight: 15
+    paddingRight: 15,
   },
   circle: {
     height: 9,
     width: 9,
-    borderRadius: 4.5
+    borderRadius: 4.5,
   },
   dateContainer: {
     paddingRight: 8,
@@ -190,31 +190,31 @@ const styles = StyleSheet.create({
   verticalLine: {
     backgroundColor: Colors.lighterGray,
     height: 40,
-    width: 0.6
+    width: 0.6,
   },
   amountContainer: {
     flex: 5,
     height: 40,
     justifyContent: "center",
     paddingLeft: 10,
-    paddingRight: 30
+    paddingRight: 30,
   },
   statusContainer: {
     height: 40,
     justifyContent: "center",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
   },
   arrowIconContainer: {
     height: 40,
     justifyContent: "center",
-    paddingLeft: 7.5
+    paddingLeft: 7.5,
   },
   confirmationContainer: {
     flex: 4,
     paddingLeft: 14,
     paddingBottom: 5,
     height: 40,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   feeContainer: {
     flex: 5,
@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
     height: 40,
     justifyContent: "center",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
   },
   copyAddressContainer: {
     flex: 4,
@@ -231,6 +231,6 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     paddingRight: 13,
     paddingLeft: 12.5,
-    paddingBottom: 5
-  }
+    paddingBottom: 5,
+  },
 });

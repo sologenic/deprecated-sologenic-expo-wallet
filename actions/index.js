@@ -1,6 +1,7 @@
-export const getMarketData = () => {
+export const getMarketData = data => {
   return {
     type: "GET_MARKET_DATA",
+    payload: data,
   };
 };
 

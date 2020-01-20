@@ -6,6 +6,7 @@ import Custom_Text from "../components/shared/Custom_Text";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
+import { formatWalletTotalBalance } from "../utils";
 
 export default function WalletCard({
   navigation,
@@ -19,10 +20,12 @@ export default function WalletCard({
   // rippleClassicAddress,
   wallet,
   baseCurrency,
+  marketData,
 }) {
   const { nickname, balance } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
-  const totalBalance = 0;
+  const totalBalance = formatWalletTotalBalance(xrp * marketData.last);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -35,7 +38,7 @@ export default function WalletCard({
               wallet,
               // totalBalance,
               // tokenizedAssets,
-              defaultCurrency,
+              defaultCurrency: baseCurrency,
               xrpBalance: "21.00",
               soloBalance: "0.00",
               nickname,
@@ -104,21 +107,22 @@ export default function WalletCard({
             <View style={{ flexDirection: "row" }}>
               <View style={{ marginRight: 5, flexDirection: "row" }}>
                 <Custom_Text
-                  // value={`${baseCurrency.symbol}`}
-                  value={`$`}
+                  value={`${baseCurrency.symbol}`}
+                  numberOfLines={1}
                   size={Fonts.size.small}
                   isBold
                 />
                 <Custom_Text
                   value={`${totalBalance}`}
                   size={Fonts.size.small}
+                  numberOfLines={1}
                   isBold
                 />
               </View>
               <View>
                 <Custom_Text
-                  // value={`${baseCurrency.label}`}
-                  value={`${defaultCurrency}`}
+                  value={`${baseCurrency.label}`}
+                  // value={`${defaultCurrency}`}
                   size={Fonts.size.small}
                   color={Colors.lighterGray}
                   isBold

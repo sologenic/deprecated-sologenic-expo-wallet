@@ -13,19 +13,21 @@ import Colors from "../constants/Colors";
 import Custom_NavButton from "../components/shared/Custom_NavButton";
 import Custom_MultiSelectInput from "../components/shared/Custom_MultiSelectInput";
 import currencies from "../constants/currencies";
-import { updateBaseCurrency } from "../actions";
+import { updateBaseCurrency, getMarketData } from "../actions";
 
 function SettingsScreen({
   navigation,
   unlockMethod,
   baseCurrency,
   updateAccountBaseCurrency,
+  getMarketData,
 }) {
   const [availableUnlockMethods, setAvailableUnlockMethods] = useState(null);
   const [unlockText, setUnlockText] = useState(null);
   useEffect(() => {
     getAvailableUnlockMethods();
-  }, []);
+    getMarketData(baseCurrency.value);
+  }, [availableUnlockMethods]);
 
   const handleOpenWithWebBrowser = url => {
     WebBrowser.openBrowserAsync(url);
@@ -194,6 +196,7 @@ const mapStateToProps = ({ unlockMethod, baseCurrency }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   completeAuthSetup: () => dispatch(setupAuthentication()),
   authenticateUser: () => dispatch(authSuccess()),
   saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),

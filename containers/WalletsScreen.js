@@ -4,7 +4,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
+  ActivityIndicator,
   View,
 } from "react-native";
 import { connect } from "react-redux";
@@ -32,11 +32,12 @@ function WalletsScreen({
   connectToRippleApi,
   marketData,
   wallets,
+  baseCurrency,
   screenProps: { rootNavigation },
 }) {
   useEffect(() => {
     connectToRippleApi();
-    getMarketData();
+    getMarketData(baseCurrency.value);
     getMarketSevens();
     // getBalanceAll(wallets);
     // return () => {
@@ -78,18 +79,30 @@ function WalletsScreen({
         }
       />
       <ScrollView>
-        {wallets.length > 0 ? (
+        {!marketData ? (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 30,
+            }}
+          >
+            <ActivityIndicator size="small" color={Colors.darkRed} />
+          </View>
+        ) : wallets.length > 0 ? (
           <View style={styles.section}>
             {wallets.map((item, index) => {
               // console.log("hey", item.id, item.walletAddress)
               // getBalance(item.id, item.rippleClassicAddress);
               return (
-                <View style={{ marginBottom: 20 }}>
+                <View key={index} style={{ marginBottom: 20 }}>
                   <WalletCard
                     navigation={navigation ? navigation : rootNavigation}
-                    defaultCurrency="usd"
+                    // defaultCurrency="usd"
+                    baseCurrency={baseCurrency}
                     wallet={item}
                     key={index}
+                    marketData={marketData}
                   />
                 </View>
               );
@@ -155,13 +168,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ marketData, wallets }) => ({
+const mapStateToProps = ({ marketData, wallets, baseCurrency }) => ({
   marketData,
   wallets,
+  baseCurrency,
 });
 
 const mapDispatchToProps = dispatch => ({
-  getMarketData: () => dispatch(getMarketData()),
+  getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   getMarketSevens: () => dispatch(getMarketSevens()),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
   connectToRippleApi: () => dispatch(connectToRippleApi()),

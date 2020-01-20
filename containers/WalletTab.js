@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Text
+  Text,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -18,7 +18,7 @@ import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
-import { getPriceChange, getPriceColor, getAddress } from "../utils"
+import { getPriceChange, getPriceColor, getAddress } from "../utils";
 import SevenChart from "../components/shared/SevenChart";
 
 function WalletTab({
@@ -36,19 +36,19 @@ function WalletTab({
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
-    false
+    false,
   );
   const priceChange = getPriceChange(marketData.last, marketData.open);
   const priceColor = getPriceColor(priceChange);
 
   const { id } = wallet;
-  console.log("HERE id", id)
+  console.log("HERE id", id);
   const { privateKey, publicKey } = wallet.details.wallet;
   const keypair = {
     privateKey,
     publicKey,
-  }; 
-  console.log("xrp", xrpBalance)
+  };
+  console.log("xrp", xrpBalance);
   if (!activate) {
     return (
       <ScrollView>
@@ -60,7 +60,7 @@ function WalletTab({
                   fontFamily: "DMSans",
                   color: Colors.text,
                   fontSize: Fonts.size.small,
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -73,7 +73,7 @@ function WalletTab({
                     fontFamily: "DMSansBold",
                     color: Colors.text,
                     fontSize: Fonts.size.small,
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                 >
                   21 XRP
@@ -94,7 +94,7 @@ function WalletTab({
                     params: {
                       currency: currency.toLowerCase(),
                       walletAddress,
-                    }
+                    },
                   });
                 }}
                 style={{ height: 40, width: 100 }}
@@ -110,10 +110,10 @@ function WalletTab({
                 style={{
                   height: 12,
                   width: 12,
-                  backgroundColor: "#FFF"
+                  backgroundColor: "#FFF",
                 }}
                 textStyle={{
-                  paddingRight: 5
+                  paddingRight: 5,
                 }}
                 onPress={() => {
                   setModalVisible(true);
@@ -125,7 +125,7 @@ function WalletTab({
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 50,
-                opacity: 0.3
+                opacity: 0.3,
               }}
             >
               <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
@@ -140,7 +140,7 @@ function WalletTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text
+                      borderColor: Colors.text,
                     }}
                     disabled
                   />
@@ -166,10 +166,7 @@ function WalletTab({
                 size={Fonts.size.small}
                 color={Colors.grayText}
               />
-              <Custom_Text
-                value={walletAddress}
-                size={Fonts.size.small}
-              />
+              <Custom_Text value={walletAddress} size={Fonts.size.small} />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>
@@ -181,7 +178,7 @@ function WalletTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -196,7 +193,7 @@ function WalletTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -237,11 +234,15 @@ function WalletTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <View style={{ paddingRight: 10 }}>
-                <Custom_Text value={`${xrpBalance}`} size={Fonts.size.h3} isBold />
+                <Custom_Text
+                  value={`${xrpBalance}`}
+                  size={Fonts.size.h3}
+                  isBold
+                />
               </View>
               <View>
                 <Custom_Text value={currency} size={Fonts.size.h4} />
@@ -272,7 +273,7 @@ function WalletTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <View style={{ paddingRight: 15 }}>
@@ -281,13 +282,13 @@ function WalletTab({
                   size={Fonts.size.medium}
                   color={Colors.lightGray}
                 />
-                <Custom_Text value={`$${marketData.open}`} size={Fonts.size.medium} />
+                <Custom_Text
+                  value={`${defaultCurrency.symbol} ${marketData.last}`}
+                  size={Fonts.size.medium}
+                />
               </View>
               <View>
-                <SevenChart
-                  marketSevens={marketSevens}
-                  color={priceColor}
-                />
+                <SevenChart marketSevens={marketSevens} color={priceColor} />
                 <Custom_Text
                   value={`${priceChange}`}
                   size={Fonts.size.small}
@@ -311,7 +312,7 @@ function WalletTab({
                       balance: xrpBalance,
                       currency: currency.toLowerCase(),
                       walletAddress,
-                    }
+                    },
                   });
                 }}
                 size={Fonts.size.large}
@@ -319,7 +320,7 @@ function WalletTab({
                   height: 40,
                   backgroundColor: Colors.headerBackground,
                   borderWidth: 0.5,
-                  borderColor: Colors.text
+                  borderColor: Colors.text,
                 }}
               />
             </View>
@@ -339,7 +340,7 @@ function WalletTab({
                       keypair,
                       id,
                       wallet,
-                    }
+                    },
                   });
                 }}
                 size={Fonts.size.large}
@@ -355,10 +356,7 @@ function WalletTab({
               size={Fonts.size.small}
               color={Colors.grayText}
             />
-            <Custom_Text
-              value={walletAddress}
-              size={Fonts.size.small}
-            />
+            <Custom_Text value={walletAddress} size={Fonts.size.small} />
           </View>
           <View style={{ flex: 1 }}>
             <View style={{ paddingVertical: 2.5 }}>
@@ -370,7 +368,7 @@ function WalletTab({
                   height: 20,
                   width: 20,
                   borderRadius: 0,
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
                 }}
               />
             </View>
@@ -385,7 +383,7 @@ function WalletTab({
                   height: 20,
                   width: 20,
                   borderRadius: 0,
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
                 }}
               />
             </View>
@@ -416,26 +414,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.headerBackground,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
-    marginTop: 20
+    marginTop: 20,
   },
   marketInfoContainer: {
-    marginVertical: 24
+    marginVertical: 24,
   },
   buttonsContainer: {
     flexDirection: "row",
     marginBottom: 24,
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   leftButtonContainer: {
     flex: 1,
-    marginRight: 10
+    marginRight: 10,
   },
   rightButtonContainer: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
   },
   walletAddressContainer: {
     flex: 9,
@@ -447,18 +445,15 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24
-  }
+    marginVertical: 24,
+  },
 });
 
-const mapStateToProps = ({
-  marketData,
-  marketSevens,
-}, props) => {
+const mapStateToProps = ({ marketData, marketSevens, baseCurrency }, props) => {
   return {
     marketData,
-    marketSevens: marketSevens ? marketSevens["xrpusd"] : {},
-  }
+    marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
+  };
 };
 
 const mapDispatchToProps = dispatch => ({});

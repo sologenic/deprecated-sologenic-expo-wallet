@@ -41,8 +41,9 @@ const getMarketData = defaultCurrency =>
   api.get(`tickers/xrp${defaultCurrency}`);
 
 function* requestGetMarketData(action) {
+  const baseCurrency = action.payload;
   try {
-    const response = yield call(getMarketData, "usd");
+    const response = yield call(getMarketData, baseCurrency);
     if (response.ok) {
       yield put(getMarketDataSuccess(response.data.markets[0]));
     } else {
