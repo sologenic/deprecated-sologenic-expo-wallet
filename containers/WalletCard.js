@@ -23,7 +23,6 @@ export default function WalletCard({
   const { nickname, balance } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
   const totalBalance = 0;
-
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -105,7 +104,8 @@ export default function WalletCard({
             <View style={{ flexDirection: "row" }}>
               <View style={{ marginRight: 5, flexDirection: "row" }}>
                 <Custom_Text
-                  value={`${baseCurrency.symbol}`}
+                  // value={`${baseCurrency.symbol}`}
+                  value={`$`}
                   size={Fonts.size.small}
                   isBold
                 />
@@ -117,7 +117,8 @@ export default function WalletCard({
               </View>
               <View>
                 <Custom_Text
-                  value={`${baseCurrency.label}`}
+                  // value={`${baseCurrency.label}`}
+                  value={`${defaultCurrency}`}
                   size={Fonts.size.small}
                   color={Colors.lighterGray}
                   isBold

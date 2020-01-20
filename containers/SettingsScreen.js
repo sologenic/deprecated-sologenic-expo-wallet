@@ -162,7 +162,7 @@ function SettingsScreen({
         </View>
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
-            value={`Version ${Constants.manifest.version}`}
+            value={`Version 1.0.0`}
             style={{ marginTop: 20, textAlign: "center" }}
             color={Colors.grayText}
             isBold

@@ -17,10 +17,14 @@ import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import WalletCard from "./WalletCard";
-import { getMarketData, getMarketSevens, testTodoReset } from "../actions";
+import {
+  getMarketData,
+  getMarketSevens,
+  getBalance,
+  connectToRippleApi,
+} from "../actions";
 
 function WalletsScreen({
-  screenProps: { rootNavigation },
   navigation,
   getMarketData,
   getMarketSevens,
@@ -28,6 +32,7 @@ function WalletsScreen({
   connectToRippleApi,
   marketData,
   wallets,
+  screenProps: { rootNavigation },
 }) {
   useEffect(() => {
     connectToRippleApi();
@@ -38,6 +43,14 @@ function WalletsScreen({
     //   testTodoReset();
     // }
   }, []);
+  console.log(wallets);
+  const getBalanceAll = wallets => {
+    wallets.map(item => {
+      console.log(".walletAddress", item.walletAddress, item.details);
+      getBalance(item.id, item.walletAddress);
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -46,12 +59,18 @@ function WalletsScreen({
         right={
           <Custom_HeaderButton
             onPress={() => {
-              rootNavigation.navigate({
-                routeName: "SettingsScreen",
-                key: "SettingsScreen",
-              });
+              if (navigation) {
+                navigation.navigate({
+                  routeName: "SettingsScreen",
+                  key: "SettingsScreen",
+                });
+              } else {
+                rootNavigation.navigate({
+                  routeName: "SettingsScreen",
+                  key: "SettingsScreen",
+                });
+              }
             }}
-            size={24}
             type="icon"
             icon="md-settings"
             iconColor={Colors.text}
@@ -59,38 +78,54 @@ function WalletsScreen({
         }
       />
       <ScrollView>
-        <View
-          style={[
-            styles.section,
-            { justifyContent: "center", alignItems: "center" },
-          ]}
-        >
-          <Custom_Text
-            value="No Wallets Added"
-            size={Fonts.size.large}
-            color={Colors.text}
-          />
-        </View>
-        <View style={styles.section}>
-          {/* {example} */}
-          <WalletCard
-            navigation={rootNavigation}
-            nickname="Elegant Dinosaur"
-            totalBalance="$5.04"
-            tokenizedAssets={0}
-            defaultCurrency="usd"
-          />
-        </View>
+        {wallets.length > 0 ? (
+          <View style={styles.section}>
+            {wallets.map((item, index) => {
+              // console.log("hey", item.id, item.walletAddress)
+              // getBalance(item.id, item.rippleClassicAddress);
+              return (
+                <View style={{ marginBottom: 20 }}>
+                  <WalletCard
+                    navigation={navigation ? navigation : rootNavigation}
+                    defaultCurrency="usd"
+                    wallet={item}
+                    key={index}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        ) : (
+          <View
+            style={[
+              styles.section,
+              { justifyContent: "center", alignItems: "center" },
+            ]}
+          >
+            <Custom_Text
+              value="No Wallets Added"
+              size={Fonts.size.large}
+              color={Colors.text}
+            />
+          </View>
+        )}
       </ScrollView>
       <View style={styles.footer}>
         <Custom_IconButton
           icon="md-add"
           color={Colors.text}
           onPress={() => {
-            rootNavigation.navigate({
-              routeName: "AddWalletScreen",
-              key: "AddWalletScreen",
-            });
+            if (navigation) {
+              navigation.navigate({
+                routeName: "AddWalletScreen",
+                key: "AddWalletScreen",
+              });
+            } else {
+              rootNavigation.navigate({
+                routeName: "AddWalletScreen",
+                key: "AddWalletScreen",
+              });
+            }
           }}
         />
       </View>
@@ -120,7 +155,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ marketData }) => ({
+const mapStateToProps = ({ marketData, wallets }) => ({
   marketData,
   wallets,
 });
@@ -128,7 +163,8 @@ const mapStateToProps = ({ marketData }) => ({
 const mapDispatchToProps = dispatch => ({
   getMarketData: () => dispatch(getMarketData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
-  testTodoReset: () => dispatch(testTodoReset()),
+  getBalance: (id, address) => dispatch(getBalance(id, address)),
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
 export default connect(

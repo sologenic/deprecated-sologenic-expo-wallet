@@ -68,12 +68,15 @@ export const updatePhraseTestValue3 = value => {
 export const getBalance = (id, address) => {
   return {
     type: "GET_BALANCE",
+    id,
+    address,
   };
 };
 
 export const getBalanceSuccess = (id, data) => {
   return {
     type: "GET_BALANCE_SUCCESS",
+    id,
     payload: data,
   };
 };

@@ -119,7 +119,11 @@ function* requestGetBalance(action) {
   try {
     const { id, address } = action;
     // const response = yield call(getAccountInfo, address);
+    console.log("action ----", action);
+    console.log("id ----", id);
+    console.log("add----", address);
     const response = yield call(getBalances, address);
+    console.log("----", response);
     const xrpBalance = response.filter(item => item.currency === "XRP");
     if (response) {
       yield put(getBalanceSuccess(id, Number(xrpBalance[0].value)));
