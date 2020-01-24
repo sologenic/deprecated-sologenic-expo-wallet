@@ -17,7 +17,12 @@ import { genereateRandomNumbers } from "../utils";
 
 export default function YourRecoveryPhraseScreen({ navigation }) {
   const [pressed, handlePressDots] = useState(false);
-  const { mnemonic, nickname, walletAddress, rippleClassicAddress } = navigation.state.params;
+  const {
+    mnemonic,
+    nickname,
+    walletAddress,
+    rippleClassicAddress,
+  } = navigation.state.params;
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -33,25 +38,23 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
           />
         }
         center={<Custom_HeaderTitle text="Your Recovery Phrase" />}
-        right={<View/>}
+        right={<View />}
       />
       <ScrollView>
         <View style={styles.section}>
           <Custom_Text
-            value="The sequence of words below is your Recovery Phrase. You need this to regain access to your XRP. You should never share this with anyone"
+            value="The sequence of words below is your Recovery Phrase. You need this to regain access to your XRP. You should never share this with anyone."
             size={Fonts.size.normal}
             color={Colors.text}
           />
         </View>
         <View style={styles.section}>
-          <RecoveryPhrase
-            phrase={mnemonic}
-          />
+          <RecoveryPhrase phrase={mnemonic} />
         </View>
         <View
           style={[
             styles.section,
-            { justifyContent: "center", alignItems: "center" }
+            { justifyContent: "center", alignItems: "center" },
           ]}
         >
           <View style={{ flexDirection: "row" }}>
@@ -104,13 +107,13 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 60
-            }
+              marginTop: 60,
+            },
           ]}
         >
           <View style={{ flex: 8.5 }}>
             <Custom_Text
-              value="I have written down my passphrase, and I understand that without it I will not have access to my wallet sshould I lose it."
+              value="I have written down my passphrase, and I understand that without it I will not have access to my wallet should I lose it."
               size={Fonts.size.normal}
             />
           </View>
@@ -137,7 +140,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
                   nickname,
                   walletAddress,
                   rippleClassicAddress,
-                }
+                },
               });
             }}
             style={{
@@ -145,7 +148,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
               width: 80,
               backgroundColor: !pressed
                 ? Colors.headerBackground
-                : Colors.darkRed
+                : Colors.darkRed,
             }}
             color={!pressed ? Colors.grayText : Colors.text}
             icon="ios-arrow-forward"
@@ -158,16 +161,16 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
 }
 
 YourRecoveryPhraseScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   section: {
     marginHorizontal: 20,
-    marginTop: 20
-  }
+    marginTop: 20,
+  },
 });

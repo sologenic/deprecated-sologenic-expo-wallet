@@ -341,3 +341,10 @@ export const getTrustlinesError = () => {
     type: "GET_TRUSTLINES_ERROR",
   };
 };
+
+export const activateWallet = id => {
+  return {
+    type: "ACTIVATE_WALLET",
+    payload: id,
+  };
+};

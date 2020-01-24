@@ -169,7 +169,9 @@ function PassphraseTab({
             if (!result) {
               setErrorModalVisible(true);
             } else {
-              const importedWallet = getWalletFromMnemonic(textValue);
+              const importedWallet = getWalletFromMnemonic(
+                textValue.toLowerCase(),
+              );
               const walletAddress = importedWallet.getAddress();
               const rippleClassicAddress = getRippleClassicAddressFromXAddress(
                 walletAddress,

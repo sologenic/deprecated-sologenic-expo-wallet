@@ -16,7 +16,7 @@ import {
   updatePhraseTestValue1,
   updatePhraseTestValue2,
   updatePhraseTestValue3,
-  addNewWallet
+  addNewWallet,
 } from "../actions";
 import WalletCreationSuccessfulModal from "../components/shared/WalletCreationSuccessfulModal";
 
@@ -29,14 +29,14 @@ function RecoveryPhraseTestScreen({
   updatePhraseTestValue2,
   updatePhraseTestValue3,
   newWallet,
-  addNewWallet
+  addNewWallet,
   // nickname,
 }) {
   const [pressed, handlePressButton] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [
     walletCreationSuccessfulModalVisible,
-    setWalletCreationSuccessfulModalVisible
+    setWalletCreationSuccessfulModalVisible,
   ] = useState(false);
   const [testResult, handleTestResult] = useState("");
 
@@ -45,7 +45,7 @@ function RecoveryPhraseTestScreen({
     phrase,
     nickname,
     walletAddress,
-    rippleClassicAddress
+    rippleClassicAddress,
   } = navigation.state.params;
   let count = 0;
 
@@ -79,7 +79,7 @@ function RecoveryPhraseTestScreen({
     phrase,
     phraseTestValue1,
     phraseTestValue2,
-    phraseTestValue3
+    phraseTestValue3,
   ) => {
     const sortedRandomNumbers = randomNumbers.sort((a, b) => (a < b ? -1 : 1));
     return (
@@ -110,7 +110,7 @@ function RecoveryPhraseTestScreen({
         <View
           style={[
             styles.section,
-            { justifyContent: "center", alignItems: "center" }
+            { justifyContent: "center", alignItems: "center" },
           ]}
         >
           {testResult === "" && (
@@ -142,7 +142,7 @@ function RecoveryPhraseTestScreen({
         <View
           style={[
             styles.section,
-            { justifyContent: "center", alignItems: "center" }
+            { justifyContent: "center", alignItems: "center" },
           ]}
         >
           <RecoveryPhrase
@@ -165,7 +165,7 @@ function RecoveryPhraseTestScreen({
                 phrase,
                 phraseTestValue1,
                 phraseTestValue2,
-                phraseTestValue3
+                phraseTestValue3,
               );
               if (result === true) {
                 handleTestResult("correct");
@@ -173,7 +173,7 @@ function RecoveryPhraseTestScreen({
                   newWallet,
                   nickname,
                   walletAddress,
-                  rippleClassicAddress
+                  rippleClassicAddress,
                 );
                 setWalletCreationSuccessfulModalVisible(true);
               } else {
@@ -188,7 +188,7 @@ function RecoveryPhraseTestScreen({
               width: 120,
               backgroundColor: !pressed
                 ? Colors.headerBackground
-                : Colors.darkRed
+                : Colors.darkRed,
             }}
             color={!pressed ? Colors.grayText : Colors.text}
             disabled={!pressed}
@@ -197,6 +197,7 @@ function RecoveryPhraseTestScreen({
       </ScrollView>
       <ExitProcessModal
         modalVisible={modalVisible}
+        closeModal={() => setModalVisible(false)}
         onClose={() => {
           setModalVisible(false);
           navigation.goBack();
@@ -211,7 +212,7 @@ function RecoveryPhraseTestScreen({
           setWalletCreationSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
-            key: "WalletsScreen"
+            key: "WalletsScreen",
           });
         }}
       />
@@ -220,31 +221,31 @@ function RecoveryPhraseTestScreen({
 }
 
 RecoveryPhraseTestScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   section: {
     marginHorizontal: 20,
-    marginTop: 20
-  }
+    marginTop: 20,
+  },
 });
 
 const mapStateToProps = ({
   phraseTestValue1,
   phraseTestValue2,
   phraseTestValue3,
-  newWallet
+  newWallet,
   // nickname,
 }) => ({
   phraseTestValue1,
   phraseTestValue2,
   phraseTestValue3,
-  newWallet
+  newWallet,
   // nickname,
 });
 
@@ -254,11 +255,11 @@ const mapDispatchToProps = dispatch => ({
   updatePhraseTestValue3: value => dispatch(updatePhraseTestValue3(value)),
   addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
     dispatch(
-      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
-    )
+      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress),
+    ),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(RecoveryPhraseTestScreen);

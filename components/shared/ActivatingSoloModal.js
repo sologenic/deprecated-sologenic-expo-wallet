@@ -21,29 +21,24 @@ export default function ActivatingSoloModal({ modalVisible, onClose }) {
         <View style={styles.modalBody} activeOpacity={1}>
           <TouchableWithoutFeedback>
             <View>
-                <View
-                  style={[
-                    styles.section,
-                    { height: 70 }
-                  ]}
-                >
-                  <Custom_Text
-                    value="Activation SOLO..."
-                    size={20}
-                    color={Colors.text}
-                    isBold
-                  />
+              <View style={[styles.section, { height: 70 }]}>
+                <Custom_Text
+                  value="Activating SOLO..."
+                  size={20}
+                  color={Colors.text}
+                  isBold
+                />
+              </View>
+              <View style={[styles.section, { marginTop: 20 }]}>
+                <Custom_Text
+                  value="Please wait"
+                  size={Fonts.size.small}
+                  color={Colors.text}
+                />
+                <View style={{ marginTop: 15, marginBottom: 50 }}>
+                  <ActivityIndicator size="small" color="#FFF" />
                 </View>
-                <View style={[styles.section, { marginTop: 20 }]}>
-                  <Custom_Text
-                    value="Please wait"
-                    size={Fonts.size.small}
-                    color={Colors.text}
-                  />
-                  <View style={{ marginTop: 15, marginBottom: 50 }}>
-                    <ActivityIndicator size="small" color="#FFF" />
-                  </View>
-                </View>
+              </View>
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -56,13 +51,13 @@ ActivatingSoloModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 ActivatingSoloModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
@@ -73,12 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10
+    borderRadius: 10,
     // height: 100,
     // width: 200,
     // zIndex: 20,

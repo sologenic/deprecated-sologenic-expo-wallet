@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { connect } from "react-redux";
-import Constants from "expo-constants";
 import * as WebBrowser from "expo-web-browser";
 import * as LocalAuthentication from "expo-local-authentication";
 
@@ -14,6 +13,7 @@ import Custom_NavButton from "../components/shared/Custom_NavButton";
 import Custom_MultiSelectInput from "../components/shared/Custom_MultiSelectInput";
 import currencies from "../constants/currencies";
 import { updateBaseCurrency, getMarketData } from "../actions";
+import config from "../constants/config";
 
 function SettingsScreen({
   navigation,
@@ -139,13 +139,13 @@ function SettingsScreen({
           <Custom_NavButton
             value="Terms & Conditions"
             handleOnPress={() => {
-              // handleOpenWithWebBrowser(config.termsUrl);
+              handleOpenWithWebBrowser(config.termsUrl);
             }}
           />
           <Custom_NavButton
             value="Privacy Policy"
             handleOnPress={() => {
-              // handleOpenWithWebBrowser(config.privacyUrl);
+              handleOpenWithWebBrowser(config.privacyUrl);
             }}
           />
         </View>
@@ -156,9 +156,9 @@ function SettingsScreen({
             isBold
           />
           <Custom_NavButton
-            value="Contact Us"
+            value="Report an Issue"
             handleOnPress={() => {
-              // handleOpenWithWebBrowser(config.contactUsUrl);
+              handleOpenWithWebBrowser(config.reportIssueUrl);
             }}
           />
         </View>

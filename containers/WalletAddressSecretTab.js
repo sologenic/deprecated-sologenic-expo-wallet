@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Clipboard
+  Clipboard,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -17,7 +17,7 @@ import { addNewWallet, getTrustlines } from "../actions";
 import {
   isValidRippleAddress,
   isValidSecret,
-  getXAddressFromRippleClassicAddress
+  getXAddressFromRippleClassicAddress,
 } from "../utils";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 
@@ -26,7 +26,7 @@ function WalletAddressSecretTab({
   importSuccessfulModalVisible,
   setImportSuccessfulModalVisible,
   addNewWallet,
-  getTrustlinesWithAddNewWallet
+  getTrustlinesWithAddNewWallet,
 }) {
   const [addressValue, onChangeAddress] = useState("");
   const [secretValue, onChangeSecret] = useState("");
@@ -71,7 +71,7 @@ function WalletAddressSecretTab({
           onChangeText={text => {
             onChangeSecret(text);
           }}
-          label="Account Secrent"
+          label="Account Secret"
           keyboardType="default"
           returnKeyType="done"
         />
@@ -112,7 +112,7 @@ function WalletAddressSecretTab({
                 nicknameValue ? nicknameValue : "",
                 "",
                 {
-                  secret: secretValue
+                  secret: secretValue,
                 },
               );
               setImportSuccessfulModalVisible(true);
@@ -123,7 +123,7 @@ function WalletAddressSecretTab({
             width: 100,
             backgroundColor: !completed
               ? Colors.headerBackground
-              : Colors.darkRed
+              : Colors.darkRed,
           }}
           color={!completed ? Colors.grayText : Colors.text}
           disabled={!completed}
@@ -136,7 +136,7 @@ function WalletAddressSecretTab({
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
-            key: "WalletsScreen"
+            key: "WalletsScreen",
           });
         }}
       />
@@ -147,22 +147,22 @@ function WalletAddressSecretTab({
 const styles = StyleSheet.create({
   addWalletContainer: {
     justifyContent: "center",
-    alignItems: "center"
-  }
+    alignItems: "center",
+  },
 });
 
 const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
   addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
     dispatch(
-      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress)
+      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress),
     ),
   getTrustlinesWithAddNewWallet: (
     walletAddress,
     rippleClassicAddress,
     nickname,
     mnemonic,
-    details
+    details,
   ) =>
     dispatch(
       getTrustlines(
@@ -170,12 +170,12 @@ const mapDispatchToProps = dispatch => ({
         rippleClassicAddress,
         nickname,
         mnemonic,
-        details
-      )
-    )
+        details,
+      ),
+    ),
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(WalletAddressSecretTab);

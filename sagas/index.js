@@ -263,6 +263,10 @@ function* requestGetTrustlines(action) {
         trustline,
       ),
     );
+    yield call(requestGetBalance, {
+      address: walletAddress,
+      id: walletAddress,
+    });
   } catch (error) {
     console.log("REQUEST_GET_TRUSTLINES_ERROR", error);
     yield put(getTrustlinesError());

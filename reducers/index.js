@@ -49,6 +49,8 @@ const defaultState = {
     label: "USD",
     value: "usd",
     key: "usd",
+    symbol: "$",
+    type: "fiat",
   },
 };
 
@@ -141,11 +143,11 @@ const getBalance = (state, action) => {
 
 const getBalanceSuccess = (state, action) => {
   const { wallets } = state;
+  const walletsCopy = [...wallets];
   const { id, payload } = action;
-  const updatedWallets = wallets.map(item => {
+  const updatedWallets = walletsCopy.map(item => {
     if (item.id === id) {
       item.balance.xrp = payload;
-      // console.log(item)
       return item;
     }
     return item;
@@ -153,6 +155,7 @@ const getBalanceSuccess = (state, action) => {
 
   return Object.assign({}, state, {
     balance: payload,
+    wallets: updatedWallets,
     getBalancePending: false,
     getBalanceSuccess: true,
     getBalanceError: false,
@@ -465,6 +468,21 @@ const getTrustlinesError = (state, action) => {
   });
 };
 
+const activateWallet = (state, action) => {
+  const { wallets } = state;
+  const copyWallets = [...wallets];
+  const updatedWallets = copyWallets.map(wallet => {
+    if (wallet.id === action.id) {
+      return { ...wallet, isActive: true };
+    }
+    return wallet;
+  });
+  console.log("updated wallets == ", updatedWallets);
+  return Object.assign({}, state, {
+    wallets: updatedWallets,
+  });
+};
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -559,6 +577,8 @@ export default (state = defaultState, action) => {
       return updateUnlockMethod(state, action);
     case "UPDATE_BASE_CURRENCY":
       return updateBaseCurrency(state, action);
+    case "ACTIVATE_WALLET":
+      return activateWallet(state, action);
 
     default:
       return state;

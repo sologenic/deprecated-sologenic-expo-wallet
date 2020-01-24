@@ -6,7 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -29,7 +29,7 @@ function ChangeWalletNicknameScreen({ navigation, changeNickname }) {
         left={
           <Custom_HeaderButton
             onPress={() => {
-              navigation.goBack();              
+              navigation.goBack();
             }}
             type="icon"
             icon="md-close"
@@ -57,10 +57,7 @@ function ChangeWalletNicknameScreen({ navigation, changeNickname }) {
           text="Confirm"
           onPress={() => {
             changeNickname(id, textValue);
-            navigation.navigate({
-              routeName: "WalletsScreen",
-              key: "WalletsScreen",
-            });
+            navigation.goBack();
           }}
           style={{ height: 40, width: 86 }}
           // icon="ios-arrow-forward"
@@ -71,13 +68,13 @@ function ChangeWalletNicknameScreen({ navigation, changeNickname }) {
 }
 
 ChangeWalletNicknameScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   nicknameInput: {
     marginTop: 20,
@@ -93,13 +90,13 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "flex-end",
     marginHorizontal: 20,
-    marginVertical: 50
+    marginVertical: 50,
   },
 });
 
 const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
-  changeNickname: (id, nickname) => dispatch(changeNickname(id, nickname))
+  changeNickname: (id, nickname) => dispatch(changeNickname(id, nickname)),
 });
 
 export default connect(
