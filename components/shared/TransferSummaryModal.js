@@ -1,23 +1,34 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { StyleSheet, TouchableOpacity, View, Modal, TouchableWithoutFeedback } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  Modal,
+  TouchableWithoutFeedback,
+  ActivityIndicator,
+} from "react-native";
 
 import Colors from "../../constants/Colors";
 import Fonts from "../../constants/Fonts";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
 
-export default function TransferSummaryModal({ onPress, onClose, modalVisible, amountToSend, address, tag, currency, defaultCurrency, style }) {
+export default function TransferSummaryModal({
+  onPress,
+  onClose,
+  modalVisible,
+  amountToSend,
+  address,
+  tag,
+  currency,
+  defaultCurrency,
+  style,
+  showSpinner,
+}) {
   return (
-    <Modal
-      visible={modalVisible}
-      animationType="none"
-      transparent={true}
-    >
-      <TouchableOpacity
-        style={styles.modalContainer}
-        activeOpacity={1}
-      >
+    <Modal visible={modalVisible} animationType="none" transparent={true}>
+      <TouchableOpacity style={styles.modalContainer} activeOpacity={1}>
         <View style={styles.modalBody} activeOpacity={1}>
           <TouchableWithoutFeedback>
             <View>
@@ -42,16 +53,18 @@ export default function TransferSummaryModal({ onPress, onClose, modalVisible, a
                   isBold
                 />
               </View>
-              <View style={[styles.sectionAddress, { marginBottom: 20, width: 244 }]}>
+              <View
+                style={[
+                  styles.sectionAddress,
+                  { marginBottom: 20, width: 244 },
+                ]}
+              >
                 <Custom_Text
                   value="To Address:"
                   size={Fonts.size.small}
                   color={Colors.lightGray}
                 />
-                <Custom_Text
-                  value={`${address}`}
-                  size={Fonts.size.small}
-                />
+                <Custom_Text value={`${address}`} size={Fonts.size.small} />
               </View>
               <View style={[styles.sectionTag, { marginBottom: 20 }]}>
                 <Custom_Text
@@ -59,33 +72,45 @@ export default function TransferSummaryModal({ onPress, onClose, modalVisible, a
                   size={Fonts.size.small}
                   color={Colors.lightGray}
                 />
-                <Custom_Text
-                  value={`${tag}`}
-                  size={Fonts.size.small}
-                />
+                <Custom_Text value={`${tag}`} size={Fonts.size.small} />
               </View>
               <View style={styles.line} />
               <View style={[styles.section, { height: 50 }]} />
-              <View style={{ flexDirection: 'row' }}>
-                <View style={[styles.section, { height: 50, position: 'absolute', right: 110, bottom: 0 }]}>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={[
+                    styles.section,
+                    { height: 50, position: "absolute", right: 110, bottom: 0 },
+                  ]}
+                >
                   <Custom_Button
                     text="CANCEL"
                     onPress={onClose}
+                    disabled={showSpinner}
                     color={Colors.lightGray}
                     size={16}
                     textStyle={{ letterSpacing: 1.2 }}
                     style={{ backgroundColor: "transparent" }}
                   />
                 </View>
-                <View style={[styles.section, { height: 50, position: 'absolute', right: 0, bottom: 0 }]}>
-                  <Custom_Button
-                    text="CONFIRM"
-                    onPress={onPress}
-                    color={Colors.freshGreen}
-                    size={16}
-                    textStyle={{ letterSpacing: 1.2 }}
-                    style={{ backgroundColor: "transparent" }}
-                  />
+                <View
+                  style={[
+                    styles.section,
+                    { height: 50, position: "absolute", right: 0, bottom: 0 },
+                  ]}
+                >
+                  {showSpinner ? (
+                    <ActivityIndicator size="small" color={Colors.freshGreen} />
+                  ) : (
+                    <Custom_Button
+                      text="CONFIRM"
+                      onPress={onPress}
+                      color={Colors.freshGreen}
+                      size={16}
+                      textStyle={{ letterSpacing: 1.2 }}
+                      style={{ backgroundColor: "transparent" }}
+                    />
+                  )}
                 </View>
               </View>
             </View>
@@ -100,20 +125,20 @@ TransferSummaryModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 TransferSummaryModal.defaultProps = {
-  onPress: () => { },
-  onClose: () => { },
-  pressed: false
+  onPress: () => {},
+  onClose: () => {},
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: Colors.cloud,
     paddingHorizontal: 40,
   },
@@ -139,5 +164,5 @@ const styles = StyleSheet.create({
   line: {
     height: 1,
     backgroundColor: Colors.grayText,
-  }
+  },
 });

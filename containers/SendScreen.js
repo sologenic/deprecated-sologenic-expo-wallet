@@ -5,7 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { connect } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
@@ -24,16 +24,36 @@ import InstructionsModal from "../components/shared/InstructionsModal";
 import TransferSummaryModal from "../components/shared/TransferSummaryModal";
 import TransferSuccessfulModal from "../components/shared/TransferSuccessfulModal";
 import TransferFailedModal from "../components/shared/TransferFailedModal";
-import { transferXrp, getBalance } from "../actions";
+import { transferXrp, getBalance, transferXrpReset } from "../actions";
+import { formatWalletTotalBalance, extractSeparatorFromText } from "../utils";
 
-function SendScreen({ navigation, transferXrp, transferXrpSuccess, getBalance }) {
+function SendScreen({
+  navigation,
+  transferXrp,
+  transferXrpPending,
+  transferXrpSuccess,
+  transferXrpError,
+  getBalance,
+  transferXrpReset,
+  baseCurrency,
+  marketData,
+}) {
   const [completed, handleIsCompleted] = useState(false);
   const [amountToSend, handleChangeAmountToSend] = useState("");
+  const [convertedAmount, setConvertedAmount] = useState(0);
   const [destination, handleChangeDestination] = useState("");
-  const [instructionsModalVisible, setInstructionsModalVisible] = useState(false);
+  const [instructionsModalVisible, setInstructionsModalVisible] = useState(
+    false,
+  );
   const [tag, handleChangeTag] = useState("");
   const [summaryModalVisible, setSummaryModalVisible] = useState(false);
-  const [transferSuccessfulModalVisible, setTransferSuccessfulModalVisible] = useState(false);
+  const [
+    transferSuccessfulModalVisible,
+    setTransferSuccessfulModalVisible,
+  ] = useState(false);
+  const [transferErrorModalVisible, setTransferErrorModalVisible] = useState(
+    false,
+  );
   const {
     balance,
     currency,
@@ -44,11 +64,17 @@ function SendScreen({ navigation, transferXrp, transferXrpSuccess, getBalance })
   } = navigation.state.params;
 
   useEffect(() => {
-    if (amountToSend && amountToSend.length > 0 && destination && destination.length > 0) {
+    if (
+      amountToSend &&
+      amountToSend.length > 0 &&
+      destination &&
+      destination.length > 0
+    ) {
       handleIsCompleted(true);
     } else {
       handleIsCompleted(false);
     }
+    setConvertedAmount(amountToSend * marketData.last);
   }, [amountToSend, destination]);
 
   useEffect(() => {
@@ -56,10 +82,20 @@ function SendScreen({ navigation, transferXrp, transferXrpSuccess, getBalance })
       setTransferSuccessfulModalVisible(true);
       setSummaryModalVisible(false);
     }
+    if (transferXrpError) {
+      setTransferErrorModalVisible(true);
+      setSummaryModalVisible(false);
+    }
     // return () => {
     //   cleanup
     // };
-  }, [transferXrpSuccess])
+  }, [
+    transferXrpSuccess,
+    transferXrpError,
+    transferSuccessfulModalVisible,
+    summaryModalVisible,
+    transferXrpPending,
+  ]);
 
   return (
     <View style={styles.container}>
@@ -67,7 +103,6 @@ function SendScreen({ navigation, transferXrp, transferXrpSuccess, getBalance })
         left={
           <Custom_HeaderButton
             onPress={() => {
-              console.log("Press!!");
               navigation.goBack();
             }}
             type="icon"
@@ -78,178 +113,227 @@ function SendScreen({ navigation, transferXrp, transferXrpSuccess, getBalance })
         center={<Custom_HeaderTitle text={`Send ${currency.toUpperCase()}`} />}
         right={<View />}
       />
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "center",
-          alignItems: "center",
-          marginVertical: 33
-        }}
-      >
-        <View style={{ paddingRight: 10 }}>
-          <Image source={Images[currency]} />
-        </View>
+      <ScrollView keyboardShouldPersistTaps="handled">
         <View
           style={{
             flexDirection: "row",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            marginVertical: 33,
           }}
         >
-          <View style={{ paddingRight: 7.5 }}>
-            <Custom_Text value={`${balance}`} size={Fonts.size.h5} isBold />
+          <View style={{ paddingRight: 10 }}>
+            <Image source={Images[currency]} />
           </View>
-          <View>
-            <Custom_Text
-              value={`${currency.toUpperCase()}`}
-              size={Fonts.size.h5}
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View style={{ paddingRight: 7.5 }}>
+              <Custom_Text value={`${balance}`} size={Fonts.size.h5} isBold />
+            </View>
+            <View>
+              <Custom_Text
+                value={`${currency.toUpperCase()}`}
+                size={Fonts.size.h5}
+              />
+            </View>
+          </View>
+        </View>
+
+        <View>
+          <View style={{ marginTop: 20, marginBottom: 10 }}>
+            <Custom_TextInput
+              value={amountToSend}
+              onChangeText={text => {
+                var t = text.replace(/[^0-9.]/g, "");
+                handleChangeAmountToSend(t);
+              }}
+              label="Amount to send"
+              keyboardType="default"
+              returnKeyType="done"
+              currency={currency}
+            />
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginHorizontal: 40,
+                borderBottomColor: Colors.grayText,
+                borderBottomWidth: 2,
+                marginTop: 10,
+              }}
+            >
+              <Custom_Text
+                value={formatWalletTotalBalance(convertedAmount)}
+                color={Colors.grayText}
+                size={16}
+              />
+              <Custom_Text
+                value={baseCurrency.label}
+                color={Colors.grayText}
+                size={16}
+              />
+            </View>
+          </View>
+
+          <View style={{ marginTop: 25, marginBottom: 10 }}>
+            <Custom_TextInput
+              value={destination}
+              onChangeText={text => {
+                handleChangeDestination(text);
+              }}
+              label="Destination Wallet Address"
+              keyboardType="default"
+              returnKeyType="done"
+            />
+          </View>
+
+          <View style={{ marginTop: 25 }}>
+            <Custom_TextInput
+              value={tag}
+              onChangeText={text => {
+                handleChangeTag(text);
+              }}
+              label="Destination Wallet Tag"
+              keyboardType="default"
+              returnKeyType="done"
+            />
+            <View style={{ marginLeft: 30, marginTop: 5 }}>
+              <Custom_Text
+                value="Optional"
+                size={Fonts.size.normal}
+                color={Colors.freshGreen}
+              />
+            </View>
+          </View>
+          <View style={{ marginHorizontal: 24, marginTop: 50 }}>
+            <Custom_IconButton
+              icon="questioncircle"
+              color={Colors.grayText}
+              text="Instructions"
+              textSize={Fonts.size.small}
+              size={13}
+              style={{
+                height: 12,
+                width: 12,
+                backgroundColor: "#FFF",
+              }}
+              textStyle={{
+                paddingRight: 5,
+              }}
+              onPress={() => {
+                setInstructionsModalVisible(true);
+              }}
+            />
+          </View>
+          <View
+            style={[
+              styles.sendButtonContainer,
+              { marginTop: 30, marginRight: 24 },
+            ]}
+          >
+            <Custom_Button
+              text="SEND"
+              onPress={() => {
+                console.log("Press Send");
+                setSummaryModalVisible(true);
+              }}
+              style={{
+                height: 40,
+                width: 100,
+                backgroundColor: !completed
+                  ? Colors.headerBackground
+                  : Colors.darkRed,
+              }}
+              color={!completed ? Colors.grayText : Colors.text}
+              disabled={!completed}
             />
           </View>
         </View>
-      </View>
-
-      <View>
-        <View style={{ marginTop: 20, marginBottom: 10 }}>
-          <Custom_TextInput
-            value={amountToSend}
-            onChangeText={text => {
-              handleChangeAmountToSend(text);
-            }}
-            label="Amount to send"
-            keyboardType="default"
-            returnKeyType="done"
-            currency={currency}
-          />
-        </View>
-
-        <View style={{ marginTop: 25, marginBottom: 10 }}>
-          <Custom_TextInput
-            value={destination}
-            onChangeText={text => {
-              handleChangeDestination(text);
-            }}
-            label="Destination Wallet Address"
-            keyboardType="default"
-            returnKeyType="done"
-          />
-        </View>
-        
-        <View style={{ marginTop: 25 }}>
-          <Custom_TextInput
-            value={tag}
-            onChangeText={text => {
-              handleChangeTag(text);
-            }}
-            label="Destination Wallet Tag"
-            keyboardType="default"
-            returnKeyType="done"
-          />
-          <View style={{ marginLeft: 30 }}>
-            <Custom_Text
-              value="Optional"
-              size={Fonts.size.normal}
-              color={Colors.freshGreen}
-            />
-          </View>
-        </View>
-        <View style={{ marginHorizontal: 24, marginTop: 50 }}>
-          <Custom_IconButton
-            icon="questioncircle"
-            color={Colors.grayText}
-            text="Instructions"
-            textSize={Fonts.size.small}
-            size={13}
-            style={{
-              height: 12,
-              width: 12,
-              backgroundColor: "#FFF"
-            }}
-            textStyle={{
-              paddingRight: 5
-            }}
-            onPress={() => {
-              setInstructionsModalVisible(true);
-            }}
-          />
-        </View>
-        <View style={[styles.sendButtonContainer, { marginTop: 30, marginRight: 24 }]}>
-          <Custom_Button
-            text="SEND"
-            onPress={() => {
-              console.log("Press Send");
-              setSummaryModalVisible(true);
-            }}
-            style={{
-              height: 40,
-              width: 100,
-              backgroundColor: !completed
-                ? Colors.headerBackground
-                : Colors.darkRed
-            }}
-            color={!completed ? Colors.grayText : Colors.text}
-            disabled={!completed}
-          />
-        </View>
-      </View>
-      <InstructionsModal
-        modalVisible={instructionsModalVisible}
-        onClose={() => setInstructionsModalVisible(false)}
-      />
-      <TransferSummaryModal
-        onPress={() => {
-          // account, destination, value
-          transferXrp(walletAddress, keypair, destination, amountToSend);
-        }}
-        modalVisible={summaryModalVisible}
-        onClose={() => setSummaryModalVisible(false)}
-        currency={currency}
-        address={destination}
-        amountToSend={amountToSend}
-        tag={tag ? tag : ""}
-      />
-      <TransferSuccessfulModal
-        modalVisible={transferSuccessfulModalVisible}
-        onPress={() => { 
-          setTransferSuccessfulModalVisible(false);
-          getBalance(id, walletAddress); 
-          navigation.goBack();
-        }}
-        currency={currency}
-      />
-      {/* <TransferFailedModal
-        modalVisible={summaryModalVisible}
-        onClose={() => setSummaryModalVisible(false)}
-      /> */}
+        <InstructionsModal
+          modalVisible={instructionsModalVisible}
+          onClose={() => setInstructionsModalVisible(false)}
+        />
+        <TransferSummaryModal
+          onPress={() => {
+            // account, destination, value
+            transferXrp(walletAddress, keypair, destination, amountToSend);
+          }}
+          modalVisible={summaryModalVisible}
+          showSpinner={transferXrpPending}
+          onClose={() => setSummaryModalVisible(false)}
+          currency={currency}
+          address={destination}
+          amountToSend={amountToSend}
+          tag={tag ? tag : ""}
+        />
+        <TransferSuccessfulModal
+          modalVisible={transferSuccessfulModalVisible}
+          onPress={() => {
+            transferXrpReset();
+            setTransferSuccessfulModalVisible(false);
+            getBalance(id, walletAddress);
+            navigation.goBack();
+          }}
+          currency={currency}
+        />
+        <TransferFailedModal
+          modalVisible={transferErrorModalVisible}
+          onPress={() => {
+            transferXrpReset();
+            setTransferErrorModalVisible(false);
+          }}
+          onClose={() => {
+            transferXrpReset();
+            setTransferErrorModalVisible(false);
+            navigation.goBack();
+          }}
+        />
+      </ScrollView>
     </View>
   );
 }
 
 SendScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   sendButtonContainer: {
     justifyContent: "center",
-    alignItems: "flex-end" 
-  }
+    alignItems: "flex-end",
+  },
 });
 
 const mapStateToProps = ({
-  transferXrpSuccess
+  transferXrpSuccess,
+  transferXrpError,
+  transferXrpPending,
+  baseCurrency,
+  marketData,
 }) => ({
-  transferXrpSuccess
+  transferXrpSuccess,
+  transferXrpError,
+  transferXrpPending,
+  baseCurrency,
+  marketData,
 });
 const mapDispatchToProps = dispatch => ({
-  transferXrp: (account, keypair, destination, value) => dispatch(transferXrp(account, keypair, destination, value)), 
-  getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)) 
+  transferXrp: (account, keypair, destination, value) =>
+    dispatch(transferXrp(account, keypair, destination, value)),
+  getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)),
+  transferXrpReset: () => dispatch(transferXrpReset()),
 });
 
 export default connect(
-  mapStateToProps, 
-  mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps,
 )(SendScreen);

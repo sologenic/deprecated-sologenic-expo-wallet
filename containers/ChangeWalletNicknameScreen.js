@@ -18,9 +18,13 @@ import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
-import { changeNickname } from "../actions";
+import { changeNickname, getBalance, setWallet } from "../actions";
 
-function ChangeWalletNicknameScreen({ navigation, changeNickname }) {
+function ChangeWalletNicknameScreen({
+  navigation,
+  changeNickname,
+  getBalance,
+}) {
   const [textValue, onChangeText] = useState("");
   const { id, nickname } = navigation.state.params;
   return (
@@ -57,6 +61,7 @@ function ChangeWalletNicknameScreen({ navigation, changeNickname }) {
           text="Confirm"
           onPress={() => {
             changeNickname(id, textValue);
+            // setWallet(id);
             navigation.goBack();
           }}
           style={{ height: 40, width: 86 }}
@@ -97,6 +102,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
   changeNickname: (id, nickname) => dispatch(changeNickname(id, nickname)),
+  setWallet: walletAddress => dispatch(setWallet(walletAddress)),
 });
 
 export default connect(

@@ -35,16 +35,21 @@ function WalletsScreen({
   baseCurrency,
   screenProps: { rootNavigation },
 }) {
+  // console.log("======================", wallets);
   useEffect(() => {
     connectToRippleApi();
+  }, []);
+
+  useEffect(() => {
     getMarketData(baseCurrency.value);
     getMarketSevens();
     // getBalanceAll(wallets);
     // return () => {
     //   testTodoReset();
     // }
-  }, []);
-  console.log(wallets);
+  }, [baseCurrency]);
+
+  // console.log(wallets);
   const getBalanceAll = wallets => {
     wallets.map(item => {
       console.log(".walletAddress", item.walletAddress, item.details);

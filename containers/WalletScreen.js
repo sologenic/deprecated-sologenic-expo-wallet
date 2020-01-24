@@ -12,6 +12,7 @@ import {
   MenuOption,
   MenuTrigger,
 } from "react-native-popup-menu";
+import P from "prop-types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
 
@@ -27,17 +28,66 @@ import WalletTab from "./WalletTab";
 import WalletSoloTab from "./WalletSoloTab";
 import WalletTokenizedAssetTab from "./WalletTokenizedAssetTab";
 import DeleteWalletModal from "../components/shared/DeleteWalletModal";
-import { deleteWallet, getBalance, getTransactions } from "../actions";
+import {
+  deleteWallet,
+  getBalance,
+  getTransactions,
+  activateWallet,
+  clearTransactions,
+  setWallet,
+  resetWallet,
+} from "../actions";
+
+const propTypes = {
+  wallet: {
+    id: P.string,
+    nickname: P.string,
+    details: P.shape({}),
+    balance: P.shape({}),
+    walletAddress: P.string,
+    rippleClassicAddress: P.string,
+    transactions: P.array,
+  },
+};
+
+const defaultProps = {
+  wallet: {
+    id: "",
+    nickname: "",
+    details: {
+      wallet: {
+        id: "",
+      },
+    },
+    balance: {
+      xrp: "",
+      solo: "",
+      tokenizedAssets: "",
+    },
+    walletAddress: "",
+    rippleClassicAddress: "",
+    transactions: [],
+  },
+};
 
 function WalletScreen({
   navigation,
   deleteWallet,
   getBalance,
   getTransactions,
+  activateWallet,
+  transactions,
+  clearTransactions,
+  defaultCurrency,
+  wallet,
+  setWallet,
+  resetWallet,
 }) {
+  // console.log("+++++++++++++++++", wallet);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
-  const { defaultCurrency, wallet } = navigation.state.params;
+  const [transactionCount, setTransactionCount] = useState(5);
+  // const { wallet } = navigation.state.params;
   const {
     id,
     balance,
@@ -49,9 +99,26 @@ function WalletScreen({
   const { xrp, solo, tokenizedAssets } = balance;
 
   useEffect(() => {
-    getBalance(id, walletAddress);
-    getTransactions(walletAddress);
-  }, []);
+    const walletAddress = navigation.state.params.walletAddress;
+    setWallet(walletAddress);
+
+    if (walletAddress && walletAddress !== "") {
+      fetchData();
+    }
+    getTransactions(walletAddress, transactionCount, "xrp");
+    const getBalanceInterval = setInterval(() => {
+      fetchData();
+    }, 30000);
+
+    return () => {
+      clearInterval(getBalanceInterval);
+      resetWallet();
+    };
+  }, [defaultCurrency, wallet]);
+
+  const fetchData = () => {
+    getBalance(walletAddress, walletAddress);
+  };
 
   return (
     <View style={styles.container}>
@@ -59,7 +126,8 @@ function WalletScreen({
         left={
           <Custom_HeaderButton
             onPress={() => {
-              console.log("Press!!");
+              clearTransactions();
+              resetWallet();
               navigation.goBack();
             }}
             type="icon"
@@ -89,7 +157,7 @@ function WalletScreen({
                 <View style={{ paddingHorizontal: 15 }}>
                   <MaterialCommunityIcons
                     name="dots-vertical"
-                    size={30}
+                    size={24}
                     color={Colors.text}
                   />
                 </View>
@@ -209,9 +277,12 @@ function WalletScreen({
           currency={"XRP"}
           defaultCurrency={defaultCurrency}
           xrpBalance={xrp}
-          activate={xrp >= 21 ? true : false}
+          activateWallet={activateWallet}
           walletAddress={walletAddress}
           wallet={wallet}
+          transactions={transactions}
+          setTransactionCount={setTransactionCount}
+          transactionCount={transactionCount}
         />
       )}
       {tab === 2 && (
@@ -253,7 +324,11 @@ function WalletScreen({
 
 WalletScreen.navigationOptions = {
   header: null,
+  gesturesEnabled: false,
 };
+
+WalletScreen.propTypes = propTypes;
+WalletScreen.defaultProps = defaultProps;
 
 const styles = StyleSheet.create({
   container: {
@@ -266,11 +341,25 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({}) => ({});
+const mapStateToProps = ({ transactions, baseCurrency, wallet }) => {
+  // const wallet = wallets.find(item => item.id === walletAddress);
+  // console.log("=============", wallet);
+  return {
+    transactions,
+    defaultCurrency: baseCurrency,
+    wallet,
+    // wallet: wallets.find(item => item.id === walletAddress),
+  };
+};
 const mapDispatchToProps = dispatch => ({
   deleteWallet: id => dispatch(deleteWallet(id)),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
-  getTransactions: address => dispatch(getTransactions(address)),
+  getTransactions: (address, limit, walletType) =>
+    dispatch(getTransactions(address, limit, walletType)),
+  activateWallet: id => dispatch(activateWallet(id)),
+  clearTransactions: () => dispatch(clearTransactions()),
+  setWallet: walletAddress => dispatch(setWallet(walletAddress)),
+  resetWallet: () => dispatch(resetWallet()),
 });
 
 export default connect(

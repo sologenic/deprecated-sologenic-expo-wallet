@@ -31,6 +31,25 @@ const defaultState = {
   phraseTestValue3: "",
   newWallet: null,
   wallets: [],
+  wallet: {
+    id: "",
+    nickname: "",
+    details: {
+      wallet: {
+        id: "",
+        privateKey: "",
+        publicKey: "",
+      },
+    },
+    balance: {
+      xrp: "",
+      solo: "",
+      tokenizedAssets: "",
+    },
+    walletAddress: "",
+    rippleClassicAddress: "",
+    transactions: [],
+  },
   nickname: "",
   createTrustlinePending: null,
   createTrustlineSuccess: null,
@@ -38,6 +57,7 @@ const defaultState = {
   transferXrpPending: null,
   transferXrpSuccess: null,
   transferXrpError: null,
+  transferXrpErrorStr: null,
   transactions: null,
   getTransactionsPending: null,
   getTransactionsSuccess: null,
@@ -324,17 +344,21 @@ const saveNickname = (state, action) => {
 };
 
 const changeNickname = (state, action) => {
-  const newNickname = action.nickname;
   const { wallets } = state;
-  const copyWallets = [...wallets];
-  const updatedWallets = copyWallets.map(wallet => {
-    if (wallet.id === action.id) {
-      wallet.nickname = newNickname;
+  const wallet = wallets.find(item => item.id === action.id);
+  const newWallet = {
+    ...wallet,
+    nickname: action.nickname,
+  };
+  const newWallets = wallets.map(item => {
+    if (item.id === action.id) {
+      return newWallet;
     }
-    return wallet;
+    return item;
   });
   return Object.assign({}, state, {
-    wallets: updatedWallets,
+    wallet: newWallet,
+    wallets: newWallets,
   });
 };
 
@@ -406,12 +430,56 @@ const transferXrpError = (state, action) => {
     transferXrpPending: false,
     transferXrpSuccess: false,
     transferXrpError: true,
+    transferXrpErrorStr: action.payload,
+  });
+};
+
+const transferXrpReset = (state, action) => {
+  return Object.assign({}, state, {
+    transferXrpPending: false,
+    transferXrpSuccess: false,
+    transferXrpError: false,
+    transferXrpErrorStr: "",
   });
 };
 
 const getTransactions = (state, action) => {
   return Object.assign({}, state, {
     getTransactionsPending: true,
+    getTransactionsSuccess: false,
+    getTransactionsError: false,
+  });
+};
+
+const getMoreTransactions = (state, action) => {
+  return Object.assign({}, state, {
+    getMoreTransactionsPending: true,
+    getMoreTransactionsSuccess: false,
+    getMoreTransactionsError: false,
+  });
+};
+
+const getMoreTransactionsSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    getMoreTransactionsPending: false,
+    getMoreTransactionsSuccess: true,
+    getMoreTransactionsError: false,
+    transactions: action.payload,
+  });
+};
+
+const getMoreTransactionsError = (state, action) => {
+  return Object.assign({}, state, {
+    getMoreTransactionsPending: false,
+    getMoreTransactionsSuccess: false,
+    getMoreTransactionsError: true,
+  });
+};
+
+const clearTransactions = state => {
+  return Object.assign({}, state, {
+    transactions: null,
+    getTransactionsPending: false,
     getTransactionsSuccess: false,
     getTransactionsError: false,
   });
@@ -472,14 +540,27 @@ const activateWallet = (state, action) => {
   const { wallets } = state;
   const copyWallets = [...wallets];
   const updatedWallets = copyWallets.map(wallet => {
-    if (wallet.id === action.id) {
+    if (wallet.details.id === action.id) {
       return { ...wallet, isActive: true };
     }
     return wallet;
   });
-  console.log("updated wallets == ", updatedWallets);
   return Object.assign({}, state, {
     wallets: updatedWallets,
+  });
+};
+
+const setWallet = (state, action) => {
+  const { wallets } = state;
+  const wallet = wallets.find(item => item.id === action.payload);
+  return Object.assign({}, state, {
+    wallet,
+  });
+};
+
+const resetWallet = state => {
+  return Object.assign({}, state, {
+    wallet: defaultState.wallet,
   });
 };
 
@@ -553,8 +634,18 @@ export default (state = defaultState, action) => {
       return transferXrpSuccess(state, action);
     case "TRANSFER_XRP_ERROR":
       return transferXrpError(state, action);
+    case "TRANSFER_XRP_RESET":
+      return transferXrpReset(state, action);
     case "GET_TRANSACTIONS":
       return getTransactions(state, action);
+    case "GET_MORE_TRANSACTIONS":
+      return getMoreTransactions(state, action);
+    case "GET_MORE_TRANSACTIONS_SUCCESS":
+      return getMoreTransactionsSuccess(state, action);
+    case "GET_MORE_TRANSACTIONS_ERROR":
+      return getMoreTransactionsError(state, action);
+    case "CLEAR_TRANSACTIONS":
+      return clearTransactions(state, action);
     case "GET_TRANSACTIONS_SUCCESS":
       return getTransactionsSuccess(state, action);
     case "GET_TRANSACTIONS_ERROR":
@@ -579,6 +670,10 @@ export default (state = defaultState, action) => {
       return updateBaseCurrency(state, action);
     case "ACTIVATE_WALLET":
       return activateWallet(state, action);
+    case "SET_WALLET":
+      return setWallet(state, action);
+    case "RESET_WALLET":
+      return resetWallet(state, action);
 
     default:
       return state;

@@ -6,7 +6,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 
 import Custom_Text from "../components/shared/Custom_Text";
@@ -72,7 +72,7 @@ export default function AddWalletScreen({ navigation }) {
           <Custom_IconButton
             icon="ios-arrow-down"
             color={Colors.text}
-            style={{ height: 48, width: 48, borderRadius: 24 }}
+            style={{ height: 48, width: 48, borderRadius: 24, paddingTop: 4 }}
             onPress={() => navigation.goBack()}
           />
         </View>
@@ -82,13 +82,13 @@ export default function AddWalletScreen({ navigation }) {
 }
 
 AddWalletScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.darkerGray
+    backgroundColor: Colors.darkerGray,
   },
   iconButtonContainer: {
     justifyContent: "center",
@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
   closeButtonContainer: {
     justifyContent: "center",
     alignItems: "flex-end",
-    marginVertical: 10
+    marginVertical: 10,
   },
   footer: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
     marginHorizontal: 20,
-    marginVertical: 50
+    marginVertical: 50,
   },
 });

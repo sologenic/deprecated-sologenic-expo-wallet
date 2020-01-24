@@ -202,3 +202,15 @@ export const formatWalletTotalBalance = number => {
     .toString()
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
+
+export const extractSeparatorFromText = text => {
+  if (typeof text === "undefined") {
+    return "";
+  }
+
+  if (typeof text !== "string") {
+    text = String(text);
+  }
+
+  return text.replace(/,/g, "");
+};

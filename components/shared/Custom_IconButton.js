@@ -1,9 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Ionicons, MaterialCommunityIcons, AntDesign } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  AntDesign,
+} from "@expo/vector-icons";
 
-import Custom_Text from '../shared/Custom_Text';
+import Custom_Text from "../shared/Custom_Text";
 import Fonts from "../../constants/Fonts";
 import Colors from "../../constants/Colors";
 
@@ -19,7 +23,6 @@ export default function Custom_IconButton({
   textSize,
 }) {
   if (text) {
-
     if (icon === "questioncircle") {
       return (
         <View style={styles.iconButtonContainer}>
@@ -27,7 +30,7 @@ export default function Custom_IconButton({
             onPress={onPress}
             style={[styles.text, { ...textStyle }]}
             disabled={disabled}
-            activeOpacity={0.5}        
+            activeOpacity={0.5}
           >
             <Custom_Text
               value={text}
@@ -42,10 +45,14 @@ export default function Custom_IconButton({
             disabled={disabled}
             activeOpacity={0.5}
           >
-            <AntDesign name={icon} size={size ? size : Fonts.size.h5} color={color} />
-          </TouchableOpacity>        
+            <AntDesign
+              name={icon}
+              size={size ? size : Fonts.size.h5}
+              color={color}
+            />
+          </TouchableOpacity>
         </View>
-      )
+      );
     }
 
     return (
@@ -54,7 +61,7 @@ export default function Custom_IconButton({
           onPress={onPress}
           style={[styles.text, { ...textStyle }]}
           disabled={disabled}
-          activeOpacity={0.5}        
+          activeOpacity={0.5}
         >
           <Custom_Text
             value={text}
@@ -71,10 +78,10 @@ export default function Custom_IconButton({
           activeOpacity={0.5}
         >
           <Ionicons name={icon} size={Fonts.size.h5} color={color} />
-        </TouchableOpacity>        
+        </TouchableOpacity>
       </View>
-    )
-  };
+    );
+  }
 
   if (icon === "content-copy" || icon === "qrcode") {
     return (
@@ -84,9 +91,13 @@ export default function Custom_IconButton({
         disabled={disabled}
         activeOpacity={0.5}
       >
-        <MaterialCommunityIcons name={icon} size={size ? size : Fonts.size.h5} color={color} />
+        <MaterialCommunityIcons
+          name={icon}
+          size={size ? size : Fonts.size.h5}
+          color={color}
+        />
       </TouchableOpacity>
-    );  
+    );
   }
 
   return (
@@ -103,7 +114,7 @@ export default function Custom_IconButton({
 
 Custom_IconButton.propTypes = {
   onPress: PropTypes.func,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 Custom_IconButton.defaultProps = {
@@ -120,7 +131,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     height: 40,
     width: 40,
-    backgroundColor: Colors.darkRed
+    backgroundColor: Colors.darkRed,
   },
   iconButtonContainer: {
     flexDirection: "row",
@@ -128,5 +139,5 @@ const styles = StyleSheet.create({
   },
   text: {
     paddingRight: 20,
-  }
+  },
 });

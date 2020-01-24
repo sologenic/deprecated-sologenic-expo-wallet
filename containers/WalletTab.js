@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
   View,
-  TouchableOpacity,
-  Image,
+  ActivityIndicator,
+  Clipboard,
   Text,
+  TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -18,38 +20,90 @@ import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
+import XrpWarningModal from "../components/shared/XrpWarningModal";
 import { getPriceChange, getPriceColor, getAddress } from "../utils";
 import SevenChart from "../components/shared/SevenChart";
+import { screenWidth, headerHeight } from "../constants/Layout";
+import { getMoreTransactions, getBalance } from "../actions";
 
 function WalletTab({
   navigation,
-  balance,
+  transactions,
+  transactionCount,
+  setTransactionCount,
   currency,
   xrpBalance,
   defaultCurrency,
   walletAddress,
-  activate,
   marketData,
   marketSevens,
   wallet,
+  activateWallet,
+  getTransactionsPending,
+  getMoreTransactions,
+  getMoreTransactionsPending,
+  getBalance,
+  getBalancePending,
 }) {
+  // const transactionLimit = 10000000000000;
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
   );
+  const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
+  const [xrpWarningModalVisible, setXrpWarningModalVisible] = useState(false);
+  const [isWalletActive, setIsWalletActive] = useState(false);
+
   const priceChange = getPriceChange(marketData.last, marketData.open);
   const priceColor = getPriceColor(priceChange);
 
-  const { id } = wallet;
-  console.log("HERE id", id);
+  const { id, isActive } = wallet;
+
+  if (xrpBalance >= 20 && !isActive) {
+    activateWallet(id);
+  }
+
+  useEffect(() => {
+    if (isActive && xrpBalance < 21) {
+      setXrpBalanceWarning(true);
+    }
+  }, [xrpBalanceWarning, transactions]);
+
+  useEffect(() => {
+    if (isActive && !isWalletActive) {
+      setIsWalletActive(true);
+    }
+  }, [wallet]);
+
   const { privateKey, publicKey } = wallet.details.wallet;
   const keypair = {
     privateKey,
     publicKey,
   };
-  console.log("xrp", xrpBalance);
-  if (!activate) {
+
+  const writeToClipboard = async address => {
+    await Clipboard.setString(address);
+    // this.onOpenNotification();
+    // setTimeout(() => this.onCloseNotification(), 2000);
+  };
+
+  // const renderTransactions = () => {
+  //   let a = [];
+  //   for (let i = 0; i <= transactionCount; i++) {
+  //     a.push(
+  //       <TransactionCard
+  //         // key={`${item.address}${index}`}
+  //         key={`${transactions[i].address}${i}`}
+  //         transaction={transactions[i]}
+  //         walletAddress={id}
+  //       />,
+  //     );
+  //   }
+  //   return a;
+  // };
+
+  if (!isWalletActive) {
     return (
       <ScrollView>
         <View>
@@ -171,7 +225,7 @@ function WalletTab({
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>
                 <Custom_IconButton
-                  onPress={() => {}}
+                  onPress={() => writeToClipboard(walletAddress)}
                   icon="content-copy"
                   size={Fonts.size.normal}
                   style={{
@@ -219,7 +273,17 @@ function WalletTab({
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={getBalancePending}
+          onRefresh={() => {
+            getBalance(id, walletAddress);
+          }}
+          progressViewOffset={headerHeight + 100}
+        />
+      }
+    >
       <View>
         <View style={styles.container}>
           <View style={styles.section}>
@@ -329,19 +393,23 @@ function WalletTab({
                 text="SEND"
                 onPress={() => {
                   console.log("Press SEND");
-                  navigation.navigate({
-                    routeName: "SendScreen",
-                    key: "SendScreen",
-                    params: {
-                      navigation,
-                      balance: xrpBalance,
-                      currency: currency.toLowerCase(),
-                      walletAddress,
-                      keypair,
-                      id,
-                      wallet,
-                    },
-                  });
+                  if (xrpBalanceWarning) {
+                    setXrpWarningModalVisible(true);
+                  } else {
+                    navigation.navigate({
+                      routeName: "SendScreen",
+                      key: "SendScreen",
+                      params: {
+                        navigation,
+                        balance: xrpBalance,
+                        currency: currency.toLowerCase(),
+                        walletAddress,
+                        keypair,
+                        id,
+                        wallet,
+                      },
+                    });
+                  }
                 }}
                 size={Fonts.size.large}
                 style={{ height: 40 }}
@@ -361,7 +429,7 @@ function WalletTab({
           <View style={{ flex: 1 }}>
             <View style={{ paddingVertical: 2.5 }}>
               <Custom_IconButton
-                onPress={() => {}}
+                onPress={() => writeToClipboard(walletAddress)}
                 icon="content-copy"
                 size={Fonts.size.normal}
                 style={{
@@ -397,7 +465,49 @@ function WalletTab({
           />
         </View>
         <View>
-          <TransactionCard currency="xrp" amount="1000.00" />
+          {!getTransactionsPending && transactions ? (
+            <View>
+              {transactions.map((item, index) => {
+                if (index === 0) {
+                  console.log(item.outcome);
+                }
+                if (!item.specification.counterparty) {
+                  return (
+                    <TransactionCard
+                      key={`${item.address}${index}`}
+                      transaction={item}
+                      walletAddress={id}
+                    />
+                  );
+                }
+              })}
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                {/* transactions.length < transactionsLength */}
+                <TouchableOpacity
+                  text="Load More"
+                  onPress={() => {
+                    // set default tab to wallet tab and reset to default on goBack() event
+                    getMoreTransactions(
+                      walletAddress,
+                      transactionCount + 10,
+                      "xrp",
+                    );
+                    setTransactionCount(transactionCount + 10);
+                  }}
+                >
+                  {getMoreTransactionsPending ? (
+                    <ActivityIndicator size="small" color={Colors.grayText} />
+                  ) : (
+                    <Custom_Text value="Load More" />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <View style={{ marginTop: 15 }}>
+              <ActivityIndicator size="small" color={Colors.grayText} />
+            </View>
+          )}
         </View>
       </View>
       <WalletAddressModal
@@ -405,6 +515,12 @@ function WalletTab({
         modalVisible={walletAddressModalVisible}
         onClose={() => setWalletAddressModalVisible(false)}
       />
+      <XrpWarningModal
+        data={walletAddress}
+        modalVisible={xrpWarningModalVisible}
+        onClose={() => setXrpWarningModalVisible(false)}
+      />
+      <View style={{ height: 30, width: screenWidth }} />
     </ScrollView>
   );
 }
@@ -449,14 +565,30 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ marketData, marketSevens, baseCurrency }, props) => {
+const mapStateToProps = ({
+  marketData,
+  marketSevens,
+  baseCurrency,
+  getTransactionsPending,
+  transactionsLength,
+  getMoreTransactionsPending,
+  getBalancePending,
+}) => {
   return {
+    getTransactionsPending,
+    getBalancePending,
+    getMoreTransactionsPending,
+    transactionsLength,
     marketData,
     marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
   };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getMoreTransactions: (address, limit, walletType) =>
+    dispatch(getMoreTransactions(address, limit, walletType)),
+  getBalance: (id, address) => dispatch(getBalance(id, address)),
+});
 
 export default connect(
   mapStateToProps,

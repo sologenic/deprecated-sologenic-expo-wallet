@@ -67,6 +67,8 @@ export const updatePhraseTestValue3 = value => {
 };
 
 export const getBalance = (id, address) => {
+  console.log(id);
+  console.log(address);
   return {
     type: "GET_BALANCE",
     id,
@@ -236,6 +238,19 @@ export const changeNickname = (id, nickname) => {
   };
 };
 
+export const setWallet = data => {
+  return {
+    type: "SET_WALLET",
+    payload: data,
+  };
+};
+
+export const resetWallet = () => {
+  return {
+    type: "RESET_WALLET",
+  };
+};
+
 export const deleteWallet = id => {
   return {
     type: "DELETE_WALLET",
@@ -284,16 +299,40 @@ export const transferXrpSuccess = () => {
   };
 };
 
-export const transferXrpError = () => {
+export const transferXrpReset = () => {
   return {
-    type: "TRANSFER_XRP_ERROR",
+    type: "TRANSFER_XRP_RESET",
   };
 };
 
-export const getTransactions = address => {
+export const transferXrpError = data => {
+  return {
+    type: "TRANSFER_XRP_ERROR",
+    payload: data,
+  };
+};
+
+export const getTransactions = (address, limit, walletType) => {
   return {
     type: "GET_TRANSACTIONS",
     address,
+    limit,
+    walletType,
+  };
+};
+
+export const getMoreTransactions = (address, limit, walletType) => {
+  return {
+    type: "GET_MORE_TRANSACTIONS",
+    address,
+    limit,
+    walletType,
+  };
+};
+
+export const clearTransactions = () => {
+  return {
+    type: "CLEAR_TRANSACTIONS",
   };
 };
 
@@ -307,6 +346,20 @@ export const getTransactionsSuccess = payload => {
 export const getTransactionsError = payload => {
   return {
     type: "GET_TRANSACTIONS_ERROR",
+    payload,
+  };
+};
+
+export const getMoreTransactionsSuccess = payload => {
+  return {
+    type: "GET_MORE_TRANSACTIONS_SUCCESS",
+    payload,
+  };
+};
+
+export const getMoreTransactionsError = payload => {
+  return {
+    type: "GET_MORE_TRANSACTIONS_ERROR",
     payload,
   };
 };

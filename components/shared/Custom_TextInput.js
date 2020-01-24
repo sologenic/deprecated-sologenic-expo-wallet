@@ -1,6 +1,12 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { TextInput, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
 
 import Fonts from "../../constants/Fonts";
 import Colors from "../../constants/Colors";
@@ -19,14 +25,18 @@ export default function Custom_TextInput({
   const handleBlur = () => handleIsFocused(false);
   return (
     <TouchableOpacity onPress={handleFocus}>
-      <Text style={{
-        position: 'absolute',
-        left: 40,
-        top: !isFocused && !value ? 16 : 5,
-        fontSize: !isFocused && !value ? 16 : 12,
-        color: Colors.lightGray,
-        zIndex: 50,
-      }}>
+      <Text
+        style={{
+          position: "absolute",
+          left: 40,
+          top: 5,
+          fontSize: 12,
+          // top: !isFocused && !value ? 16 : 5,
+          // fontSize: !isFocused && !value ? 16 : 12,
+          color: Colors.lightGray,
+          zIndex: 50,
+        }}
+      >
         {label}
       </Text>
       <TextInput
@@ -56,7 +66,7 @@ export default function Custom_TextInput({
         </Text>
       )}
     </TouchableOpacity>
-  )
+  );
 }
 
 Custom_TextInput.propTypes = {
@@ -74,15 +84,15 @@ Custom_TextInput.propTypes = {
 };
 
 Custom_TextInput.defaultProps = {
-  value: '',
+  value: "",
   onChangeText: () => {},
-  placeholder: '',
-  autoCapitalize: 'none',
+  placeholder: "",
+  autoCapitalize: "none",
   autoCorrect: false,
-  textContentType: 'none',
-  keyboardType: 'default',
+  textContentType: "none",
+  keyboardType: "default",
   secureTextEntry: false,
-  returnKeyType: 'done',
+  returnKeyType: "done",
   autoFocus: false,
   showSecureTextEntryButton: false,
 };
@@ -90,8 +100,8 @@ Custom_TextInput.defaultProps = {
 const styles = StyleSheet.create({
   textInputContainer: {
     flex: 1,
-    justifyContent: 'flex-end',
-    alignItems: 'flex-start',
+    justifyContent: "flex-end",
+    alignItems: "flex-start",
     borderRadius: 25,
     backgroundColor: Colors.headerBackground,
     marginHorizontal: 15,
@@ -108,5 +118,5 @@ const styles = StyleSheet.create({
     paddingTop: 18,
     paddingBottom: 10,
     borderRadius: 25,
-  }
+  },
 });

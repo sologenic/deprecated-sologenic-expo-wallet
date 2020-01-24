@@ -27,29 +27,58 @@ import TermsScreen from "../containers/TermsScreen";
 const MainStack = createStackNavigator(
   {
     // HomeScreen: HomeScreen,
-    HomeScreen: ({ navigation, screenProps }) => {
-      if (!screenProps.isAuthenticated) {
-        if (!screenProps.authSetupComplete) {
-          return (
-            <CreatePinScreen
-              screenProps={{
-                rootNavigation: navigation,
-              }}
-            />
-          );
+    HomeScreen: {
+      name: "HomeScreen",
+      screen: ({ navigation, screenProps }) => {
+        if (!screenProps.isAuthenticated) {
+          if (!screenProps.authSetupComplete) {
+            return (
+              <CreatePinScreen
+                screenProps={{
+                  rootNavigation: navigation,
+                }}
+              />
+            );
+          } else {
+            return (
+              <UnlockScreen
+                screenProps={{
+                  rootNavigation: navigation,
+                }}
+              />
+            );
+          }
         } else {
-          return (
-            <UnlockScreen
-              screenProps={{
-                rootNavigation: navigation,
-              }}
-            />
-          );
+          return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
         }
-      } else {
-        return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
-      }
+      },
+      navigationOptions: {
+        gesturesEnabled: false,
+      },
     },
+    // HomeScreen: ({ navigation, screenProps }) => {
+    //   if (!screenProps.isAuthenticated) {
+    //     if (!screenProps.authSetupComplete) {
+    //       return (
+    //         <CreatePinScreen
+    //           screenProps={{
+    //             rootNavigation: navigation,
+    //           }}
+    //         />
+    //       );
+    //     } else {
+    //       return (
+    //         <UnlockScreen
+    //           screenProps={{
+    //             rootNavigation: navigation,
+    //           }}
+    //         />
+    //       );
+    //     }
+    //   } else {
+    //     return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
+    //   }
+    // },
     LinksScreen: LinksScreen,
     SettingsScreen: SettingsScreen,
     WalletsScreen: WalletsScreen,

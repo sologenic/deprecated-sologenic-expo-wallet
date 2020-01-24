@@ -22,7 +22,7 @@ export default function WalletCard({
   baseCurrency,
   marketData,
 }) {
-  const { nickname, balance } = wallet;
+  const { nickname, balance, walletAddress } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
   const totalBalance = formatWalletTotalBalance(xrp * marketData.last);
 
@@ -35,10 +35,10 @@ export default function WalletCard({
             key: "WalletName",
             params: {
               navigation,
-              wallet,
+              walletAddress,
               // totalBalance,
               // tokenizedAssets,
-              defaultCurrency: baseCurrency,
+              // defaultCurrency: baseCurrency,
               xrpBalance: "21.00",
               soloBalance: "0.00",
               nickname,

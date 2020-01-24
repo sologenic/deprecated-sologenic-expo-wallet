@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import { View } from 'react-native';
-import _ from 'lodash';
-import { LineChart } from 'react-native-chart-kit';
-import Colors from '../../constants/Colors';
+import React, { Component } from "react";
+import { View } from "react-native";
+import _ from "lodash";
+import { LineChart } from "react-native-chart-kit";
+import Colors from "../../constants/Colors";
 
 let data = {
   datasets: [
@@ -22,11 +22,7 @@ class SevenChart extends Component {
 
   render() {
     const { marketSevens } = this.props;
-    if (
-      marketSevens &&
-      marketSevens.o &&
-      typeof marketSevens.o === 'object'
-    ) {
+    if (marketSevens && marketSevens.o && typeof marketSevens.o === "object") {
       data = {
         datasets: [
           {

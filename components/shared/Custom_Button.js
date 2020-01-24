@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-import Custom_Text from '../shared/Custom_Text';
-import Fonts from '../../constants/Fonts';
-import Colors from '../../constants/Colors';
+import Custom_Text from "../shared/Custom_Text";
+import Fonts from "../../constants/Fonts";
+import Colors from "../../constants/Colors";
 
 export default function Custom_Button({
   icon,
@@ -39,11 +39,15 @@ export default function Custom_Button({
               />
             </View>
             <View style={styles.iconContainer}>
-              <MaterialCommunityIcons name={icon} size={size ? size : Fonts.size.regular} color={color}/>
+              <MaterialCommunityIcons
+                name={icon}
+                size={size ? size : Fonts.size.regular}
+                color={color}
+              />
             </View>
           </View>
         </TouchableOpacity>
-      )      
+      );
     }
 
     return (
@@ -64,10 +68,10 @@ export default function Custom_Button({
             />
           </View>
           <View style={styles.iconContainer}>
-            <Ionicons name={icon} size={Fonts.size.regular} color={color}/>
+            <Ionicons name={icon} size={Fonts.size.regular} color={color} />
           </View>
         </View>
-      </TouchableOpacity>      
+      </TouchableOpacity>
     );
   }
 
@@ -104,24 +108,24 @@ Custom_Button.defaultProps = {
 
 const styles = StyleSheet.create({
   button: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     borderRadius: 20,
     backgroundColor: Colors.darkRed,
   },
   withIcons: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   textContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     height: 20,
   },
   iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    // height: 20,
     paddingLeft: 6,
-    marginTop: 2,
-  }
+    // marginTop: 2,
+  },
 });

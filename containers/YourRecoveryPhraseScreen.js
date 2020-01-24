@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, Clipboard } from "react-native";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -14,6 +14,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { genereateRandomNumbers } from "../utils";
+import WalletAddressModal from "../components/shared/WalletAddressModal";
 
 export default function YourRecoveryPhraseScreen({ navigation }) {
   const [pressed, handlePressDots] = useState(false);
@@ -23,6 +24,17 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
     walletAddress,
     rippleClassicAddress,
   } = navigation.state.params;
+
+  const writeToClipboard = async str => {
+    await Clipboard.setString(str);
+    // this.onOpenNotification();
+    // setTimeout(() => this.onCloseNotification(), 2000);
+  };
+
+  const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
+    false,
+  );
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -61,7 +73,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
             <Custom_Button
               text="Copy"
               onPress={() => {
-                console.log("Press Next");
+                writeToClipboard(mnemonic.join(" "));
               }}
               style={{ height: 40, width: 80, backgroundColor: "transparent" }}
               icon="content-copy"
@@ -91,7 +103,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
             <Custom_Button
               text="Show QR"
               onPress={() => {
-                console.log("Press Next");
+                setWalletAddressModalVisible(true);
               }}
               style={{ height: 40, width: 80, backgroundColor: "transparent" }}
               icon="qrcode"
@@ -156,6 +168,11 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
           />
         </View>
       </ScrollView>
+      <WalletAddressModal
+        data={mnemonic.join(" ")}
+        modalVisible={walletAddressModalVisible}
+        onClose={() => setWalletAddressModalVisible(false)}
+      />
     </View>
   );
 }

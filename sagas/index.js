@@ -24,6 +24,8 @@ import {
   getTrustlinesSuccess,
   getTrustlinesError,
   addNewWallet,
+  getMoreTransactionsSuccess,
+  getMoreTransactionsError,
 } from "../actions";
 import { createSevensObj, sologenic } from "../utils";
 
@@ -194,10 +196,13 @@ function* requestTransferXrp(action) {
     const secret = keypair ? keypair : "";
     yield call(setAccount, account, secret, keypair);
     const tx = yield call(transferXrp, account, destination, value);
-    console.log("tx", tx);
     const response = yield tx.promise;
-    console.log(response);
-    if (response) {
+    console.log("REQUEST_TRANSFER_XRP ", response);
+    if (response.result && response.result.status === "failed") {
+      console.log("REQUEST_TRANSFER_XRP_ERROR");
+      yield put(transferXrpError(response.result.reason));
+    } else if (response) {
+      console.log("REQUEST_TRANSFER_XRP_SUCCESS");
       yield put(transferXrpSuccess(response));
     }
   } catch (error) {
@@ -206,28 +211,60 @@ function* requestTransferXrp(action) {
   }
 }
 
-const getTransactions = async address => {
+const getTransactions = async (address, limit = 500, walletType) => {
+  console.log("walletType------- ", walletType);
   const rippleApi = sologenic.getRippleApi();
+  // console.log("getTransactions address ", address);
   const currentLedger = await rippleApi.getLedgerVersion();
-  console.log("currentLedger", currentLedger);
-  return rippleApi.getTransactions(address, {
-    minLedgerVersion: currentLedger - 500,
-    maxLedgerVersion: currentLedger,
-  });
+  // console.log("currentLedger", currentLedger);
+  const serverInfo = await rippleApi.getServerInfo();
+  const ledgers = serverInfo.completeLedgers.split("-");
+  const minLedgerVersion = Number(ledgers[0]);
+  const maxLedgerVersion = Number(ledgers[1]);
+
+  // return (txs = await rippleApi.getTransactions(address, {
+  //   minLedgerVersion: minLedgerVersion,
+  //   maxLedgerVersion: maxLedgerVersion,
+  // }));
+  return (txs = await rippleApi.getTransactions(address, {
+    minLedgerVersion: minLedgerVersion,
+    maxLedgerVersion: maxLedgerVersion,
+    limit,
+  }));
+
+  // return rippleApi.getTransactions(address, {
+  //   minLedgerVersion: currentLedger - 500,
+  //   maxLedgerVersion: currentLedger,
+  // });
 };
 
-function* requestGetTransactionsactions(action) {
-  const { address } = action;
+function* requestGetTransactions({ address, limit, walletType }) {
+  // const { address } = action;
+  console.log("requestGetTransactions address", address);
   try {
-    const response = yield call(getTransactions, address);
-    console.log("TRANSACTIONS");
-    console.log(response);
+    const response = yield call(getTransactions, address, limit, walletType);
+    // console.log("TRANSACTIONS = " , response);
     if (response) {
       yield put(getTransactionsSuccess(response));
     }
   } catch (error) {
     console.log("REQUEST_GET_TRANSACTIONS_ERROR", error);
     yield put(getTransactionsError());
+  }
+}
+
+function* requestGetMoreTransactions({ address, limit, walletType }) {
+  // const { address } = action;
+  console.log("moreTransactions address", address);
+  try {
+    const response = yield call(getTransactions, address, limit, walletType);
+    // console.log("TRANSACTIONS = " , response);
+    if (response) {
+      yield put(getMoreTransactionsSuccess(response));
+    }
+  } catch (error) {
+    console.log("REQUEST_GET_TRANSACTIONS_ERROR", error);
+    yield put(getMoreTransactionsError());
   }
 }
 
@@ -403,7 +440,8 @@ export default function* rootSaga() {
     takeEvery("CONNECT_TO_RIPPLE_API", requestConnectToRippleApi),
     takeEvery("CREATE_TRUSTLINE", requestCreateTrustline),
     takeEvery("TRANSFER_XRP", requestTransferXrp),
-    takeEvery("GET_TRANSACTIONS", requestGetTransactionsactions),
+    takeEvery("GET_TRANSACTIONS", requestGetTransactions),
+    takeEvery("GET_MORE_TRANSACTIONS", requestGetMoreTransactions),
     takeEvery("GET_TRUSTLINES", requestGetTrustlines),
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),

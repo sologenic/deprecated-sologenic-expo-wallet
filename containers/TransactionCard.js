@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import P from "prop-types";
 import { StyleSheet, View, TouchableOpacity, Clipboard } from "react-native";
 import moment from "moment-timezone";
 
@@ -8,17 +9,69 @@ import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 
-export default function TransactionCard({ transactionType, amount, currency }) {
+// const propTypes = {
+//   transaction: P.shape({
+//     address: P.string,
+//     type: P.string,
+//     outcome: P.shape({
+//       deliveredAmount: P.shape({
+//         currency: P.string,
+//         value: P.number
+//       }),
+//     }),
+//     fee: P.number,
+//     timestamp: P.string,
+//     result: P.string
+//    })
+// }
+
+// const defaultProps = {
+//   transaction: {
+//     address: '',
+//     type: '',
+//     outcome: P.shape({
+//       deliveredAmount: P.shape({
+//         currency: '',
+//         value: 0
+//       }),
+//     }),
+//     fee: 0,
+//     timestamp: '',
+//     result: ''
+//   }
+// }
+
+export default function TransactionCard({ transaction, walletAddress }) {
+  const { outcome, specification } = transaction;
+  // const failedTransaction = outcome.result === 'tecUNFUNDED_PAYMENT';
+  const currency = outcome.deliveredAmount
+    ? outcome.deliveredAmount.currency
+    : "";
+  const value = outcome.deliveredAmount ? outcome.deliveredAmount.value : "";
+  const timestamp = outcome ? outcome.timestamp : "";
+  const result = outcome ? outcome.result : "";
+  const fee = outcome ? outcome.fee : "";
+  const ledgerVersion = outcome ? outcome.ledgerVersion : "";
+  const fundsRecevied =
+    specification.destination &&
+    specification.destination.address === walletAddress
+      ? "+"
+      : "-";
+  const copyAddress =
+    specification.destination &&
+    specification.destination.address === walletAddress
+      ? specification.source.address
+      : specification.destination.address;
   const [expanded, setExpanded] = useState(false);
 
-  const Circle = transactionType => {
+  const Circle = () => {
     return (
       <View
         style={[
           styles.circle,
           {
             backgroundColor:
-              transactionType === "send"
+              result === "tesSUCCESS"
                 ? Colors.freshGreen
                 : Colors.errorBackground,
           },
@@ -27,7 +80,7 @@ export default function TransactionCard({ transactionType, amount, currency }) {
     );
   };
 
-  const datetime = moment()
+  const datetime = moment(timestamp)
     .format("L.LT")
     .split(".");
   const date = datetime[0];
@@ -43,13 +96,13 @@ export default function TransactionCard({ transactionType, amount, currency }) {
         activeOpacity={0.9}
       >
         <View style={styles.confirmationContainer}>
-          <Custom_Text value="Confirmation" size={Fonts.size.small} />
-          <Custom_Text value={"4932091"} size={Fonts.size.small} isBold />
+          <Custom_Text value="Confirmations" size={10} />
+          <Custom_Text value={ledgerVersion} size={Fonts.size.small} isBold />
         </View>
         <View style={styles.feeContainer}>
-          <Custom_Text value="Fee" size={Fonts.size.small} />
+          <Custom_Text value="Fee" size={10} />
           <Custom_Text
-            value={`${currency.toUpperCase()} ${amount}`}
+            value={`${currency.toUpperCase()} ${fee}`}
             size={Fonts.size.small}
             isBold
           />
@@ -57,7 +110,6 @@ export default function TransactionCard({ transactionType, amount, currency }) {
         <View style={styles.copyAddressContainer}>
           <View
             style={{
-              width: 86,
               borderRadius: 16.5,
               borderWidth: 0.5,
               borderColor: Colors.lighterGray,
@@ -65,10 +117,15 @@ export default function TransactionCard({ transactionType, amount, currency }) {
           >
             <Custom_Button
               text="Copy Address"
-              onPress={() => writeToClipboard()}
-              size={10}
+              onPress={() => writeToClipboard(copyAddress)}
+              size={8}
               fontSize={Fonts.size.tiny}
-              style={{ height: 23, width: 86, backgroundColor: "transparent" }}
+              style={{
+                paddingHorizontal: 8,
+                backgroundColor: "transparent",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
               icon="content-copy"
               isBold={false}
             />
@@ -78,9 +135,9 @@ export default function TransactionCard({ transactionType, amount, currency }) {
     );
   };
 
-  const writeToClipboard = async () => {
+  const writeToClipboard = async address => {
     // const input = txid ? txid : rid;
-    await Clipboard.setString();
+    await Clipboard.setString(address);
   };
 
   return (
@@ -92,7 +149,7 @@ export default function TransactionCard({ transactionType, amount, currency }) {
         }}
         activeOpacity={0.9}
       >
-        <View style={{ flex: 4, flexDirection: "row", paddingHorizontal: 15 }}>
+        <View style={{ flex: 4, flexDirection: "row" }}>
           <View style={styles.circleContainer}>{Circle()}</View>
           <View style={styles.dateContainer}>
             <Custom_Text value={date} size={10} isBold />
@@ -101,14 +158,15 @@ export default function TransactionCard({ transactionType, amount, currency }) {
         </View>
         <View style={styles.amountContainer}>
           <Custom_Text
-            value={
-              transactionType === "send"
-                ? `+ ${currency.toUpperCase()} ${amount}`
-                : `- ${currency.toUpperCase()} ${amount}`
-            }
+            value={`${fundsRecevied} ${currency.toUpperCase()} ${value}`}
+            // value={
+            //   result === "tesSUCCESS"
+            //     ? ` ${currency.toUpperCase()} ${value}`
+            //     : `- ${currency.toUpperCase()} ${value}`
+            // }
             size={Fonts.size.small}
             color={
-              transactionType === "send"
+              result === "tesSUCCESS"
                 ? Colors.freshGreen
                 : Colors.errorBackground
             }
@@ -120,29 +178,27 @@ export default function TransactionCard({ transactionType, amount, currency }) {
             flex: 4,
             flexDirection: "row",
             justifyContent: "flex-end",
-            paddingRight: 10,
           }}
         >
           <View style={styles.statusContainer}>
             <Custom_Text
-              value={"Completed"}
+              value={result === "tesSUCCESS" ? "Completed" : "Failed"}
               size={Fonts.size.small}
               color={
-                transactionType === "send"
+                result === "tesSUCCESS"
                   ? Colors.freshGreen
                   : Colors.errorBackground
               }
-              isBold
             />
           </View>
           <View style={styles.arrowIconContainer}>
             <Custom_IconButton
               onPress={() => {
                 setExpanded(!expanded);
-                toggle();
+                // toggle();
               }}
               icon={expanded ? "ios-arrow-up" : "ios-arrow-down"}
-              size={Fonts.size.normal}
+              size={10}
               style={{
                 height: 20,
                 width: 20,
@@ -158,12 +214,17 @@ export default function TransactionCard({ transactionType, amount, currency }) {
   );
 }
 
+// TransactionCard.propTypes = propTypes;
+// TransactionCard.defaultProps = defaultProps;
+
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.headerBackground,
     marginHorizontal: 24,
+    paddingHorizontal: 15,
     height: 40,
     borderRadius: 20,
+    marginBottom: 10,
   },
   upperViewContainer: {
     flexDirection: "row",
@@ -176,7 +237,7 @@ const styles = StyleSheet.create({
   circleContainer: {
     height: 40,
     justifyContent: "center",
-    paddingRight: 15,
+    paddingRight: 10,
   },
   circle: {
     height: 9,
@@ -184,7 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: 4.5,
   },
   dateContainer: {
-    paddingRight: 8,
+    // paddingRight: 8,
     justifyContent: "center",
   },
   verticalLine: {
@@ -193,11 +254,11 @@ const styles = StyleSheet.create({
     width: 0.6,
   },
   amountContainer: {
-    flex: 5,
+    flex: 4,
     height: 40,
     justifyContent: "center",
-    paddingLeft: 10,
-    paddingRight: 30,
+    // paddingLeft: 10,
+    // paddingRight: 30,
   },
   statusContainer: {
     height: 40,
@@ -207,19 +268,19 @@ const styles = StyleSheet.create({
   arrowIconContainer: {
     height: 40,
     justifyContent: "center",
-    paddingLeft: 7.5,
+    // paddingLeft: 7.5,
   },
   confirmationContainer: {
     flex: 4,
-    paddingLeft: 14,
-    paddingBottom: 5,
+    // paddingLeft: 14,
+    // paddingBottom: 5,
     height: 40,
     justifyContent: "center",
   },
   feeContainer: {
-    flex: 5,
-    paddingLeft: 10,
-    paddingBottom: 5,
+    flex: 4,
+    // paddingLeft: 25,
+    // paddingBottom: 5,
     height: 40,
     justifyContent: "center",
     alignItems: "flex-start",
@@ -228,9 +289,9 @@ const styles = StyleSheet.create({
     flex: 4,
     height: 40,
     justifyContent: "center",
-    alignItems: "flex-end",
-    paddingRight: 13,
-    paddingLeft: 12.5,
-    paddingBottom: 5,
+    alignItems: "center",
+    // paddingRight: 13,
+    // paddingLeft: 12.5,
+    // paddingBottom: 5,
   },
 });

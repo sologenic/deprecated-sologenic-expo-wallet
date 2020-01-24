@@ -152,11 +152,11 @@ function PassphraseTab({
           keyboardType="default"
           returnKeyType="done"
         />
-        <View style={{ marginLeft: 30 }}>
+        <View style={{ marginLeft: 30, marginTop: 5 }}>
           <Custom_Text
             value="Optional"
             size={Fonts.size.normal}
-            color={Colors.freshGreen}
+            color={Colors.grayText}
           />
         </View>
       </View>
