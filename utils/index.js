@@ -214,3 +214,28 @@ export const extractSeparatorFromText = text => {
 
   return text.replace(/,/g, "");
 };
+
+export const checkWalletExists = (walletAddress, wallets) => {
+  let walletAlreadyExists = false;
+  wallets.forEach(item => {
+    if (item.walletAddress === walletAddress) {
+      walletAlreadyExists = true;
+    }
+  });
+  return walletAlreadyExists;
+};
+
+export const checkMnemoicExists = (mnemonic, wallets) => {
+  let walletAlreadyExists = false;
+  wallets.forEach(item => {
+    console.log(mnemonic);
+    if (
+      item.details &&
+      item.details.mnemonic &&
+      item.details.mnemonic === mnemonic
+    ) {
+      walletAlreadyExists = true;
+    }
+  });
+  return walletAlreadyExists;
+};

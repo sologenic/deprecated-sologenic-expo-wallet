@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Clipboard,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
@@ -13,25 +7,34 @@ import Custom_Button from "../components/shared/Custom_Button";
 import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
-import { addNewWallet, getTrustlines } from "../actions";
+import { addNewWallet, getTrustlines, getTrustlinesReset } from "../actions";
 import {
   isValidRippleAddress,
   isValidSecret,
   getXAddressFromRippleClassicAddress,
+  checkWalletExists,
 } from "../utils";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
+import ErrorModal from "../components/shared/ErrorModal";
 
 function WalletAddressSecretTab({
   navigation,
   importSuccessfulModalVisible,
   setImportSuccessfulModalVisible,
-  addNewWallet,
+  errorModalVisible,
+  setErrorModalVisible,
   getTrustlinesWithAddNewWallet,
+  getTrustlinesError,
+  wallets,
+  getTrustlinesSuccess,
+  getTrustlinesReset,
+  getTrustlinesPending,
 }) {
   const [addressValue, onChangeAddress] = useState("");
   const [secretValue, onChangeSecret] = useState("");
   const [nicknameValue, onChangeNickname] = useState("");
   const [completed, handleIsCompleted] = useState(false);
+  const [existingWalletError, setExistingWalletError] = useState(false);
 
   useEffect(() => {
     if (
@@ -45,6 +48,15 @@ function WalletAddressSecretTab({
       handleIsCompleted(false);
     }
   }, [addressValue, secretValue]);
+
+  useEffect(() => {
+    if (getTrustlinesError) {
+      setErrorModalVisible(true);
+    }
+    if (getTrustlinesSuccess) {
+      setImportSuccessfulModalVisible(true);
+    }
+  }, [getTrustlinesError, getTrustlinesSuccess]);
 
   const handleValidation = (addressValue, secretValue) => {
     const validationResultAddress = isValidRippleAddress(addressValue);
@@ -60,7 +72,7 @@ function WalletAddressSecretTab({
           onChangeText={text => {
             onChangeAddress(text);
           }}
-          label="Account Address"
+          label="Wallet Address"
           keyboardType="default"
           returnKeyType="done"
         />
@@ -71,7 +83,7 @@ function WalletAddressSecretTab({
           onChangeText={text => {
             onChangeSecret(text);
           }}
-          label="Account Secret"
+          label="Wallet Secret"
           keyboardType="default"
           returnKeyType="done"
         />
@@ -82,7 +94,7 @@ function WalletAddressSecretTab({
           onChangeText={text => {
             onChangeNickname(text);
           }}
-          label="Account Nickname"
+          label="Wallet Nickname"
           keyboardType="default"
           returnKeyType="done"
         />
@@ -101,21 +113,30 @@ function WalletAddressSecretTab({
             console.log("Press Add Wallet");
             const result = handleValidation(addressValue, secretValue);
             if (!result) {
-              console.log("error");
+              setErrorModalVisible(true);
             } else {
               // const walletAddress = getXAddressFromRippleClassicAddress(addressValue);
               const walletAddress = addressValue;
-              const rippleClassicAddress = addressValue;
-              getTrustlinesWithAddNewWallet(
+              const walletAlreadyExists = checkWalletExists(
                 walletAddress,
-                rippleClassicAddress,
-                nicknameValue ? nicknameValue : "",
-                "",
-                {
-                  secret: secretValue,
-                },
+                wallets,
               );
-              setImportSuccessfulModalVisible(true);
+
+              if (!walletAlreadyExists) {
+                const rippleClassicAddress = addressValue;
+                getTrustlinesWithAddNewWallet(
+                  walletAddress,
+                  rippleClassicAddress,
+                  nicknameValue ? nicknameValue : "",
+                  "",
+                  {
+                    secret: secretValue,
+                  },
+                );
+              } else {
+                setExistingWalletError(true);
+              }
+              // setImportSuccessfulModalVisible(true);
             }
           }}
           style={{
@@ -126,13 +147,29 @@ function WalletAddressSecretTab({
               : Colors.darkRed,
           }}
           color={!completed ? Colors.grayText : Colors.text}
+          isPending={getTrustlinesPending}
           disabled={!completed}
         />
       </View>
+      <ErrorModal
+        value="You have entered an invalid wallet address and secret combination. Please check your details and try again."
+        modalVisible={errorModalVisible}
+        onClose={() => {
+          getTrustlinesReset();
+          setErrorModalVisible(false);
+        }}
+      />
+      <ErrorModal
+        value="You have already imported this wallet."
+        modalVisible={existingWalletError}
+        onClose={() => {
+          setExistingWalletError(false);
+        }}
+      />
       <ImportSuccessfulModal
         modalVisible={importSuccessfulModalVisible}
-        // onClose={() => setImportSuccessfulModalVisible(false)}
         onPress={() => {
+          getTrustlinesReset();
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
@@ -151,7 +188,20 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({}) => ({});
+const mapStateToProps = ({
+  getTrustlinesSuccess,
+  getTrustlinesPending,
+  getTrustlinesError,
+  getTrustlinesErrorStr,
+  wallets,
+}) => ({
+  getTrustlinesError,
+  getTrustlinesErrorStr,
+  wallets,
+  getTrustlinesSuccess,
+  getTrustlinesPending,
+});
+
 const mapDispatchToProps = dispatch => ({
   addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
     dispatch(
@@ -173,6 +223,7 @@ const mapDispatchToProps = dispatch => ({
         details,
       ),
     ),
+  getTrustlinesReset: () => dispatch(getTrustlinesReset()),
 });
 
 export default connect(

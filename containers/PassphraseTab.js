@@ -17,9 +17,11 @@ import {
   countWords,
   getWalletFromMnemonic,
   getRippleClassicAddressFromXAddress,
+  checkWalletExists,
+  checkMnemoicExists,
 } from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
-import { addNewWallet, getTrustlines } from "../actions";
+import { addNewWallet, getTrustlines, getTrustlinesReset } from "../actions";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 
 function PassphraseTab({
@@ -28,12 +30,18 @@ function PassphraseTab({
   setErrorModalVisible,
   importSuccessfulModalVisible,
   setImportSuccessfulModalVisible,
-  addNewWallet,
+  wallets,
+  getTrustlinesReset,
   getTrustlinesWithAddNewWallet,
+  // getTrustlinesError,
+  // getTrustlinesErrorStr,
+  // getTrustlinesSuccess,
+  // getTrustlinesPending,
 }) {
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
   const [nicknameValue, onChangeNickname] = useState("");
+  const [existingWalletError, setExistingWalletError] = useState(false);
 
   const getContentFromClipboard = async () => {
     const content = await Clipboard.getString();
@@ -71,6 +79,12 @@ function PassphraseTab({
       handleIsCompleted(false);
     }
   }, [textValue]);
+
+  // useEffect(() => {
+  //   if (getTrustlinesError) {
+  //     setErrorModalVisible(true);
+  //   }
+  // }, [getTrustlinesError]);
 
   return (
     <View>
@@ -164,7 +178,6 @@ function PassphraseTab({
         <Custom_Button
           text="Add Wallet"
           onPress={() => {
-            console.log("Press Add Wallet");
             const result = countWords(textValue);
             if (!result) {
               setErrorModalVisible(true);
@@ -172,19 +185,33 @@ function PassphraseTab({
               const importedWallet = getWalletFromMnemonic(
                 textValue.toLowerCase(),
               );
-              const walletAddress = importedWallet.getAddress();
-              const rippleClassicAddress = getRippleClassicAddressFromXAddress(
-                walletAddress,
-              );
-              getTrustlinesWithAddNewWallet(
-                rippleClassicAddress,
-                rippleClassicAddress,
-                nicknameValue ? nicknameValue : "",
-                textValue,
-                importedWallet,
-              );
+              if (importedWallet) {
+                const walletAddress = importedWallet.getAddress();
+                const walletAlreadyExists = checkMnemoicExists(
+                  textValue.toLowerCase(),
+                  wallets,
+                );
+                console.log(walletAlreadyExists);
+                if (!walletAlreadyExists) {
+                  const rippleClassicAddress = getRippleClassicAddressFromXAddress(
+                    walletAddress,
+                  );
+                  getTrustlinesWithAddNewWallet(
+                    rippleClassicAddress,
+                    rippleClassicAddress,
+                    nicknameValue ? nicknameValue : "",
+                    textValue,
+                    importedWallet,
+                  );
+                } else {
+                  setExistingWalletError(true);
+                }
 
-              setImportSuccessfulModalVisible(true);
+                // move to useEffect
+                // setImportSuccessfulModalVisible(true);
+              } else {
+                setErrorModalVisible(true);
+              }
             }
           }}
           style={{
@@ -201,12 +228,22 @@ function PassphraseTab({
       <ErrorModal
         value="You have entered an invalid mnemonic passphrase. It should consist of 12 words, each separated by a space. Please check your phrase and try again."
         modalVisible={errorModalVisible}
-        onClose={() => setErrorModalVisible(false)}
+        onClose={() => {
+          getTrustlinesReset();
+          setErrorModalVisible(false);
+        }}
+      />
+      <ErrorModal
+        value="You have already imported this wallet."
+        modalVisible={existingWalletError}
+        onClose={() => {
+          setExistingWalletError(false);
+        }}
       />
       <ImportSuccessfulModal
         modalVisible={importSuccessfulModalVisible}
-        // onClose={() => setImportSuccessfulModalVisible(false)}
         onPress={() => {
+          getTrustlinesReset();
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
@@ -238,7 +275,19 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({}) => ({});
+const mapStateToProps = ({
+  getTrustlinesSuccess,
+  getTrustlinesPending,
+  getTrustlinesError,
+  getTrustlinesErrorStr,
+  wallets,
+}) => ({
+  getTrustlinesError,
+  getTrustlinesErrorStr,
+  getTrustlinesSuccess,
+  getTrustlinesPending,
+  wallets,
+});
 const mapDispatchToProps = dispatch => ({
   addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
     dispatch(
@@ -260,6 +309,7 @@ const mapDispatchToProps = dispatch => ({
         details,
       ),
     ),
+  getTrustlinesReset: () => dispatch(getTrustlinesReset()),
 });
 
 export default connect(

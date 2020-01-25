@@ -1,6 +1,11 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+} from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import Custom_Text from "../shared/Custom_Text";
@@ -18,6 +23,7 @@ export default function Custom_Button({
   size,
   fontSize,
   isBold,
+  isPending,
 }) {
   if (icon) {
     if (icon === "content-copy" || icon === "qrcode") {
@@ -59,13 +65,17 @@ export default function Custom_Button({
       >
         <View style={styles.withIcons}>
           <View style={styles.textContainer}>
-            <Custom_Text
-              value={text}
-              size={Fonts.size.normal}
-              color={color}
-              isBold={isBold}
-              style={textStyle}
-            />
+            {isPending ? (
+              <ActivityIndicator size="small" color={Colors.text} />
+            ) : (
+              <Custom_Text
+                value={text}
+                size={Fonts.size.normal}
+                color={color}
+                isBold={isBold}
+                style={textStyle}
+              />
+            )}
           </View>
           <View style={styles.iconContainer}>
             <Ionicons name={icon} size={Fonts.size.regular} color={color} />
@@ -97,6 +107,7 @@ Custom_Button.propTypes = {
   onPress: PropTypes.func,
   text: PropTypes.string.isRequired,
   style: PropTypes.shape({}),
+  isPending: PropTypes.bool,
 };
 
 Custom_Button.defaultProps = {
@@ -104,6 +115,7 @@ Custom_Button.defaultProps = {
   disabled: false,
   color: Colors.text,
   isBold: true,
+  isPending: false,
 };
 
 const styles = StyleSheet.create({

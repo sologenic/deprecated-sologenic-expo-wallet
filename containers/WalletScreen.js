@@ -310,10 +310,9 @@ function WalletScreen({
         onPress={() => {
           deleteWallet(id);
           setModalVisible(false);
-          navigation.navigate({
-            routeName: "WalletsScreen",
-            key: "WalletsScreen",
-          });
+          clearTransactions();
+          resetWallet();
+          navigation.popToTop();
         }}
         onClose={() => setModalVisible(false)}
       />

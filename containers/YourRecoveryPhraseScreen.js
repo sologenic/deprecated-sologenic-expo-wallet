@@ -14,7 +14,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { genereateRandomNumbers } from "../utils";
-import WalletAddressModal from "../components/shared/WalletAddressModal";
+// // import WalletAddressModal from "../components/shared/WalletAddressModal";
 
 export default function YourRecoveryPhraseScreen({ navigation }) {
   const [pressed, handlePressDots] = useState(false);
@@ -80,16 +80,17 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
               isBold={false}
             />
             <Custom_Button
-              text="Share"
+              text="Show QR"
               onPress={() => {
-                console.log("Press Next");
+                setWalletAddressModalVisible(true);
               }}
               style={{ height: 40, width: 80, backgroundColor: "transparent" }}
-              icon="md-share"
+              icon="qrcode"
+              color={Colors.text}
               isBold={false}
             />
           </View>
-          <View style={{ flexDirection: "row" }}>
+          {/* <View style={{ flexDirection: "row" }}>
             <Custom_Button
               text="Print"
               onPress={() => {
@@ -101,16 +102,15 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
               isBold={false}
             />
             <Custom_Button
-              text="Show QR"
+              text="Share"
               onPress={() => {
-                setWalletAddressModalVisible(true);
+                console.log("Press Next");
               }}
               style={{ height: 40, width: 80, backgroundColor: "transparent" }}
-              icon="qrcode"
-              color={Colors.text}
+              icon="md-share"
               isBold={false}
             />
-          </View>
+          </View> */}
         </View>
         <View
           style={[
@@ -168,11 +168,11 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
           />
         </View>
       </ScrollView>
-      <WalletAddressModal
+      {/* <WalletAddressModal
         data={mnemonic.join(" ")}
         modalVisible={walletAddressModalVisible}
         onClose={() => setWalletAddressModalVisible(false)}
-      />
+      /> */}
     </View>
   );
 }

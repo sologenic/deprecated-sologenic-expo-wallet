@@ -11,6 +11,9 @@ const defaultState = {
   getBalancePending: null,
   getBalanceSuccess: null,
   getBalanceError: null,
+  pullToRefreshBalancePending: null,
+  pullToRefreshBalanceSuccess: null,
+  pullToRefreshBalanceError: null,
   postPaymentTransactionPending: null,
   postPaymentTransactionSuccess: null,
   postPaymentTransactionError: null,
@@ -23,6 +26,10 @@ const defaultState = {
   connectToRippleApiPending: null,
   connectToRippleApiSuccess: null,
   connectToRippleApiError: null,
+  getTrustlinesPending: false,
+  getTrustlinesSuccess: false,
+  getTrustlinesError: false,
+  getTrustlinesErrorStr: "",
   isOrientationComplete: null,
   isPinCreated: null,
   pin: null,
@@ -188,6 +195,43 @@ const getBalanceError = (state, action) => {
     getBalancePending: false,
     getBalanceSuccess: false,
     getBalanceError: true,
+  });
+};
+const pullToRefresh = (state, action) => {
+  return Object.assign({}, state, {
+    pullToRefreshBalancePending: true,
+    pullToRefreshBalanceSuccess: false,
+    pullToRefreshBalanceError: false,
+  });
+};
+
+const pullToRefreshSuccess = (state, action) => {
+  const { wallets } = state;
+  const walletsCopy = [...wallets];
+  const { id, payload } = action;
+  const updatedWallets = walletsCopy.map(item => {
+    if (item.id === id) {
+      item.balance.xrp = payload;
+      return item;
+    }
+    return item;
+  });
+  console.log("HEREEEE");
+  return Object.assign({}, state, {
+    balance: payload,
+    wallets: updatedWallets,
+    pullToRefreshBalancePending: false,
+    pullToRefreshBalanceSuccess: true,
+    pullToRefreshBalanceError: false,
+  });
+};
+
+const pullToRefreshError = (state, action) => {
+  return Object.assign({}, state, {
+    errors: action.payload,
+    pullToRefreshBalancePending: false,
+    pullToRefreshBalanceSuccess: false,
+    pullToRefreshBalanceError: true,
   });
 };
 
@@ -533,6 +577,16 @@ const getTrustlinesError = (state, action) => {
     getTrustlinesPending: false,
     getTrustlinesSuccess: false,
     getTrustlinesError: true,
+    getTrustlinesErrorStr: action.payload,
+  });
+};
+
+const getTrustlinesReset = state => {
+  return Object.assign({}, state, {
+    getTrustlinesPending: false,
+    getTrustlinesSuccess: false,
+    getTrustlinesError: false,
+    getTrustlinesErrorStr: "",
   });
 };
 
@@ -594,6 +648,12 @@ export default (state = defaultState, action) => {
       return getBalanceSuccess(state, action);
     case "GET_BALANCE_ERROR":
       return getBalanceError(state, action);
+    case "PULL_TO_REFRESH":
+      return pullToRefresh(state, action);
+    case "PULL_TO_REFRESH_SUCCESS":
+      return pullToRefreshSuccess(state, action);
+    case "PULL_TO_REFRESH_ERROR":
+      return pullToRefreshError(state, action);
     case "POST_PAYMENT_TRANSACTION":
       return postPaymentTransaction(state, action);
     case "POST_PAYMENT_TRANSACTION_SUCCESS":
@@ -656,6 +716,8 @@ export default (state = defaultState, action) => {
       return getTrustlinesSuccess(state, action);
     case "GET_TRUSTLINES_ERROR":
       return getTrustlinesError(state, action);
+    case "GET_TRUSTLINES_RESET":
+      return getTrustlinesReset(state);
     case "UPDATE_ORIENTATION_COMPLETE":
       return updateIsOrientationComplete(state, action);
     case "CREATE_PIN":

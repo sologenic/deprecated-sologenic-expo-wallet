@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Image,
-  Platform,
+  ImageBackground,
   ScrollView,
   StyleSheet,
   ActivityIndicator,
@@ -23,6 +23,8 @@ import {
   getBalance,
   connectToRippleApi,
 } from "../actions";
+import { screenWidth } from "../constants/Layout";
+import images from "../constants/Images";
 
 function WalletsScreen({
   navigation,
@@ -127,27 +129,41 @@ function WalletsScreen({
             />
           </View>
         )}
+        <View style={{ height: 100, width: screenWidth }} />
       </ScrollView>
-      <View style={styles.footer}>
-        <Custom_IconButton
-          icon="md-add"
-          color={Colors.text}
-          onPress={() => {
-            if (navigation) {
-              navigation.navigate({
-                routeName: "AddWalletScreen",
-                key: "AddWalletScreen",
-              });
-            } else {
-              rootNavigation.navigate({
-                routeName: "AddWalletScreen",
-                key: "AddWalletScreen",
-              });
-            }
-          }}
-        />
-      </View>
+      {/* <View style={styles.footer}>
+        <Image source={images.gradient} style={styles.gradient} />
+      </View> */}
+      <Custom_IconButton
+        icon="md-add"
+        color={Colors.text}
+        onPress={() => {
+          if (navigation) {
+            navigation.navigate({
+              routeName: "AddWalletScreen",
+              key: "AddWalletScreen",
+            });
+          } else {
+            rootNavigation.navigate({
+              routeName: "AddWalletScreen",
+              key: "AddWalletScreen",
+            });
+          }
+        }}
+        style={{
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.8,
+          shadowRadius: 3,
+          paddingTop: 2,
+          position: "absolute",
+          right: 20,
+          bottom: 30,
+          zIndex: 3,
+        }}
+      />
     </View>
+    // </View>
   );
 }
 
@@ -159,6 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
+    zIndex: 2,
   },
   section: {
     marginHorizontal: 20,
@@ -166,10 +183,13 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "flex-end",
-    marginHorizontal: 20,
-    marginVertical: 50,
+    position: "absolute",
+    bottom: 0,
+  },
+  gradient: {
+    height: 100,
+    width: screenWidth,
+    zIndex: 1,
   },
 });
 

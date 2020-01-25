@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Text
+  Text,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -30,7 +30,7 @@ function WalletSoloTab({
   createTrustlineSuccess,
   createTrustline,
   wallet,
-  xrpActivate
+  xrpActivate,
 }) {
   useEffect(() => {
     console.log("hey effect", createTrustlineSuccess);
@@ -49,15 +49,15 @@ function WalletSoloTab({
   const { privateKey, publicKey, secret } = wallet.details.wallet;
   const keypair = {
     privateKey,
-    publicKey
+    publicKey,
   };
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [
     activateSuccessfulModalVisible,
-    setActivateSuccessfulModalVisible
+    setActivateSuccessfulModalVisible,
   ] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
-    false
+    false,
   );
   if (!activate) {
     return (
@@ -71,7 +71,7 @@ function WalletSoloTab({
                     fontFamily: "DMSans",
                     color: Colors.text,
                     fontSize: Fonts.size.small,
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                   numberOfLines={2}
                   ellipsizeMode="tail"
@@ -85,7 +85,7 @@ function WalletSoloTab({
                     fontFamily: "DMSans",
                     color: Colors.text,
                     fontSize: Fonts.size.small,
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                   numberOfLines={2}
                   ellipsizeMode="tail"
@@ -98,7 +98,7 @@ function WalletSoloTab({
                       fontFamily: "DMSansBold",
                       color: Colors.text,
                       fontSize: Fonts.size.small,
-                      textAlign: "center"
+                      textAlign: "center",
                     }}
                   >
                     21 XRP
@@ -126,7 +126,7 @@ function WalletSoloTab({
                     ? Colors.headerBackground
                     : Colors.darkRed,
                   borderColor: !xrpActivate ? Colors.grayText : Colors.darkRed,
-                  borderWidth: !xrpActivate ? 1 : 0
+                  borderWidth: !xrpActivate ? 1 : 0,
                 }}
                 color={!xrpActivate ? Colors.grayText : Colors.text}
                 disabled={!xrpActivate}
@@ -137,7 +137,7 @@ function WalletSoloTab({
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 50,
-                opacity: 0.3
+                opacity: 0.3,
               }}
             >
               <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
@@ -152,7 +152,7 @@ function WalletSoloTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text
+                      borderColor: Colors.text,
                     }}
                     disabled
                   />
@@ -190,7 +190,7 @@ function WalletSoloTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -205,7 +205,7 @@ function WalletSoloTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -229,7 +229,7 @@ function WalletSoloTab({
             setActivateSuccessfulModalVisible(false);
             navigation.navigate({
               routeName: "WalletsScreen",
-              key: "WalletsScreen"
+              key: "WalletsScreen",
             });
           }}
         />
@@ -253,7 +253,7 @@ function WalletSoloTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <View style={{ paddingRight: 10 }}>
@@ -273,7 +273,7 @@ function WalletSoloTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               {/* <View style={{ paddingRight: 5 }}>
@@ -292,7 +292,7 @@ function WalletSoloTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <View style={{ paddingRight: 15 }}>
@@ -324,7 +324,7 @@ function WalletSoloTab({
                   height: 40,
                   backgroundColor: Colors.headerBackground,
                   borderWidth: 0.5,
-                  borderColor: Colors.text
+                  borderColor: Colors.text,
                 }}
               />
             </View>
@@ -359,7 +359,7 @@ function WalletSoloTab({
                   height: 20,
                   width: 20,
                   borderRadius: 0,
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
                 }}
               />
             </View>
@@ -374,13 +374,13 @@ function WalletSoloTab({
                   height: 20,
                   width: 20,
                   borderRadius: 0,
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
                 }}
               />
             </View>
           </View>
         </View>
-        <View style={{ marginLeft: 38, marginBottom: 5 }}>
+        {/* <View style={{ marginLeft: 38, marginBottom: 5 }}>
           <Custom_Text
             value="Recent Transactions"
             size={Fonts.size.small}
@@ -389,7 +389,7 @@ function WalletSoloTab({
         </View>
         <View>
           <TransactionCard currency="xrp" amount="1000.00" />
-        </View>
+        </View> */}
       </View>
       <WalletAddressModal
         data={walletAddress}
@@ -405,26 +405,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.headerBackground,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
-    marginTop: 20
+    marginTop: 20,
   },
   marketInfoContainer: {
-    marginVertical: 24
+    marginVertical: 24,
   },
   buttonsContainer: {
     flexDirection: "row",
     marginBottom: 24,
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   leftButtonContainer: {
     flex: 1,
-    marginRight: 10
+    marginRight: 10,
   },
   rightButtonContainer: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
   },
   walletAddressContainer: {
     flex: 9,
@@ -436,16 +436,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24
-  }
+    marginVertical: 24,
+  },
 });
 
 const mapStateToProps = ({ createTrustlineSuccess }) => ({
-  createTrustlineSuccess
+  createTrustlineSuccess,
 });
 const mapDispatchToProps = dispatch => ({
   createTrustline: (address, secret, keypair, id) =>
-    dispatch(createTrustline(address, secret, keypair, id))
+    dispatch(createTrustline(address, secret, keypair, id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletSoloTab);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WalletSoloTab);

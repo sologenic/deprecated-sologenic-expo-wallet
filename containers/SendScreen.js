@@ -37,6 +37,7 @@ function SendScreen({
   transferXrpReset,
   baseCurrency,
   marketData,
+  wallet,
 }) {
   const [completed, handleIsCompleted] = useState(false);
   const [amountToSend, handleChangeAmountToSend] = useState("");
@@ -60,8 +61,8 @@ function SendScreen({
     walletAddress,
     keypair,
     id,
-    wallet,
   } = navigation.state.params;
+  console.log("+++++++++++keypair", keypair);
 
   useEffect(() => {
     if (
@@ -261,6 +262,7 @@ function SendScreen({
         <TransferSummaryModal
           onPress={() => {
             // account, destination, value
+            console.log("keypair- ", keypair);
             transferXrp(walletAddress, keypair, destination, amountToSend);
           }}
           modalVisible={summaryModalVisible}
@@ -319,12 +321,14 @@ const mapStateToProps = ({
   transferXrpPending,
   baseCurrency,
   marketData,
+  wallet,
 }) => ({
   transferXrpSuccess,
   transferXrpError,
   transferXrpPending,
   baseCurrency,
   marketData,
+  wallet,
 });
 const mapDispatchToProps = dispatch => ({
   transferXrp: (account, keypair, destination, value) =>

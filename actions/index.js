@@ -66,9 +66,30 @@ export const updatePhraseTestValue3 = value => {
   };
 };
 
+export const pullToRefreshBalance = (id, address) => {
+  return {
+    type: "PULL_TO_REFRESH",
+    id,
+    address,
+  };
+};
+
+export const pullToRefreshBalanceSuccess = (id, data) => {
+  return {
+    type: "PULL_TO_REFRESH_SUCCESS",
+    id,
+    payload: data,
+  };
+};
+
+export const pullToRefreshBalanceError = data => {
+  return {
+    type: "PULL_TO_REFRESH_ERROR",
+    payload: data,
+  };
+};
+
 export const getBalance = (id, address) => {
-  console.log(id);
-  console.log(address);
   return {
     type: "GET_BALANCE",
     id,
@@ -389,9 +410,16 @@ export const getTrustlinesSuccess = (address, trustline) => {
   };
 };
 
-export const getTrustlinesError = () => {
+export const getTrustlinesError = data => {
   return {
     type: "GET_TRUSTLINES_ERROR",
+    payload: data,
+  };
+};
+
+export const getTrustlinesReset = () => {
+  return {
+    type: "GET_TRUSTLINES_RESET",
   };
 };
 

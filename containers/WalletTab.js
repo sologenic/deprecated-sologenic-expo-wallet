@@ -24,7 +24,11 @@ import XrpWarningModal from "../components/shared/XrpWarningModal";
 import { getPriceChange, getPriceColor, getAddress } from "../utils";
 import SevenChart from "../components/shared/SevenChart";
 import { screenWidth, headerHeight } from "../constants/Layout";
-import { getMoreTransactions, getBalance } from "../actions";
+import {
+  getMoreTransactions,
+  getBalance,
+  pullToRefreshBalance,
+} from "../actions";
 
 function WalletTab({
   navigation,
@@ -43,7 +47,8 @@ function WalletTab({
   getMoreTransactions,
   getMoreTransactionsPending,
   getBalance,
-  getBalancePending,
+  pullToRefreshBalance,
+  pullToRefreshBalancePending,
 }) {
   // const transactionLimit = 10000000000000;
   const [modalVisible, setModalVisible] = useState(false);
@@ -59,6 +64,10 @@ function WalletTab({
   const priceColor = getPriceColor(priceChange);
 
   const { id, isActive } = wallet;
+
+  useEffect(() => {
+    getBalance(id, walletAddress);
+  }, []);
 
   if (xrpBalance >= 20 && !isActive) {
     activateWallet(id);
@@ -76,11 +85,16 @@ function WalletTab({
     }
   }, [wallet]);
 
+  let keypair = null;
   const { privateKey, publicKey } = wallet.details.wallet;
-  const keypair = {
-    privateKey,
-    publicKey,
-  };
+  if (privateKey && publicKey) {
+    keypair = {
+      privateKey,
+      publicKey,
+    };
+  } else {
+    keypair = wallet.details.wallet.secret;
+  }
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
@@ -276,9 +290,9 @@ function WalletTab({
     <ScrollView
       refreshControl={
         <RefreshControl
-          refreshing={getBalancePending}
+          refreshing={pullToRefreshBalancePending}
           onRefresh={() => {
-            getBalance(id, walletAddress);
+            pullToRefreshBalance(id, walletAddress);
           }}
           progressViewOffset={headerHeight + 100}
         />
@@ -468,9 +482,6 @@ function WalletTab({
           {!getTransactionsPending && transactions ? (
             <View>
               {transactions.map((item, index) => {
-                if (index === 0) {
-                  console.log(item.outcome);
-                }
                 if (!item.specification.counterparty) {
                   return (
                     <TransactionCard
@@ -573,6 +584,7 @@ const mapStateToProps = ({
   transactionsLength,
   getMoreTransactionsPending,
   getBalancePending,
+  pullToRefreshBalancePending,
 }) => {
   return {
     getTransactionsPending,
@@ -580,6 +592,7 @@ const mapStateToProps = ({
     getMoreTransactionsPending,
     transactionsLength,
     marketData,
+    pullToRefreshBalancePending,
     marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
   };
 };
@@ -588,6 +601,8 @@ const mapDispatchToProps = dispatch => ({
   getMoreTransactions: (address, limit, walletType) =>
     dispatch(getMoreTransactions(address, limit, walletType)),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
+  pullToRefreshBalance: (id, address) =>
+    dispatch(pullToRefreshBalance(id, address)),
 });
 
 export default connect(
