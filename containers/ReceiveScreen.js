@@ -5,7 +5,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { connect } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
@@ -20,14 +20,12 @@ import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { generateQRCode } from "../utils";
 
-export default function ReceiveScreen({
-  navigation,
-}) {
+export default function ReceiveScreen({ navigation }) {
   const {
     balance,
     currency,
     // defaultCurrency,
-    walletAddress
+    walletAddress,
   } = navigation.state.params;
   const uri = generateQRCode(walletAddress);
   return (
@@ -44,29 +42,53 @@ export default function ReceiveScreen({
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text={`Receive ${currency.toUpperCase()}`} />}
-        right={<View/>}
+        center={
+          <Custom_HeaderTitle text={`Receive ${currency.toUpperCase()}`} />
+        }
+        right={<View />}
       />
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 33 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          marginVertical: 33,
+        }}
+      >
         <View style={{ paddingRight: 10 }}>
           <Image source={Images[currency]} />
         </View>
-        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <View style={{ paddingRight: 7.5 }}>
-            <Custom_Text value={`${balance}`} size={Fonts.size.h5} isBold/>
+            <Custom_Text value={`${balance}`} size={Fonts.size.h5} isBold />
           </View>
           <View>
-            <Custom_Text value={`${currency.toUpperCase()}`} size={Fonts.size.h5}/>
+            <Custom_Text
+              value={`${currency.toUpperCase()}`}
+              size={Fonts.size.h5}
+            />
           </View>
         </View>
       </View>
-      <View style={{ justifyContent: "center", alignItems: "center", marginVertical: 10 }}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginVertical: 10,
+        }}
+      >
         <Image
           source={{ uri }}
           style={{
             width: 200,
             height: 200,
-            backgroundColor: Colors.headerBackground
+            backgroundColor: Colors.headerBackground,
           }}
         />
       </View>
@@ -77,10 +99,7 @@ export default function ReceiveScreen({
             size={Fonts.size.small}
             color={Colors.grayText}
           />
-          <Custom_Text
-            value={walletAddress}
-            size={Fonts.size.small}
-          />
+          <Custom_Text value={walletAddress} size={Fonts.size.small} />
         </View>
         <View style={{ flex: 1 }}>
           <View style={{ paddingVertical: 2.5 }}>
@@ -92,19 +111,40 @@ export default function ReceiveScreen({
                 height: 20,
                 width: 20,
                 borderRadius: 0,
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
               }}
             />
           </View>
         </View>
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "flex-start", marginVertical: 33, marginHorizontal: 33 }}>
-        <View style={{ justifyContent: "flex-start", alignItems: "flex-start", paddingRight: 5, paddingTop: 2}}>
-          <AntDesign name="exclamationcircle" size={Fonts.size.small} color={Colors.text}/>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          marginVertical: 33,
+          marginHorizontal: 33,
+        }}
+      >
+        <View
+          style={{
+            justifyContent: "flex-start",
+            alignItems: "flex-start",
+            paddingRight: 5,
+            paddingTop: 2,
+          }}
+        >
+          <AntDesign
+            name="exclamationcircle"
+            size={Fonts.size.small}
+            color={Colors.text}
+          />
         </View>
-        <View style={{ justifyContent: "flex-start", alignItems: "flex-start", }}>
+        <View
+          style={{ justifyContent: "flex-start", alignItems: "flex-start" }}
+        >
           <Custom_Text
-            value="Sending SOLO to any other address than the one shown will result in your SOLO to be lost forever. Please make sure you double check the copied address." 
+            value={`Sending ${currency.toUpperCase()} to any other address than the one shown will result in your ${currency.toUpperCase()} to be lost forever. Please make sure you double check the copied address.`}
             size={Fonts.size.small}
           />
         </View>
@@ -114,7 +154,7 @@ export default function ReceiveScreen({
 }
 
 ReceiveScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
@@ -132,6 +172,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24
-  }
+    marginVertical: 24,
+  },
 });

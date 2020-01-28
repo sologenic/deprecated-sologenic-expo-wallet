@@ -61,11 +61,16 @@ const defaultState = {
   createTrustlinePending: null,
   createTrustlineSuccess: null,
   createTrustlineError: null,
+  transferSoloPending: null,
+  transferSoloSuccess: null,
+  transferSoloError: null,
+  transferSoloErrorStr: null,
   transferXrpPending: null,
   transferXrpSuccess: null,
   transferXrpError: null,
   transferXrpErrorStr: null,
   transactions: null,
+  soloTransactions: null,
   getTransactionsPending: null,
   getTransactionsSuccess: null,
   getTransactionsError: null,
@@ -171,17 +176,19 @@ const getBalance = (state, action) => {
 const getBalanceSuccess = (state, action) => {
   const { wallets } = state;
   const walletsCopy = [...wallets];
-  const { id, payload } = action;
+  const { id, xrpBalance, soloBalance } = action;
   const updatedWallets = walletsCopy.map(item => {
     if (item.id === id) {
-      item.balance.xrp = payload;
+      item.balance.xrp = xrpBalance;
+      item.balance.solo = soloBalance;
       return item;
     }
     return item;
   });
 
   return Object.assign({}, state, {
-    balance: payload,
+    balance: xrpBalance,
+    soloBalance: soloBalance,
     wallets: updatedWallets,
     getBalancePending: false,
     getBalanceSuccess: true,
@@ -208,17 +215,18 @@ const pullToRefresh = (state, action) => {
 const pullToRefreshSuccess = (state, action) => {
   const { wallets } = state;
   const walletsCopy = [...wallets];
-  const { id, payload } = action;
+  const { id, xrpBalance, soloBalance } = action;
   const updatedWallets = walletsCopy.map(item => {
     if (item.id === id) {
-      item.balance.xrp = payload;
+      item.balance.xrp = xrpBalance;
+      item.balance.solo = soloBalance;
       return item;
     }
     return item;
   });
-  console.log("HEREEEE");
   return Object.assign({}, state, {
-    balance: payload,
+    balance: xrpBalance,
+    soloBalance: soloBalance,
     wallets: updatedWallets,
     pullToRefreshBalancePending: false,
     pullToRefreshBalanceSuccess: true,
@@ -487,6 +495,40 @@ const transferXrpReset = (state, action) => {
   });
 };
 
+const transferSolo = (state, action) => {
+  return Object.assign({}, state, {
+    transferSoloPending: true,
+    transferSoloSuccess: false,
+    transferSoloError: false,
+  });
+};
+
+const transferSoloSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    transferSoloPending: false,
+    transferSoloSuccess: true,
+    transferSoloError: false,
+  });
+};
+
+const transferSoloError = (state, action) => {
+  return Object.assign({}, state, {
+    transferSoloPending: false,
+    transferSoloSuccess: false,
+    transferSoloError: true,
+    transferSoloErrorStr: action.payload,
+  });
+};
+
+const transferSoloReset = (state, action) => {
+  return Object.assign({}, state, {
+    transferSoloPending: false,
+    transferSoloSuccess: false,
+    transferSoloError: false,
+    transferSoloErrorStr: "",
+  });
+};
+
 const getTransactions = (state, action) => {
   return Object.assign({}, state, {
     getTransactionsPending: true,
@@ -508,7 +550,8 @@ const getMoreTransactionsSuccess = (state, action) => {
     getMoreTransactionsPending: false,
     getMoreTransactionsSuccess: true,
     getMoreTransactionsError: false,
-    transactions: action.payload,
+    transactions: action.payload.xrpTransactions,
+    soloTransactions: action.payload.soloTransactions,
   });
 };
 
@@ -534,7 +577,8 @@ const getTransactionsSuccess = (state, action) => {
     getTransactionsPending: false,
     getTransactionsSuccess: true,
     getTransactionsError: false,
-    transactions: action.payload,
+    transactions: action.payload.xrpTransactions,
+    soloTransactions: action.payload.soloTransactions,
   });
 };
 
@@ -696,6 +740,14 @@ export default (state = defaultState, action) => {
       return transferXrpError(state, action);
     case "TRANSFER_XRP_RESET":
       return transferXrpReset(state, action);
+    case "TRANSFER_SOLO":
+      return transferSolo(state, action);
+    case "TRANSFER_SOLO_SUCCESS":
+      return transferSoloSuccess(state, action);
+    case "TRANSFER_SOLO_ERROR":
+      return transferSoloError(state, action);
+    case "TRANSFER_SOLO_RESET":
+      return transferSoloReset(state, action);
     case "GET_TRANSACTIONS":
       return getTransactions(state, action);
     case "GET_MORE_TRANSACTIONS":

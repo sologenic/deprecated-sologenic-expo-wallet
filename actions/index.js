@@ -75,10 +75,12 @@ export const pullToRefreshBalance = (id, address) => {
 };
 
 export const pullToRefreshBalanceSuccess = (id, data) => {
+  console.log("xrpBal ", data.xrp);
   return {
     type: "PULL_TO_REFRESH_SUCCESS",
     id,
-    payload: data,
+    xrpBalance: data.xrp,
+    soloBalance: data.solo,
   };
 };
 
@@ -101,7 +103,8 @@ export const getBalanceSuccess = (id, data) => {
   return {
     type: "GET_BALANCE_SUCCESS",
     id,
-    payload: data,
+    xrpBalance: data.xrp,
+    soloBalance: data.solo,
   };
 };
 
@@ -304,11 +307,12 @@ export const createTrustlineError = () => {
   };
 };
 
-export const transferXrp = (account, keypair, destination, value) => {
+export const transferXrp = (account, keypair, secret, destination, value) => {
   return {
     type: "TRANSFER_XRP",
     account,
     keypair,
+    secret,
     destination,
     value,
   };
@@ -329,6 +333,36 @@ export const transferXrpReset = () => {
 export const transferXrpError = data => {
   return {
     type: "TRANSFER_XRP_ERROR",
+    payload: data,
+  };
+};
+
+export const transferSolo = (account, keypair, secret, destination, value) => {
+  return {
+    type: "TRANSFER_SOLO",
+    account,
+    keypair,
+    secret,
+    destination,
+    value,
+  };
+};
+
+export const transferSoloSuccess = () => {
+  return {
+    type: "TRANSFER_SOLO_SUCCESS",
+  };
+};
+
+export const transferSoloReset = () => {
+  return {
+    type: "TRANSFER_SOLO_RESET",
+  };
+};
+
+export const transferSoloError = data => {
+  return {
+    type: "TRANSFER_SOLO_ERROR",
     payload: data,
   };
 };

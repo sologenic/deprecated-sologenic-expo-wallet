@@ -49,12 +49,11 @@ function WalletsScreen({
     // return () => {
     //   testTodoReset();
     // }
-  }, [baseCurrency]);
+  }, [baseCurrency, wallets]);
 
   // console.log(wallets);
   const getBalanceAll = wallets => {
     wallets.map(item => {
-      console.log(".walletAddress", item.walletAddress, item.details);
       getBalance(item.id, item.walletAddress);
     });
   };
@@ -62,7 +61,11 @@ function WalletsScreen({
   return (
     <View style={styles.container}>
       <Custom_Header
-        left={<View />}
+        // left={
+        //   <View style={{ marginLeft: 20 }}>
+        //     <Image source={images.solo} style={{ height: 24, width: 24 }} />
+        //   </View>
+        // }
         center={<Custom_HeaderTitle text="Your Wallets" />}
         right={
           <Custom_HeaderButton

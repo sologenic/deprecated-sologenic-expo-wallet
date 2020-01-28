@@ -239,3 +239,61 @@ export const checkMnemoicExists = (mnemonic, wallets) => {
   });
   return walletAlreadyExists;
 };
+
+export const filterTransactions = (transactions, currentLedger) => {
+  let xrpTransactions = [];
+  let soloTransactions = [];
+  transactions.filter(item => {
+    if (item.type === "payment" && item.outcome.result === "tesSUCCESS") {
+      // console.log("confirmations ", currentLedger - item.outcome.ledgerVersion);
+      if (
+        item.outcome.deliveredAmount.currency ===
+        "534F4C4F00000000000000000000000000000000"
+      ) {
+        soloTransactions.push({
+          ...item,
+          outcome: {
+            ...item.outcome,
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+          },
+        });
+      } else {
+        xrpTransactions.push({
+          ...item,
+          outcome: {
+            ...item.outcome,
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+          },
+        });
+      }
+    } else {
+      if (item.outcome.result === "tecUNFUNDED_PAYMENT") {
+        // console.log(item.specification.source.maxAmount);
+        if (
+          item.specification.source.maxAmount.currency ===
+          "534F4C4F00000000000000000000000000000000"
+        ) {
+          soloTransactions.push({
+            ...item,
+            outcome: {
+              ...item.outcome,
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+            },
+          });
+        } else if (item.specification.source.maxAmount.currency === "XRP") {
+          xrpTransactions.push({
+            ...item,
+            outcome: {
+              ...item.outcome,
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+            },
+          });
+        }
+      }
+    }
+  });
+  return {
+    xrpTransactions,
+    soloTransactions,
+  };
+};

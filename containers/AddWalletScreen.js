@@ -53,6 +53,7 @@ export default function AddWalletScreen({ navigation }) {
                 key: "CreateNewWalletScreen",
               });
             }}
+            style={{ paddingTop: 2 }}
           />
         </View>
         <View style={styles.iconButtonContainer}>

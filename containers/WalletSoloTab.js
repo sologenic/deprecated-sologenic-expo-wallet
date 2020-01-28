@@ -4,8 +4,10 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Image,
+  ActivityIndicator,
   Text,
+  RefreshControl,
+  Clipboard,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -18,7 +20,12 @@ import TransactionCard from "./TransactionCard";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import ActivationSoloModal from "../components/shared/ActivatingSoloModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
-import { createTrustline } from "../actions";
+import {
+  createTrustline,
+  getMoreTransactions,
+  pullToRefreshBalance,
+} from "../actions";
+import { headerHeight } from "../constants/Layout";
 
 function WalletSoloTab({
   navigation,
@@ -31,6 +38,16 @@ function WalletSoloTab({
   createTrustline,
   wallet,
   xrpActivate,
+  // marketData,
+  // marketSevens,
+  getTransactionsPending,
+  getMoreTransactions,
+  getMoreTransactionsPending,
+  setTransactionCount,
+  transactions,
+  transactionCount,
+  pullToRefreshBalance,
+  pullToRefreshBalancePending,
 }) {
   useEffect(() => {
     console.log("hey effect", createTrustlineSuccess);
@@ -45,12 +62,17 @@ function WalletSoloTab({
     };
   }, [createTrustlineSuccess]);
   const { id } = wallet;
-  console.log("HERE id", id);
-  const { privateKey, publicKey, secret } = wallet.details.wallet;
-  const keypair = {
-    privateKey,
-    publicKey,
-  };
+  let keypair = null;
+  let secret = null;
+  const { privateKey, publicKey } = wallet.details.wallet;
+  if (privateKey && publicKey) {
+    keypair = {
+      privateKey,
+      publicKey,
+    };
+  } else {
+    secret = wallet.details.wallet.secret;
+  }
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [
     activateSuccessfulModalVisible,
@@ -59,6 +81,13 @@ function WalletSoloTab({
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
   );
+
+  const writeToClipboard = async address => {
+    await Clipboard.setString(address);
+    // this.onOpenNotification();
+    // setTimeout(() => this.onCloseNotification(), 2000);
+  };
+
   if (!activate) {
     return (
       <ScrollView>
@@ -177,13 +206,14 @@ function WalletSoloTab({
                 value="Wallet Address"
                 size={Fonts.size.small}
                 color={Colors.grayText}
+                style={{ marginBottom: 3 }}
               />
               <Custom_Text value={walletAddress} size={Fonts.size.small} />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>
                 <Custom_IconButton
-                  onPress={() => {}}
+                  onPress={() => writeToClipboard(walletAddress)}
                   icon="content-copy"
                   size={Fonts.size.normal}
                   style={{
@@ -227,10 +257,6 @@ function WalletSoloTab({
           currency="solo"
           onPress={() => {
             setActivateSuccessfulModalVisible(false);
-            navigation.navigate({
-              routeName: "WalletsScreen",
-              key: "WalletsScreen",
-            });
           }}
         />
       </ScrollView>
@@ -238,7 +264,17 @@ function WalletSoloTab({
   }
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl
+          refreshing={pullToRefreshBalancePending}
+          onRefresh={() => {
+            pullToRefreshBalance(id, walletAddress);
+          }}
+          progressViewOffset={headerHeight + 100}
+        />
+      }
+    >
       <View>
         <View style={styles.container}>
           <View style={styles.section}>
@@ -317,7 +353,16 @@ function WalletSoloTab({
               <Custom_Button
                 text="RECEIVE"
                 onPress={() => {
-                  console.log("Press RECEIVE");
+                  navigation.navigate({
+                    routeName: "ReceiveScreen",
+                    key: "ReceiveScreen",
+                    params: {
+                      navigation,
+                      balance: soloBalance,
+                      currency: currency.toLowerCase(),
+                      walletAddress,
+                    },
+                  });
                 }}
                 size={Fonts.size.large}
                 style={{
@@ -332,7 +377,20 @@ function WalletSoloTab({
               <Custom_Button
                 text="SEND"
                 onPress={() => {
-                  console.log("Press SEND");
+                  navigation.navigate({
+                    routeName: "SendScreen",
+                    key: "SendScreen",
+                    params: {
+                      navigation,
+                      balance: soloBalance,
+                      currency: currency.toLowerCase(),
+                      walletAddress,
+                      keypair,
+                      secret,
+                      id,
+                      wallet,
+                    },
+                  });
                 }}
                 size={Fonts.size.large}
                 style={{ height: 40 }}
@@ -352,7 +410,7 @@ function WalletSoloTab({
           <View style={{ flex: 1 }}>
             <View style={{ paddingVertical: 2.5 }}>
               <Custom_IconButton
-                onPress={() => {}}
+                onPress={() => writeToClipboard(walletAddress)}
                 icon="content-copy"
                 size={Fonts.size.normal}
                 style={{
@@ -390,6 +448,62 @@ function WalletSoloTab({
         <View>
           <TransactionCard currency="xrp" amount="1000.00" />
         </View> */}
+        <View style={{ marginLeft: 38, marginBottom: 5 }}>
+          <Custom_Text
+            value="Recent Transactions"
+            size={Fonts.size.small}
+            isBold
+          />
+        </View>
+        <View>
+          {!transactions || (transactions && transactions.length === 0) ? (
+            <View style={{ marginTop: 10 }}>
+              <Custom_Text
+                value="No recent transactions"
+                style={{ textAlign: "center" }}
+              />
+            </View>
+          ) : !getTransactionsPending && transactions ? (
+            <View>
+              {transactions.map((item, index) => {
+                if (item.type === "payment") {
+                  return (
+                    <TransactionCard
+                      key={`${item.address}${index}`}
+                      transaction={item}
+                      walletAddress={id}
+                    />
+                  );
+                }
+              })}
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                {/* transactions.length < transactionsLength */}
+                <TouchableOpacity
+                  text="Load More"
+                  onPress={() => {
+                    // set default tab to wallet tab and reset to default on goBack() event
+                    getMoreTransactions(
+                      walletAddress,
+                      transactionCount + 10,
+                      "solo",
+                    );
+                    setTransactionCount(transactionCount + 10);
+                  }}
+                >
+                  {getMoreTransactionsPending ? (
+                    <ActivityIndicator size="small" color={Colors.grayText} />
+                  ) : (
+                    <Custom_Text value="Load More" />
+                  )}
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <View style={{ marginTop: 15 }}>
+              <ActivityIndicator size="small" color={Colors.grayText} />
+            </View>
+          )}
+        </View>
       </View>
       <WalletAddressModal
         data={walletAddress}
@@ -440,12 +554,34 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ createTrustlineSuccess }) => ({
+const mapStateToProps = ({
   createTrustlineSuccess,
+  marketData,
+  marketSevens,
+  baseCurrency,
+  getTransactionsPending,
+  transactionsLength,
+  getMoreTransactionsPending,
+  getBalancePending,
+  pullToRefreshBalancePending,
+}) => ({
+  createTrustlineSuccess,
+  marketData,
+  marketSevens,
+  baseCurrency,
+  getTransactionsPending,
+  transactionsLength,
+  getMoreTransactionsPending,
+  getBalancePending,
+  pullToRefreshBalancePending,
 });
 const mapDispatchToProps = dispatch => ({
   createTrustline: (address, secret, keypair, id) =>
     dispatch(createTrustline(address, secret, keypair, id)),
+  getMoreTransactions: (address, limit, walletType) =>
+    dispatch(getMoreTransactions(address, limit, walletType)),
+  pullToRefreshBalance: (id, address) =>
+    dispatch(pullToRefreshBalance(id, address)),
 });
 
 export default connect(

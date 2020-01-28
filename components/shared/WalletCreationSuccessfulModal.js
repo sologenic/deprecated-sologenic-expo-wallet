@@ -6,7 +6,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
-  Text
+  Text,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -31,7 +31,12 @@ export default function WalletCreationSuccessfulModal({
               <View
                 style={[
                   styles.section,
-                  { width: 230, height: 100, alignItems: "flex-start", marginRight: 60 }
+                  {
+                    width: 230,
+                    height: 100,
+                    alignItems: "flex-start",
+                    marginRight: 60,
+                  },
                 ]}
               >
                 <Custom_Text
@@ -41,16 +46,25 @@ export default function WalletCreationSuccessfulModal({
                   isBold
                 />
               </View>
-              <View style={[styles.section, { marginBottom: 20, flexDirection: "row" }]}>
+              <View
+                style={[
+                  styles.section,
+                  { marginBottom: 20, flexDirection: "row" },
+                ]}
+              >
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Now you can start activating your XRP and SOLO wallets.`}
+                    value={`Activate your wallet to start sending and receiving funds.`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
                 </View>
                 <View style={{ flex: 2, alignItems: "flex-end" }}>
-                  <Ionicons name="ios-checkmark-circle" size={Fonts.size.h5} color={Colors.freshGreen} />
+                  <Ionicons
+                    name="ios-checkmark-circle"
+                    size={Fonts.size.h5}
+                    color={Colors.freshGreen}
+                  />
                 </View>
               </View>
               <View style={styles.line} />
@@ -58,7 +72,7 @@ export default function WalletCreationSuccessfulModal({
               <View
                 style={[
                   styles.section,
-                  { height: 50, position: "absolute", right: 0, bottom: 0 }
+                  { height: 50, position: "absolute", right: 0, bottom: 0 },
                 ]}
               >
                 <Custom_Button
@@ -82,13 +96,13 @@ WalletCreationSuccessfulModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 WalletCreationSuccessfulModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
@@ -99,12 +113,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10
+    borderRadius: 10,
     // height: 100,
     // width: 200,
     // zIndex: 20,
@@ -112,10 +126,10 @@ const styles = StyleSheet.create({
   section: {
     justifyContent: "center",
     alignItems: "flex-start",
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   line: {
     height: 1,
-    backgroundColor: Colors.grayText
-  }
+    backgroundColor: Colors.grayText,
+  },
 });

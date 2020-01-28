@@ -42,22 +42,25 @@ import Colors from "../constants/Colors";
 // }
 
 export default function TransactionCard({ transaction, walletAddress }) {
-  const { outcome, specification } = transaction;
+  const { outcome, specification, type } = transaction;
   // const failedTransaction = outcome.result === 'tecUNFUNDED_PAYMENT';
   const currency = outcome.deliveredAmount
     ? outcome.deliveredAmount.currency
     : "";
+  const isSolo = currency === "534F4C4F00000000000000000000000000000000";
   const value = outcome.deliveredAmount ? outcome.deliveredAmount.value : "";
   const timestamp = outcome ? outcome.timestamp : "";
   const result = outcome ? outcome.result : "";
   const fee = outcome ? outcome.fee : "";
   const ledgerVersion = outcome ? outcome.ledgerVersion : "";
   const fundsRecevied =
+    specification &&
     specification.destination &&
     specification.destination.address === walletAddress
       ? "+"
       : "-";
   const copyAddress =
+    specification &&
     specification.destination &&
     specification.destination.address === walletAddress
       ? specification.source.address
@@ -101,11 +104,14 @@ export default function TransactionCard({ transaction, walletAddress }) {
         </View>
         <View style={styles.feeContainer}>
           <Custom_Text value="Fee" size={10} />
-          <Custom_Text
-            value={`${currency.toUpperCase()} ${fee}`}
-            size={Fonts.size.small}
-            isBold
-          />
+          <View style={{ flexDirection: "row" }}>
+            <Custom_Text
+              value={isSolo ? "Ƨ" : currency.toUpperCase()}
+              size={9}
+              style={{ marginTop: 2 }}
+            />
+            <Custom_Text value={` ${fee}`} size={Fonts.size.small} isBold />
+          </View>
         </View>
         <View style={styles.copyAddressContainer}>
           <View
@@ -158,7 +164,12 @@ export default function TransactionCard({ transaction, walletAddress }) {
         </View>
         <View style={styles.amountContainer}>
           <Custom_Text
-            value={`${fundsRecevied} ${currency.toUpperCase()} ${value}`}
+            value={`${fundsRecevied} ${isSolo ? "Ƨ" : currency.toUpperCase()}`}
+            size={9}
+            style={{ marginTop: 1 }}
+          />
+          <Custom_Text
+            value={` ${value}`}
             // value={
             //   result === "tesSUCCESS"
             //     ? ` ${currency.toUpperCase()} ${value}`
@@ -256,7 +267,8 @@ const styles = StyleSheet.create({
   amountContainer: {
     flex: 4,
     height: 40,
-    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
     // paddingLeft: 10,
     // paddingRight: 30,
   },

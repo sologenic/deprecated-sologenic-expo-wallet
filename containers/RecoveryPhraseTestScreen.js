@@ -118,6 +118,7 @@ function RecoveryPhraseTestScreen({
               value="To ensure that you have complied with the steps as instructed, please enter the missing info of your given Recovery Phrase below."
               size={Fonts.size.normal}
               color={Colors.text}
+              style={{ textAlign: "center" }}
             />
           )}
           {testResult === "error" && (

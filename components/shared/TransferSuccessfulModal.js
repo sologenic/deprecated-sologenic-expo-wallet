@@ -49,7 +49,7 @@ export default function TransferSuccessfulModal({
               >
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Your ${currency.toUpperCase()} wallet has been successfully activated.`}
+                    value={`Your ${currency.toUpperCase()} transfer has been successfully completed.`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />

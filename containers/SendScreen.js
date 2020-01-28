@@ -24,7 +24,13 @@ import InstructionsModal from "../components/shared/InstructionsModal";
 import TransferSummaryModal from "../components/shared/TransferSummaryModal";
 import TransferSuccessfulModal from "../components/shared/TransferSuccessfulModal";
 import TransferFailedModal from "../components/shared/TransferFailedModal";
-import { transferXrp, getBalance, transferXrpReset } from "../actions";
+import {
+  transferXrp,
+  getBalance,
+  transferXrpReset,
+  transferSolo,
+  transferSoloReset,
+} from "../actions";
 import { formatWalletTotalBalance, extractSeparatorFromText } from "../utils";
 
 function SendScreen({
@@ -33,8 +39,13 @@ function SendScreen({
   transferXrpPending,
   transferXrpSuccess,
   transferXrpError,
-  getBalance,
   transferXrpReset,
+  transferSolo,
+  transferSoloPending,
+  transferSoloSuccess,
+  transferSoloError,
+  transferSoloReset,
+  getBalance,
   baseCurrency,
   marketData,
   wallet,
@@ -60,9 +71,9 @@ function SendScreen({
     currency,
     walletAddress,
     keypair,
+    secret,
     id,
   } = navigation.state.params;
-  console.log("+++++++++++keypair", keypair);
 
   useEffect(() => {
     if (
@@ -87,15 +98,26 @@ function SendScreen({
       setTransferErrorModalVisible(true);
       setSummaryModalVisible(false);
     }
+    if (transferSoloSuccess) {
+      setTransferSuccessfulModalVisible(true);
+      setSummaryModalVisible(false);
+    }
+    if (transferSoloError) {
+      setTransferErrorModalVisible(true);
+      setSummaryModalVisible(false);
+    }
     // return () => {
     //   cleanup
     // };
   }, [
+    transferXrpPending,
     transferXrpSuccess,
     transferXrpError,
+    transferSoloPending,
+    transferSoloSuccess,
+    transferSoloError,
     transferSuccessfulModalVisible,
     summaryModalVisible,
-    transferXrpPending,
   ]);
 
   return (
@@ -124,7 +146,10 @@ function SendScreen({
           }}
         >
           <View style={{ paddingRight: 10 }}>
-            <Image source={Images[currency]} />
+            <Image
+              source={Images[currency]}
+              style={{ height: 40, width: 40 }}
+            />
           </View>
           <View
             style={{
@@ -199,7 +224,7 @@ function SendScreen({
               onChangeText={text => {
                 handleChangeTag(text);
               }}
-              label="Destination Wallet Tag"
+              label="Destination Tag"
               keyboardType="default"
               returnKeyType="done"
             />
@@ -261,12 +286,26 @@ function SendScreen({
         />
         <TransferSummaryModal
           onPress={() => {
-            // account, destination, value
-            console.log("keypair- ", keypair);
-            transferXrp(walletAddress, keypair, destination, amountToSend);
+            if (currency === "xrp") {
+              transferXrp(
+                walletAddress,
+                keypair,
+                secret,
+                destination,
+                amountToSend,
+              );
+            } else {
+              transferSolo(
+                walletAddress,
+                keypair,
+                secret,
+                destination,
+                amountToSend,
+              );
+            }
           }}
           modalVisible={summaryModalVisible}
-          showSpinner={transferXrpPending}
+          showSpinner={transferXrpPending || transferSoloPending}
           onClose={() => setSummaryModalVisible(false)}
           currency={currency}
           address={destination}
@@ -276,7 +315,12 @@ function SendScreen({
         <TransferSuccessfulModal
           modalVisible={transferSuccessfulModalVisible}
           onPress={() => {
-            transferXrpReset();
+            // if solo
+            if (currency === "xrp") {
+              transferXrpReset();
+            } else {
+              transferSoloReset();
+            }
             setTransferSuccessfulModalVisible(false);
             getBalance(id, walletAddress);
             navigation.goBack();
@@ -286,11 +330,19 @@ function SendScreen({
         <TransferFailedModal
           modalVisible={transferErrorModalVisible}
           onPress={() => {
-            transferXrpReset();
+            if (currency === "xrp") {
+              transferXrpReset();
+            } else {
+              transferSoloReset();
+            }
             setTransferErrorModalVisible(false);
           }}
           onClose={() => {
-            transferXrpReset();
+            if (currency === "xrp") {
+              transferXrpReset();
+            } else {
+              transferSoloReset();
+            }
             setTransferErrorModalVisible(false);
             navigation.goBack();
           }}
@@ -319,6 +371,9 @@ const mapStateToProps = ({
   transferXrpSuccess,
   transferXrpError,
   transferXrpPending,
+  transferSoloSuccess,
+  transferSoloError,
+  transferSoloPending,
   baseCurrency,
   marketData,
   wallet,
@@ -326,15 +381,21 @@ const mapStateToProps = ({
   transferXrpSuccess,
   transferXrpError,
   transferXrpPending,
+  transferSoloSuccess,
+  transferSoloError,
+  transferSoloPending,
   baseCurrency,
   marketData,
   wallet,
 });
 const mapDispatchToProps = dispatch => ({
-  transferXrp: (account, keypair, destination, value) =>
-    dispatch(transferXrp(account, keypair, destination, value)),
+  transferXrp: (account, keypair, secret, destination, value) =>
+    dispatch(transferXrp(account, keypair, secret, destination, value)),
+  transferSolo: (account, keypair, secret, destination, value) =>
+    dispatch(transferSolo(account, keypair, secret, destination, value)),
   getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)),
   transferXrpReset: () => dispatch(transferXrpReset()),
+  transferSoloReset: () => dispatch(transferSoloReset()),
 });
 
 export default connect(

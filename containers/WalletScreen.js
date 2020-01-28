@@ -39,7 +39,7 @@ import {
 } from "../actions";
 
 const propTypes = {
-  wallet: {
+  wallet: P.shape({
     id: P.string,
     nickname: P.string,
     details: P.shape({}),
@@ -47,7 +47,7 @@ const propTypes = {
     walletAddress: P.string,
     rippleClassicAddress: P.string,
     transactions: P.array,
-  },
+  }),
 };
 
 const defaultProps = {
@@ -82,24 +82,17 @@ function WalletScreen({
   wallet,
   setWallet,
   resetWallet,
+  soloTransactions,
 }) {
   // console.log("+++++++++++++++++", wallet);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(5);
-  // const { wallet } = navigation.state.params;
-  const {
-    id,
-    balance,
-    nickname,
-    walletAddress,
-    rippleClassicAddress,
-    trustline,
-  } = wallet;
+  const { walletAddress } = navigation.state.params;
+  const { id, balance, nickname, rippleClassicAddress, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
 
   useEffect(() => {
-    const walletAddress = navigation.state.params.walletAddress;
     setWallet(walletAddress);
 
     if (walletAddress && walletAddress !== "") {
@@ -293,6 +286,9 @@ function WalletScreen({
           soloBalance={solo}
           walletAddress={walletAddress}
           wallet={wallet}
+          transactions={soloTransactions}
+          setTransactionCount={setTransactionCount}
+          transactionCount={transactionCount}
           activate={trustline ? true : false}
           xrpActivate={xrp >= 21 ? true : false}
         />
@@ -340,11 +336,17 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ transactions, baseCurrency, wallet }) => {
+const mapStateToProps = ({
+  transactions,
+  soloTransactions,
+  baseCurrency,
+  wallet,
+}) => {
   // const wallet = wallets.find(item => item.id === walletAddress);
   // console.log("=============", wallet);
   return {
     transactions,
+    soloTransactions,
     defaultCurrency: baseCurrency,
     wallet,
     // wallet: wallets.find(item => item.id === walletAddress),

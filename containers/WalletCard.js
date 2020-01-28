@@ -1,31 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Image, StyleSheet, View, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { connect } from "react-redux";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { formatWalletTotalBalance } from "../utils";
+import { getBalance } from "../actions";
 
-export default function WalletCard({
+function WalletCard({
   navigation,
-  // nickname,
-  // totalBalance,
-  // tokenizedAssets,
-  // balance,
-  // details,
-  defaultCurrency,
-  // walletAddress,
-  // rippleClassicAddress,
   wallet,
   baseCurrency,
   marketData,
+  getBalance,
 }) {
-  const { nickname, balance, walletAddress } = wallet;
+  const { nickname, balance, walletAddress, id } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
   const totalBalance = formatWalletTotalBalance(xrp * marketData.last);
-
+  useEffect(() => {
+    getBalance(id, walletAddress);
+  }, []);
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -36,11 +33,6 @@ export default function WalletCard({
             params: {
               navigation,
               walletAddress,
-              // totalBalance,
-              // tokenizedAssets,
-              // defaultCurrency: baseCurrency,
-              xrpBalance: "21.00",
-              soloBalance: "0.00",
               nickname,
             },
           });
@@ -156,6 +148,29 @@ export default function WalletCard({
                 />
               </View>
             </View>
+            {/* {wallet.isActive ? (
+              <View style={{ flexDirection: "row", paddingTop: 5 }}>
+                <View style={{ marginRight: 5 }}>
+                  <Custom_Text
+                    value={`${xrp}`}
+                    size={Fonts.size.normal}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value="XRP"
+                    size={Fonts.size.normal}
+                    color={Colors.lighterGray}
+                    isBold
+                  />
+                </View>
+              </View>
+            ) : (
+              <View style={{ paddingTop: 5 }}>
+                <Custom_Text value="Not activated" />
+              </View>
+            )} */}
           </View>
           <View
             style={{ width: 1, height: 88, backgroundColor: Colors.gray }}
@@ -181,6 +196,29 @@ export default function WalletCard({
                 />
               </View>
             </View>
+            {/* {wallet.trustline ? (
+              <View style={{ flexDirection: "row", paddingTop: 5 }}>
+                <View style={{ marginRight: 5 }}>
+                  <Custom_Text
+                    value={`${solo}`}
+                    size={Fonts.size.normal}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value="SOLO"
+                    size={Fonts.size.normal}
+                    color={Colors.lighterGray}
+                    isBold
+                  />
+                </View>
+              </View>
+            ) : (
+              <View style={{ paddingTop: 5 }}>
+                <Custom_Text value="Not activated" />
+              </View>
+            )} */}
           </View>
         </View>
       </View>
@@ -206,3 +244,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+const mapDispatchToProps = dispatch => ({
+  getBalance: (id, address) => dispatch(getBalance(id, address)),
+});
+
+export default connect(
+  null,
+  mapDispatchToProps,
+)(WalletCard);

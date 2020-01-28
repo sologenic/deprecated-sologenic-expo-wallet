@@ -59,10 +59,8 @@ function WalletTab({
   const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
   const [xrpWarningModalVisible, setXrpWarningModalVisible] = useState(false);
   const [isWalletActive, setIsWalletActive] = useState(false);
-
   const priceChange = getPriceChange(marketData.last, marketData.open);
   const priceColor = getPriceColor(priceChange);
-
   const { id, isActive } = wallet;
 
   useEffect(() => {
@@ -77,7 +75,7 @@ function WalletTab({
     if (isActive && xrpBalance < 21) {
       setXrpBalanceWarning(true);
     }
-  }, [xrpBalanceWarning, transactions]);
+  }, [xrpBalanceWarning, transactions, getTransactionsPending]);
 
   useEffect(() => {
     if (isActive && !isWalletActive) {
@@ -86,6 +84,7 @@ function WalletTab({
   }, [wallet]);
 
   let keypair = null;
+  let secret = null;
   const { privateKey, publicKey } = wallet.details.wallet;
   if (privateKey && publicKey) {
     keypair = {
@@ -93,7 +92,7 @@ function WalletTab({
       publicKey,
     };
   } else {
-    keypair = wallet.details.wallet.secret;
+    secret = wallet.details.wallet.secret;
   }
 
   const writeToClipboard = async address => {
@@ -233,6 +232,7 @@ function WalletTab({
                 value="Wallet Address"
                 size={Fonts.size.small}
                 color={Colors.grayText}
+                style={{ marginBottom: 3 }}
               />
               <Custom_Text value={walletAddress} size={Fonts.size.small} />
             </View>
@@ -419,6 +419,7 @@ function WalletTab({
                         currency: currency.toLowerCase(),
                         walletAddress,
                         keypair,
+                        secret,
                         id,
                         wallet,
                       },
@@ -479,10 +480,20 @@ function WalletTab({
           />
         </View>
         <View>
-          {!getTransactionsPending && transactions ? (
+          {!transactions || (transactions && transactions.length == 0) ? (
+            <View style={{ marginTop: 10 }}>
+              <Custom_Text
+                value="No recent transactions"
+                style={{ textAlign: "center" }}
+              />
+            </View>
+          ) : !getTransactionsPending && transactions ? (
             <View>
               {transactions.map((item, index) => {
-                if (!item.specification.counterparty) {
+                if (
+                  item.type === "payment" &&
+                  !item.specification.counterparty
+                ) {
                   return (
                     <TransactionCard
                       key={`${item.address}${index}`}

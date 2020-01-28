@@ -56,6 +56,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
         <View style={styles.section}>
           <Custom_Text
             value="The sequence of words below is your Recovery Phrase. You need this to regain access to your XRP. You should never share this with anyone."
+            style={{ textAlign: "center" }}
             size={Fonts.size.normal}
             color={Colors.text}
           />
