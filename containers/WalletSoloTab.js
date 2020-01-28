@@ -27,6 +27,8 @@ import {
   createTrustlineReset,
 } from "../actions";
 import { headerHeight } from "../constants/Layout";
+import CopiedModal from "../components/shared/CopiedModal";
+import { formatBalance } from "../utils";
 
 function WalletSoloTab({
   navigation,
@@ -42,6 +44,8 @@ function WalletSoloTab({
   // defaultCurrency,
   // marketData,
   // marketSevens,
+  soloData,
+  baseCurrency,
   getTransactionsPending,
   getMoreTransactions,
   getMoreTransactionsPending,
@@ -51,6 +55,15 @@ function WalletSoloTab({
   pullToRefreshBalance,
   pullToRefreshBalancePending,
 }) {
+  const [activateModalVisible, setActivateModalVisible] = useState(false);
+  const [
+    activateSuccessfulModalVisible,
+    setActivateSuccessfulModalVisible,
+  ] = useState(false);
+  const [copiedModalVisible, setCopiedModalVisible] = useState(false);
+  const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
+    false,
+  );
   useEffect(() => {
     if (createTrustlineSuccess) {
       setActivateModalVisible(false);
@@ -83,19 +96,15 @@ function WalletSoloTab({
   } else {
     secret = wallet.details.wallet.secret;
   }
-  const [activateModalVisible, setActivateModalVisible] = useState(false);
-  const [
-    activateSuccessfulModalVisible,
-    setActivateSuccessfulModalVisible,
-  ] = useState(false);
-  const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
-    false,
-  );
+
+  const soloMarketPrice = soloData[baseCurrency.value];
+  // const priceChange = getPriceChange(marketData.last, marketData.open);
+  // const priceColor = getPriceColor(priceChange);
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    // this.onOpenNotification();
-    // setTimeout(() => this.onCloseNotification(), 2000);
+    setCopiedModalVisible(true);
+    setTimeout(() => setCopiedModalVisible(false), 2500);
   };
 
   if (!soloActive) {
@@ -275,55 +284,56 @@ function WalletSoloTab({
   }
 
   return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={pullToRefreshBalancePending}
-          onRefresh={() => {
-            pullToRefreshBalance(id, walletAddress);
-          }}
-          progressViewOffset={headerHeight + 100}
-        />
-      }
-    >
-      <View>
-        <View style={styles.container}>
-          <View style={styles.section}>
-            <Custom_Text
-              value="Your Balance:"
-              size={Fonts.size.medium}
-              color={Colors.lightGray}
-            />
-          </View>
-          <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <View style={{ paddingRight: 10 }}>
-                <Custom_Text
-                  value={`${soloBalance}`}
-                  size={Fonts.size.h3}
-                  isBold
-                />
-              </View>
-              <View>
-                <Custom_Text value={currency} size={Fonts.size.h4} />
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={pullToRefreshBalancePending}
+            onRefresh={() => {
+              pullToRefreshBalance(id, walletAddress);
+            }}
+            progressViewOffset={headerHeight + 100}
+          />
+        }
+      >
+        <View>
+          <View style={styles.container}>
+            <View style={styles.section}>
+              <Custom_Text
+                value="Your Balance:"
+                size={Fonts.size.medium}
+                color={Colors.lightGray}
+              />
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ paddingRight: 10 }}>
+                  <Custom_Text
+                    value={`${formatBalance(soloBalance)}`}
+                    size={Fonts.size.h3}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text value={currency} size={Fonts.size.h4} />
+                </View>
               </View>
             </View>
-          </View>
-          <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {/* <View style={{ paddingRight: 5 }}>
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {/* <View style={{ paddingRight: 5 }}>
                 <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
               </View>
               <View>
@@ -332,124 +342,129 @@ function WalletSoloTab({
                   size={Fonts.size.medium}
                 />
               </View> */}
-            </View>
-          </View>
-          <View style={styles.marketInfoContainer}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <View style={{ paddingRight: 15 }}>
-                <Custom_Text
-                  value="Market Price:"
-                  size={Fonts.size.medium}
-                  color={Colors.lightGray}
-                />
-                {/* <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} /> */}
               </View>
-              <View>
-                {/* <Custom_Text
+            </View>
+            <View style={styles.marketInfoContainer}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View style={{ paddingRight: 15 }}>
+                  <Custom_Text
+                    value="Market Price:"
+                    size={Fonts.size.medium}
+                    color={Colors.lightGray}
+                    style={{ textAlign: "center" }}
+                  />
+                  <Custom_Text
+                    value={`${baseCurrency.symbol} ${soloMarketPrice}`}
+                    size={Fonts.size.medium}
+                    style={{ textAlign: "center" }}
+                  />
+                </View>
+                <View>
+                  {/* <Custom_Text
                   value={`${-0.61}%`}
                   size={Fonts.size.small}
                   color={Colors.errorBackground}
                 /> */}
+                </View>
+              </View>
+            </View>
+            <View style={styles.buttonsContainer}>
+              <View style={styles.leftButtonContainer}>
+                <Custom_Button
+                  text="RECEIVE"
+                  onPress={() => {
+                    navigation.navigate({
+                      routeName: "ReceiveScreen",
+                      key: "ReceiveScreen",
+                      params: {
+                        navigation,
+                        balance: soloBalance,
+                        currency: currency.toLowerCase(),
+                        walletAddress,
+                      },
+                    });
+                  }}
+                  size={Fonts.size.large}
+                  style={{
+                    height: 40,
+                    backgroundColor: Colors.headerBackground,
+                    borderWidth: 0.5,
+                    borderColor: Colors.text,
+                  }}
+                />
+              </View>
+              <View style={styles.rightButtonContainer}>
+                <Custom_Button
+                  text="SEND"
+                  onPress={() => {
+                    navigation.navigate({
+                      routeName: "SendScreen",
+                      key: "SendScreen",
+                      params: {
+                        navigation,
+                        balance: soloBalance,
+                        currency: currency.toLowerCase(),
+                        walletAddress,
+                        keypair,
+                        secret,
+                        id,
+                        wallet,
+                      },
+                    });
+                  }}
+                  size={Fonts.size.large}
+                  style={{ height: 40 }}
+                />
               </View>
             </View>
           </View>
-          <View style={styles.buttonsContainer}>
-            <View style={styles.leftButtonContainer}>
-              <Custom_Button
-                text="RECEIVE"
-                onPress={() => {
-                  navigation.navigate({
-                    routeName: "ReceiveScreen",
-                    key: "ReceiveScreen",
-                    params: {
-                      navigation,
-                      balance: soloBalance,
-                      currency: currency.toLowerCase(),
-                      walletAddress,
-                    },
-                  });
-                }}
-                size={Fonts.size.large}
-                style={{
-                  height: 40,
-                  backgroundColor: Colors.headerBackground,
-                  borderWidth: 0.5,
-                  borderColor: Colors.text,
-                }}
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={styles.walletAddressContainer}>
+              <Custom_Text
+                value="Wallet Address"
+                size={Fonts.size.small}
+                color={Colors.grayText}
               />
+              <Custom_Text value={walletAddress} size={Fonts.size.small} />
             </View>
-            <View style={styles.rightButtonContainer}>
-              <Custom_Button
-                text="SEND"
-                onPress={() => {
-                  navigation.navigate({
-                    routeName: "SendScreen",
-                    key: "SendScreen",
-                    params: {
-                      navigation,
-                      balance: soloBalance,
-                      currency: currency.toLowerCase(),
-                      walletAddress,
-                      keypair,
-                      secret,
-                      id,
-                      wallet,
-                    },
-                  });
-                }}
-                size={Fonts.size.large}
-                style={{ height: 40 }}
-              />
+            <View style={{ flex: 1 }}>
+              <View style={{ paddingVertical: 2.5 }}>
+                <Custom_IconButton
+                  onPress={() => writeToClipboard(walletAddress)}
+                  icon="content-copy"
+                  size={Fonts.size.normal}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    borderRadius: 0,
+                    backgroundColor: "transparent",
+                  }}
+                />
+              </View>
+              <View style={{ paddingVertical: 2.5 }}>
+                <Custom_IconButton
+                  onPress={() => {
+                    setWalletAddressModalVisible(true);
+                  }}
+                  icon="qrcode"
+                  size={Fonts.size.normal}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    borderRadius: 0,
+                    backgroundColor: "transparent",
+                  }}
+                />
+              </View>
             </View>
           </View>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={styles.walletAddressContainer}>
-            <Custom_Text
-              value="Wallet Address"
-              size={Fonts.size.small}
-              color={Colors.grayText}
-            />
-            <Custom_Text value={walletAddress} size={Fonts.size.small} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <View style={{ paddingVertical: 2.5 }}>
-              <Custom_IconButton
-                onPress={() => writeToClipboard(walletAddress)}
-                icon="content-copy"
-                size={Fonts.size.normal}
-                style={{
-                  height: 20,
-                  width: 20,
-                  borderRadius: 0,
-                  backgroundColor: "transparent",
-                }}
-              />
-            </View>
-            <View style={{ paddingVertical: 2.5 }}>
-              <Custom_IconButton
-                onPress={() => {
-                  setWalletAddressModalVisible(true);
-                }}
-                icon="qrcode"
-                size={Fonts.size.normal}
-                style={{
-                  height: 20,
-                  width: 20,
-                  borderRadius: 0,
-                  backgroundColor: "transparent",
-                }}
-              />
-            </View>
-          </View>
-        </View>
-        {/* <View style={{ marginLeft: 38, marginBottom: 5 }}>
+          {/* <View style={{ marginLeft: 38, marginBottom: 5 }}>
           <Custom_Text
             value="Recent Transactions"
             size={Fonts.size.small}
@@ -459,69 +474,73 @@ function WalletSoloTab({
         <View>
           <TransactionCard currency="xrp" amount="1000.00" />
         </View> */}
-        <View style={{ marginLeft: 38, marginBottom: 5 }}>
-          <Custom_Text
-            value="Recent Transactions"
-            size={Fonts.size.small}
-            isBold
-          />
-        </View>
-        <View>
-          {!transactions || (transactions && transactions.length === 0) ? (
-            <View style={{ marginTop: 10 }}>
-              <Custom_Text
-                value="No recent transactions"
-                style={{ textAlign: "center" }}
-              />
-            </View>
-          ) : !getTransactionsPending && transactions ? (
-            <View>
-              {transactions.map((item, index) => {
-                if (item.type === "payment") {
-                  return (
-                    <TransactionCard
-                      key={`${item.address}${index}`}
-                      transaction={item}
-                      walletAddress={id}
-                    />
-                  );
-                }
-              })}
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                {/* transactions.length < transactionsLength */}
-                <TouchableOpacity
-                  text="Load More"
-                  onPress={() => {
-                    // set default tab to wallet tab and reset to default on goBack() event
-                    getMoreTransactions(
-                      walletAddress,
-                      transactionCount + 10,
-                      "solo",
-                    );
-                    setTransactionCount(transactionCount + 10);
-                  }}
-                >
-                  {getMoreTransactionsPending ? (
-                    <ActivityIndicator size="small" color={Colors.grayText} />
-                  ) : (
-                    <Custom_Text value="Load More" />
-                  )}
-                </TouchableOpacity>
+          <View style={{ marginLeft: 38, marginBottom: 5 }}>
+            <Custom_Text
+              value="Recent Transactions"
+              size={Fonts.size.small}
+              isBold
+            />
+          </View>
+          <View>
+            {!transactions || (transactions && transactions.length === 0) ? (
+              <View style={{ marginTop: 10 }}>
+                <Custom_Text
+                  value="No recent transactions"
+                  style={{ textAlign: "center" }}
+                />
               </View>
-            </View>
-          ) : (
-            <View style={{ marginTop: 15 }}>
-              <ActivityIndicator size="small" color={Colors.grayText} />
-            </View>
-          )}
+            ) : !getTransactionsPending && transactions ? (
+              <View>
+                {transactions.map((item, index) => {
+                  if (item.type === "payment") {
+                    return (
+                      <TransactionCard
+                        key={`${item.address}${index}`}
+                        transaction={item}
+                        walletAddress={id}
+                      />
+                    );
+                  }
+                })}
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  {/* transactions.length < transactionsLength */}
+                  <TouchableOpacity
+                    text="Load More"
+                    onPress={() => {
+                      // set default tab to wallet tab and reset to default on goBack() event
+                      getMoreTransactions(
+                        walletAddress,
+                        transactionCount + 10,
+                        "solo",
+                      );
+                      setTransactionCount(transactionCount + 10);
+                    }}
+                  >
+                    {getMoreTransactionsPending ? (
+                      <ActivityIndicator size="small" color={Colors.grayText} />
+                    ) : (
+                      <Custom_Text value="Load More" />
+                    )}
+                  </TouchableOpacity>
+                </View>
+              </View>
+            ) : (
+              <View style={{ marginTop: 15 }}>
+                <ActivityIndicator size="small" color={Colors.grayText} />
+              </View>
+            )}
+          </View>
         </View>
-      </View>
-      <WalletAddressModal
-        data={walletAddress}
-        modalVisible={walletAddressModalVisible}
-        onClose={() => setWalletAddressModalVisible(false)}
-      />
-    </ScrollView>
+        <WalletAddressModal
+          data={walletAddress}
+          modalVisible={walletAddressModalVisible}
+          onClose={() => setWalletAddressModalVisible(false)}
+        />
+      </ScrollView>
+      <CopiedModal showModal={copiedModalVisible} />
+    </View>
   );
 }
 
@@ -576,6 +595,7 @@ const mapStateToProps = ({
   getMoreTransactionsPending,
   getBalancePending,
   pullToRefreshBalancePending,
+  soloData,
 }) => ({
   createTrustlineSuccess,
   createTrustlinePending,
@@ -587,6 +607,7 @@ const mapStateToProps = ({
   getMoreTransactionsPending,
   getBalancePending,
   pullToRefreshBalancePending,
+  soloData,
 });
 const mapDispatchToProps = dispatch => ({
   createTrustline: (address, secret, keypair, id) =>

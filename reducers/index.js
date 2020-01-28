@@ -3,6 +3,10 @@ const defaultState = {
   getMarketDataPending: null,
   getMarketDataSuccess: null,
   getMarketDataError: null,
+  soloData: null,
+  getSoloDataPending: null,
+  getSoloDataSuccess: null,
+  getSoloDataError: null,
   marketSevens: null,
   getMarketSevensPending: null,
   getMarketSevensSuccess: null,
@@ -109,6 +113,32 @@ const getMarketDataError = (state, action) => {
     getMarketDataPending: false,
     getMarketDataSuccess: false,
     getMarketDataError: true,
+  });
+};
+
+const getSoloData = state => {
+  return Object.assign({}, state, {
+    getSoloDataPending: true,
+    getSoloDataSuccess: false,
+    getSoloDataError: false,
+  });
+};
+
+const getSoloDataSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    soloData: action.payload,
+    getSoloDataPending: false,
+    getSoloDataSuccess: true,
+    getSoloDataError: false,
+  });
+};
+
+const getSoloDataError = (state, action) => {
+  return Object.assign({}, state, {
+    marketData: action.payload,
+    getSoloDataPending: false,
+    getSoloDataSuccess: false,
+    getSoloDataError: true,
   });
 };
 
@@ -684,6 +714,12 @@ export default (state = defaultState, action) => {
       return getMarketDataSuccess(state, action);
     case "GET_MARKET_DATA_ERROR":
       return getMarketDataError(state, action);
+    case "GET_SOLO_DATA":
+      return getSoloData(state, action);
+    case "GET_SOLO_DATA_SUCCESS":
+      return getSoloDataSuccess(state, action);
+    case "GET_SOLO_DATA_ERROR":
+      return getSoloDataError(state, action);
     case "GET_MARKET_SEVENS":
       return getMarketSevens(state, action);
     case "GET_MARKET_SEVENS_SUCCESS":

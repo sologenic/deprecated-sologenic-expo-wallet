@@ -7,7 +7,7 @@ import Custom_Text from "../components/shared/Custom_Text";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
-import { formatWalletTotalBalance } from "../utils";
+import { formatWalletTotalBalance, formatBalance } from "../utils";
 import { getBalance } from "../actions";
 
 function WalletCard({
@@ -15,11 +15,17 @@ function WalletCard({
   wallet,
   baseCurrency,
   marketData,
+  soloData,
   getBalance,
 }) {
   const { nickname, balance, walletAddress, id } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
-  const totalBalance = formatWalletTotalBalance(xrp * marketData.last);
+  const soloMarketPrice = soloData[baseCurrency.value];
+  const xrpBalanceInFiat = xrp * marketData.last;
+  const soloBalanceInFiat = solo * soloMarketPrice;
+  const totalBalance = formatWalletTotalBalance(
+    xrpBalanceInFiat + soloBalanceInFiat,
+  );
   useEffect(() => {
     fetchBalance();
     const getBalanceInterval = setInterval(() => {
@@ -148,7 +154,11 @@ function WalletCard({
             <Image source={Images.xrp} />
             <View style={{ flexDirection: "row", paddingTop: 5 }}>
               <View style={{ marginRight: 5 }}>
-                <Custom_Text value={`${xrp}`} size={Fonts.size.normal} isBold />
+                <Custom_Text
+                  value={`${formatBalance(xrp)}`}
+                  size={Fonts.size.normal}
+                  isBold
+                />
               </View>
               <View>
                 <Custom_Text
@@ -193,7 +203,7 @@ function WalletCard({
             <View style={{ flexDirection: "row", paddingTop: 5 }}>
               <View style={{ marginRight: 5 }}>
                 <Custom_Text
-                  value={`${solo}`}
+                  value={`${formatBalance(solo)}`}
                   size={Fonts.size.normal}
                   isBold
                 />

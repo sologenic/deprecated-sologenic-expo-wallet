@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   Image,
   Platform,
-  ScrollView,
+  Clipboard,
   StyleSheet,
   Text,
   View,
@@ -19,6 +19,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { generateQRCode } from "../utils";
+import CopiedModal from "../components/shared/CopiedModal";
 
 export default function ReceiveScreen({ navigation }) {
   const {
@@ -28,6 +29,14 @@ export default function ReceiveScreen({ navigation }) {
     walletAddress,
   } = navigation.state.params;
   const uri = generateQRCode(walletAddress);
+  const [copiedModalVisible, setCopiedModalVisible] = useState(false);
+
+  const writeToClipboard = async address => {
+    await Clipboard.setString(address);
+    setCopiedModalVisible(true);
+    setTimeout(() => setCopiedModalVisible(false), 2500);
+  };
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -104,7 +113,7 @@ export default function ReceiveScreen({ navigation }) {
         <View style={{ flex: 1 }}>
           <View style={{ paddingVertical: 2.5 }}>
             <Custom_IconButton
-              onPress={() => {}}
+              onPress={() => writeToClipboard(walletAddress)}
               icon="content-copy"
               size={Fonts.size.normal}
               style={{
@@ -149,6 +158,7 @@ export default function ReceiveScreen({ navigation }) {
           />
         </View>
       </View>
+      <CopiedModal showModal={copiedModalVisible} />
     </View>
   );
 }

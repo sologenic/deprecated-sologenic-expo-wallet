@@ -34,6 +34,7 @@
     "https-browserify": "0.0.1",
     "lodash": "^4.17.15",
     "moment-timezone": "^0.5.27",
+    "numbro": "^2.1.2",
     "path-browserify": "0.0.0",
     "process": "^0.11.10",
     "prop-types": "^15.7.2",

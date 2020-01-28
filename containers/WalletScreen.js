@@ -37,6 +37,7 @@ import {
   setWallet,
   resetWallet,
 } from "../actions";
+import { formatWalletTotalBalance } from "../utils";
 
 const propTypes = {
   wallet: P.shape({
@@ -83,6 +84,8 @@ function WalletScreen({
   setWallet,
   resetWallet,
   soloTransactions,
+  marketData,
+  soloData,
 }) {
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
@@ -90,6 +93,12 @@ function WalletScreen({
   const { walletAddress } = navigation.state.params;
   const { id, balance, nickname, rippleClassicAddress, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
+  const soloMarketPrice = soloData[defaultCurrency.value];
+  const xrpBalanceInFiat = xrp * marketData.last;
+  const soloBalanceInFiat = solo * soloMarketPrice;
+  const totalBalance = formatWalletTotalBalance(
+    xrpBalanceInFiat + soloBalanceInFiat,
+  );
 
   useEffect(() => {
     setWallet(walletAddress);
@@ -188,6 +197,23 @@ function WalletScreen({
         }
         color={Colors.background}
       />
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "row",
+        }}
+      >
+        <Custom_Text
+          value={`Total Balance:`}
+          style={{ position: "relative", bottom: 10 }}
+        />
+        <Custom_Text
+          value={` ${defaultCurrency.symbol}${totalBalance}`}
+          style={{ position: "relative", bottom: 10 }}
+          isBold
+        />
+      </View>
       {/* <View> */}
       <View
         style={{
@@ -334,15 +360,16 @@ const mapStateToProps = ({
   soloTransactions,
   baseCurrency,
   wallet,
+  marketData,
+  soloData,
 }) => {
-  // const wallet = wallets.find(item => item.id === walletAddress);
-  // console.log("=============", wallet);
   return {
     transactions,
     soloTransactions,
     defaultCurrency: baseCurrency,
     wallet,
-    // wallet: wallets.find(item => item.id === walletAddress),
+    marketData,
+    soloData,
   };
 };
 const mapDispatchToProps = dispatch => ({

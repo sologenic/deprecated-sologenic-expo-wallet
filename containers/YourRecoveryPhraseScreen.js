@@ -14,7 +14,8 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { genereateRandomNumbers } from "../utils";
-// // import WalletAddressModal from "../components/shared/WalletAddressModal";
+import WalletAddressModal from "../components/shared/WalletAddressModal";
+import CopiedModal from "../components/shared/CopiedModal";
 
 export default function YourRecoveryPhraseScreen({ navigation }) {
   const [pressed, handlePressDots] = useState(false);
@@ -25,12 +26,12 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
     rippleClassicAddress,
   } = navigation.state.params;
 
-  const writeToClipboard = async str => {
-    await Clipboard.setString(str);
-    // this.onOpenNotification();
-    // setTimeout(() => this.onCloseNotification(), 2000);
+  const writeToClipboard = async address => {
+    await Clipboard.setString(address);
+    setCopiedModalVisible(true);
+    setTimeout(() => setCopiedModalVisible(false), 2500);
   };
-
+  const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
   );
@@ -169,11 +170,12 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
           />
         </View>
       </ScrollView>
-      {/* <WalletAddressModal
+      <WalletAddressModal
         data={mnemonic.join(" ")}
         modalVisible={walletAddressModalVisible}
         onClose={() => setWalletAddressModalVisible(false)}
-      /> */}
+      />
+      <CopiedModal showModal={copiedModalVisible} />
     </View>
   );
 }

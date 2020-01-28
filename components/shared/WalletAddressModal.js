@@ -26,7 +26,12 @@ export default function WalletAddressModal({ data, modalVisible, onClose }) {
                 <View
                   style={[
                     styles.section,
-                    { height: 70, alignItems: "flex-start", justifyContent: "center", paddingLeft: 50 }
+                    {
+                      height: 70,
+                      alignItems: "flex-start",
+                      justifyContent: "center",
+                      paddingLeft: 50,
+                    },
                   ]}
                 >
                   <Custom_Text
@@ -45,13 +50,19 @@ export default function WalletAddressModal({ data, modalVisible, onClose }) {
                   />
                 </View>
               </View>
-              <View style={{ justifyContent: "center", alignItems: "center", marginBottom: 30 }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: 30,
+                }}
+              >
                 <Image
                   source={{ uri }}
                   style={{
                     width: 150,
                     height: 150,
-                    backgroundColor: Colors.headerBackground
+                    backgroundColor: Colors.headerBackground,
                   }}
                 />
               </View>
@@ -82,13 +93,13 @@ WalletAddressModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 WalletAddressModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
@@ -99,12 +110,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10
+    borderRadius: 10,
     // height: 100,
     // width: 200,
     // zIndex: 20,
@@ -112,10 +123,10 @@ const styles = StyleSheet.create({
   section: {
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   line: {
     height: 1,
-    backgroundColor: Colors.grayText
-  }
+    backgroundColor: Colors.grayText,
+  },
 });

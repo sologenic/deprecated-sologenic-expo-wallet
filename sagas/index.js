@@ -30,6 +30,8 @@ import {
   pullToRefreshBalanceError,
   transferSoloError,
   transferSoloSuccess,
+  getSoloDataSuccess,
+  getSoloDataError,
 } from "../actions";
 import { createSevensObj, sologenic, filterTransactions } from "../utils";
 import appConfig from "../app.config";
@@ -55,6 +57,23 @@ function* requestGetMarketData(action) {
       yield put(getMarketDataSuccess(response.data.markets[0]));
     } else {
       yield put(getMarketDataError(response.data));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const getSoloData = () => api.get("https://ops.coinfield.com/solo_rates.json");
+
+export function* requestGetSoloData() {
+  try {
+    const response = yield call(getSoloData);
+    if (response.ok) {
+      yield put(getSoloDataSuccess(response.data));
+    } else {
+      yield put(
+        getSoloDataError("There was an error fetching the Solo market price"),
+      );
     }
   } catch (error) {
     console.log(error);
@@ -131,7 +150,7 @@ function* requestGetBalance(action) {
     // console.log("id ----", id);
     // console.log("add----", address);
     const response = yield call(getBalances, address);
-    // console.log("----", response);
+    console.log("GET BALANCE ----", response);
     const xrpBalance = response.find(item => item.currency === "XRP");
     const soloBalance = response.find(
       item => item.currency === appConfig.soloHash,
@@ -561,6 +580,7 @@ function* requestGetTrustlines(action) {
 export default function* rootSaga() {
   yield all([
     takeEvery("GET_MARKET_DATA", requestGetMarketData),
+    takeEvery("GET_SOLO_DATA", requestGetSoloData),
     takeEvery("GET_MARKET_SEVENS", requestMarketSevens),
     takeEvery("GET_BALANCE", requestGetBalance),
     takeEvery("PULL_TO_REFRESH", requestPullToRefresh),

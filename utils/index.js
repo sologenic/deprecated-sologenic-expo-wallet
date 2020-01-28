@@ -1,4 +1,6 @@
 import qrcode from "qrcode-generator";
+import numbro from "numbro";
+
 import Colors from "../constants/Colors";
 import { Wallet, Utils } from "xpring-common-js";
 // import { RippleAPI } from "ripple-lib";
@@ -14,7 +16,7 @@ export const countWords = words => {
 };
 
 export const generateQRCode = data => {
-  const typeNumber = 4;
+  const typeNumber = 0;
   const errorCorrectionLevel = "L";
   const QRCode = qrcode(typeNumber, errorCorrectionLevel);
   QRCode.addData(data);
@@ -294,3 +296,52 @@ export const filterTransactions = (transactions, currentLedger) => {
     soloTransactions,
   };
 };
+
+export function formatBalance(value, precision = 6) {
+  var p = "0,0.";
+  for (var i = 0; i < precision; i++) {
+    p += "0";
+  }
+
+  var styledVolume = numbro(value).format(p);
+  var position = getPositionOfLeadingZeros(styledVolume);
+  var a = styledVolume.substring(0, position);
+  var b = styledVolume.substring(position);
+
+  if (a === "") {
+    return <span>0</span>;
+  }
+
+  a = a.split(".");
+
+  if (value === 0) {
+    return "0";
+  }
+  return `${a[0]}.${a[1].replace(".", "")}${b}`;
+}
+
+function getPositionOfLeadingZeros(data) {
+  var a = data.split(".");
+
+  if (typeof a[1] === "undefined") {
+    return 0;
+  }
+  a = a[1];
+  a = a.split("");
+  a.shift();
+  a.shift();
+  a.reverse();
+  var position = 0;
+  for (var i = 0; i < a.length; i++) {
+    if (a[i] !== "0") {
+      break;
+    }
+    position++;
+  }
+  var result = data.length - position;
+  if (position > 7) {
+    return a.length - 7;
+  } else {
+    return result;
+  }
+}

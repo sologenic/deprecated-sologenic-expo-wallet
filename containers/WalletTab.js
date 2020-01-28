@@ -29,6 +29,7 @@ import {
   getBalance,
   pullToRefreshBalance,
 } from "../actions";
+import CopiedModal from "../components/shared/CopiedModal";
 
 function WalletTab({
   navigation,
@@ -56,12 +57,13 @@ function WalletTab({
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
   );
+  const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
   const [xrpWarningModalVisible, setXrpWarningModalVisible] = useState(false);
-  const [isWalletActive, setIsWalletActive] = useState(false);
   const priceChange = getPriceChange(marketData.last, marketData.open);
   const priceColor = getPriceColor(priceChange);
   const { id, isActive } = wallet;
+  const [isWalletActive, setIsWalletActive] = useState(isActive);
 
   useEffect(() => {
     getBalance(id, walletAddress);
@@ -97,222 +99,54 @@ function WalletTab({
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    // this.onOpenNotification();
-    // setTimeout(() => this.onCloseNotification(), 2000);
+    setCopiedModalVisible(true);
+    setTimeout(() => setCopiedModalVisible(false), 2500);
   };
 
-  if (!isWalletActive) {
+  if (isWalletActive) {
     return (
-      <ScrollView>
-        <View>
-          <View style={styles.container}>
-            <View style={{ marginTop: 50, marginHorizontal: 45 }}>
-              <Text
-                style={{
-                  fontFamily: "DMSans",
-                  color: Colors.text,
-                  fontSize: Fonts.size.small,
-                  textAlign: "center",
-                }}
-                numberOfLines={2}
-                ellipsizeMode="tail"
-              >
-                In order to activate your XRP wallet, you must first send at
-                least
-                <Text> </Text>
-                <Text
-                  style={{
-                    fontFamily: "DMSansBold",
-                    color: Colors.text,
-                    fontSize: Fonts.size.small,
-                    textAlign: "center",
-                  }}
-                >
-                  21 XRP
-                </Text>
-                <Text> </Text>
-                to this address
-              </Text>
-            </View>
-            <View style={{ marginTop: 8, marginBottom: 30 }}>
-              <Custom_Button
-                text="Activate"
-                onPress={() => {
-                  console.log("Press Activate");
-                  // setActivateModalVisible(true);
-                  navigation.navigate({
-                    routeName: "ActivateWalletScreen",
-                    key: "ActivateWalletScreen",
-                    params: {
-                      currency: currency.toLowerCase(),
-                      walletAddress,
-                    },
-                  });
-                }}
-                style={{ height: 40, width: 100 }}
-              />
-            </View>
-            <View>
-              <Custom_IconButton
-                icon="questioncircle"
-                color={Colors.grayText}
-                text="Why 21 XRP"
-                textSize={Fonts.size.small}
-                size={13}
-                style={{
-                  height: 12,
-                  width: 12,
-                  backgroundColor: "#FFF",
-                }}
-                textStyle={{
-                  paddingRight: 5,
-                }}
-                onPress={() => {
-                  setModalVisible(true);
-                }}
-              />
-            </View>
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                zIndex: 50,
-                opacity: 0.3,
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={pullToRefreshBalancePending}
+              onRefresh={() => {
+                pullToRefreshBalance(id, walletAddress);
               }}
-            >
-              <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
-                <View style={styles.leftButtonContainer}>
-                  <Custom_Button
-                    text="RECEIVE"
-                    onPress={() => {
-                      console.log("Press RECEIVE");
-                    }}
-                    size={Fonts.size.large}
-                    style={{
-                      height: 40,
-                      backgroundColor: Colors.headerBackground,
-                      borderWidth: 0.5,
-                      borderColor: Colors.text,
-                    }}
-                    disabled
-                  />
-                </View>
-                <View style={styles.rightButtonContainer}>
-                  <Custom_Button
-                    text="SEND"
-                    onPress={() => {
-                      console.log("Press SEND");
-                    }}
-                    size={Fonts.size.large}
-                    style={{ height: 40 }}
-                    disabled
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View style={styles.walletAddressContainer}>
-              <Custom_Text
-                value="Wallet Address"
-                size={Fonts.size.small}
-                color={Colors.grayText}
-                style={{ marginBottom: 3 }}
-              />
-              <Custom_Text value={walletAddress} size={Fonts.size.small} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <View style={{ paddingVertical: 2.5 }}>
-                <Custom_IconButton
-                  onPress={() => writeToClipboard(walletAddress)}
-                  icon="content-copy"
-                  size={Fonts.size.normal}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 0,
-                    backgroundColor: "transparent",
-                  }}
-                />
-              </View>
-              <View style={{ paddingVertical: 2.5 }}>
-                <Custom_IconButton
-                  onPress={() => {
-                    setWalletAddressModalVisible(true);
-                  }}
-                  icon="qrcode"
-                  size={Fonts.size.normal}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 0,
-                    backgroundColor: "transparent",
-                  }}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-        <Why21XRPModal
-          modalVisible={modalVisible}
-          onClose={() => setModalVisible(false)}
-        />
-        <ActivationSuccessfulModal
-          modalVisible={activateModalVisible}
-          onClose={() => setActivateModalVisible(false)}
-          currency="xrp"
-        />
-        <WalletAddressModal
-          data={walletAddress}
-          modalVisible={walletAddressModalVisible}
-          onClose={() => setWalletAddressModalVisible(false)}
-        />
-      </ScrollView>
-    );
-  }
-
-  return (
-    <ScrollView
-      refreshControl={
-        <RefreshControl
-          refreshing={pullToRefreshBalancePending}
-          onRefresh={() => {
-            pullToRefreshBalance(id, walletAddress);
-          }}
-          progressViewOffset={headerHeight + 100}
-        />
-      }
-    >
-      <View>
-        <View style={styles.container}>
-          <View style={styles.section}>
-            <Custom_Text
-              value="Your Balance:"
-              size={Fonts.size.medium}
-              color={Colors.lightGray}
+              progressViewOffset={headerHeight + 100}
             />
-          </View>
+          }
+        >
           <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <View style={{ paddingRight: 10 }}>
+            <View style={styles.container}>
+              <View style={styles.section}>
                 <Custom_Text
-                  value={`${xrpBalance}`}
-                  size={Fonts.size.h3}
-                  isBold
+                  value="Your Balance:"
+                  size={Fonts.size.medium}
+                  color={Colors.lightGray}
                 />
               </View>
               <View>
-                <Custom_Text value={currency} size={Fonts.size.h4} />
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View style={{ paddingRight: 10 }}>
+                    <Custom_Text
+                      value={`${xrpBalance}`}
+                      size={Fonts.size.h3}
+                      isBold
+                    />
+                  </View>
+                  <View>
+                    <Custom_Text value={currency} size={Fonts.size.h4} />
+                  </View>
+                </View>
               </View>
-            </View>
-          </View>
-          {/* <View>
+              {/* <View>
             <View
               style={{
                 flexDirection: "row",
@@ -331,89 +165,321 @@ function WalletTab({
               </View>
             </View>
           </View> */}
-          <View style={styles.marketInfoContainer}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <View style={{ paddingRight: 15 }}>
-                <Custom_Text
-                  value="Market Price:"
-                  size={Fonts.size.medium}
-                  color={Colors.lightGray}
-                />
-                <Custom_Text
-                  value={`${defaultCurrency.symbol} ${marketData.last}`}
-                  size={Fonts.size.medium}
-                />
+              <View style={styles.marketInfoContainer}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View style={{ paddingRight: 15 }}>
+                    <Custom_Text
+                      value="Market Price:"
+                      size={Fonts.size.medium}
+                      color={Colors.lightGray}
+                    />
+                    <Custom_Text
+                      value={`${defaultCurrency.symbol} ${marketData.last}`}
+                      size={Fonts.size.medium}
+                    />
+                  </View>
+                  <View>
+                    <SevenChart
+                      marketSevens={marketSevens}
+                      color={priceColor}
+                    />
+                    <Custom_Text
+                      value={`${priceChange}`}
+                      size={Fonts.size.small}
+                      // color={Colors.errorBackground}
+                      color={priceColor}
+                    />
+                  </View>
+                </View>
               </View>
-              <View>
-                <SevenChart marketSevens={marketSevens} color={priceColor} />
+              <View style={styles.buttonsContainer}>
+                <View style={styles.leftButtonContainer}>
+                  <Custom_Button
+                    text="RECEIVE"
+                    onPress={() => {
+                      console.log("Press RECEIVE");
+                      navigation.navigate({
+                        routeName: "ReceiveScreen",
+                        key: "ReceiveScreen",
+                        params: {
+                          navigation,
+                          balance: xrpBalance,
+                          currency: currency.toLowerCase(),
+                          walletAddress,
+                        },
+                      });
+                    }}
+                    size={Fonts.size.large}
+                    style={{
+                      height: 40,
+                      backgroundColor: Colors.headerBackground,
+                      borderWidth: 0.5,
+                      borderColor: Colors.text,
+                    }}
+                  />
+                </View>
+                <View style={styles.rightButtonContainer}>
+                  <Custom_Button
+                    text="SEND"
+                    onPress={() => {
+                      console.log("Press SEND");
+                      if (xrpBalanceWarning) {
+                        setXrpWarningModalVisible(true);
+                      } else {
+                        navigation.navigate({
+                          routeName: "SendScreen",
+                          key: "SendScreen",
+                          params: {
+                            navigation,
+                            balance: xrpBalance,
+                            currency: currency.toLowerCase(),
+                            walletAddress,
+                            keypair,
+                            secret,
+                            id,
+                            wallet,
+                          },
+                        });
+                      }
+                    }}
+                    size={Fonts.size.large}
+                    style={{ height: 40 }}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={styles.walletAddressContainer}>
                 <Custom_Text
-                  value={`${priceChange}`}
+                  value="Wallet Address"
                   size={Fonts.size.small}
-                  // color={Colors.errorBackground}
-                  color={priceColor}
+                  color={Colors.grayText}
                 />
+                <Custom_Text value={walletAddress} size={Fonts.size.small} />
               </View>
+              <View style={{ flex: 1 }}>
+                <View style={{ paddingVertical: 2.5 }}>
+                  <Custom_IconButton
+                    onPress={() => writeToClipboard(walletAddress)}
+                    icon="content-copy"
+                    size={Fonts.size.normal}
+                    style={{
+                      height: 20,
+                      width: 20,
+                      borderRadius: 0,
+                      backgroundColor: "transparent",
+                    }}
+                  />
+                </View>
+                <View style={{ paddingVertical: 2.5 }}>
+                  <Custom_IconButton
+                    onPress={() => {
+                      setWalletAddressModalVisible(true);
+                    }}
+                    icon="qrcode"
+                    size={Fonts.size.normal}
+                    style={{
+                      height: 20,
+                      width: 20,
+                      borderRadius: 0,
+                      backgroundColor: "transparent",
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ marginLeft: 38, marginBottom: 5 }}>
+              <Custom_Text
+                value="Recent Transactions"
+                size={Fonts.size.small}
+                isBold
+              />
+            </View>
+            <View>
+              {!transactions || (transactions && transactions.length == 0) ? (
+                <View style={{ marginTop: 10 }}>
+                  <Custom_Text
+                    value="No recent transactions"
+                    style={{ textAlign: "center" }}
+                  />
+                </View>
+              ) : !getTransactionsPending && transactions ? (
+                <View>
+                  {transactions.map((item, index) => {
+                    if (
+                      item.type === "payment" &&
+                      !item.specification.counterparty
+                    ) {
+                      return (
+                        <TransactionCard
+                          key={`${item.address}${index}`}
+                          transaction={item}
+                          walletAddress={id}
+                        />
+                      );
+                    }
+                  })}
+                  <View
+                    style={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    {/* transactions.length < transactionsLength */}
+                    <TouchableOpacity
+                      text="Load More"
+                      onPress={() => {
+                        // set default tab to wallet tab and reset to default on goBack() event
+                        getMoreTransactions(
+                          walletAddress,
+                          transactionCount + 10,
+                          "xrp",
+                        );
+                        setTransactionCount(transactionCount + 10);
+                      }}
+                    >
+                      {getMoreTransactionsPending ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={Colors.grayText}
+                        />
+                      ) : (
+                        <Custom_Text value="Load More" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ) : (
+                <View style={{ marginTop: 15 }}>
+                  <ActivityIndicator size="small" color={Colors.grayText} />
+                </View>
+              )}
             </View>
           </View>
-          <View style={styles.buttonsContainer}>
-            <View style={styles.leftButtonContainer}>
-              <Custom_Button
-                text="RECEIVE"
-                onPress={() => {
-                  console.log("Press RECEIVE");
-                  navigation.navigate({
-                    routeName: "ReceiveScreen",
-                    key: "ReceiveScreen",
-                    params: {
-                      navigation,
-                      balance: xrpBalance,
-                      currency: currency.toLowerCase(),
-                      walletAddress,
-                    },
-                  });
-                }}
-                size={Fonts.size.large}
+          <WalletAddressModal
+            data={walletAddress}
+            modalVisible={walletAddressModalVisible}
+            onClose={() => setWalletAddressModalVisible(false)}
+          />
+          <XrpWarningModal
+            data={walletAddress}
+            modalVisible={xrpWarningModalVisible}
+            onClose={() => setXrpWarningModalVisible(false)}
+          />
+          <View style={{ height: 30, width: screenWidth }} />
+        </ScrollView>
+        <CopiedModal showModal={copiedModalVisible} />
+      </View>
+    );
+  }
+  return (
+    <ScrollView>
+      <View>
+        <View style={styles.container}>
+          <View style={{ marginTop: 50, marginHorizontal: 45 }}>
+            <Text
+              style={{
+                fontFamily: "DMSans",
+                color: Colors.text,
+                fontSize: Fonts.size.small,
+                textAlign: "center",
+              }}
+              numberOfLines={2}
+              ellipsizeMode="tail"
+            >
+              In order to activate your XRP wallet, you must first send at least
+              <Text> </Text>
+              <Text
                 style={{
-                  height: 40,
-                  backgroundColor: Colors.headerBackground,
-                  borderWidth: 0.5,
-                  borderColor: Colors.text,
+                  fontFamily: "DMSansBold",
+                  color: Colors.text,
+                  fontSize: Fonts.size.small,
+                  textAlign: "center",
                 }}
-              />
-            </View>
-            <View style={styles.rightButtonContainer}>
-              <Custom_Button
-                text="SEND"
-                onPress={() => {
-                  console.log("Press SEND");
-                  if (xrpBalanceWarning) {
-                    setXrpWarningModalVisible(true);
-                  } else {
-                    navigation.navigate({
-                      routeName: "SendScreen",
-                      key: "SendScreen",
-                      params: {
-                        navigation,
-                        balance: xrpBalance,
-                        currency: currency.toLowerCase(),
-                        walletAddress,
-                        keypair,
-                        secret,
-                        id,
-                        wallet,
-                      },
-                    });
-                  }
-                }}
-                size={Fonts.size.large}
-                style={{ height: 40 }}
-              />
+              >
+                21 XRP
+              </Text>
+              <Text> </Text>
+              to this address
+            </Text>
+          </View>
+          <View style={{ marginTop: 8, marginBottom: 30 }}>
+            <Custom_Button
+              text="Activate"
+              onPress={() => {
+                console.log("Press Activate");
+                // setActivateModalVisible(true);
+                navigation.navigate({
+                  routeName: "ActivateWalletScreen",
+                  key: "ActivateWalletScreen",
+                  params: {
+                    currency: currency.toLowerCase(),
+                    walletAddress,
+                  },
+                });
+              }}
+              style={{ height: 40, width: 100 }}
+            />
+          </View>
+          <View>
+            <Custom_IconButton
+              icon="questioncircle"
+              color={Colors.grayText}
+              text="Why 21 XRP"
+              textSize={Fonts.size.small}
+              size={13}
+              style={{
+                height: 12,
+                width: 12,
+                backgroundColor: "#FFF",
+              }}
+              textStyle={{
+                paddingRight: 5,
+              }}
+              onPress={() => {
+                setModalVisible(true);
+              }}
+            />
+          </View>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 50,
+              opacity: 0.3,
+            }}
+          >
+            <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
+              <View style={styles.leftButtonContainer}>
+                <Custom_Button
+                  text="RECEIVE"
+                  onPress={() => {
+                    console.log("Press RECEIVE");
+                  }}
+                  size={Fonts.size.large}
+                  style={{
+                    height: 40,
+                    backgroundColor: Colors.headerBackground,
+                    borderWidth: 0.5,
+                    borderColor: Colors.text,
+                  }}
+                  disabled
+                />
+              </View>
+              <View style={styles.rightButtonContainer}>
+                <Custom_Button
+                  text="SEND"
+                  onPress={() => {
+                    console.log("Press SEND");
+                  }}
+                  size={Fonts.size.large}
+                  style={{ height: 40 }}
+                  disabled
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -423,6 +489,7 @@ function WalletTab({
               value="Wallet Address"
               size={Fonts.size.small}
               color={Colors.grayText}
+              style={{ marginBottom: 3 }}
             />
             <Custom_Text value={walletAddress} size={Fonts.size.small} />
           </View>
@@ -457,77 +524,21 @@ function WalletTab({
             </View>
           </View>
         </View>
-        <View style={{ marginLeft: 38, marginBottom: 5 }}>
-          <Custom_Text
-            value="Recent Transactions"
-            size={Fonts.size.small}
-            isBold
-          />
-        </View>
-        <View>
-          {!transactions || (transactions && transactions.length == 0) ? (
-            <View style={{ marginTop: 10 }}>
-              <Custom_Text
-                value="No recent transactions"
-                style={{ textAlign: "center" }}
-              />
-            </View>
-          ) : !getTransactionsPending && transactions ? (
-            <View>
-              {transactions.map((item, index) => {
-                if (
-                  item.type === "payment" &&
-                  !item.specification.counterparty
-                ) {
-                  return (
-                    <TransactionCard
-                      key={`${item.address}${index}`}
-                      transaction={item}
-                      walletAddress={id}
-                    />
-                  );
-                }
-              })}
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                {/* transactions.length < transactionsLength */}
-                <TouchableOpacity
-                  text="Load More"
-                  onPress={() => {
-                    // set default tab to wallet tab and reset to default on goBack() event
-                    getMoreTransactions(
-                      walletAddress,
-                      transactionCount + 10,
-                      "xrp",
-                    );
-                    setTransactionCount(transactionCount + 10);
-                  }}
-                >
-                  {getMoreTransactionsPending ? (
-                    <ActivityIndicator size="small" color={Colors.grayText} />
-                  ) : (
-                    <Custom_Text value="Load More" />
-                  )}
-                </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <View style={{ marginTop: 15 }}>
-              <ActivityIndicator size="small" color={Colors.grayText} />
-            </View>
-          )}
-        </View>
       </View>
+      <Why21XRPModal
+        modalVisible={modalVisible}
+        onClose={() => setModalVisible(false)}
+      />
+      <ActivationSuccessfulModal
+        modalVisible={activateModalVisible}
+        onClose={() => setActivateModalVisible(false)}
+        currency="xrp"
+      />
       <WalletAddressModal
         data={walletAddress}
         modalVisible={walletAddressModalVisible}
         onClose={() => setWalletAddressModalVisible(false)}
       />
-      <XrpWarningModal
-        data={walletAddress}
-        modalVisible={xrpWarningModalVisible}
-        onClose={() => setXrpWarningModalVisible(false)}
-      />
-      <View style={{ height: 30, width: screenWidth }} />
     </ScrollView>
   );
 }

@@ -22,6 +22,7 @@ import {
   getMarketSevens,
   getBalance,
   connectToRippleApi,
+  getSoloData,
 } from "../actions";
 import { screenWidth } from "../constants/Layout";
 import images from "../constants/Images";
@@ -29,33 +30,35 @@ import images from "../constants/Images";
 function WalletsScreen({
   navigation,
   getMarketData,
+  getSoloData,
   getMarketSevens,
   getBalance,
   connectToRippleApi,
   marketData,
+  soloData,
   wallets,
   baseCurrency,
   screenProps: { rootNavigation },
 }) {
-  // console.log("======================", wallets);
   useEffect(() => {
     connectToRippleApi();
   }, []);
 
   useEffect(() => {
-    getMarketData(baseCurrency.value);
-    getMarketSevens();
-    // getBalanceAll(wallets);
-    // return () => {
-    //   testTodoReset();
-    // }
+    fetchData();
+    const getMarketDataInterval = setInterval(() => {
+      fetchData();
+    }, 10000);
+
+    return () => {
+      clearInterval(getMarketDataInterval);
+    };
   }, [baseCurrency, wallets]);
 
-  // console.log(wallets);
-  const getBalanceAll = wallets => {
-    wallets.map(item => {
-      getBalance(item.id, item.walletAddress);
-    });
+  const fetchData = () => {
+    getMarketData(baseCurrency.value);
+    getSoloData();
+    getMarketSevens();
   };
 
   return (
@@ -89,7 +92,7 @@ function WalletsScreen({
         }
       />
       <ScrollView>
-        {!marketData ? (
+        {!marketData || !soloData ? (
           <View
             style={{
               justifyContent: "center",
@@ -113,6 +116,7 @@ function WalletsScreen({
                     wallet={item}
                     key={index}
                     marketData={marketData}
+                    soloData={soloData}
                   />
                 </View>
               );
@@ -196,14 +200,16 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ marketData, wallets, baseCurrency }) => ({
+const mapStateToProps = ({ marketData, wallets, baseCurrency, soloData }) => ({
   marketData,
   wallets,
   baseCurrency,
+  soloData,
 });
 
 const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
+  getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
   connectToRippleApi: () => dispatch(connectToRippleApi()),

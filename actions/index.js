@@ -19,6 +19,26 @@ export const getMarketDataError = data => {
   };
 };
 
+export const getSoloData = () => {
+  return {
+    type: "GET_SOLO_DATA",
+  };
+};
+
+export const getSoloDataSuccess = data => {
+  return {
+    type: "GET_SOLO_DATA_SUCCESS",
+    payload: data,
+  };
+};
+
+export const getSoloDataError = data => {
+  return {
+    type: "GET_SOLO_DATA_ERROR",
+    payload: data,
+  };
+};
+
 export const getMarketSevens = () => {
   return {
     type: "GET_MARKET_SEVENS",
