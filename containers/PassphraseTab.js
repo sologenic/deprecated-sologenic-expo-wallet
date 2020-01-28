@@ -33,10 +33,10 @@ function PassphraseTab({
   wallets,
   getTrustlinesReset,
   getTrustlinesWithAddNewWallet,
-  // getTrustlinesError,
-  // getTrustlinesErrorStr,
-  // getTrustlinesSuccess,
-  // getTrustlinesPending,
+  getTrustlinesError,
+  getTrustlinesErrorStr,
+  getTrustlinesSuccess,
+  getTrustlinesPending,
 }) {
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
@@ -48,29 +48,6 @@ function PassphraseTab({
     await onChangeText(content);
   };
 
-  // const handlePressAddWallet = () => {
-  //   console.log("Press Add Wallet");
-  //   const result = countWords(textValue);
-  //   if (!result) {
-  //     setErrorModalVisible(true);
-  //   } else {
-  //     const importedWallet = getWalletFromMnemonic(textValue);
-  //     const walletAddress = importedWallet.getAddress();
-  //     const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
-  //     addNewWallet(
-  //       {
-  //         mnemonic: textValue,
-  //         wallet: importedWallet,
-  //       },
-  //       nicknameValue ? nicknameValue : "",
-  //       walletAddress,
-  //       rippleClassicAddress,
-  //       trustline,
-  //     );
-  //     setImportSuccessfulModalVisible(true);
-  //   }
-  // }
-
   useEffect(() => {
     const result = countWords(textValue);
     if (textValue) {
@@ -80,11 +57,14 @@ function PassphraseTab({
     }
   }, [textValue]);
 
-  // useEffect(() => {
-  //   if (getTrustlinesError) {
-  //     setErrorModalVisible(true);
-  //   }
-  // }, [getTrustlinesError]);
+  useEffect(() => {
+    if (getTrustlinesError) {
+      setErrorModalVisible(true);
+    }
+    if (getTrustlinesSuccess) {
+      setImportSuccessfulModalVisible(true);
+    }
+  }, [getTrustlinesSuccess, getTrustlinesError, getTrustlinesPending]);
 
   return (
     <View>
@@ -191,7 +171,6 @@ function PassphraseTab({
                   textValue.toLowerCase(),
                   wallets,
                 );
-                console.log(walletAlreadyExists);
                 if (!walletAlreadyExists) {
                   const rippleClassicAddress = getRippleClassicAddressFromXAddress(
                     walletAddress,
@@ -222,7 +201,8 @@ function PassphraseTab({
               : Colors.darkRed,
           }}
           color={!completed ? Colors.grayText : Colors.text}
-          disabled={!completed}
+          disabled={getTrustlinesPending}
+          isPending={getTrustlinesPending}
         />
       </View>
       <ErrorModal

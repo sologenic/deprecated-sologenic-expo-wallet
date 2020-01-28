@@ -21,8 +21,19 @@ function WalletCard({
   const { xrp, solo, tokenizedAssets } = balance;
   const totalBalance = formatWalletTotalBalance(xrp * marketData.last);
   useEffect(() => {
-    getBalance(id, walletAddress);
+    fetchBalance();
+    const getBalanceInterval = setInterval(() => {
+      fetchBalance();
+    }, 10000);
+
+    return () => {
+      clearInterval(getBalanceInterval);
+    };
   }, []);
+
+  const fetchBalance = () => {
+    getBalance(id, walletAddress);
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity

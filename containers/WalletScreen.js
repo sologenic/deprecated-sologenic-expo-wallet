@@ -84,7 +84,6 @@ function WalletScreen({
   resetWallet,
   soloTransactions,
 }) {
-  // console.log("+++++++++++++++++", wallet);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(5);
@@ -94,17 +93,11 @@ function WalletScreen({
 
   useEffect(() => {
     setWallet(walletAddress);
-
     if (walletAddress && walletAddress !== "") {
       fetchData();
     }
     getTransactions(walletAddress, transactionCount, "xrp");
-    const getBalanceInterval = setInterval(() => {
-      fetchData();
-    }, 30000);
-
     return () => {
-      clearInterval(getBalanceInterval);
       resetWallet();
     };
   }, [defaultCurrency, wallet]);
@@ -289,7 +282,7 @@ function WalletScreen({
           transactions={soloTransactions}
           setTransactionCount={setTransactionCount}
           transactionCount={transactionCount}
-          activate={trustline ? true : false}
+          soloActive={trustline ? true : false}
           xrpActivate={xrp >= 21 ? true : false}
         />
       )}

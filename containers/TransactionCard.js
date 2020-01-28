@@ -8,6 +8,7 @@ import Custom_Button from "../components/shared/Custom_Button";
 import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
+import appConfig from "../app.config";
 
 // const propTypes = {
 //   transaction: P.shape({
@@ -47,7 +48,7 @@ export default function TransactionCard({ transaction, walletAddress }) {
   const currency = outcome.deliveredAmount
     ? outcome.deliveredAmount.currency
     : "";
-  const isSolo = currency === "534F4C4F00000000000000000000000000000000";
+  const isSolo = currency === appConfig.soloHash;
   const value = outcome.deliveredAmount ? outcome.deliveredAmount.value : "";
   const timestamp = outcome ? outcome.timestamp : "";
   const result = outcome ? outcome.result : "";

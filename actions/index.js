@@ -307,6 +307,12 @@ export const createTrustlineError = () => {
   };
 };
 
+export const createTrustlineReset = () => {
+  return {
+    type: "CREATE_TRUSTLINE_RESET",
+  };
+};
+
 export const transferXrp = (account, keypair, secret, destination, value) => {
   return {
     type: "TRANSFER_XRP",

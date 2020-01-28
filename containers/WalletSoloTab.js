@@ -24,6 +24,7 @@ import {
   createTrustline,
   getMoreTransactions,
   pullToRefreshBalance,
+  createTrustlineReset,
 } from "../actions";
 import { headerHeight } from "../constants/Layout";
 
@@ -32,12 +33,13 @@ function WalletSoloTab({
   currency,
   soloBalance,
   walletAddress,
-  defaultCurrency,
-  activate,
+  soloActive,
   createTrustlineSuccess,
+  createTrustlinePending,
   createTrustline,
+  createTrustlineReset,
   wallet,
-  xrpActivate,
+  // defaultCurrency,
   // marketData,
   // marketSevens,
   getTransactionsPending,
@@ -50,18 +52,26 @@ function WalletSoloTab({
   pullToRefreshBalancePending,
 }) {
   useEffect(() => {
-    console.log("hey effect", createTrustlineSuccess);
     if (createTrustlineSuccess) {
       setActivateModalVisible(false);
       setActivateSuccessfulModalVisible(true);
-      // setActivateModalVisible(false);
+    }
+    if (createTrustlinePending) {
+      setActivateModalVisible(true);
     }
     return () => {
       setActivateModalVisible(false);
       setActivateSuccessfulModalVisible(false);
     };
-  }, [createTrustlineSuccess]);
-  const { id } = wallet;
+  }, [createTrustlineSuccess, createTrustlinePending, isActive]);
+
+  // useEffect(() => {
+  //   if (isActive && !isWalletActive) {
+  //     setIsWalletActive(true);
+  //   }
+  // }, [wallet]);
+
+  const { id, isActive } = wallet;
   let keypair = null;
   let secret = null;
   const { privateKey, publicKey } = wallet.details.wallet;
@@ -88,13 +98,13 @@ function WalletSoloTab({
     // setTimeout(() => this.onCloseNotification(), 2000);
   };
 
-  if (!activate) {
+  if (!soloActive) {
     return (
       <ScrollView>
         <View>
           <View style={styles.container}>
             <View style={{ marginTop: 50, marginHorizontal: 45 }}>
-              {xrpActivate ? (
+              {isActive ? (
                 <Text
                   style={{
                     fontFamily: "DMSans",
@@ -151,14 +161,14 @@ function WalletSoloTab({
                 style={{
                   height: 40,
                   width: 100,
-                  backgroundColor: !xrpActivate
+                  backgroundColor: !isActive
                     ? Colors.headerBackground
                     : Colors.darkRed,
-                  borderColor: !xrpActivate ? Colors.grayText : Colors.darkRed,
-                  borderWidth: !xrpActivate ? 1 : 0,
+                  borderColor: !isActive ? Colors.grayText : Colors.darkRed,
+                  borderWidth: !isActive ? 1 : 0,
                 }}
-                color={!xrpActivate ? Colors.grayText : Colors.text}
-                disabled={!xrpActivate}
+                color={!isActive ? Colors.grayText : Colors.text}
+                disabled={!isActive}
               />
             </View>
             <View
@@ -257,6 +267,7 @@ function WalletSoloTab({
           currency="solo"
           onPress={() => {
             setActivateSuccessfulModalVisible(false);
+            createTrustlineReset();
           }}
         />
       </ScrollView>
@@ -556,6 +567,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = ({
   createTrustlineSuccess,
+  createTrustlinePending,
   marketData,
   marketSevens,
   baseCurrency,
@@ -566,6 +578,7 @@ const mapStateToProps = ({
   pullToRefreshBalancePending,
 }) => ({
   createTrustlineSuccess,
+  createTrustlinePending,
   marketData,
   marketSevens,
   baseCurrency,
@@ -582,6 +595,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(getMoreTransactions(address, limit, walletType)),
   pullToRefreshBalance: (id, address) =>
     dispatch(pullToRefreshBalance(id, address)),
+  createTrustlineReset: () => dispatch(createTrustlineReset()),
 });
 
 export default connect(

@@ -56,7 +56,7 @@ function WalletAddressSecretTab({
     if (getTrustlinesSuccess) {
       setImportSuccessfulModalVisible(true);
     }
-  }, [getTrustlinesError, getTrustlinesSuccess]);
+  }, [getTrustlinesError, getTrustlinesSuccess, getTrustlinesPending]);
 
   const handleValidation = (addressValue, secretValue) => {
     const validationResultAddress = isValidRippleAddress(addressValue);

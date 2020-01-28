@@ -439,9 +439,14 @@ const createTrustlineSuccess = (state, action) => {
   console.log("id", id);
   const { wallets } = state;
   const copyWallets = [...wallets];
+  let w;
   const updatedWallets = copyWallets.map(wallet => {
     if (wallet.id === action.id) {
       wallet.trustline = true;
+      w = {
+        ...wallet,
+        trustline: true,
+      };
     }
     return wallet;
   });
@@ -450,6 +455,7 @@ const createTrustlineSuccess = (state, action) => {
     createTrustlineSuccess: true,
     createTrustlineError: false,
     wallets: updatedWallets,
+    wallet: w,
   });
 };
 
@@ -457,6 +463,14 @@ const createTrustlineError = (state, action) => {
   return Object.assign({}, state, {
     createTrustlinePending: false,
     createTrustlineSuccess: true,
+    createTrustlineError: false,
+  });
+};
+
+const createTrustlineReset = (state, action) => {
+  return Object.assign({}, state, {
+    createTrustlinePending: false,
+    createTrustlineSuccess: false,
     createTrustlineError: false,
   });
 };
@@ -732,6 +746,8 @@ export default (state = defaultState, action) => {
       return createTrustlineSuccess(state, action);
     case "CREATE_TRUSTLINE_ERROR":
       return createTrustlineError(state, action);
+    case "CREATE_TRUSTLINE_RESET":
+      return createTrustlineReset(state, action);
     case "TRANSFER_XRP":
       return transferXrp(state, action);
     case "TRANSFER_XRP_SUCCESS":

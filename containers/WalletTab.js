@@ -101,21 +101,6 @@ function WalletTab({
     // setTimeout(() => this.onCloseNotification(), 2000);
   };
 
-  // const renderTransactions = () => {
-  //   let a = [];
-  //   for (let i = 0; i <= transactionCount; i++) {
-  //     a.push(
-  //       <TransactionCard
-  //         // key={`${item.address}${index}`}
-  //         key={`${transactions[i].address}${i}`}
-  //         transaction={transactions[i]}
-  //         walletAddress={id}
-  //       />,
-  //     );
-  //   }
-  //   return a;
-  // };
-
   if (!isWalletActive) {
     return (
       <ScrollView>
