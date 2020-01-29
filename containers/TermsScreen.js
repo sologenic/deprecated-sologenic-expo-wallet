@@ -247,6 +247,7 @@ function TermsScreen({ navigation, completeOrientation }) {
                   : Colors.headerBackground,
               paddingHorizontal: 15,
               paddingVertical: 10,
+              zIndex: 100,
             }}
             disabled={!isActive || !isSecondActive}
           />

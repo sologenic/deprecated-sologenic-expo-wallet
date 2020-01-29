@@ -2,7 +2,6 @@ import qrcode from "qrcode-generator";
 import numbro from "numbro";
 const forge = require("node-forge");
 const crypto = require("crypto");
-// import crypto from "crypto";
 
 import Colors from "../constants/Colors";
 import { Wallet, Utils } from "xpring-common-js";
