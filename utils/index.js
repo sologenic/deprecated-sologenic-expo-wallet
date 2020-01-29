@@ -1,9 +1,12 @@
 import qrcode from "qrcode-generator";
 import numbro from "numbro";
+const forge = require("node-forge");
+const crypto = require("crypto");
 
 import Colors from "../constants/Colors";
 import { Wallet, Utils } from "xpring-common-js";
 // import { RippleAPI } from "ripple-lib";
+// import * as s from "sologenic-xrpl-stream-js";
 import * as s from "sologenic-xrpl-stream-js-non-redis";
 import appConfig from "../app.config";
 
@@ -222,6 +225,7 @@ export const checkWalletExists = (walletAddress, wallets) => {
   let walletAlreadyExists = false;
   wallets.forEach(item => {
     if (item.walletAddress === walletAddress) {
+      console.log(item.walletAddress, " ======= ", walletAddress);
       walletAlreadyExists = true;
     }
   });
@@ -344,3 +348,49 @@ function getPositionOfLeadingZeros(data) {
     return result;
   }
 }
+
+export const encrypt = (string, salt, address, passphrase) => {
+  var cipher = forge.cipher.createCipher("AES-CBC", "FdlPhVMO4Ho_Pb9a");
+  cipher.start({
+    iv: crypto
+      .createHmac("sha256", salt + passphrase)
+      .update(address)
+      .digest("hex"),
+  });
+  cipher.update(forge.util.createBuffer(string));
+  cipher.finish();
+  var encrypted = cipher.output;
+  var encodedB64 = forge.util.encode64(encrypted.data);
+  return encodedB64;
+};
+
+export const decrypt = (encrypted, salt, address, passphrase) => {
+  var decipher = forge.cipher.createDecipher("AES-CBC", "FdlPhVMO4Ho_Pb9a");
+  decipher.start({
+    iv: crypto
+      .createHmac("sha256", salt + passphrase)
+      .update(address)
+      .digest("hex"),
+  });
+  decipher.update(forge.util.createBuffer(forge.util.decode64(encrypted)));
+  decipher.finish();
+  return decipher.output.data;
+};
+
+// console.log(
+//   encrypt(
+//     "PRIVATE KEY123",
+//     salt,
+//     "rGfRVfHBdAiwveepHTy1vJbqugUfmdYMSP",
+//     "aB123456",
+//   ),
+// );
+
+// console.log(
+//   decrypt(
+//     "rBuyaAXf8G9uqVxpHdVSBg==",
+//     salt,
+//     "rGfRVfHBdAiwveepHTy1vJbqugUfmdYMSP",
+//     "aB123456",
+//   ),
+// );

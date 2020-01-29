@@ -33,7 +33,12 @@ import {
   getSoloDataSuccess,
   getSoloDataError,
 } from "../actions";
-import { createSevensObj, sologenic, filterTransactions } from "../utils";
+import {
+  createSevensObj,
+  sologenic,
+  filterTransactions,
+  decrypt,
+} from "../utils";
 import appConfig from "../app.config";
 
 const api = create({
@@ -146,9 +151,9 @@ function* requestGetBalance(action) {
   try {
     const { id, address } = action;
     // const response = yield call(getAccountInfo, address);
-    // console.log("action ----", action);
-    // console.log("id ----", id);
-    // console.log("add----", address);
+    console.log("action ----", action);
+    console.log("id ----", id);
+    console.log("add----", address);
     const response = yield call(getBalances, address);
     const xrpBalance = response.find(item => item.currency === "XRP");
     const soloBalance = response.find(
@@ -201,17 +206,33 @@ function* requestPullToRefresh(action) {
   }
 }
 
-const setAccount = (address, secret, keypair) => {
-  console.log(secret, " -- ", keypair);
-  if (secret) {
+const setAccount = (address, passphrase, salt, encrypted, publicKey) => {
+  console.log("SET ACCOUNT =====", {
+    address,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
+  });
+  const decrypted = decrypt(encrypted, salt, address, passphrase);
+  const rippleApi = sologenic.getRippleApi();
+  const isSecret = rippleApi.isValidSecret(decrypted);
+  console.log("SET ACCOUNT =====", {
+    decrypted,
+    isSecret,
+  });
+  if (isSecret) {
     return sologenic.setAccount({
       address,
-      secret,
+      secret: decrypted,
     });
   }
   return sologenic.setAccount({
     address,
-    keypair,
+    keypair: {
+      publicKey: publicKey,
+      privateKey: decrypted,
+    },
   });
 };
 
@@ -229,12 +250,27 @@ const setTrustline = account => {
   });
 };
 
+const checkTrustlineExists = async address => {
+  const rippleApi = sologenic.getRippleApi();
+  return rippleApi.getTrustlines(address, {
+    counterparty: appConfig.soloIssuer,
+  });
+};
+
 function* requestCreateTrustline(action) {
-  const { address, secret, keypair, id } = action;
-  console.log("REQUEST_CREATE_TRUSTLINE SECRET ===> ", secret);
-  console.log("REQUEST_CREATE_TRUSTLINE KEYPAIR ===> ", keypair);
+  const { address, id, passphrase, salt, encrypted, publicKey } = action;
+  console.log("REQUEST_CREATE_TRUSTLINE  ===> ", passphrase);
+  console.log("REQUEST_CREATE_TRUSTLINE  ===> ", salt);
+  console.log("REQUEST_CREATE_TRUSTLINE  ===> ", encrypted);
   try {
-    yield call(setAccount, address, secret, keypair);
+    // address, passphrase, salt, encrypted, publicKey
+    yield call(setAccount, address, passphrase, salt, encrypted, publicKey);
+    // yield call(setAccount, address, secret, keypair);
+    // const ts = yield call(checkTrustlineExists, address);
+    // console.log("REQUEST_CREATE_TRUSTLINE TS", ts);
+    // if (ts) {
+    //   yield put(createTrustlineSuccess(id));
+    // } else {
     const tx = yield call(setTrustline, address);
     console.log("tx", tx);
     const response = yield tx.promise;
@@ -244,6 +280,7 @@ function* requestCreateTrustline(action) {
     } else {
       yield put(createTrustlineError());
     }
+    // }
   } catch (error) {
     yield put(createTrustlineError());
     console.log("REQUEST_CREATE_TRUSTLINE", error);
@@ -263,13 +300,22 @@ const transferXrp = (account, destination, value) => {
 
 function* requestTransferXrp(action) {
   try {
-    const { account, keypair, secret, destination, value } = action;
+    const {
+      account,
+      destination,
+      value,
+      passphrase,
+      salt,
+      encrypted,
+      publicKey,
+    } = action;
     // const secret = keypair ? keypair : "";
     console.log("REQUEST_TRANSFER_XRP account ", account);
-    console.log("REQUEST_TRANSFER_XRP keypair ", keypair);
     console.log("REQUEST_TRANSFER_XRP destination ", destination);
     console.log("REQUEST_TRANSFER_XRP value ", value);
-    yield call(setAccount, account, secret, keypair);
+    // passphrase, salt, encrypted, publicKey
+    yield call(setAccount, account, passphrase, salt, encrypted, publicKey);
+
     const tx = yield call(transferXrp, account, destination, value);
     const response = yield tx.promise;
     console.log("REQUEST_TRANSFER_XRP ", response);
@@ -310,13 +356,20 @@ const transferSolo = (account, destination, value) => {
 
 function* requestTransferSolo(action) {
   try {
-    const { account, keypair, secret, destination, value } = action;
+    const {
+      account,
+      destination,
+      value,
+      passphrase,
+      salt,
+      encrypted,
+      publicKey,
+    } = action;
     // const secret = keypair ? keypair : "";
     console.log("REQUEST_TRANSFER_SOLO account ", account);
-    console.log("REQUEST_TRANSFER_SOLO keypair ", keypair);
     console.log("REQUEST_TRANSFER_SOLO destination ", destination);
     console.log("REQUEST_TRANSFER_SOLO value ", value);
-    yield call(setAccount, account, secret, keypair);
+    yield call(setAccount, account, passphrase, salt, encrypted, publicKey);
     const tx = yield call(transferSolo, account, destination, value);
     const response = yield tx.promise;
     console.log("REQUEST_TRANSFER_SOLO ", response);
@@ -424,31 +477,31 @@ function* requestGetTrustlines(action) {
     walletAddress,
     rippleClassicAddress,
     nickname,
-    mnemonic,
+    salt,
+    encrypted,
     details,
   } = action;
   try {
-    // get existing wallets
-    // if walletAddress already exists then call getTrustlinesError
     const response = yield call(getTrustlines, walletAddress, issuer);
-    const trustline = response.length > 0 ? true : false;
-    yield put(
-      addNewWallet(
-        {
-          mnemonic,
-          wallet: details,
-        },
-        nickname ? nickname : "",
-        walletAddress,
-        rippleClassicAddress,
-        trustline,
-      ),
-    );
-    yield put(getTrustlinesSuccess());
-    yield call(requestGetBalance, {
-      address: walletAddress,
-      id: walletAddress,
-    });
+    if (response) {
+      const trustline = response.length > 0 ? true : false;
+      yield put(
+        addNewWallet({
+          newWallet: details,
+          nickname: nickname ? nickname : "",
+          walletAddress,
+          rippleClassicAddress,
+          trustline,
+          encrypted,
+          salt,
+        }),
+      );
+      yield put(getTrustlinesSuccess());
+      yield call(requestGetBalance, {
+        address: walletAddress,
+        id: walletAddress,
+      });
+    }
   } catch (error) {
     console.log("REQUEST_GET_TRUSTLINES_ERROR", error);
     yield put(getTrustlinesError(error));

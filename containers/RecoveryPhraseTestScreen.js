@@ -19,6 +19,7 @@ import {
   addNewWallet,
 } from "../actions";
 import WalletCreationSuccessfulModal from "../components/shared/WalletCreationSuccessfulModal";
+import { encrypt, decrypt } from "../utils";
 
 function RecoveryPhraseTestScreen({
   navigation,
@@ -46,6 +47,7 @@ function RecoveryPhraseTestScreen({
     nickname,
     walletAddress,
     rippleClassicAddress,
+    passphrase,
   } = navigation.state.params;
   let count = 0;
 
@@ -57,7 +59,14 @@ function RecoveryPhraseTestScreen({
 
   console.log(phraseTestValue1, phraseTestValue2, phraseTestValue3);
 
-  console.log("new wallet", newWallet, "nickname", nickname);
+  console.log(
+    "new wallet",
+    newWallet,
+    "nickname",
+    nickname,
+    "passphrase",
+    passphrase,
+  );
 
   useEffect(() => {
     if (
@@ -103,7 +112,7 @@ function RecoveryPhraseTestScreen({
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Recovery Phrase Test" />}
+        center={<Custom_HeaderTitle text="Recovery Words Test" />}
         right={<View />}
       />
       <ScrollView>
@@ -115,7 +124,7 @@ function RecoveryPhraseTestScreen({
         >
           {testResult === "" && (
             <Custom_Text
-              value="To ensure that you have complied with the steps as instructed, please enter the missing info of your given Recovery Phrase below."
+              value="To ensure that you have complied with the steps as instructed, please enter the missing info of your given Recovery Words below."
               size={Fonts.size.normal}
               color={Colors.text}
               style={{ textAlign: "center" }}
@@ -132,7 +141,7 @@ function RecoveryPhraseTestScreen({
               </View>
               <View style={{ marginHorizontal: 45 }}>
                 <Custom_Text
-                  value="The information you entered was incorrect. Please double check your written Recovery Phrase and try again."
+                  value="The information you entered was incorrect. Please double check your written Recovery Words and try again."
                   size={Fonts.size.normal}
                   color={Colors.text}
                 />
@@ -169,13 +178,31 @@ function RecoveryPhraseTestScreen({
                 phraseTestValue3,
               );
               if (result === true) {
+                const salt = Math.random()
+                  .toString(36)
+                  .slice(2);
+                const encrypted = encrypt(
+                  newWallet.wallet.privateKey,
+                  salt,
+                  walletAddress,
+                  passphrase,
+                );
+                const secureNewWallet = {
+                  derivationPath: newWallet.derivationPath,
+                  wallet: {
+                    publicKey: newWallet.wallet.publicKey,
+                    test: newWallet.wallet.test,
+                  },
+                };
                 handleTestResult("correct");
-                addNewWallet(
-                  newWallet,
+                addNewWallet({
+                  newWallet: secureNewWallet,
                   nickname,
                   walletAddress,
                   rippleClassicAddress,
-                );
+                  encrypted,
+                  salt,
+                });
                 setWalletCreationSuccessfulModalVisible(true);
               } else {
                 handleTestResult("error");
@@ -254,9 +281,25 @@ const mapDispatchToProps = dispatch => ({
   updatePhraseTestValue1: value => dispatch(updatePhraseTestValue1(value)),
   updatePhraseTestValue2: value => dispatch(updatePhraseTestValue2(value)),
   updatePhraseTestValue3: value => dispatch(updatePhraseTestValue3(value)),
-  addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
+  addNewWallet: ({
+    newWallet,
+    nickname,
+    walletAddress,
+    rippleClassicAddress,
+    trustline,
+    encrypted,
+    salt,
+  }) =>
     dispatch(
-      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress),
+      addNewWallet({
+        newWallet,
+        nickname,
+        walletAddress,
+        rippleClassicAddress,
+        trustline,
+        encrypted,
+        salt,
+      }),
     ),
 });
 

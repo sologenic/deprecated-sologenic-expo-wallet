@@ -57,6 +57,7 @@ function SendScreen({
     false,
   );
   const [tag, handleChangeTag] = useState("");
+  const [passphrase, handleChangePassphrase] = useState("");
   const [summaryModalVisible, setSummaryModalVisible] = useState(false);
   const [
     transferSuccessfulModalVisible,
@@ -65,28 +66,25 @@ function SendScreen({
   const [transferErrorModalVisible, setTransferErrorModalVisible] = useState(
     false,
   );
-  const {
-    balance,
-    currency,
-    walletAddress,
-    keypair,
-    secret,
-    id,
-  } = navigation.state.params;
+  const { balance, currency, walletAddress, id } = navigation.state.params;
+  const { salt, encrypted, details } = wallet;
+  const { publicKey } = details.wallet;
 
   useEffect(() => {
     if (
       amountToSend &&
       amountToSend.length > 0 &&
       destination &&
-      destination.length > 0
+      destination.length > 0 &&
+      passphrase &&
+      passphrase.length > 0
     ) {
       handleIsCompleted(true);
     } else {
       handleIsCompleted(false);
     }
     setConvertedAmount(amountToSend * marketData.last);
-  }, [amountToSend, destination]);
+  }, [amountToSend, destination, passphrase]);
 
   useEffect(() => {
     if (transferXrpSuccess) {
@@ -224,17 +222,30 @@ function SendScreen({
                 handleChangeTag(text);
               }}
               label="Destination Tag"
+              placeholder="Optional"
               keyboardType="default"
               returnKeyType="done"
             />
-            <View style={{ marginLeft: 30, marginTop: 5 }}>
+            {/* <View style={{ marginLeft: 30, marginTop: 5 }}>
               <Custom_Text
                 value="Optional"
                 size={Fonts.size.normal}
                 color={Colors.grayText}
                 style={{ marginLeft: 10 }}
               />
-            </View>
+            </View> */}
+          </View>
+
+          <View style={{ marginTop: 25 }}>
+            <Custom_TextInput
+              value={passphrase}
+              onChangeText={text => {
+                handleChangePassphrase(text);
+              }}
+              label="Wallet Passphrase"
+              keyboardType="default"
+              returnKeyType="done"
+            />
           </View>
           <View style={{ marginHorizontal: 24, marginTop: 50 }}>
             <Custom_IconButton
@@ -265,6 +276,7 @@ function SendScreen({
             <Custom_Button
               text="SEND"
               onPress={() => {
+                2;
                 console.log("Press Send");
                 setSummaryModalVisible(true);
               }}
@@ -287,21 +299,25 @@ function SendScreen({
         <TransferSummaryModal
           onPress={() => {
             if (currency === "xrp") {
-              transferXrp(
-                walletAddress,
-                keypair,
-                secret,
+              transferXrp({
+                account: walletAddress,
                 destination,
-                amountToSend,
-              );
+                value: amountToSend,
+                passphrase,
+                salt,
+                encrypted,
+                publicKey,
+              });
             } else {
-              transferSolo(
-                walletAddress,
-                keypair,
-                secret,
+              transferSolo({
+                account: walletAddress,
                 destination,
-                amountToSend,
-              );
+                value: amountToSend,
+                passphrase,
+                salt,
+                encrypted,
+                publicKey,
+              });
             }
           }}
           modalVisible={summaryModalVisible}
@@ -389,10 +405,46 @@ const mapStateToProps = ({
   wallet,
 });
 const mapDispatchToProps = dispatch => ({
-  transferXrp: (account, keypair, secret, destination, value) =>
-    dispatch(transferXrp(account, keypair, secret, destination, value)),
-  transferSolo: (account, keypair, secret, destination, value) =>
-    dispatch(transferSolo(account, keypair, secret, destination, value)),
+  transferXrp: ({
+    account,
+    destination,
+    value,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
+  }) =>
+    dispatch(
+      transferXrp({
+        account,
+        destination,
+        value,
+        passphrase,
+        salt,
+        encrypted,
+        publicKey,
+      }),
+    ),
+  transferSolo: ({
+    account,
+    destination,
+    value,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
+  }) =>
+    dispatch(
+      transferSolo({
+        account,
+        destination,
+        value,
+        passphrase,
+        salt,
+        encrypted,
+        publicKey,
+      }),
+    ),
   getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)),
   transferXrpReset: () => dispatch(transferXrpReset()),
   transferSoloReset: () => dispatch(transferSoloReset()),

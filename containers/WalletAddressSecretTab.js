@@ -13,9 +13,11 @@ import {
   isValidSecret,
   getXAddressFromRippleClassicAddress,
   checkWalletExists,
+  encrypt,
 } from "../utils";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 import ErrorModal from "../components/shared/ErrorModal";
+import colors from "../constants/Colors";
 
 function WalletAddressSecretTab({
   navigation,
@@ -33,6 +35,7 @@ function WalletAddressSecretTab({
   const [addressValue, onChangeAddress] = useState("");
   const [secretValue, onChangeSecret] = useState("");
   const [nicknameValue, onChangeNickname] = useState("");
+  const [passphrase, setPassphrase] = useState("");
   const [completed, handleIsCompleted] = useState(false);
   const [existingWalletError, setExistingWalletError] = useState(false);
 
@@ -41,13 +44,15 @@ function WalletAddressSecretTab({
       addressValue &&
       addressValue.length > 0 &&
       secretValue &&
-      secretValue.length > 0
+      secretValue.length > 0 &&
+      passphrase &&
+      passphrase.length > 0
     ) {
       handleIsCompleted(true);
     } else {
       handleIsCompleted(false);
     }
-  }, [addressValue, secretValue]);
+  }, [addressValue, secretValue, passphrase]);
 
   useEffect(() => {
     if (getTrustlinesError) {
@@ -97,20 +102,25 @@ function WalletAddressSecretTab({
           label="Wallet Nickname"
           keyboardType="default"
           returnKeyType="done"
+          placeholder="Optional"
+          placeholderTextColor={colors.grayText}
         />
-        <View style={{ marginLeft: 30, marginTop: 5 }}>
-          <Custom_Text
-            value="Optional"
-            size={Fonts.size.normal}
-            color={Colors.grayText}
-          />
-        </View>
+      </View>
+      <View style={{ marginTop: 15 }}>
+        <Custom_TextInput
+          value={passphrase}
+          onChangeText={text => {
+            setPassphrase(text);
+          }}
+          label="Wallet Passphrase"
+          keyboardType="default"
+          returnKeyType="done"
+        />
       </View>
       <View style={[styles.addWalletContainer, { marginTop: 70 }]}>
         <Custom_Button
           text="Add Wallet"
           onPress={() => {
-            console.log("Press Add Wallet");
             const result = handleValidation(addressValue, secretValue);
             if (!result) {
               setErrorModalVisible(true);
@@ -121,18 +131,37 @@ function WalletAddressSecretTab({
                 walletAddress,
                 wallets,
               );
-
               if (!walletAlreadyExists) {
                 const rippleClassicAddress = addressValue;
-                getTrustlinesWithAddNewWallet(
-                  walletAddress,
+                const salt = Math.random()
+                  .toString(36)
+                  .slice(2);
+                const encrypted = encrypt(
+                  secretValue,
+                  salt,
                   rippleClassicAddress,
-                  nicknameValue ? nicknameValue : "",
-                  "",
-                  {
-                    secret: secretValue,
-                  },
+                  passphrase,
                 );
+                const secureNewWallet = {
+                  wallet: {},
+                };
+                getTrustlinesWithAddNewWallet({
+                  walletAddress: rippleClassicAddress,
+                  rippleClassicAddress,
+                  nickname: nicknameValue ? nicknameValue : "",
+                  details: secureNewWallet,
+                  encrypted,
+                  salt,
+                });
+                // getTrustlinesWithAddNewWallet(
+                //   walletAddress,
+                //   rippleClassicAddress,
+                //   nicknameValue ? nicknameValue : "",
+                //   "",
+                //   {
+                //     secret: secretValue,
+                //   },
+                // );
               } else {
                 setExistingWalletError(true);
               }
@@ -203,25 +232,23 @@ const mapStateToProps = ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
-    dispatch(
-      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress),
-    ),
-  getTrustlinesWithAddNewWallet: (
+  getTrustlinesWithAddNewWallet: ({
     walletAddress,
     rippleClassicAddress,
     nickname,
-    mnemonic,
     details,
-  ) =>
+    salt,
+    encrypted,
+  }) =>
     dispatch(
-      getTrustlines(
+      getTrustlines({
         walletAddress,
         rippleClassicAddress,
         nickname,
-        mnemonic,
         details,
-      ),
+        salt,
+        encrypted,
+      }),
     ),
   getTrustlinesReset: () => dispatch(getTrustlinesReset()),
 });

@@ -3,23 +3,19 @@ import React, { useState } from "react";
 import {
   Image,
   Platform,
-  ScrollView,
+  TouchableOpacity,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { connect } from "react-redux";
 
-import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
 import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
 import Custom_Button from "../components/shared/Custom_Button";
-import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_RadioButton from "../components/shared/Custom_RadioButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
 import Custom_TextInput from "../components/shared/Custom_TextInput";
-import Fonts from "../constants/Fonts";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import {
@@ -32,13 +28,15 @@ import { generateNewWallet, saveNickname } from "../actions";
 
 function CreateNewWallet({ navigation, generateNewWallet }) {
   const [textValue, onChangeText] = useState("");
+  const [passphraseValue, onChangePassphrase] = useState("");
+  const [secureEntry, setSecureEntry] = useState(true);
   return (
     <View style={styles.container}>
       <Custom_Header
         left={
           <Custom_HeaderButton
             onPress={() => {
-              navigation.goBack();              
+              navigation.goBack();
             }}
             type="icon"
             icon="md-arrow-back"
@@ -60,6 +58,39 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             returnKeyType="done"
           />
         </View>
+        <View style={styles.passPhraseInput}>
+          <Custom_TextInput
+            value={passphraseValue}
+            onChangeText={text => {
+              onChangePassphrase(text);
+            }}
+            label="Wallet Passphrase"
+            keyboardType="default"
+            returnKeyType="done"
+            secureTextEntry={secureEntry}
+          />
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              right: 30,
+              padding: 5,
+              paddingTop: 8,
+              alignItems: "center",
+            }}
+            onPress={() => setSecureEntry(!secureEntry)}
+          >
+            <MaterialCommunityIcons
+              name={secureEntry ? "eye" : "eye-off"}
+              size={24}
+              color="#fff"
+            />
+            {/* <Ionicons
+              name={true ? "Visibility" : "Visibility-off"}
+              size={10}
+              color="#fff"
+            /> */}
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.footer}>
         <Custom_Button
@@ -69,12 +100,14 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             console.log("==generateWalletAddress==", result);
             const walletAddress = getAddress(result);
             console.log("==address==", walletAddress);
-            const rippleClassicAddress = getRippleClassicAddressFromXAddress(walletAddress);
+            const rippleClassicAddress = getRippleClassicAddressFromXAddress(
+              walletAddress,
+            );
             console.log("==rippleClassicAddress==", rippleClassicAddress);
             // const { address } = rippleClassicAddress;
             generateNewWallet(result);
             const nickname = textValue;
-            console.log("nickname", nickname)
+            console.log("nickname", nickname);
             saveNickname(nickname);
             const mnemonic = generateMnemonicArray(result.mnemonic);
             navigation.navigate({
@@ -83,11 +116,11 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
               params: {
                 mnemonic,
                 nickname,
+                passphrase: passphraseValue,
                 walletAddress: rippleClassicAddress,
                 rippleClassicAddress: rippleClassicAddress,
               },
             });
-
 
             // const mnemonic = result.mnemonic;
             // console.log("==mnemonic==", mnemonic);
@@ -101,7 +134,6 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             //   "Is it the same as the one from mnemonic?",
             //   address === walletFromMnemonic.getAddress()
             // );
-
           }}
           style={{ height: 40, width: 80 }}
           icon="ios-arrow-forward"
@@ -112,30 +144,34 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
 }
 
 CreateNewWallet.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   nicknameInput: {
     marginTop: 20,
     // marginHorizontal: 20,
+  },
+  passPhraseInput: {
+    marginTop: 20,
+    justifyContent: "center",
   },
   footer: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
     marginHorizontal: 20,
-    marginVertical: 50
+    marginVertical: 50,
   },
 });
 
 const mapStateToProps = ({}) => ({});
 const mapDispatchToProps = dispatch => ({
-  generateNewWallet: newWallet => dispatch(generateNewWallet(newWallet)), 
+  generateNewWallet: newWallet => dispatch(generateNewWallet(newWallet)),
   saveNickname: nickname => dispatch(saveNickname(nickname)),
 });
 

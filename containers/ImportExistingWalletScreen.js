@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Clipboard
+  Clipboard,
 } from "react-native";
 
 import Custom_Text from "../components/shared/Custom_Text";
@@ -26,7 +26,10 @@ import WalletAddressSecretTab from "./WalletAddressSecretTab";
 export default function ImportExistingWalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
-  const [importSuccessfulModalVisible, setImportSuccessfulModalVisible] = useState(false);
+  const [
+    importSuccessfulModalVisible,
+    setImportSuccessfulModalVisible,
+  ] = useState(false);
   // const [textValue, onChangeText] = useState("");
   // const [completed, handleIsCompleted] = useState(false);
 
@@ -64,7 +67,7 @@ export default function ImportExistingWalletScreen({ navigation }) {
         style={{
           flexDirection: "row",
           height: 50,
-          backgroundColor: Colors.headerBackground
+          backgroundColor: Colors.headerBackground,
         }}
       >
         <TouchableOpacity
@@ -75,17 +78,17 @@ export default function ImportExistingWalletScreen({ navigation }) {
             {
               flex: 1,
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             },
             tab === 1
               ? {
                   borderBottomColor: Colors.text,
-                  borderBottomWidth: 2
+                  borderBottomWidth: 2,
                 }
-              : {}
+              : {},
           ]}
         >
-          <Custom_Text value="Passphrase" size={Fonts.size.normal} />
+          <Custom_Text value="Recovery Words" size={Fonts.size.normal} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
@@ -95,14 +98,14 @@ export default function ImportExistingWalletScreen({ navigation }) {
             {
               flex: 1,
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             },
             tab === 2
               ? {
                   borderBottomColor: Colors.text,
-                  borderBottomWidth: 2
+                  borderBottomWidth: 2,
                 }
-              : {}
+              : {},
           ]}
         >
           <Custom_Text
@@ -112,7 +115,7 @@ export default function ImportExistingWalletScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       {tab === 1 ? (
-        <PassphraseTab 
+        <PassphraseTab
           navigation={navigation}
           errorModalVisible={errorModalVisible}
           setErrorModalVisible={setErrorModalVisible}
@@ -120,7 +123,7 @@ export default function ImportExistingWalletScreen({ navigation }) {
           setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
         />
       ) : (
-        <WalletAddressSecretTab 
+        <WalletAddressSecretTab
           navigation={navigation}
           errorModalVisible={errorModalVisible}
           setErrorModalVisible={setErrorModalVisible}
@@ -133,36 +136,36 @@ export default function ImportExistingWalletScreen({ navigation }) {
 }
 
 ImportExistingWalletScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   addWalletContainer: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   passphraseTextInputContainer: {
     marginHorizontal: 40,
     marginTop: 30,
-    marginBottom: 60
+    marginBottom: 60,
   },
   passphraseTextInput: {
     borderBottomColor: Colors.text,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   footer: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
     marginHorizontal: 20,
-    marginVertical: 50
-  }
+    marginVertical: 50,
+  },
 });

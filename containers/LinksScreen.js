@@ -42,7 +42,7 @@ export default function LinksScreen({ navigation }) {
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Your Recovery Phrase" />}
+        center={<Custom_HeaderTitle text="Your Recovery Words" />}
         right={
           <Menu onSelect={value => alert(`Selected number: ${value}`)}>
             <MenuTrigger
@@ -104,7 +104,7 @@ export default function LinksScreen({ navigation }) {
           </View> */}
         <View style={styles.section}>
           <Custom_Text
-            value="The sequence of words below is your Recovery Phrase. You need this to regain access to your XRP. You should never share this with anyone"
+            value="The sequence of words below is your Recovery Words. You need this to regain access to your XRP. You should never share this with anyone"
             size={Fonts.size.normal}
             color={Colors.text}
           />

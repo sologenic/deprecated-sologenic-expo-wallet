@@ -399,6 +399,8 @@ const addNewWallet = (state, action) => {
     walletAddress,
     rippleClassicAddress,
     trustline,
+    encrypted,
+    salt,
   } = action;
   const wallet = {
     id: rippleClassicAddress,
@@ -413,7 +415,10 @@ const addNewWallet = (state, action) => {
     rippleClassicAddress,
     transactions: [],
     trustline,
+    encrypted,
+    salt,
   };
+  console.log("REDUCER =====================", wallet);
   return Object.assign({}, state, {
     wallets: [...wallets, wallet],
   });
@@ -682,14 +687,17 @@ const getTrustlinesReset = state => {
 const activateWallet = (state, action) => {
   const { wallets } = state;
   const copyWallets = [...wallets];
+  let updatedWallet;
   const updatedWallets = copyWallets.map(wallet => {
-    if (wallet.details.id === action.id) {
+    if (wallet.id === action.payload) {
+      updatedWallet = { ...wallet, isActive: true };
       return { ...wallet, isActive: true };
     }
     return wallet;
   });
   return Object.assign({}, state, {
     wallets: updatedWallets,
+    wallet: updatedWallet,
   });
 };
 

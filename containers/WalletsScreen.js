@@ -48,7 +48,7 @@ function WalletsScreen({
     fetchData();
     const getMarketDataInterval = setInterval(() => {
       fetchData();
-    }, 10000);
+    }, 30000);
 
     return () => {
       clearInterval(getMarketDataInterval);

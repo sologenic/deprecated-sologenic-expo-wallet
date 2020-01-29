@@ -4,7 +4,12 @@ import { StyleSheet, TouchableOpacity, View } from "react-native";
 
 import Colors from "../../constants/Colors";
 
-export default function Custom_RadioButton({ onPress, pressed, style }) {
+export default function Custom_RadioButton({
+  onPress,
+  pressed,
+  style,
+  imageStyle,
+}) {
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -19,6 +24,7 @@ export default function Custom_RadioButton({ onPress, pressed, style }) {
         style={[
           styles.innerButton,
           { backgroundColor: pressed ? Colors.darkRed : "transparent" },
+          imageStyle,
         ]}
       />
     </TouchableOpacity>

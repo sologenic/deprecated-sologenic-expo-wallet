@@ -87,6 +87,7 @@ function WalletScreen({
   marketData,
   soloData,
 }) {
+  // console.log(wallet);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(5);
@@ -295,6 +296,9 @@ function WalletScreen({
           transactions={transactions}
           setTransactionCount={setTransactionCount}
           transactionCount={transactionCount}
+          getTransactions={() =>
+            getTransactions(walletAddress, transactionCount, "xrp")
+          }
         />
       )}
       {tab === 2 && (
@@ -309,7 +313,9 @@ function WalletScreen({
           setTransactionCount={setTransactionCount}
           transactionCount={transactionCount}
           soloActive={trustline ? true : false}
-          xrpActivate={xrp >= 21 ? true : false}
+          getTransactions={() =>
+            getTransactions(walletAddress, transactionCount, "xrp")
+          }
         />
       )}
       {tab === 3 && (
