@@ -10,14 +10,17 @@ import {
 
 import Fonts from "../../constants/Fonts";
 import Colors from "../../constants/Colors";
+import colors from "../../constants/Colors";
 
 export default function Custom_TextInput({
   value,
   onChangeText,
   returnKeyType,
   keyboardType,
+  secureTextEntry,
   label,
   placeholder,
+  placeholderTextColor,
   currency,
 }) {
   const [isFocused, handleIsFocused] = useState(false);
@@ -41,10 +44,12 @@ export default function Custom_TextInput({
       </Text>
       <TextInput
         placeholder={placeholder}
+        placeholderTextColor={placeholderTextColor}
         value={value}
         onChangeText={onChangeText}
         returnKeyType={returnKeyType}
         keyboardType={keyboardType}
+        secureTextEntry={secureTextEntry}
         onBlur={handleBlur}
         onFocus={handleFocus}
         style={styles.defaultTextInput}
@@ -74,6 +79,7 @@ Custom_TextInput.propTypes = {
   onChangeText: PropTypes.func,
   placeholder: PropTypes.string,
   autoCapitalize: PropTypes.string,
+  placeholderTextColor: PropTypes.string,
   autoCorrect: PropTypes.bool,
   secureTextEntry: PropTypes.bool,
   textContentType: PropTypes.string,
@@ -87,6 +93,7 @@ Custom_TextInput.defaultProps = {
   value: "",
   onChangeText: () => {},
   placeholder: "",
+  placeholderTextColor: colors.grayText,
   autoCapitalize: "none",
   autoCorrect: false,
   textContentType: "none",

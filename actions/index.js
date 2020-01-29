@@ -250,13 +250,15 @@ export const generateNewWallet = newWallet => {
   };
 };
 
-export const addNewWallet = (
+export const addNewWallet = ({
   newWallet,
   nickname,
   walletAddress,
   rippleClassicAddress,
   trustline,
-) => {
+  encrypted,
+  salt,
+}) => {
   return {
     type: "ADD_NEW_WALLET",
     newWallet,
@@ -264,6 +266,8 @@ export const addNewWallet = (
     walletAddress,
     rippleClassicAddress,
     trustline,
+    encrypted,
+    salt,
   };
 };
 
@@ -302,14 +306,23 @@ export const deleteWallet = id => {
   };
 };
 
-export const createTrustline = (address, secret, keypair, id) => {
+export const createTrustline = ({
+  address,
+  id,
+  passphrase,
+  salt,
+  encrypted,
+  publicKey,
+}) => {
   console.log("HEHERE id", id);
   return {
     type: "CREATE_TRUSTLINE",
     address,
-    secret,
-    keypair,
     id,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
   };
 };
 
@@ -333,7 +346,17 @@ export const createTrustlineReset = () => {
   };
 };
 
-export const transferXrp = (account, keypair, secret, destination, value) => {
+export const transferXrp = ({
+  account,
+  keypair,
+  secret,
+  destination,
+  value,
+  passphrase,
+  salt,
+  encrypted,
+  publicKey,
+}) => {
   return {
     type: "TRANSFER_XRP",
     account,
@@ -341,6 +364,10 @@ export const transferXrp = (account, keypair, secret, destination, value) => {
     secret,
     destination,
     value,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
   };
 };
 
@@ -363,7 +390,17 @@ export const transferXrpError = data => {
   };
 };
 
-export const transferSolo = (account, keypair, secret, destination, value) => {
+export const transferSolo = ({
+  account,
+  keypair,
+  secret,
+  destination,
+  value,
+  passphrase,
+  salt,
+  encrypted,
+  publicKey,
+}) => {
   return {
     type: "TRANSFER_SOLO",
     account,
@@ -371,6 +408,10 @@ export const transferSolo = (account, keypair, secret, destination, value) => {
     secret,
     destination,
     value,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
   };
 };
 
@@ -445,19 +486,21 @@ export const getMoreTransactionsError = payload => {
   };
 };
 
-export const getTrustlines = (
+export const getTrustlines = ({
   walletAddress,
   rippleClassicAddress,
   nickname,
-  mnemonic,
+  salt,
+  encrypted,
   details,
-) => {
+}) => {
   return {
     type: "GET_TRUSTLINES",
     walletAddress,
     rippleClassicAddress,
     nickname,
-    mnemonic,
+    salt,
+    encrypted,
     details,
   };
 };

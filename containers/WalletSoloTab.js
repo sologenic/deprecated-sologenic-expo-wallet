@@ -84,18 +84,8 @@ function WalletSoloTab({
   //   }
   // }, [wallet]);
 
-  const { id, isActive } = wallet;
-  let keypair = null;
-  let secret = null;
-  const { privateKey, publicKey } = wallet.details.wallet;
-  if (privateKey && publicKey) {
-    keypair = {
-      privateKey,
-      publicKey,
-    };
-  } else {
-    secret = wallet.details.wallet.secret;
-  }
+  const { id, isActive, salt, encrypted, details } = wallet;
+  const { publicKey } = details.wallet;
 
   const soloMarketPrice = soloData[baseCurrency.value];
   // const priceChange = getPriceChange(marketData.last, marketData.open);
@@ -161,11 +151,14 @@ function WalletSoloTab({
                 text="Activate"
                 onPress={() => {
                   setActivateModalVisible(true);
-                  if (secret) {
-                    createTrustline(walletAddress, secret, "", id);
-                  } else if (keypair) {
-                    createTrustline(walletAddress, "", keypair, id);
-                  }
+                  createTrustline({
+                    address: walletAddress,
+                    id,
+                    passphrase: "test",
+                    salt,
+                    encrypted,
+                    publicKey,
+                  });
                 }}
                 style={{
                   height: 40,
@@ -291,6 +284,7 @@ function WalletSoloTab({
             refreshing={pullToRefreshBalancePending}
             onRefresh={() => {
               pullToRefreshBalance(id, walletAddress);
+              getMoreTransactions(walletAddress, transactionCount, "solo");
             }}
             progressViewOffset={headerHeight + 100}
           />
@@ -411,8 +405,6 @@ function WalletSoloTab({
                         balance: soloBalance,
                         currency: currency.toLowerCase(),
                         walletAddress,
-                        keypair,
-                        secret,
                         id,
                         wallet,
                       },
@@ -610,8 +602,10 @@ const mapStateToProps = ({
   soloData,
 });
 const mapDispatchToProps = dispatch => ({
-  createTrustline: (address, secret, keypair, id) =>
-    dispatch(createTrustline(address, secret, keypair, id)),
+  createTrustline: ({ address, id, passphrase, salt, encrypted, publicKey }) =>
+    dispatch(
+      createTrustline({ address, id, passphrase, salt, encrypted, publicKey }),
+    ),
   getMoreTransactions: (address, limit, walletType) =>
     dispatch(getMoreTransactions(address, limit, walletType)),
   pullToRefreshBalance: (id, address) =>

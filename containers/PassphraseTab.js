@@ -19,10 +19,12 @@ import {
   getRippleClassicAddressFromXAddress,
   checkWalletExists,
   checkMnemoicExists,
+  encrypt,
 } from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
-import { addNewWallet, getTrustlines, getTrustlinesReset } from "../actions";
+import { getTrustlines, getTrustlinesReset } from "../actions";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
+import colors from "../constants/Colors";
 
 function PassphraseTab({
   navigation,
@@ -41,8 +43,8 @@ function PassphraseTab({
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
   const [nicknameValue, onChangeNickname] = useState("");
+  const [passphrase, setPassphrase] = useState("");
   const [existingWalletError, setExistingWalletError] = useState(false);
-
   const getContentFromClipboard = async () => {
     const content = await Clipboard.getString();
     await onChangeText(content);
@@ -50,12 +52,17 @@ function PassphraseTab({
 
   useEffect(() => {
     const result = countWords(textValue);
-    if (textValue) {
+    if (
+      textValue &&
+      textValue.length > 0 &&
+      passphrase &&
+      passphrase.length > 0
+    ) {
       handleIsCompleted(true);
     } else {
       handleIsCompleted(false);
     }
-  }, [textValue]);
+  }, [textValue, passphrase]);
 
   useEffect(() => {
     if (getTrustlinesError) {
@@ -75,7 +82,7 @@ function PassphraseTab({
         ]}
       >
         <Custom_Text
-          value="Enter the 12 word passphrase that was given to you when you created your account."
+          value="Enter the 12 recovery words that were given to you when you created your account."
           size={Fonts.size.small}
           isBold
         />
@@ -94,7 +101,7 @@ function PassphraseTab({
       <View style={styles.passphraseTextInputContainer}>
         <View>
           <Custom_Text
-            value="Passphrase"
+            value="Recovery Words"
             size={Fonts.size.small}
             color={Colors.lightGray}
           />
@@ -142,17 +149,23 @@ function PassphraseTab({
           onChangeText={text => {
             onChangeNickname(text);
           }}
-          label="Account Nickname"
+          label="Wallet Nickname"
+          keyboardType="default"
+          returnKeyType="done"
+          placeholder="Optional"
+          placeholderTextColor={colors.grayText}
+        />
+      </View>
+      <View style={{ marginBottom: 30 }}>
+        <Custom_TextInput
+          value={passphrase}
+          onChangeText={text => {
+            setPassphrase(text);
+          }}
+          label="Wallet Passphrase"
           keyboardType="default"
           returnKeyType="done"
         />
-        <View style={{ marginLeft: 30, marginTop: 5 }}>
-          <Custom_Text
-            value="Optional"
-            size={Fonts.size.normal}
-            color={Colors.grayText}
-          />
-        </View>
       </View>
       <View style={styles.addWalletContainer}>
         <Custom_Button
@@ -167,27 +180,39 @@ function PassphraseTab({
               );
               if (importedWallet) {
                 const walletAddress = importedWallet.getAddress();
-                const walletAlreadyExists = checkMnemoicExists(
-                  textValue.toLowerCase(),
+                const rippleClassicAddress = getRippleClassicAddressFromXAddress(
+                  walletAddress,
+                );
+                const walletAlreadyExists = checkWalletExists(
+                  rippleClassicAddress,
                   wallets,
                 );
                 if (!walletAlreadyExists) {
-                  const rippleClassicAddress = getRippleClassicAddressFromXAddress(
-                    walletAddress,
-                  );
-                  getTrustlinesWithAddNewWallet(
+                  const salt = Math.random()
+                    .toString(36)
+                    .slice(2);
+                  const encrypted = encrypt(
+                    importedWallet.privateKey,
+                    salt,
                     rippleClassicAddress,
-                    rippleClassicAddress,
-                    nicknameValue ? nicknameValue : "",
-                    textValue,
-                    importedWallet,
+                    passphrase,
                   );
+                  const secureNewWallet = {
+                    wallet: {
+                      publicKey: importedWallet.publicKey,
+                    },
+                  };
+                  getTrustlinesWithAddNewWallet({
+                    walletAddress: rippleClassicAddress,
+                    rippleClassicAddress,
+                    nickname: nicknameValue ? nicknameValue : "",
+                    details: secureNewWallet,
+                    encrypted,
+                    salt,
+                  });
                 } else {
                   setExistingWalletError(true);
                 }
-
-                // move to useEffect
-                // setImportSuccessfulModalVisible(true);
               } else {
                 setErrorModalVisible(true);
               }
@@ -201,12 +226,12 @@ function PassphraseTab({
               : Colors.darkRed,
           }}
           color={!completed ? Colors.grayText : Colors.text}
-          disabled={getTrustlinesPending}
+          disabled={getTrustlinesPending || !completed}
           isPending={getTrustlinesPending}
         />
       </View>
       <ErrorModal
-        value="You have entered an invalid mnemonic passphrase. It should consist of 12 words, each separated by a space. Please check your phrase and try again."
+        value="You have entered an invalid mnemonic recovery words. It should consist of 12 words, each separated by a space. Please check your phrase and try again."
         modalVisible={errorModalVisible}
         onClose={() => {
           getTrustlinesReset();
@@ -269,25 +294,23 @@ const mapStateToProps = ({
   wallets,
 });
 const mapDispatchToProps = dispatch => ({
-  addNewWallet: (newWallet, nickname, walletAddress, rippleClassicAddress) =>
-    dispatch(
-      addNewWallet(newWallet, nickname, walletAddress, rippleClassicAddress),
-    ),
-  getTrustlinesWithAddNewWallet: (
+  getTrustlinesWithAddNewWallet: ({
     walletAddress,
     rippleClassicAddress,
     nickname,
-    mnemonic,
     details,
-  ) =>
+    salt,
+    encrypted,
+  }) =>
     dispatch(
-      getTrustlines(
+      getTrustlines({
         walletAddress,
         rippleClassicAddress,
         nickname,
-        mnemonic,
         details,
-      ),
+        salt,
+        encrypted,
+      }),
     ),
   getTrustlinesReset: () => dispatch(getTrustlinesReset()),
 });

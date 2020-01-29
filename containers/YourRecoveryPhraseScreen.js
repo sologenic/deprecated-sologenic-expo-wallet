@@ -24,6 +24,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
     nickname,
     walletAddress,
     rippleClassicAddress,
+    passphrase,
   } = navigation.state.params;
 
   const writeToClipboard = async address => {
@@ -50,13 +51,13 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Your Recovery Phrase" />}
+        center={<Custom_HeaderTitle text="Your Recovery Words" />}
         right={<View />}
       />
       <ScrollView>
         <View style={styles.section}>
           <Custom_Text
-            value="The sequence of words below is your Recovery Phrase. You need this to regain access to your XRP. You should never share this with anyone."
+            value="The sequence of words below is your Recovery Words. You need this to regain access to your XRP. You should never share this with anyone."
             style={{ textAlign: "center" }}
             size={Fonts.size.normal}
             color={Colors.text}
@@ -127,7 +128,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
         >
           <View style={{ flex: 8.5 }}>
             <Custom_Text
-              value="I have written down my passphrase, and I understand that without it I will not have access to my wallet should I lose it."
+              value="I have written down my Recovery Words, and I understand that without it I will not have access to my wallet should I lose it."
               size={Fonts.size.normal}
             />
           </View>
@@ -153,6 +154,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
                   phrase: mnemonic,
                   nickname,
                   walletAddress,
+                  passphrase,
                   rippleClassicAddress,
                 },
               });

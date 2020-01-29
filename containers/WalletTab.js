@@ -50,8 +50,8 @@ function WalletTab({
   getBalance,
   pullToRefreshBalance,
   pullToRefreshBalancePending,
+  getTransactions,
 }) {
-  // const transactionLimit = 10000000000000;
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
@@ -85,17 +85,17 @@ function WalletTab({
     }
   }, [wallet]);
 
-  let keypair = null;
-  let secret = null;
-  const { privateKey, publicKey } = wallet.details.wallet;
-  if (privateKey && publicKey) {
-    keypair = {
-      privateKey,
-      publicKey,
-    };
-  } else {
-    secret = wallet.details.wallet.secret;
-  }
+  // let keypair = null;
+  // let secret = null;
+  // const { privateKey, publicKey } = wallet.details.wallet;
+  // if (privateKey && publicKey) {
+  //   keypair = {
+  //     privateKey,
+  //     publicKey,
+  //   };
+  // } else {
+  //   secret = wallet.details.wallet.secret;
+  // }
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
@@ -112,6 +112,7 @@ function WalletTab({
               refreshing={pullToRefreshBalancePending}
               onRefresh={() => {
                 pullToRefreshBalance(id, walletAddress);
+                getMoreTransactions(walletAddress, transactionCount, "xrp");
               }}
               progressViewOffset={headerHeight + 100}
             />
@@ -240,8 +241,6 @@ function WalletTab({
                             balance: xrpBalance,
                             currency: currency.toLowerCase(),
                             walletAddress,
-                            keypair,
-                            secret,
                             id,
                             wallet,
                           },
