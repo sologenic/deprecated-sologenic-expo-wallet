@@ -150,7 +150,6 @@ function* requestGetBalance(action) {
     // console.log("id ----", id);
     // console.log("add----", address);
     const response = yield call(getBalances, address);
-    console.log("GET BALANCE ----", response);
     const xrpBalance = response.find(item => item.currency === "XRP");
     const soloBalance = response.find(
       item => item.currency === appConfig.soloHash,
@@ -278,12 +277,12 @@ function* requestTransferXrp(action) {
       console.log("REQUEST_TRANSFER_XRP_ERROR");
       yield put(transferXrpError(response.result.reason));
     } else if (response) {
-      console.log("REQUEST_TRANSFER_XRP_SUCCESS: ", response);
       yield put(transferXrpSuccess(response));
-      yield put(requestGetBalance({ id: account, address: account }));
-      yield put(requestGetTransactions({ address: account, limit: 5 }));
-      yield put(requestGetBalance({ id: destination, address: destination }));
-      yield put(requestGetTransactions({ address: destination, limit: 5 }));
+      yield call(requestGetBalance, { id: account, address: account });
+      yield call(requestGetTransactions, { address: account, limit: 5 });
+      yield call(requestGetBalance, { id: destination, address: destination });
+      yield call(requestGetTransactions, { address: destination, limit: 5 });
+      console.log("REQUEST_TRANSFER_XRP_SUCCESS: ", response);
     }
   } catch (error) {
     console.log("REQUEST_TRANSFER_XRP_ERROR", error);
@@ -325,12 +324,12 @@ function* requestTransferSolo(action) {
       console.log("REQUEST_TRANSFER_SOLO_ERROR", response);
       yield put(transferSoloError(response.result.reason));
     } else if (response) {
-      console.log("REQUEST_TRANSFER_SOLO_SUCCESS: ", response);
       yield put(transferSoloSuccess(response));
-      yield put(requestGetBalance({ id: account, address: account }));
-      yield put(requestGetTransactions({ address: account, limit: 5 }));
-      yield put(requestGetBalance({ id: destination, address: destination }));
-      yield put(requestGetTransactions({ address: destination, limit: 5 }));
+      console.log("REQUEST_TRANSFER_SOLO_SUCCESS: ", response);
+      yield call(requestGetBalance, { id: account, address: account });
+      yield call(requestGetTransactions, { address: account, limit: 5 });
+      yield call(requestGetBalance, { id: destination, address: destination });
+      yield call(requestGetTransactions, { address: destination, limit: 5 });
     }
   } catch (error) {
     console.log("REQUEST_TRANSFER_SOLO_ERROR", error);
@@ -368,6 +367,7 @@ const getFormattedTransactions = async transactions => {
   const rippleApi = sologenic.getRippleApi();
   const currentLedger = await rippleApi.getLedgerVersion();
   const formattedTransactions = filterTransactions(transactions, currentLedger);
+  console.log("FORMATTE TRANSAC ++++++++++", formattedTransactions);
   return formattedTransactions;
 };
 

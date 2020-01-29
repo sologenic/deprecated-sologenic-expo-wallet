@@ -8,7 +8,6 @@ import {
   View,
 } from "react-native";
 import { connect } from "react-redux";
-import { AntDesign } from "@expo/vector-icons";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -232,7 +231,8 @@ function SendScreen({
               <Custom_Text
                 value="Optional"
                 size={Fonts.size.normal}
-                color={Colors.freshGreen}
+                color={Colors.grayText}
+                style={{ marginLeft: 10 }}
               />
             </View>
           </View>

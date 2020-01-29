@@ -617,6 +617,7 @@ const clearTransactions = state => {
 };
 
 const getTransactionsSuccess = (state, action) => {
+  console.log(action.payload.xrpTransactions);
   return Object.assign({}, state, {
     getTransactionsPending: false,
     getTransactionsSuccess: true,

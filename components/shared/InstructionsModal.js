@@ -6,7 +6,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
-  Text
+  Text,
 } from "react-native";
 
 import Colors from "../../constants/Colors";
@@ -18,7 +18,7 @@ export default function InstructionsModal({
   onPress,
   onClose,
   modalVisible,
-  style
+  style,
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -29,7 +29,7 @@ export default function InstructionsModal({
               <View
                 style={[
                   styles.section,
-                  { height: 70, alignItems: "flex-start" }
+                  { height: 70, alignItems: "flex-start" },
                 ]}
               >
                 <Custom_Text
@@ -39,26 +39,82 @@ export default function InstructionsModal({
                   isBold
                 />
               </View>
-              <View style={[styles.section, { marginBottom: 20, alignItems: "flex-start" }]}>
-                <View style={{ marginBottom: 10, flexDirection: "row", alignItems: "flex-start" }}>
-                  <View style={{ paddingTop: 6, paddingRight: 8, }}>
-                    <View style={{ height: 4, width: 4, borderRadius: 2, backgroundColor: "#FFF" }}/>
+              <View
+                style={[
+                  styles.section,
+                  { marginBottom: 20, alignItems: "flex-start" },
+                ]}
+              >
+                <View
+                  style={{
+                    marginBottom: 10,
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <View style={{ paddingTop: 6, paddingRight: 8 }}>
+                    <View
+                      style={{
+                        height: 4,
+                        width: 4,
+                        borderRadius: 2,
+                        backgroundColor: "#FFF",
+                      }}
+                    />
                   </View>
                   <View>
                     <Custom_Text
-                      value={`Your withdrawal request will be processed after you confirm the transaction confirmation sent to your email right after withdrawal.`}
+                      value={`Enter the amount of XRP you want to withdraw.`}
                       size={Fonts.size.small}
                       color={Colors.text}
                     />
                   </View>
                 </View>
-                <View style={{ marginBottom: 10, flexDirection: "row", alignItems: "flex-start" }}>
-                  <View style={{ paddingTop: 6, paddingRight: 8, }}>
-                    <View style={{ height: 4, width: 4, borderRadius: 2, backgroundColor: "#FFF" }}/>
+                <View
+                  style={{
+                    marginBottom: 10,
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <View style={{ paddingTop: 6, paddingRight: 8 }}>
+                    <View
+                      style={{
+                        height: 4,
+                        width: 4,
+                        borderRadius: 2,
+                        backgroundColor: "#FFF",
+                      }}
+                    />
                   </View>
                   <View>
                     <Custom_Text
-                      value={`Once your withdrawal is successfully processed, you will receive an email confirmation.`}
+                      value={`Enter the destination wallet address that you want to send your XRP to. Please double check that you have entered the correct address or your funds will be lost forever. XRP addresses begin with an 'r' or 'X'.`}
+                      size={Fonts.size.small}
+                      color={Colors.text}
+                    />
+                  </View>
+                </View>
+                <View
+                  style={{
+                    marginBottom: 10,
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                  }}
+                >
+                  <View style={{ paddingTop: 6, paddingRight: 8 }}>
+                    <View
+                      style={{
+                        height: 4,
+                        width: 4,
+                        borderRadius: 2,
+                        backgroundColor: "#FFF",
+                      }}
+                    />
+                  </View>
+                  <View>
+                    <Custom_Text
+                      value={`Destination tags are used by exchanges and custodians to distiguish thier clients wallets. Please ensure that you enter the correct tag if you are withdrawing to these organizations or your funds may be lost forever. You may leave this section blank if you are withdrawing to personal wallets.`}
                       size={Fonts.size.small}
                       color={Colors.text}
                     />
@@ -70,7 +126,7 @@ export default function InstructionsModal({
               <View
                 style={[
                   styles.section,
-                  { height: 50, position: "absolute", right: 0, bottom: 0 }
+                  { height: 50, position: "absolute", right: 0, bottom: 0 },
                 ]}
               >
                 <Custom_Button
@@ -94,13 +150,13 @@ InstructionsModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 InstructionsModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
@@ -111,12 +167,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10
+    borderRadius: 10,
     // height: 100,
     // width: 200,
     // zIndex: 20,
@@ -124,10 +180,10 @@ const styles = StyleSheet.create({
   section: {
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   line: {
     height: 1,
-    backgroundColor: Colors.grayText
-  }
+    backgroundColor: Colors.grayText,
+  },
 });

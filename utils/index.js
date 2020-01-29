@@ -248,7 +248,6 @@ export const filterTransactions = (transactions, currentLedger) => {
   let soloTransactions = [];
   transactions.filter(item => {
     if (item.type === "payment" && item.outcome.result === "tesSUCCESS") {
-      // console.log("confirmations ", currentLedger - item.outcome.ledgerVersion);
       if (item.outcome.deliveredAmount.currency === appConfig.soloHash) {
         soloTransactions.push({
           ...item,
