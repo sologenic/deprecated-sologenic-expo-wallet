@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import { connect } from "react-redux";
+import NetInfo from "@react-native-community/netinfo";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -23,6 +24,7 @@ import {
   getBalance,
   connectToRippleApi,
   getSoloData,
+  getNetInfo,
 } from "../actions";
 import { screenWidth } from "../constants/Layout";
 import images from "../constants/Images";
@@ -38,8 +40,24 @@ function WalletsScreen({
   soloData,
   wallets,
   baseCurrency,
+  getNetInfo,
+  netinfo,
   screenProps: { rootNavigation },
 }) {
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      // console.log("---------------------------------------------------------------")
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      // console.log("---------------------------------------------------------------")
+      getNetInfo(state.isConnected);
+    });
+  }, []);
+
+  useEffect(() => {
+    fetchData();    
+  }, [netinfo]);
+
   useEffect(() => {
     connectToRippleApi();
   }, []);
@@ -60,7 +78,7 @@ function WalletsScreen({
     getSoloData();
     getMarketSevens();
   };
-
+  // console.log("marketData", marketData, "soloData", soloData);
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -200,11 +218,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ marketData, wallets, baseCurrency, soloData }) => ({
+const mapStateToProps = ({ marketData, wallets, baseCurrency, soloData, netinfo }) => ({
   marketData,
   wallets,
   baseCurrency,
   soloData,
+  netinfo,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -213,6 +232,7 @@ const mapDispatchToProps = dispatch => ({
   getMarketSevens: () => dispatch(getMarketSevens()),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
+  getNetInfo: status => dispatch(getNetInfo(status)),
 });
 
 export default connect(

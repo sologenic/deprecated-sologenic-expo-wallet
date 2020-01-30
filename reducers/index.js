@@ -88,6 +88,7 @@ const defaultState = {
     symbol: "$",
     type: "fiat",
   },
+  netinfo: null,
 };
 
 const getMarketData = (state, action) => {
@@ -165,15 +166,6 @@ const getMarketSevensError = (state, action) => {
     getMarketSevensPending: false,
     getMarketSevensSuccess: false,
     getMarketSevensError: true,
-  });
-};
-
-const testTodoReset = (state, action) => {
-  return Object.assign({}, state, {
-    test: "Default",
-    testPending: null,
-    testSuccess: null,
-    testError: null,
   });
 };
 
@@ -715,6 +707,13 @@ const resetWallet = state => {
   });
 };
 
+const getNetInfo = (state, action) => {
+  const { netinfo } = action;
+  return Object.assign({}, state, {
+    netinfo,
+  });
+}
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -735,10 +734,6 @@ export default (state = defaultState, action) => {
       return getMarketSevensSuccess(state, action);
     case "GET_MARKET_SEVENS_ERROR":
       return getMarketSevensError(state, action);
-
-    case "TEST_TODO_RESET":
-      return testTodoReset(state, action);
-
     case "UPDATE_PHRASE_TEST_VALUE_1":
       return updatePhraseTestValue1(state, action);
     case "UPDATE_PHRASE_TEST_VALUE_2":
@@ -849,6 +844,8 @@ export default (state = defaultState, action) => {
       return setWallet(state, action);
     case "RESET_WALLET":
       return resetWallet(state, action);
+    case "GET_NET_INFO":
+      return getNetInfo(state, action);
 
     default:
       return state;

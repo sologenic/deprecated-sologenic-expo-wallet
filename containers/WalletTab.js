@@ -28,6 +28,9 @@ import {
   getMoreTransactions,
   getBalance,
   pullToRefreshBalance,
+  getMarketData,
+  getSoloData,
+  getMarketSevens,
 } from "../actions";
 import CopiedModal from "../components/shared/CopiedModal";
 
@@ -51,6 +54,7 @@ function WalletTab({
   pullToRefreshBalance,
   pullToRefreshBalancePending,
   getTransactions,
+  netinfo,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
@@ -60,10 +64,22 @@ function WalletTab({
   const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
   const [xrpWarningModalVisible, setXrpWarningModalVisible] = useState(false);
-  const priceChange = getPriceChange(marketData.last, marketData.open);
+  const priceChange = marketData ? getPriceChange(marketData.last, marketData.open) : "";
   const priceColor = getPriceColor(priceChange);
   const { id, isActive } = wallet;
   const [isWalletActive, setIsWalletActive] = useState(isActive);
+
+  useEffect(() => {
+    if (netinfo) {
+      fetchData();
+    }
+  }, [netinfo]);
+
+  const fetchData = () => {
+    getMarketData(defaultCurrency.value);
+    getSoloData();
+    getMarketSevens();
+  };
 
   useEffect(() => {
     getBalance(id, walletAddress);
@@ -147,58 +163,50 @@ function WalletTab({
                   </View>
                 </View>
               </View>
-              {/* <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <View style={{ paddingRight: 5 }}>
-                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
-              </View>
-              <View>
-                <Custom_Text
-                  value={defaultCurrency.toUpperCase()}
-                  size={Fonts.size.medium}
-                />
-              </View>
-            </View>
-          </View> */}
-              <View style={styles.marketInfoContainer}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <View style={{ paddingRight: 15 }}>
-                    <Custom_Text
-                      value="Market Price:"
-                      size={Fonts.size.medium}
-                      color={Colors.lightGray}
-                    />
-                    <Custom_Text
-                      value={`${defaultCurrency.symbol} ${marketData.last}`}
-                      size={Fonts.size.medium}
-                    />
+              {netinfo ? (
+                <View style={styles.marketInfoContainer}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ paddingRight: 15 }}>
+                      <Custom_Text
+                        value="Market Price:"
+                        size={Fonts.size.medium}
+                        color={Colors.lightGray}
+                      />
+                      <Custom_Text
+                        value={`${defaultCurrency.symbol} ${marketData.last}`}
+                        size={Fonts.size.medium}
+                      />
+                    </View>
+                    <View>
+                      <SevenChart
+                        marketSevens={marketSevens}
+                        color={priceColor}
+                      />
+                      <Custom_Text
+                        value={`${priceChange}`}
+                        size={Fonts.size.small}
+                        // color={Colors.errorBackground}
+                        color={priceColor}
+                      />
+                    </View>
                   </View>
+                </View>
+              ) : (
+                <View style={{ height: 100, justifyContent: "center", alignItems: "center" }}>
                   <View>
-                    <SevenChart
-                      marketSevens={marketSevens}
-                      color={priceColor}
-                    />
                     <Custom_Text
-                      value={`${priceChange}`}
-                      size={Fonts.size.small}
-                      // color={Colors.errorBackground}
-                      color={priceColor}
+                      value="Your device is now offline."
+                      size={Fonts.size.normal}
                     />
                   </View>
                 </View>
-              </View>
+              )}
               <View style={styles.buttonsContainer}>
                 <View style={styles.leftButtonContainer}>
                   <Custom_Button
@@ -591,6 +599,7 @@ const mapStateToProps = ({
   getMoreTransactionsPending,
   getBalancePending,
   pullToRefreshBalancePending,
+  netinfo,
 }) => {
   return {
     getTransactionsPending,
@@ -600,6 +609,7 @@ const mapStateToProps = ({
     marketData,
     pullToRefreshBalancePending,
     marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
+    netinfo,
   };
 };
 
@@ -609,6 +619,9 @@ const mapDispatchToProps = dispatch => ({
   getBalance: (id, address) => dispatch(getBalance(id, address)),
   pullToRefreshBalance: (id, address) =>
     dispatch(pullToRefreshBalance(id, address)),
+  getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
+  getSoloData: () => dispatch(getSoloData()),
+  getMarketSevens: () => dispatch(getMarketSevens()),
 });
 
 export default connect(
