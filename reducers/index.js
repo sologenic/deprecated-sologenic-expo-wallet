@@ -65,6 +65,7 @@ const defaultState = {
   createTrustlinePending: null,
   createTrustlineSuccess: null,
   createTrustlineError: null,
+  createTrustlineErrorStr: "",
   transferSoloPending: null,
   transferSoloSuccess: null,
   transferSoloError: null,
@@ -495,10 +496,12 @@ const createTrustlineSuccess = (state, action) => {
 };
 
 const createTrustlineError = (state, action) => {
+  console.log(action.payload);
   return Object.assign({}, state, {
     createTrustlinePending: false,
-    createTrustlineSuccess: true,
-    createTrustlineError: false,
+    createTrustlineSuccess: false,
+    createTrustlineError: true,
+    createTrustlineErrorStr: action.payload,
   });
 };
 
@@ -507,6 +510,7 @@ const createTrustlineReset = (state, action) => {
     createTrustlinePending: false,
     createTrustlineSuccess: false,
     createTrustlineError: false,
+    createTrustlineErrorStr: "",
   });
 };
 

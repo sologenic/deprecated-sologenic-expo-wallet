@@ -375,170 +375,174 @@ function WalletTab({
     );
   }
   return (
-    <ScrollView>
-      <View>
-        <View style={styles.container}>
-          <View style={{ marginTop: 50, marginHorizontal: 45 }}>
-            <Text
-              style={{
-                fontFamily: "DMSans",
-                color: Colors.text,
-                fontSize: Fonts.size.small,
-                textAlign: "center",
-              }}
-              numberOfLines={2}
-              ellipsizeMode="tail"
-            >
-              In order to activate your XRP wallet, you must first send at least
-              <Text> </Text>
+    <View style={{ flex: 1 }}>
+      <ScrollView>
+        <View>
+          <View style={styles.container}>
+            <View style={{ marginTop: 50, marginHorizontal: 45 }}>
               <Text
                 style={{
-                  fontFamily: "DMSansBold",
+                  fontFamily: "DMSans",
                   color: Colors.text,
                   fontSize: Fonts.size.small,
                   textAlign: "center",
                 }}
+                numberOfLines={2}
+                ellipsizeMode="tail"
               >
-                21 XRP
-              </Text>
-              <Text> </Text>
-              to this address
-            </Text>
-          </View>
-          <View style={{ marginTop: 8, marginBottom: 30 }}>
-            <Custom_Button
-              text="Activate"
-              onPress={() => {
-                console.log("Press Activate");
-                // setActivateModalVisible(true);
-                navigation.navigate({
-                  routeName: "ActivateWalletScreen",
-                  key: "ActivateWalletScreen",
-                  params: {
-                    currency: currency.toLowerCase(),
-                    walletAddress,
-                  },
-                });
-              }}
-              style={{ height: 40, width: 100 }}
-            />
-          </View>
-          <View>
-            <Custom_IconButton
-              icon="questioncircle"
-              color={Colors.grayText}
-              text="Why 21 XRP"
-              textSize={Fonts.size.small}
-              size={13}
-              style={{
-                height: 12,
-                width: 12,
-                backgroundColor: "#FFF",
-              }}
-              textStyle={{
-                paddingRight: 5,
-              }}
-              onPress={() => {
-                setModalVisible(true);
-              }}
-            />
-          </View>
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              zIndex: 50,
-              opacity: 0.3,
-            }}
-          >
-            <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
-              <View style={styles.leftButtonContainer}>
-                <Custom_Button
-                  text="RECEIVE"
-                  onPress={() => {
-                    console.log("Press RECEIVE");
-                  }}
-                  size={Fonts.size.large}
+                In order to activate your XRP wallet, you must first send at
+                least
+                <Text> </Text>
+                <Text
                   style={{
-                    height: 40,
-                    backgroundColor: Colors.headerBackground,
-                    borderWidth: 0.5,
-                    borderColor: Colors.text,
+                    fontFamily: "DMSansBold",
+                    color: Colors.text,
+                    fontSize: Fonts.size.small,
+                    textAlign: "center",
                   }}
-                  disabled
-                />
-              </View>
-              <View style={styles.rightButtonContainer}>
-                <Custom_Button
-                  text="SEND"
-                  onPress={() => {
-                    console.log("Press SEND");
-                  }}
-                  size={Fonts.size.large}
-                  style={{ height: 40 }}
-                  disabled
-                />
-              </View>
+                >
+                  21 XRP
+                </Text>
+                <Text> </Text>
+                to this address
+              </Text>
             </View>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={styles.walletAddressContainer}>
-            <Custom_Text
-              value="Wallet Address"
-              size={Fonts.size.small}
-              color={Colors.grayText}
-              style={{ marginBottom: 3 }}
-            />
-            <Custom_Text value={walletAddress} size={Fonts.size.small} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <View style={{ paddingVertical: 2.5 }}>
-              <Custom_IconButton
-                onPress={() => writeToClipboard(walletAddress)}
-                icon="content-copy"
-                size={Fonts.size.normal}
-                style={{
-                  height: 20,
-                  width: 20,
-                  borderRadius: 0,
-                  backgroundColor: "transparent",
-                }}
-              />
-            </View>
-            <View style={{ paddingVertical: 2.5 }}>
-              <Custom_IconButton
+            <View style={{ marginTop: 8, marginBottom: 30 }}>
+              <Custom_Button
+                text="Activate"
                 onPress={() => {
-                  setWalletAddressModalVisible(true);
+                  console.log("Press Activate");
+                  // setActivateModalVisible(true);
+                  navigation.navigate({
+                    routeName: "ActivateWalletScreen",
+                    key: "ActivateWalletScreen",
+                    params: {
+                      currency: currency.toLowerCase(),
+                      walletAddress,
+                    },
+                  });
                 }}
-                icon="qrcode"
-                size={Fonts.size.normal}
+                style={{ height: 40, width: 100 }}
+              />
+            </View>
+            <View>
+              <Custom_IconButton
+                icon="questioncircle"
+                color={Colors.grayText}
+                text="Why 21 XRP"
+                textSize={Fonts.size.small}
+                size={13}
                 style={{
-                  height: 20,
-                  width: 20,
-                  borderRadius: 0,
-                  backgroundColor: "transparent",
+                  height: 12,
+                  width: 12,
+                  backgroundColor: "#FFF",
+                }}
+                textStyle={{
+                  paddingRight: 5,
+                }}
+                onPress={() => {
+                  setModalVisible(true);
                 }}
               />
             </View>
+            <View
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                zIndex: 50,
+                opacity: 0.3,
+              }}
+            >
+              <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
+                <View style={styles.leftButtonContainer}>
+                  <Custom_Button
+                    text="RECEIVE"
+                    onPress={() => {
+                      console.log("Press RECEIVE");
+                    }}
+                    size={Fonts.size.large}
+                    style={{
+                      height: 40,
+                      backgroundColor: Colors.headerBackground,
+                      borderWidth: 0.5,
+                      borderColor: Colors.text,
+                    }}
+                    disabled
+                  />
+                </View>
+                <View style={styles.rightButtonContainer}>
+                  <Custom_Button
+                    text="SEND"
+                    onPress={() => {
+                      console.log("Press SEND");
+                    }}
+                    size={Fonts.size.large}
+                    style={{ height: 40 }}
+                    disabled
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={styles.walletAddressContainer}>
+              <Custom_Text
+                value="Wallet Address"
+                size={Fonts.size.small}
+                color={Colors.grayText}
+                style={{ marginBottom: 3 }}
+              />
+              <Custom_Text value={walletAddress} size={Fonts.size.small} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <View style={{ paddingVertical: 2.5 }}>
+                <Custom_IconButton
+                  onPress={() => writeToClipboard(walletAddress)}
+                  icon="content-copy"
+                  size={Fonts.size.normal}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    borderRadius: 0,
+                    backgroundColor: "transparent",
+                  }}
+                />
+              </View>
+              <View style={{ paddingVertical: 2.5 }}>
+                <Custom_IconButton
+                  onPress={() => {
+                    setWalletAddressModalVisible(true);
+                  }}
+                  icon="qrcode"
+                  size={Fonts.size.normal}
+                  style={{
+                    height: 20,
+                    width: 20,
+                    borderRadius: 0,
+                    backgroundColor: "transparent",
+                  }}
+                />
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-      <Why21XRPModal
-        modalVisible={modalVisible}
-        onClose={() => setModalVisible(false)}
-      />
-      <ActivationSuccessfulModal
-        modalVisible={activateModalVisible}
-        onClose={() => setActivateModalVisible(false)}
-        currency="xrp"
-      />
-      <WalletAddressModal
-        data={walletAddress}
-        modalVisible={walletAddressModalVisible}
-        onClose={() => setWalletAddressModalVisible(false)}
-      />
-    </ScrollView>
+        <Why21XRPModal
+          modalVisible={modalVisible}
+          onClose={() => setModalVisible(false)}
+        />
+        <ActivationSuccessfulModal
+          modalVisible={activateModalVisible}
+          onClose={() => setActivateModalVisible(false)}
+          currency="xrp"
+        />
+        <WalletAddressModal
+          data={walletAddress}
+          modalVisible={walletAddressModalVisible}
+          onClose={() => setWalletAddressModalVisible(false)}
+        />
+      </ScrollView>
+      <CopiedModal showModal={copiedModalVisible} />
+    </View>
   );
 }
 

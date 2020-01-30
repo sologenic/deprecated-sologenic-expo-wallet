@@ -187,6 +187,10 @@ function RecoveryPhraseTestScreen({
                   walletAddress,
                   passphrase,
                 );
+                console.log(
+                  "PRIVATE KEY =========================>",
+                  newWallet.wallet.privateKey,
+                );
                 const secureNewWallet = {
                   derivationPath: newWallet.derivationPath,
                   wallet: {

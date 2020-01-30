@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { connect } from "react-redux";
 import * as WebBrowser from "expo-web-browser";
 import * as LocalAuthentication from "expo-local-authentication";
+import { persistStore } from "redux-persist";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -14,6 +15,8 @@ import Custom_MultiSelectInput from "../components/shared/Custom_MultiSelectInpu
 import currencies from "../constants/currencies";
 import { updateBaseCurrency, getMarketData } from "../actions";
 import config from "../constants/config";
+import appConfig from "../app.config";
+import ResetDataModal from "../components/shared/ResetDataModal";
 
 function SettingsScreen({
   navigation,
@@ -21,9 +24,15 @@ function SettingsScreen({
   baseCurrency,
   updateAccountBaseCurrency,
   getMarketData,
+  pin,
+  // persistor,
 }) {
+  // console.log(persistor);
   const [availableUnlockMethods, setAvailableUnlockMethods] = useState(null);
   const [unlockText, setUnlockText] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [showPinError, setShowPinError] = useState(false);
+  const [code, setCode] = useState("");
   useEffect(() => {
     getAvailableUnlockMethods();
     getMarketData(baseCurrency.value);
@@ -162,15 +171,47 @@ function SettingsScreen({
             }}
           />
         </View>
+        {/* <View style={{ marginTop: 15, marginHorizontal: 15 }}>
+          <Custom_Text
+            value="Reset"
+            style={{ marginLeft: 15, marginBottom: 10 }}
+            isBold
+          />
+          <Custom_NavButton
+            value="Reset all data"
+            handleOnPress={() => {
+              setShowModal(true);
+            }}
+          />
+        </View> */}
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
-            value={`Version 1.0.0`}
+            value={`Version ${appConfig.version}`}
             style={{ marginTop: 20, textAlign: "center" }}
             color={Colors.grayText}
             isBold
           />
         </View>
       </ScrollView>
+      <ResetDataModal
+        modalVisible={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setShowPinError(false);
+          setCode("");
+        }}
+        onChangeCode={setCode}
+        code={code}
+        showError={showPinError}
+        onPress={() => {
+          if (pin !== code) {
+            setShowPinError(true);
+          } else {
+            setShowModal(false);
+            persistStore(store).purge();
+          }
+        }}
+      />
     </View>
   );
 }
@@ -190,9 +231,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ unlockMethod, baseCurrency }) => ({
-  unlockMethod,
-  baseCurrency,
+const mapStateToProps = store => ({
+  store,
+  unlockMethod: store.unlockMethod,
+  baseCurrency: store.baseCurrency,
+  pin: store.pin,
+  // persistor: store.persistor,
 });
 
 const mapDispatchToProps = dispatch => ({

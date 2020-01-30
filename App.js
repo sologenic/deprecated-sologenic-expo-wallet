@@ -50,7 +50,7 @@ sagaMiddleware.run(rootSaga);
 
 export default function App(props) {
   return (
-    <Provider store={store}>
+    <Provider store={{ ...store, persistor }}>
       <PersistGate loading={null} persistor={persistor}>
         <RootContainer />
       </PersistGate>

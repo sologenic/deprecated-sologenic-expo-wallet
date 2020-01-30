@@ -334,9 +334,10 @@ export const createTrustlineSuccess = id => {
   };
 };
 
-export const createTrustlineError = () => {
+export const createTrustlineError = data => {
   return {
     type: "CREATE_TRUSTLINE_ERROR",
+    payload: data,
   };
 };
 
