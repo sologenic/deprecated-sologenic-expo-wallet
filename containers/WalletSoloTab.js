@@ -532,7 +532,6 @@ function WalletSoloTab({
             ) : !getTransactionsPending && transactions ? (
               <View>
                 {transactions.map((item, index) => {
-                  console.log("=========", item)
                   if (item.type === "payment") {
                     return (
                       <TransactionCard
