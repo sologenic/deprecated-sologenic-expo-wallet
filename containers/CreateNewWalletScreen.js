@@ -25,6 +25,7 @@ import {
   generateMnemonicArray,
 } from "../utils";
 import { generateNewWallet, saveNickname } from "../actions";
+import Custom_Text from "../components/shared/Custom_Text";
 
 function CreateNewWallet({ navigation, generateNewWallet }) {
   const [textValue, onChangeText] = useState("");
@@ -64,10 +65,12 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             onChangeText={text => {
               onChangePassphrase(text);
             }}
-            label="Wallet Passphrase"
+            label="Wallet Password"
             keyboardType="default"
             returnKeyType="done"
             secureTextEntry={secureEntry}
+            placeholder="Enter new password"
+            placeholderTextColor={Colors.grayText}
           />
           <TouchableOpacity
             style={{
@@ -91,6 +94,7 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             /> */}
           </TouchableOpacity>
         </View>
+          <Custom_Text value="Note: You will need to enter your password every time you want to make a transaction." style={{ marginHorizontal: 40, marginTop: 5 }} size={10} />
       </View>
       <View style={styles.footer}>
         <Custom_Button

@@ -156,17 +156,21 @@ function PassphraseTab({
           placeholderTextColor={colors.grayText}
         />
       </View>
-      <View style={{ marginBottom: 30 }}>
+      <View style={{}}>
         <Custom_TextInput
           value={passphrase}
           onChangeText={text => {
             setPassphrase(text);
           }}
-          label="Wallet Passphrase"
+          label="Wallet Password"
           keyboardType="default"
           returnKeyType="done"
+          placeholder="Enter new password"
+          placeholderTextColor={colors.grayText}
+          secureTextEntry
         />
       </View>
+      <Custom_Text value="Note: You will need to enter your password every time you want to make a transaction." style={{ marginHorizontal: 40, marginTop: 5, marginBottom: 30  }} size={10} />
       <View style={styles.addWalletContainer}>
         <Custom_Button
           text="Add Wallet"

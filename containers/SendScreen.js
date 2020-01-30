@@ -242,9 +242,10 @@ function SendScreen({
               onChangeText={text => {
                 handleChangePassphrase(text);
               }}
-              label="Wallet Passphrase"
+              label="Wallet Password"
               keyboardType="default"
               returnKeyType="done"
+              secureTextEntry
             />
           </View>
           <View style={{ marginHorizontal: 24, marginTop: 50 }}>

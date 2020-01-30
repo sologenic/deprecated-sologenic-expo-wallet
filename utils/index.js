@@ -300,7 +300,20 @@ export const filterTransactions = (transactions, currentLedger) => {
   };
 };
 
-export function formatBalance(value, precision) {
+export function formatBalance(value, precision = 6) {
+  const regex = new RegExp("^-?\\d+(?:\\.\\d{0," + precision + "})?", "g");
+  const a = value.toString().match(regex)[0];
+  const dot = a.indexOf(".");
+
+  if (dot === -1) {
+    return a + "." + "0".repeat(precision);
+  }
+
+  const b = precision - (a.length - dot) + 1;
+  return b > 0 ? a + "0".repeat(b) : a;
+}
+
+export function format(value, precision = 6) {
   const regex = new RegExp("^-?\\d+(?:\\.\\d{0," + precision + "})?", "g");
   const a = value.toString().match(regex)[0];
   const dot = a.indexOf(".");
@@ -313,29 +326,6 @@ export function formatBalance(value, precision) {
   return b > 0
     ? a + "0".repeat(b).replace(/\d(?=(\d{3})+\.)/g, "$&,")
     : a.replace(/\d(?=(\d{3})+\.)/g, "$&,");
-}
-
-export function format(value, precision = 6) {
-  var p = "0,0.";
-  for (var i = 0; i < precision; i++) {
-    p += "0";
-  }
-
-  var styledVolume = numbro(value).format(p);
-  var position = getPositionOfLeadingZeros(styledVolume);
-  var a = styledVolume.substring(0, position);
-  var b = styledVolume.substring(position);
-
-  if (a === "") {
-    return <span>0</span>;
-  }
-
-  a = a.split(".");
-
-  if (value === 0) {
-    return "0";
-  }
-  return `${a[0]}.${a[1].replace(".", "")}${b}`;
 }
 
 function getPositionOfLeadingZeros(data) {

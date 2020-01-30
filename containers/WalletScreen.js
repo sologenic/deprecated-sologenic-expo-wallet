@@ -87,7 +87,7 @@ function WalletScreen({
   marketData,
   soloData,
 }) {
-  // console.log(wallet);
+  console.log(wallet);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(5);
