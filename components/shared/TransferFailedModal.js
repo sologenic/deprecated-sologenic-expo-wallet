@@ -6,7 +6,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
-  Text,
+  Text
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -22,6 +22,7 @@ export default function TransferFailedModal({
   style,
   currency,
   navigation,
+  errorMessage
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -32,7 +33,7 @@ export default function TransferFailedModal({
               <View
                 style={[
                   styles.section,
-                  { height: 70, alignItems: "flex-start", marginRight: 60 },
+                  { height: 70, alignItems: "flex-start", marginRight: 60 }
                 ]}
               >
                 <Custom_Text
@@ -45,12 +46,17 @@ export default function TransferFailedModal({
               <View
                 style={[
                   styles.section,
-                  { marginBottom: 20, flexDirection: "row", width: 230 },
+                  { marginBottom: 20, flexDirection: "row", width: 230 }
                 ]}
               >
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Your transfer cannot be processed. Please try again or contact our support team if the problem persists.`}
+                    // value={`Your transfer cannot be processed. Please try again or contact our support team if the problem persists.`}
+                    value={
+                      errorMessage
+                        ? errorMessage
+                        : `Your transfer cannot be processed. Please try again or contact our support team if the problem persists.`
+                    }
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
@@ -86,7 +92,7 @@ export default function TransferFailedModal({
                 <View
                   style={[
                     styles.section,
-                    { height: 50, position: "absolute", right: 130, bottom: 0 },
+                    { height: 50, position: "absolute", right: 130, bottom: 0 }
                   ]}
                 >
                   <Custom_Button
@@ -101,7 +107,7 @@ export default function TransferFailedModal({
                 <View
                   style={[
                     styles.section,
-                    { height: 50, position: "absolute", right: 0, bottom: 0 },
+                    { height: 50, position: "absolute", right: 0, bottom: 0 }
                   ]}
                 >
                   <Custom_Button
@@ -125,13 +131,13 @@ TransferFailedModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({}),
+  style: PropTypes.shape({})
 };
 
 TransferFailedModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false,
+  pressed: false
 };
 
 const styles = StyleSheet.create({
@@ -142,12 +148,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40,
+    paddingHorizontal: 40
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10,
+    borderRadius: 10
     // height: 100,
     // width: 200,
     // zIndex: 20,
@@ -155,10 +161,10 @@ const styles = StyleSheet.create({
   section: {
     justifyContent: "center",
     alignItems: "flex-start",
-    marginHorizontal: 24,
+    marginHorizontal: 24
   },
   line: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: Colors.grayText,
-  },
+    backgroundColor: Colors.grayText
+  }
 });

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 // import P from "prop-types";
 import { StyleSheet, View, TouchableOpacity, Clipboard } from "react-native";
 import moment from "moment-timezone";
+import * as WebBrowser from "expo-web-browser";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Button from "../components/shared/Custom_Button";
@@ -9,6 +10,7 @@ import Custom_IconButton from "../components/shared/Custom_IconButton";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import appConfig from "../app.config";
+import config from "../constants/config";
 
 // const propTypes = {
 //   transaction: P.shape({
@@ -43,7 +45,7 @@ import appConfig from "../app.config";
 // }
 
 export default function TransactionCard({ transaction, walletAddress }) {
-  const { outcome, specification, type } = transaction;
+  const { outcome, specification, type, id } = transaction;
   // const failedTransaction = outcome.result === 'tecUNFUNDED_PAYMENT';
   const currency = outcome.deliveredAmount
     ? outcome.deliveredAmount.currency
@@ -53,6 +55,9 @@ export default function TransactionCard({ transaction, walletAddress }) {
   const timestamp = outcome ? outcome.timestamp : "";
   const result = outcome ? outcome.result : "";
   const fee = outcome ? outcome.fee : "";
+  
+  const burnAmount = Number(value) * 0.0001;
+
   const ledgerVersion = outcome ? outcome.ledgerVersion : "";
   const fundsRecevied =
     specification &&
@@ -66,6 +71,7 @@ export default function TransactionCard({ transaction, walletAddress }) {
     specification.destination.address === walletAddress
       ? specification.source.address
       : specification.destination.address;
+  const txId = id;
   const [expanded, setExpanded] = useState(false);
 
   const Circle = () => {
@@ -92,53 +98,112 @@ export default function TransactionCard({ transaction, walletAddress }) {
 
   const renderLowpperView = () => {
     return (
-      <TouchableOpacity
-        style={styles.lowerViewContainer}
-        onPress={() => {
-          setExpanded(!expanded);
-        }}
-        activeOpacity={0.9}
-      >
-        <View style={styles.confirmationContainer}>
-          <Custom_Text value="Confirmations" size={10} />
-          <Custom_Text value={ledgerVersion} size={Fonts.size.small} isBold />
-        </View>
-        <View style={styles.feeContainer}>
-          <Custom_Text value="Fee" size={10} />
-          <View style={{ flexDirection: "row" }}>
-            <Custom_Text
-              value={isSolo ? "Ƨ" : currency.toUpperCase()}
-              size={9}
-              style={{ marginTop: 2 }}
-            />
-            <Custom_Text value={` ${fee}`} size={Fonts.size.small} isBold />
+      <View>
+        <TouchableOpacity
+          style={styles.lowerViewContainer}
+          onPress={() => {
+            setExpanded(!expanded);
+          }}
+          activeOpacity={0.9}
+        >
+          <View style={styles.confirmationContainer}>
+            <Custom_Text value="Confirmations" size={10} />
+            <Custom_Text value={ledgerVersion} size={Fonts.size.small} isBold />
           </View>
-        </View>
-        <View style={styles.copyAddressContainer}>
-          <View
-            style={{
-              borderRadius: 16.5,
-              borderWidth: 0.5,
-              borderColor: Colors.lighterGray,
-            }}
-          >
-            <Custom_Button
-              text="Copy Address"
-              onPress={() => writeToClipboard(copyAddress)}
-              size={8}
-              fontSize={Fonts.size.tiny}
+          <View style={styles.feeContainer}>
+            <Custom_Text value="Tx Fee" size={10} />
+            <View style={{ flexDirection: "row" }}>
+              <Custom_Text
+                value={isSolo ? "Ƨ" : currency.toUpperCase()}
+                size={9}
+                style={{ marginTop: 2 }}
+              />
+              <Custom_Text value={` ${fee}`} size={Fonts.size.small} isBold />
+            </View>
+          </View>
+          <View style={styles.burnAmountContainer}>
+            <Custom_Text value="Burn Amount" size={10} />
+            <View style={{ flexDirection: "row" }}>
+              <Custom_Text
+                value={isSolo ? "Ƨ" : currency.toUpperCase()}
+                size={9}
+                style={{ marginTop: 2 }}
+              />
+              <Custom_Text value={` ${burnAmount.toFixed(4)}`} size={Fonts.size.small} isBold />
+            </View>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.lowerViewContainer}
+          onPress={() => {
+            setExpanded(!expanded);
+          }}
+          activeOpacity={0.9}
+        >
+          <View style={styles.copyAddressContainer}>
+            <View
               style={{
-                paddingHorizontal: 8,
-                backgroundColor: "transparent",
-                justifyContent: "center",
-                alignItems: "center",
+                borderRadius: 16.5,
+                borderWidth: 0.5,
+                borderColor: Colors.lighterGray,
               }}
-              icon="content-copy"
-              isBold={false}
-            />
+            >
+              <Custom_Button
+                text="Copy Address"
+                onPress={() => writeToClipboard(copyAddress)}
+                size={8}
+                fontSize={Fonts.size.tiny}
+                style={{
+                  paddingHorizontal: 8,
+                  backgroundColor: "transparent",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                icon="content-copy"
+                isBold={false}
+              />
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
+          <View style={styles.copyTxIdContainer}>
+            <View
+              style={{
+                borderRadius: 16.5,
+                borderWidth: 0.5,
+                borderColor: Colors.lighterGray,
+              }}
+            >
+              <Custom_Button
+                text="Copy TX ID"
+                onPress={() => writeToClipboard(txId)}
+                size={8}
+                fontSize={Fonts.size.tiny}
+                style={{
+                  paddingHorizontal: 8,
+                  backgroundColor: "transparent",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+                icon="content-copy"
+                isBold={false}
+              />
+            </View>
+          </View>
+          <View style={styles.viewBithompContainer}>
+            <TouchableOpacity 
+              style={{ borderBottomColor: Colors.text, borderBottomWidth: 0.5 }}
+              onPress={() => {
+                WebBrowser.openBrowserAsync(`${config.bithompUrl}/${txId}`);
+              }}
+            >
+              <Custom_Text
+                value="View on Bithomp"
+                size={9}
+                style={{ marginTop: 2 }}
+              />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   };
 
@@ -148,7 +213,7 @@ export default function TransactionCard({ transaction, walletAddress }) {
   };
 
   return (
-    <View style={[styles.container, { height: expanded ? 80 : 40 }]}>
+    <View style={[styles.container, { height: expanded ? 120 : 40 }]}>
       <TouchableOpacity
         style={styles.upperViewContainer}
         onPress={() => {
@@ -189,7 +254,8 @@ export default function TransactionCard({ transaction, walletAddress }) {
           style={{
             flex: 4,
             flexDirection: "row",
-            justifyContent: "flex-end",
+            // justifyContent: "flex-start",
+            justifyContent: "space-between",
           }}
         >
           <View style={styles.statusContainer}>
@@ -298,13 +364,29 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-start",
   },
+  burnAmountContainer: {
+    flex: 4,
+    // height: 40,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
   copyAddressContainer: {
     flex: 4,
     height: 40,
     justifyContent: "center",
-    alignItems: "center",
-    // paddingRight: 13,
-    // paddingLeft: 12.5,
-    // paddingBottom: 5,
+    alignItems: "flex-start",
+    // marginRight: 10,
+  },
+  copyTxIdContainer: {
+    flex: 4,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "flex-start",
+  },
+  viewBithompContainer: {
+    flex: 4,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "flex-start",
   },
 });

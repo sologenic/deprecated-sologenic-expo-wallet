@@ -26,6 +26,8 @@ const persistConfig = {
     "authSetupComplete",
     "unlockMethod",
     "wallets",
+    "marketData",
+    "soloData",
   ],
   // transforms: [persistedUserState],
   // blacklist: ["isAuthenticated"],

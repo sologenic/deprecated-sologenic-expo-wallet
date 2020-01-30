@@ -13,6 +13,7 @@
   "dependencies": {
     "@expo/samples": "~36.0.0",
     "@expo/vector-icons": "~10.0.0",
+    "@react-native-community/netinfo": "^5.3.3",
     "@react-navigation/web": "~1.0.0-alpha.9",
     "@tradle/react-native-http": "^2.0.1",
     "apisauce": "^1.1.1",
