@@ -123,8 +123,6 @@ function WalletsScreen({
         ) : wallets.length > 0 ? (
           <View style={styles.section}>
             {wallets.map((item, index) => {
-              // console.log("hey", item.id, item.walletAddress)
-              // getBalance(item.id, item.rippleClassicAddress);
               return (
                 <View key={index} style={{ marginBottom: 20 }}>
                   <WalletCard
