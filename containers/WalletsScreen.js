@@ -63,7 +63,8 @@ function WalletsScreen({
   useEffect(() => {
     if (netinfo) {
       console.log("netinfo is true", netinfo);
-      fetchData();    
+      fetchData();
+      connectToRippleApi();
     }
   }, [netinfo]);
 

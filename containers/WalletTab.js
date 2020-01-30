@@ -31,6 +31,7 @@ import {
   getMarketData,
   getSoloData,
   getMarketSevens,
+  connectToRippleApi,
 } from "../actions";
 import CopiedModal from "../components/shared/CopiedModal";
 
@@ -55,6 +56,7 @@ function WalletTab({
   pullToRefreshBalancePending,
   getTransactions,
   netinfo,
+  connectToRippleApi,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
@@ -72,6 +74,7 @@ function WalletTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
+      connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -622,6 +625,7 @@ const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
 export default connect(

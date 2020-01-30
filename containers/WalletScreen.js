@@ -39,6 +39,7 @@ import {
   getMarketData,
   getSoloData,
   getMarketSevens,
+  connectToRippleApi,
 } from "../actions";
 import { formatWalletTotalBalance } from "../utils";
 
@@ -90,6 +91,7 @@ function WalletScreen({
   marketData,
   soloData,
   netinfo,
+  connectToRippleApi,
 }) {
   console.log(wallet);
   const [tab, handleTabView] = useState(1);
@@ -108,6 +110,7 @@ function WalletScreen({
   useEffect(() => {
     if (netinfo) {
       fetchData();
+      connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -406,6 +409,7 @@ const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
 export default connect(

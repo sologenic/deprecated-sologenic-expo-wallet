@@ -28,6 +28,7 @@ import {
   getMarketData,
   getSoloData,
   getMarketSevens,
+  connectToRippleApi,
 } from "../actions";
 import { headerHeight } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
@@ -62,6 +63,7 @@ function WalletSoloTab({
   getMarketData,
   getSoloData,
   getMarketSevens,
+  connectToRippleApi,
 }) {
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
@@ -78,6 +80,7 @@ function WalletSoloTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
+      connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -662,6 +665,7 @@ const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
 export default connect(
