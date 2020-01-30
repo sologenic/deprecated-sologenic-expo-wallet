@@ -91,7 +91,7 @@ function WalletScreen({
   soloData,
   netinfo,
 }) {
-  // console.log(wallet);
+  console.log(wallet);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(5);

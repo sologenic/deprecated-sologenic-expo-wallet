@@ -32,6 +32,7 @@ import {
   transferSoloSuccess,
   getSoloDataSuccess,
   getSoloDataError,
+  createTrustlineReset,
 } from "../actions";
 import {
   createSevensObj,
@@ -217,7 +218,7 @@ const setAccount = (address, passphrase, salt, encrypted, publicKey) => {
   const decrypted = decrypt(encrypted, salt, address, passphrase);
   const rippleApi = sologenic.getRippleApi();
   const isSecret = rippleApi.isValidSecret(decrypted);
-  console.log("SET ACCOUNT =====", {
+  console.log("SET ACCOUNT DESCRYPTED =====", {
     decrypted,
     isSecret,
   });
@@ -273,10 +274,32 @@ function* requestCreateTrustline(action) {
     // } else {
     const tx = yield call(setTrustline, address);
     console.log("tx", tx);
-    const response = yield tx.promise;
+
+    yield tx.events
+      .on("queued", tx => {
+        console.log("QUEUED", tx);
+      })
+      .on("dispatched", (tx, dispatched) => {
+        console.log("DISPATCHED", tx, dispatched);
+      })
+      .on("requeued", (tx, result) => {
+        console.log("REQUEUED", tx, result);
+      })
+      .on("warning", (type, code) => {
+        console.log("warning:", type, code);
+      })
+      .on("validated", (dispatched, result) => {
+        console.log("VALIDATED", dispatched, result);
+      })
+      .on("failed", (type, code) => {
+        console.log("failed:", type, code);
+      });
+
+    const response = tx.promise;
     console.log(response);
     if (response) {
       yield put(createTrustlineSuccess(id));
+      yield put(createTrustlineReset());
     } else {
       yield put(createTrustlineError());
     }
@@ -289,7 +312,9 @@ function* requestCreateTrustline(action) {
 
 const transferXrp = (account, destination, value) => {
   const valueAmount = value / 0.000001;
-
+  console.log(
+    "#$%^$#%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^",
+  );
   return sologenic.submit({
     TransactionType: "Payment",
     Account: account,
@@ -317,8 +342,9 @@ function* requestTransferXrp(action) {
     yield call(setAccount, account, passphrase, salt, encrypted, publicKey);
 
     const tx = yield call(transferXrp, account, destination, value);
-    const response = yield tx.promise;
-    console.log("REQUEST_TRANSFER_XRP ", response);
+    console.log("REQUEST_TRANSFER_XRP BEFORE ", tx);
+    const response = tx.promise;
+    console.log("REQUEST_TRANSFER_XRP AFTER", response);
     if (response.result && response.result.status === "failed") {
       console.log("REQUEST_TRANSFER_XRP_ERROR");
       yield put(transferXrpError(response.result.reason));
@@ -371,7 +397,7 @@ function* requestTransferSolo(action) {
     console.log("REQUEST_TRANSFER_SOLO value ", value);
     yield call(setAccount, account, passphrase, salt, encrypted, publicKey);
     const tx = yield call(transferSolo, account, destination, value);
-    const response = yield tx.promise;
+    const response = tx.promise;
     console.log("REQUEST_TRANSFER_SOLO ", response);
     if (response.result && response.result.status === "failed") {
       console.log("REQUEST_TRANSFER_SOLO_ERROR", response);

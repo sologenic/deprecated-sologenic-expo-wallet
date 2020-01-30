@@ -112,11 +112,15 @@ function WalletAddressSecretTab({
           onChangeText={text => {
             setPassphrase(text);
           }}
-          label="Wallet Passphrase"
+          label="Wallet Password"
           keyboardType="default"
           returnKeyType="done"
+          placeholder="Enter new password"
+          placeholderTextColor={colors.grayText}
+          secureTextEntry
         />
       </View>
+      <Custom_Text value="Note: You will need to enter your password every time you want to make a transaction." style={{ marginHorizontal: 40, marginTop: 5  }} size={10} />
       <View style={[styles.addWalletContainer, { marginTop: 70 }]}>
         <Custom_Button
           text="Add Wallet"

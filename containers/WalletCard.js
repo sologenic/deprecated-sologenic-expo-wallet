@@ -20,12 +20,12 @@ function WalletCard({
 }) {
   const { nickname, balance, walletAddress, id } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
-  const soloMarketPrice = soloData[baseCurrency.value];
-  const xrpBalanceInFiat = xrp * marketData.last;
-  const soloBalanceInFiat = solo * soloMarketPrice;
-  const totalBalance = formatWalletTotalBalance(
+  const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
+  const xrpBalanceInFiat = marketData ? xrp * marketData.last : "";
+  const soloBalanceInFiat = soloMarketPrice ? solo * soloMarketPrice : "";
+  const totalBalance =  xrpBalanceInFiat ? formatWalletTotalBalance(
     xrpBalanceInFiat + soloBalanceInFiat,
-  );
+  ) : "";
   useEffect(() => {
     fetchBalance();
     const getBalanceInterval = setInterval(() => {
@@ -113,31 +113,42 @@ function WalletCard({
               flex: 1,
             }}
           >
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ marginRight: 5, flexDirection: "row" }}>
-                <Custom_Text
-                  value={`${baseCurrency.symbol}`}
-                  numberOfLines={1}
-                  size={Fonts.size.small}
-                  isBold
-                />
-                <Custom_Text
-                  value={`${totalBalance}`}
-                  size={Fonts.size.small}
-                  numberOfLines={1}
-                  isBold
-                />
+            {totalBalance ? (
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ marginRight: 5, flexDirection: "row" }}>
+                  <Custom_Text
+                    value={`${baseCurrency.symbol}`}
+                    numberOfLines={1}
+                    size={Fonts.size.small}
+                    isBold
+                  />
+                  <Custom_Text
+                    value={`${totalBalance}`}
+                    size={Fonts.size.small}
+                    numberOfLines={1}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value={`${baseCurrency.label}`}
+                    // value={`${defaultCurrency}`}
+                    size={Fonts.size.small}
+                    color={Colors.lighterGray}
+                    isBold
+                  />
+                </View>
               </View>
+            ) : (
               <View>
                 <Custom_Text
-                  value={`${baseCurrency.label}`}
-                  // value={`${defaultCurrency}`}
+                  value="Your device is offline"
                   size={Fonts.size.small}
-                  color={Colors.lighterGray}
+                  numberOfLines={1}
                   isBold
                 />
               </View>
-            </View>
+            )}
             <Custom_Text
               value={`${tokenizedAssets}`}
               size={Fonts.size.small}

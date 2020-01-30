@@ -125,7 +125,35 @@ function TermsScreen({ navigation, completeOrientation }) {
               SOLOGENIC DECENTRALIZED WALLET
             </Text>
           </View>
-          <Text style={[styles.textBoldStyle]}>License Agreement</Text>
+          <View>
+            {/* <Text
+              style={[
+                styles.textBoldStyle,
+                { fontSize: 16, textAlign: "center", marginTop: 11 },
+              ]}
+            >
+              License Agreement
+            </Text> */}
+            <Custom_Button
+              text="View License Agreement"
+              onPress={() => {
+                console.log(navigation);
+                navigation.navigate({
+                  key: "LicenseAgreementScreen",
+                  routeName: "LicenseAgreementScreen",
+                });
+              }}
+              color={Colors.text}
+              size={14}
+              textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
+              style={{
+                marginTop: 25,
+                backgroundColor: Colors.darkRed,
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+              }}
+            />
+          </View>
         </ScrollView>
       </View>
       <View
@@ -204,7 +232,7 @@ function TermsScreen({ navigation, completeOrientation }) {
             imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
           />
         </View>
-        <View style={{ alignItems: "flex-end" }}>
+        <View style={{ alignItems: "flex-end", zIndex: 100 }}>
           <Custom_Button
             text="Next"
             onPress={() => completeOrientation(true)}
@@ -230,6 +258,7 @@ function TermsScreen({ navigation, completeOrientation }) {
             position: "absolute",
             bottom: 30,
             zIndex: 10,
+            // backgroundColor: "red",
           }}
         >
           <Text

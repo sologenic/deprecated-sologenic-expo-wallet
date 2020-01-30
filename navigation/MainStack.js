@@ -23,6 +23,7 @@ import RecoveryPhraseTestScreen from "../containers/RecoveryPhraseTestScreen";
 import ChangeWalletNicknameScreen from "../containers/ChangeWalletNicknameScreen";
 import ConfirmUnlockMethodScreen from "../containers/ConfirmUnlockMethodScreen";
 import TermsScreen from "../containers/TermsScreen";
+import LicenseAgreementScreen from "../containers/LicenseAgreementScreen";
 
 const MainStack = createStackNavigator(
   {
@@ -98,6 +99,7 @@ const MainStack = createStackNavigator(
     RecoveryPhraseTestScreen: RecoveryPhraseTestScreen,
     ChangeWalletNicknameScreen: ChangeWalletNicknameScreen,
     TermsScreen: TermsScreen,
+    LicenseAgreementScreen: LicenseAgreementScreen,
   },
   {
     headerMode: "none",

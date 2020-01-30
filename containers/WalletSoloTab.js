@@ -32,6 +32,7 @@ import {
 import { headerHeight } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
 import { formatBalance } from "../utils";
+import EnterPasswordModal from "../components/shared/EnterPasswordModal";
 
 function WalletSoloTab({
   navigation,
@@ -63,6 +64,8 @@ function WalletSoloTab({
   getMarketSevens,
 }) {
   const [activateModalVisible, setActivateModalVisible] = useState(false);
+  const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const [passwordValue, setPasswordValue] = useState("");
   const [
     activateSuccessfulModalVisible,
     setActivateSuccessfulModalVisible,
@@ -170,15 +173,7 @@ function WalletSoloTab({
               <Custom_Button
                 text="Activate"
                 onPress={() => {
-                  setActivateModalVisible(true);
-                  createTrustline({
-                    address: walletAddress,
-                    id,
-                    passphrase: "test",
-                    salt,
-                    encrypted,
-                    publicKey,
-                  });
+                  setPasswordModalVisible(true);
                 }}
                 style={{
                   height: 40,
@@ -278,6 +273,25 @@ function WalletSoloTab({
           data={walletAddress}
           modalVisible={walletAddressModalVisible}
           onClose={() => setWalletAddressModalVisible(false)}
+        />
+        <EnterPasswordModal
+          modalVisible={passwordModalVisible}
+          onClose={() => setPasswordModalVisible(false)}
+          onChangePassword={setPasswordValue}
+          password={passwordValue}
+          onPress={() => {
+            setPasswordModalVisible(false);
+            setActivateModalVisible(true);
+            setActivateModalVisible(true);
+            createTrustline({
+              address: walletAddress,
+              id,
+              passphrase: passwordValue,
+              salt,
+              encrypted,
+              publicKey,
+            });
+          }}
         />
         <ActivationSoloModal
           modalVisible={activateModalVisible}
@@ -515,6 +529,7 @@ function WalletSoloTab({
             ) : !getTransactionsPending && transactions ? (
               <View>
                 {transactions.map((item, index) => {
+                  console.log("=========", item)
                   if (item.type === "payment") {
                     return (
                       <TransactionCard
