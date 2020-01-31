@@ -38,6 +38,8 @@ function SendScreen({
   transferXrpPending,
   transferXrpSuccess,
   transferXrpError,
+  transferXrpErrorStr,
+  transferSoloErrorStr,
   transferXrpReset,
   transferSolo,
   transferSoloPending,
@@ -346,6 +348,7 @@ function SendScreen({
         />
         <TransferFailedModal
           modalVisible={transferErrorModalVisible}
+          value={transferXrpError ? transferXrpErrorStr : transferSoloErrorStr}
           onPress={() => {
             if (currency === "xrp") {
               transferXrpReset();
@@ -391,6 +394,8 @@ const mapStateToProps = ({
   transferSoloSuccess,
   transferSoloError,
   transferSoloPending,
+  transferXrpErrorStr,
+  transferSoloErrorStr,
   baseCurrency,
   marketData,
   wallet,
@@ -401,6 +406,9 @@ const mapStateToProps = ({
   transferSoloSuccess,
   transferSoloError,
   transferSoloPending,
+  transferXrpError,
+  transferXrpErrorStr,
+  transferSoloErrorStr,
   baseCurrency,
   marketData,
   wallet,

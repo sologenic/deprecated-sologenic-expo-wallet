@@ -293,7 +293,17 @@ function* requestCreateTrustline(action) {
       console.log("tx", tx);
       const response = yield tx.promise;
       console.log(response);
-      if (response) {
+      if (response.result && response.result.status === "failed") {
+        if (response.result.reason === "invalid_xrp_address") {
+          yield put(
+            createTrustlineError(
+              "Sorry, something went wrong! Please try again later.",
+            ),
+          );
+        } else {
+          yield put(createTrustlineError(response.result.reason));
+        }
+      } else if (response) {
         yield put(createTrustlineSuccess(id));
         yield put(createTrustlineReset());
       } else {
@@ -335,26 +345,62 @@ function* requestTransferXrp(action) {
     console.log("REQUEST_TRANSFER_XRP destination ", destination);
     console.log("REQUEST_TRANSFER_XRP value ", value);
     // passphrase, salt, encrypted, publicKey
-    yield call(setAccount, account, passphrase, salt, encrypted, publicKey);
+    const validCredentials = yield call(
+      setAccount,
+      account,
+      passphrase,
+      salt,
+      encrypted,
+      publicKey,
+    );
 
-    const tx = yield call(transferXrp, account, destination, value);
-    console.log("REQUEST_TRANSFER_XRP BEFORE ", tx);
-    const response = yield tx.promise;
-    console.log("REQUEST_TRANSFER_XRP AFTER", response);
-    if (response.result && response.result.status === "failed") {
-      console.log("REQUEST_TRANSFER_XRP_ERROR");
-      yield put(transferXrpError(response.result.reason));
-    } else if (response) {
-      yield put(transferXrpSuccess(response));
-      yield call(requestGetBalance, { id: account, address: account });
-      yield call(requestGetTransactions, { address: account, limit: 5 });
-      yield call(requestGetBalance, { id: destination, address: destination });
-      yield call(requestGetTransactions, { address: destination, limit: 5 });
-      console.log("REQUEST_TRANSFER_XRP_SUCCESS: ", response);
+    if (validCredentials === "invalid") {
+      yield put(
+        transferXrpError(
+          "Transfer failed. Please make sure you enetered the correct password.",
+        ),
+      );
+    } else {
+      const tx = yield call(transferXrp, account, destination, value);
+      console.log("REQUEST_TRANSFER_XRP BEFORE ", tx);
+      const response = yield tx.promise;
+      console.log("REQUEST_TRANSFER_XRP AFTER", response);
+      if (response.result && response.result.status === "failed") {
+        console.log("REQUEST_TRANSFER_XRP_ERROR");
+        // yield put(transferXrpError(response.result.reason));
+        if (response.result.reason === "tecPATH_DRY") {
+          yield put(
+            transferXrpError(
+              "Transfer failed. Please make sure the address you're sending to has activated their wallet.",
+            ),
+          );
+        } else if (response.result.reason === "tecUNFUNDED_PAYMENT") {
+          yield put(
+            transferXrpError(
+              "Transfer failed. Please make sure you have enough funds in your wallet.",
+            ),
+          );
+        } else {
+          yield put(transferXrpError(response.result.reason));
+        }
+      } else if (response) {
+        yield put(transferXrpSuccess(response));
+        yield call(requestGetBalance, { id: account, address: account });
+        yield call(requestGetMoreTransactions, { address: account, limit: 10 });
+        yield call(requestGetBalance, {
+          id: destination,
+          address: destination,
+        });
+        console.log("REQUEST_TRANSFER_XRP_SUCCESS: ", response);
+      }
     }
   } catch (error) {
     console.log("REQUEST_TRANSFER_XRP_ERROR", error);
-    yield put(transferXrpError());
+    yield put(
+      transferXrpError(
+        `Your transfer could not be processed. Please try again.`,
+      ),
+    );
   }
 }
 
@@ -391,25 +437,60 @@ function* requestTransferSolo(action) {
     console.log("REQUEST_TRANSFER_SOLO account ", account);
     console.log("REQUEST_TRANSFER_SOLO destination ", destination);
     console.log("REQUEST_TRANSFER_SOLO value ", value);
-    yield call(setAccount, account, passphrase, salt, encrypted, publicKey);
-    const tx = yield call(transferSolo, account, destination, value);
-    const response = yield tx.promise;
+    const validCredentials = yield call(
+      setAccount,
+      account,
+      passphrase,
+      salt,
+      encrypted,
+      publicKey,
+    );
 
-    console.log("REQUEST_TRANSFER_SOLO ", response);
-    if (response.result && response.result.status === "failed") {
-      console.log("REQUEST_TRANSFER_SOLO_ERROR", response);
-      yield put(transferSoloError(response.result.reason));
-    } else if (response) {
-      yield put(transferSoloSuccess(response));
-      console.log("REQUEST_TRANSFER_SOLO_SUCCESS: ", response);
-      yield call(requestGetBalance, { id: account, address: account });
-      yield call(requestGetTransactions, { address: account, limit: 5 });
-      yield call(requestGetBalance, { id: destination, address: destination });
-      yield call(requestGetTransactions, { address: destination, limit: 5 });
+    if (validCredentials === "invalid") {
+      yield put(
+        transferSoloError(
+          "Transfer failed. Please make sure you enetered the correct password.",
+        ),
+      );
+    } else {
+      const tx = yield call(transferSolo, account, destination, value);
+      const response = yield tx.promise;
+      console.log("REQUEST_TRANSFER_SOLO ", response);
+      if (response.result && response.result.status === "failed") {
+        console.log("REQUEST_TRANSFER_SOLO_ERROR", response);
+        if (response.result.reason === "tecPATH_DRY") {
+          yield put(
+            transferSoloError(
+              "Transfer failed. Please make sure you have enough funds, or that the address you're sending to has activated their Solo wallet.",
+            ),
+          );
+        } else if (response.result.reason === "tecUNFUNDED_PAYMENT") {
+          yield put(
+            transferSoloError(
+              "Transfer failed. Please make sure you have enough funds in your wallet.",
+            ),
+          );
+        } else {
+          yield put(transferSoloError(response.result.reason));
+        }
+      } else if (response) {
+        yield put(transferSoloSuccess(response));
+        console.log("REQUEST_TRANSFER_SOLO_SUCCESS: ", response);
+        yield call(requestGetBalance, { id: account, address: account });
+        yield call(requestGetMoreTransactions, { address: account, limit: 10 });
+        yield call(requestGetBalance, {
+          id: destination,
+          address: destination,
+        });
+      }
     }
   } catch (error) {
     console.log("REQUEST_TRANSFER_SOLO_ERROR", error);
-    yield put(transferSoloError());
+    yield put(
+      transferSoloError(
+        "Your transfer could not be processed. Please try again.",
+      ),
+    );
   }
 }
 

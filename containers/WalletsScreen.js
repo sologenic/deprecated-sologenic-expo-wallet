@@ -21,7 +21,6 @@ import {
   getMarketData,
   getMarketSevens,
   getBalance,
-  connectToRippleApi,
   getSoloData,
 } from "../actions";
 import { screenWidth } from "../constants/Layout";
@@ -33,17 +32,12 @@ function WalletsScreen({
   getSoloData,
   getMarketSevens,
   getBalance,
-  connectToRippleApi,
   marketData,
   soloData,
   wallets,
   baseCurrency,
   screenProps: { rootNavigation },
 }) {
-  useEffect(() => {
-    connectToRippleApi();
-  }, []);
-
   useEffect(() => {
     fetchData();
     const getMarketDataInterval = setInterval(() => {
@@ -212,7 +206,6 @@ const mapDispatchToProps = dispatch => ({
   getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
-  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
 export default connect(

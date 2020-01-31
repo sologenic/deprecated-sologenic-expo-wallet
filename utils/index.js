@@ -6,8 +6,8 @@ const crypto = require("crypto");
 import Colors from "../constants/Colors";
 import { Wallet, Utils } from "xpring-common-js";
 // import { RippleAPI } from "ripple-lib";
-// import * as s from "sologenic-xrpl-stream-js";
-import * as s from "sologenic-xrpl-stream-js-non-redis";
+import * as s from "sologenic-xrpl-stream-js";
+// import * as s from "sologenic-xrpl-stream-js-non-redis";
 import appConfig from "../app.config";
 
 export const countWords = words => {
@@ -127,6 +127,7 @@ export const sologenic = new s.SologenicTxHandler(
   },
   // Sologenic Options, hash or redis
   {
+    // clearCache: true,
     queueType: "hash",
     hash: {},
   },

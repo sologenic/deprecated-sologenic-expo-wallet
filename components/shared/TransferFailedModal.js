@@ -19,9 +19,7 @@ export default function TransferFailedModal({
   onPress,
   onClose,
   modalVisible,
-  style,
-  currency,
-  navigation,
+  value,
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -50,7 +48,7 @@ export default function TransferFailedModal({
               >
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Your transfer cannot be processed. Please try again or contact our support team if the problem persists.`}
+                    value={value}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
