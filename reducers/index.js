@@ -717,6 +717,9 @@ const getNetInfo = (state, action) => {
     netinfo,
   });
 }
+const purgeStore = state => {
+  return Object.assign({}, state, defaultState);
+};
 
 export default (state = defaultState, action) => {
   switch (action.type) {
@@ -850,6 +853,8 @@ export default (state = defaultState, action) => {
       return resetWallet(state, action);
     case "GET_NET_INFO":
       return getNetInfo(state, action);
+    case "PURGE_STORE":
+      return purgeStore(state, action);
 
     default:
       return state;

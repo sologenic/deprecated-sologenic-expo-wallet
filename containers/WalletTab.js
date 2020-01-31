@@ -423,8 +423,6 @@ function WalletTab({
               <Custom_Button
                 text="Activate"
                 onPress={() => {
-                  console.log("Press Activate");
-                  // setActivateModalVisible(true);
                   navigation.navigate({
                     routeName: "ActivateWalletScreen",
                     key: "ActivateWalletScreen",

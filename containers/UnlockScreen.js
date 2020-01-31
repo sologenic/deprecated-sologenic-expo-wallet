@@ -211,7 +211,8 @@ class UnlockScreen extends React.Component {
                 <PinView
                   disabled={codeMatched}
                   onComplete={(val, clear) => {
-                    if (val === pin) {
+                    const v = val.length > 4 ? val.substring(0, 3) : val;
+                    if (v === pin) {
                       this.setState({
                         codeMatched: true,
                         showCodeError: false,

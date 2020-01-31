@@ -144,7 +144,11 @@ def jscFlavor = 'org.webkit:android-jsc:+'
 def enableHermes = project.ext.react.get("enableHermes", false);
 
 dependencies {
+<<<<<<< HEAD
     implementation project(':@react-native-community_netinfo')
+=======
+    implementation project(':react-native-splash-screen')
+>>>>>>> 1966435cd9e761c80976dbbca0df7bfa1f355062
     implementation project(':react-native-randombytes')
     implementation project(':react-native-svg')
     implementation project(':react-native-screens')

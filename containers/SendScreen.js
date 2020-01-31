@@ -237,7 +237,8 @@ function SendScreen({
             <Custom_TextInput
               value={tag}
               onChangeText={text => {
-                handleChangeTag(text);
+                var t = text.replace(/[^0-9.]/g, "");
+                handleChangeTag(t);
               }}
               label="Destination Tag"
               placeholder="Optional"
@@ -325,6 +326,7 @@ function SendScreen({
                 transferXrp({
                   account: walletAddress,
                   destination,
+                  tag,
                   value: amountToSend,
                   passphrase,
                   salt,
@@ -335,6 +337,7 @@ function SendScreen({
                 transferSolo({
                   account: walletAddress,
                   destination,
+                  tag,
                   value: amountToSend,
                   passphrase,
                   salt,
@@ -448,6 +451,7 @@ const mapDispatchToProps = dispatch => ({
   transferXrp: ({
     account,
     destination,
+    tag,
     value,
     passphrase,
     salt,
@@ -458,6 +462,7 @@ const mapDispatchToProps = dispatch => ({
       transferXrp({
         account,
         destination,
+        tag,
         value,
         passphrase,
         salt,
@@ -468,6 +473,7 @@ const mapDispatchToProps = dispatch => ({
   transferSolo: ({
     account,
     destination,
+    tag,
     value,
     passphrase,
     salt,
@@ -478,6 +484,7 @@ const mapDispatchToProps = dispatch => ({
       transferSolo({
         account,
         destination,
+        tag,
         value,
         passphrase,
         salt,

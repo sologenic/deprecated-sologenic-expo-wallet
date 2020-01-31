@@ -352,6 +352,7 @@ export const transferXrp = ({
   keypair,
   secret,
   destination,
+  tag,
   value,
   passphrase,
   salt,
@@ -364,6 +365,7 @@ export const transferXrp = ({
     keypair,
     secret,
     destination,
+    tag,
     value,
     passphrase,
     salt,
@@ -396,6 +398,7 @@ export const transferSolo = ({
   keypair,
   secret,
   destination,
+  tag,
   value,
   passphrase,
   salt,
@@ -408,6 +411,7 @@ export const transferSolo = ({
     keypair,
     secret,
     destination,
+    tag,
     value,
     passphrase,
     salt,
@@ -534,10 +538,14 @@ export const activateWallet = id => {
   };
 };
 
-
 export const getNetInfo = status => {
   return {
     type: "GET_NET_INFO",
     netinfo: status,
   }
 }
+export const purgeStore = () => {
+  return {
+    type: "PURGE_STORE",
+  };
+};

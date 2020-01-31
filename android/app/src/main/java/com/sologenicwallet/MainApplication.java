@@ -3,7 +3,11 @@ package com.sologenicwallet;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+<<<<<<< HEAD
 import com.reactnativecommunity.netinfo.NetInfoPackage;
+=======
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
+>>>>>>> 1966435cd9e761c80976dbbca0df7bfa1f355062
 import com.bitgo.randombytes.RandomBytesPackage;
 import com.horcrux.svg.SvgPackage;
 import com.facebook.react.ReactNativeHost;
@@ -43,7 +47,11 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+<<<<<<< HEAD
             new NetInfoPackage(),
+=======
+            new SplashScreenReactPackage(),
+>>>>>>> 1966435cd9e761c80976dbbca0df7bfa1f355062
             new RandomBytesPackage(),
             new SvgPackage(),
           new ReanimatedPackage(),

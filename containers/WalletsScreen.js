@@ -42,7 +42,7 @@ function WalletsScreen({
   netinfo,
   screenProps: { rootNavigation },
 }) {
-  console.log("HERE netinfo", netinfo);
+  // console.log("HERE netinfo", netinfo);
   useEffect(() => {
     console.log("netinfo is true", netinfo);
     if (netinfo) {

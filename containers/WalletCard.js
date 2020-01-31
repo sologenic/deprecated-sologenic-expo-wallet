@@ -18,7 +18,7 @@ function WalletCard({
   soloData,
   getBalance
 }) {
-  const { nickname, balance, walletAddress, id } = wallet;
+  const { nickname, balance, walletAddress, id, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
   const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
   const xrpBalanceInFiat = marketData ? xrp * marketData.last : "";
@@ -164,24 +164,29 @@ function WalletCard({
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Image source={Images.xrp} />
-            <View style={{ flexDirection: "row", paddingTop: 5 }}>
-              <View style={{ marginRight: 5 }}>
-                <Custom_Text
-                  value={`${formatBalance(xrp)}`}
-                  size={Fonts.size.normal}
-                  isBold
-                />
+            <Image source={Images.xrp} style={{ marginBottom: 5 }} />
+            {/* <Image source={Images.xrp} /> */}
+            {xrp === 0 ? (
+              <Custom_Text value="Not activated" size={Fonts.size.normal} />
+            ) : (
+              <View style={{ flexDirection: "row", paddingTop: 5 }}>
+                <View style={{ marginRight: 5 }}>
+                  <Custom_Text
+                    value={`${formatBalance(xrp)}`}
+                    size={Fonts.size.normal}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value="XRP"
+                    size={Fonts.size.normal}
+                    color={Colors.lighterGray}
+                    isBold
+                  />
+                </View>
               </View>
-              <View>
-                <Custom_Text
-                  value="XRP"
-                  size={Fonts.size.normal}
-                  color={Colors.lighterGray}
-                  isBold
-                />
-              </View>
-            </View>
+            )}
             {/* {wallet.isActive ? (
               <View style={{ flexDirection: "row", paddingTop: 5 }}>
                 <View style={{ marginRight: 5 }}>
@@ -212,24 +217,28 @@ function WalletCard({
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
-            <Image source={Images.solo} />
-            <View style={{ flexDirection: "row", paddingTop: 5 }}>
-              <View style={{ marginRight: 5 }}>
-                <Custom_Text
-                  value={`${formatBalance(solo)}`}
-                  size={Fonts.size.normal}
-                  isBold
-                />
+            <Image source={Images.solo} style={{ marginBottom: 5 }} />
+            {!trustline ? (
+              <Custom_Text value="Not activated" size={Fonts.size.normal} />
+            ) : (
+              <View style={{ flexDirection: "row", paddingTop: 5 }}>
+                <View style={{ marginRight: 5 }}>
+                  <Custom_Text
+                    value={`${formatBalance(solo)}`}
+                    size={Fonts.size.normal}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value="SOLO"
+                    size={Fonts.size.normal}
+                    color={Colors.lighterGray}
+                    isBold
+                  />
+                </View>
               </View>
-              <View>
-                <Custom_Text
-                  value="SOLO"
-                  size={Fonts.size.normal}
-                  color={Colors.lighterGray}
-                  isBold
-                />
-              </View>
-            </View>
+            )}
             {/* {wallet.trustline ? (
               <View style={{ flexDirection: "row", paddingTop: 5 }}>
                 <View style={{ marginRight: 5 }}>
