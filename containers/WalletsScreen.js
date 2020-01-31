@@ -148,7 +148,6 @@ function WalletsScreen({
                   <View key={index} style={{ marginBottom: 20 }}>
                     <WalletCard
                       navigation={navigation ? navigation : rootNavigation}
-                      // defaultCurrency="usd"
                       baseCurrency={baseCurrency}
                       wallet={item}
                       key={index}

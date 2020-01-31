@@ -90,7 +90,7 @@ export const getWalletFromMnemonic = mnemonic => {
 // Encode an X-Address
 export const getXAddressFromRippleClassicAddress = (
   rippleClassicAddress,
-  tag,
+  tag
 ) => {
   const xAddress = Utils.encodeXAddress(rippleClassicAddress, tag);
   return xAddress;
@@ -123,14 +123,14 @@ export const isValidClassicAddress = address => {
 export const sologenic = new s.SologenicTxHandler(
   // RippleAPI Options
   {
-    server: "wss://testnet.xrpl-labs.com", // Kudos to Wietse Wind
+    server: "wss://testnet.xrpl-labs.com" // Kudos to Wietse Wind
   },
   // Sologenic Options, hash or redis
   {
     // clearCache: true,
     queueType: "hash",
-    hash: {},
-  },
+    hash: {}
+  }
 );
 
 export const isValidSecret = secret => {
@@ -199,7 +199,7 @@ export const transferXrp = (account, destination, value) => {
     TransactionType: "Payment",
     Account: account,
     Destination: destination,
-    Amount: `${valueAmount}`,
+    Amount: `${valueAmount}`
   });
 };
 
@@ -210,16 +210,43 @@ export const formatWalletTotalBalance = number => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-export const extractSeparatorFromText = text => {
-  if (typeof text === "undefined") {
-    return "";
-  }
+export const roundDown = (value, precision) => {
+  const regExp = new RegExp(`(\\d+\\.\\d{${precision}})`, "g");
+  const result = String(value).match(regExp);
+  return result ? result[0] : String(value);
+};
 
-  if (typeof text !== "string") {
-    text = String(text);
+export const formatInput = (text, numberOfDecimals) => {
+  if (text.split("").filter(word => word === ".").length > 1) {
+    text = text.slice(0, -1);
+  } else if (
+    text.split("").filter(word => word === ".").length > 0 &&
+    text.split(".")[1].length > numberOfDecimals
+  ) {
+    const difference = text.split(".")[1].length - numberOfDecimals;
+    text = text.slice(0, -difference);
   }
+  return text;
+};
 
-  return text.replace(/,/g, "");
+export const excludeLettersExceptForNumber = text => {
+  if (text.split("").filter(word => word === ".").length > 0) {
+    const integerPortion = extractNumbers(text.split(".")[0]);
+    const fractionalPortion = extractNumbers(text.split(".")[1]);
+    return integerPortion + "." + fractionalPortion;
+  } else {
+    return extractNumbers(text);
+  }
+};
+
+export const extractNumbers = text => {
+  let result = "";
+  for (let i = 0; i < text.length; i += 1) {
+    if (Number(text[i]) || Number(text[i]) === 0) {
+      result = result + text[i];
+    }
+  }
+  return result;
 };
 
 export const checkWalletExists = (walletAddress, wallets) => {
@@ -258,16 +285,16 @@ export const filterTransactions = (transactions, currentLedger) => {
           ...item,
           outcome: {
             ...item.outcome,
-            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-          },
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion
+          }
         });
       } else {
         xrpTransactions.push({
           ...item,
           outcome: {
             ...item.outcome,
-            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-          },
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion
+          }
         });
       }
     } else {
@@ -280,16 +307,16 @@ export const filterTransactions = (transactions, currentLedger) => {
             ...item,
             outcome: {
               ...item.outcome,
-              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-            },
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion
+            }
           });
         } else if (item.specification.source.maxAmount.currency === "XRP") {
           xrpTransactions.push({
             ...item,
             outcome: {
               ...item.outcome,
-              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-            },
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion
+            }
           });
         }
       }
@@ -297,7 +324,7 @@ export const filterTransactions = (transactions, currentLedger) => {
   });
   return {
     xrpTransactions,
-    soloTransactions,
+    soloTransactions
   };
 };
 
@@ -361,7 +388,7 @@ export const encrypt = (string, salt, address, passphrase) => {
     iv: crypto
       .createHmac("sha256", salt + passphrase)
       .update(address)
-      .digest("hex"),
+      .digest("hex")
   });
   cipher.update(forge.util.createBuffer(string));
   cipher.finish();
@@ -376,7 +403,7 @@ export const decrypt = (encrypted, salt, address, passphrase) => {
     iv: crypto
       .createHmac("sha256", salt + passphrase)
       .update(address)
-      .digest("hex"),
+      .digest("hex")
   });
   decipher.update(forge.util.createBuffer(forge.util.decode64(encrypted)));
   decipher.finish();

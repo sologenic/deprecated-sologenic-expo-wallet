@@ -115,6 +115,7 @@ function WalletScreen({
     }
   }, [netinfo]);
 
+  console.log("HEREEE", netinfo)
   useEffect(() => {
     setWallet(walletAddress);
     if (walletAddress && walletAddress !== "") {

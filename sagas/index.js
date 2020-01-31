@@ -39,6 +39,7 @@ import {
   sologenic,
   filterTransactions,
   decrypt,
+  roundDown,
 } from "../utils";
 import appConfig from "../app.config";
 
@@ -318,7 +319,7 @@ function* requestCreateTrustline(action) {
 }
 
 const transferXrp = (account, destination, value) => {
-  const valueAmount = value / 0.000001;
+  const valueAmount = (value / 0.000001).toFixed(0);
   console.log(
     "#$%^$#%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^",
   );

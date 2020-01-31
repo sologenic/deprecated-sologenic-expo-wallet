@@ -23,7 +23,6 @@ function WalletCard({
   const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
   const xrpBalanceInFiat = marketData ? xrp * marketData.last : "";
   const soloBalanceInFiat = soloMarketPrice ? solo * soloMarketPrice : "";
-  // console.log(typeof solo, typeof xrp)
   const totalBalance =
     xrp === 0 && solo === 0
       ? 0
@@ -127,7 +126,7 @@ function WalletCard({
                     isBold
                   />
                   <Custom_Text
-                    value={`${totalBalance === 0 ? totalBalance.toFixed(2) : totalBalance}`}
+                    value={`${totalBalance === 0 ? totalBalance.toFixed(2) : String(totalBalance)}`}
                     size={Fonts.size.small}
                     numberOfLines={1}
                     isBold
@@ -136,7 +135,6 @@ function WalletCard({
                 <View>
                   <Custom_Text
                     value={`${baseCurrency.label}`}
-                    // value={`${defaultCurrency}`}
                     size={Fonts.size.small}
                     color={Colors.lighterGray}
                     isBold

@@ -31,7 +31,7 @@ import {
   transferSolo,
   transferSoloReset,
 } from "../actions";
-import { formatWalletTotalBalance, extractSeparatorFromText } from "../utils";
+import { formatWalletTotalBalance, excludeLettersExceptForNumber, formatInput } from "../utils";
 
 function SendScreen({
   navigation,
@@ -187,8 +187,11 @@ function SendScreen({
             <Custom_TextInput
               value={amountToSend}
               onChangeText={text => {
-                var t = text.replace(/[^0-9.]/g, "");
-                handleChangeAmountToSend(t);
+                // var t = text.replace(/[^0-9.]/g, "");
+                const formattedText = excludeLettersExceptForNumber(
+                  formatInput(text, 6)
+                );
+                handleChangeAmountToSend(formattedText);
               }}
               label="Amount to send"
               keyboardType="default"
@@ -292,7 +295,7 @@ function SendScreen({
             <Custom_Button
               text="SEND"
               onPress={() => {
-                2;
+                // 2;
                 console.log("Press Send");
                 setSummaryModalVisible(true);
               }}
