@@ -25,6 +25,7 @@ const images = {
   slide4: require("../assets/images/orientation/background4.png"),
   slide4Overlay: require("../assets/images/orientation/slide4Overlay.png"),
   gradient: require("../assets/images/gradient.png"),
+  splashLogo: require("../assets/images/splashLogo.png"),
 };
 
 export default images;

@@ -719,6 +719,10 @@ const resetWallet = state => {
   });
 };
 
+const purgeStore = state => {
+  return Object.assign({}, state, defaultState);
+};
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -853,6 +857,8 @@ export default (state = defaultState, action) => {
       return setWallet(state, action);
     case "RESET_WALLET":
       return resetWallet(state, action);
+    case "PURGE_STORE":
+      return purgeStore(state, action);
 
     default:
       return state;

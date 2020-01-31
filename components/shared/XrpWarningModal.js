@@ -42,7 +42,7 @@ export default function XrpWarningModal({ data, modalVisible, onClose }) {
                 </View>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center", marginBottom: 20, marginTop: 10 }}>
-                <Custom_Text value="Your XRP balance is running low. You need at least 21 XRP to pay for transactions fees."  style={{textAlign: 'center'}}/>
+                <Custom_Text value="Your XRP balance is running low. You need at least 21 XRP to pay for transaction fees."  style={{textAlign: 'center'}}/>
               </View>
             </View>
         </View>

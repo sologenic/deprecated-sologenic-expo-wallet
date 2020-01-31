@@ -147,25 +147,6 @@ function WalletTab({
                   </View>
                 </View>
               </View>
-              {/* <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <View style={{ paddingRight: 5 }}>
-                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
-              </View>
-              <View>
-                <Custom_Text
-                  value={defaultCurrency.toUpperCase()}
-                  size={Fonts.size.medium}
-                />
-              </View>
-            </View>
-          </View> */}
               <View style={styles.marketInfoContainer}>
                 <View
                   style={{
@@ -193,7 +174,6 @@ function WalletTab({
                     <Custom_Text
                       value={`${priceChange}`}
                       size={Fonts.size.small}
-                      // color={Colors.errorBackground}
                       color={priceColor}
                     />
                   </View>
@@ -411,8 +391,6 @@ function WalletTab({
               <Custom_Button
                 text="Activate"
                 onPress={() => {
-                  console.log("Press Activate");
-                  // setActivateModalVisible(true);
                   navigation.navigate({
                     routeName: "ActivateWalletScreen",
                     key: "ActivateWalletScreen",

@@ -453,7 +453,8 @@ function WalletSoloTab({
                     });
                   }}
                   size={Fonts.size.large}
-                  style={{ height: 40 }}
+                  style={{ height: 40, opacity: soloBalance === 0 ? 0.3 : 1 }}
+                  disabled={soloBalance === 0}
                 />
               </View>
             </View>

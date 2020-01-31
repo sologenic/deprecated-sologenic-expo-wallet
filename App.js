@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { AsyncStorage } from "react-native";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore, persistReducer } from "redux-persist";
-import Rehydration from "./reducers/Rehydration";
+import SplashScreen from "react-native-splash-screen";
 
 import reducer from "./reducers";
 import rootSaga from "./sagas";
@@ -49,6 +49,10 @@ const { store, persistor } = setUpStore();
 sagaMiddleware.run(rootSaga);
 
 export default function App(props) {
+  useEffect(() => {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <Provider store={{ ...store, persistor }}>
       <PersistGate loading={null} persistor={persistor}>

@@ -13,7 +13,7 @@ import Colors from "../constants/Colors";
 import Custom_NavButton from "../components/shared/Custom_NavButton";
 import Custom_MultiSelectInput from "../components/shared/Custom_MultiSelectInput";
 import currencies from "../constants/currencies";
-import { updateBaseCurrency, getMarketData } from "../actions";
+import { updateBaseCurrency, getMarketData, purgeStore } from "../actions";
 import config from "../constants/config";
 import appConfig from "../app.config";
 import ResetDataModal from "../components/shared/ResetDataModal";
@@ -25,7 +25,7 @@ function SettingsScreen({
   updateAccountBaseCurrency,
   getMarketData,
   pin,
-  // persistor,
+  purgeStore,
 }) {
   // console.log(persistor);
   const [availableUnlockMethods, setAvailableUnlockMethods] = useState(null);
@@ -171,7 +171,7 @@ function SettingsScreen({
             }}
           />
         </View>
-        {/* <View style={{ marginTop: 15, marginHorizontal: 15 }}>
+        <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
             value="Reset"
             style={{ marginLeft: 15, marginBottom: 10 }}
@@ -183,7 +183,7 @@ function SettingsScreen({
               setShowModal(true);
             }}
           />
-        </View> */}
+        </View>
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
             value={`Version ${appConfig.version}`}
@@ -208,7 +208,7 @@ function SettingsScreen({
             setShowPinError(true);
           } else {
             setShowModal(false);
-            persistStore(store).purge();
+            purgeStore();
           }
         }}
       />
@@ -243,6 +243,7 @@ const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   completeAuthSetup: () => dispatch(setupAuthentication()),
   authenticateUser: () => dispatch(authSuccess()),
+  purgeStore: () => dispatch(purgeStore()),
   saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
   updateAccountBaseCurrency: data => dispatch(updateBaseCurrency(data)),
 });

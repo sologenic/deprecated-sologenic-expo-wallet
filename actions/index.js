@@ -352,6 +352,7 @@ export const transferXrp = ({
   keypair,
   secret,
   destination,
+  tag,
   value,
   passphrase,
   salt,
@@ -364,6 +365,7 @@ export const transferXrp = ({
     keypair,
     secret,
     destination,
+    tag,
     value,
     passphrase,
     salt,
@@ -396,6 +398,7 @@ export const transferSolo = ({
   keypair,
   secret,
   destination,
+  tag,
   value,
   passphrase,
   salt,
@@ -408,6 +411,7 @@ export const transferSolo = ({
     keypair,
     secret,
     destination,
+    tag,
     value,
     passphrase,
     salt,
@@ -531,5 +535,11 @@ export const activateWallet = id => {
   return {
     type: "ACTIVATE_WALLET",
     payload: id,
+  };
+};
+
+export const purgeStore = () => {
+  return {
+    type: "PURGE_STORE",
   };
 };

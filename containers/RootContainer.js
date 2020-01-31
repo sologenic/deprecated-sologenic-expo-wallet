@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
-import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
+import { Platform, StatusBar, StyleSheet, View, Image } from "react-native";
 import { connect } from "react-redux";
 import { MenuProvider } from "react-native-popup-menu";
 import { createAppContainer } from "react-navigation";
@@ -9,8 +9,9 @@ import { createAppContainer } from "react-navigation";
 import MainStack from "../navigation/MainStack";
 import OrientationStack from "../navigation/OrientationStack";
 import Fonts from "../constants/Fonts";
-import { imagesArray } from "../constants/Images";
+import images, { imagesArray } from "../constants/Images";
 import { connectToRippleApi } from "../actions";
+import colors from "../constants/Colors";
 const App = createAppContainer(MainStack);
 const Orientation = createAppContainer(OrientationStack);
 
@@ -45,8 +46,15 @@ class RootContainer extends React.Component {
 
     if (!isLoadingComplete && !skipLoadingScreen) {
       return (
-        <View>
-          <Text>Loading...</Text>
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: colors.background,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {/* <Image source={images.splashLogo} /> */}
         </View>
       );
     } else {
