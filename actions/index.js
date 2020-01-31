@@ -533,3 +533,11 @@ export const activateWallet = id => {
     payload: id,
   };
 };
+
+
+export const getNetInfo = status => {
+  return {
+    type: "GET_NET_INFO",
+    netinfo: status,
+  }
+}

@@ -23,6 +23,7 @@ import InstructionsModal from "../components/shared/InstructionsModal";
 import TransferSummaryModal from "../components/shared/TransferSummaryModal";
 import TransferSuccessfulModal from "../components/shared/TransferSuccessfulModal";
 import TransferFailedModal from "../components/shared/TransferFailedModal";
+import ErrorModal from "../components/shared/ErrorModal";
 import {
   transferXrp,
   getBalance,
@@ -50,6 +51,7 @@ function SendScreen({
   baseCurrency,
   marketData,
   wallet,
+  netinfo,
 }) {
   const [completed, handleIsCompleted] = useState(false);
   const [amountToSend, handleChangeAmountToSend] = useState("");
@@ -68,9 +70,20 @@ function SendScreen({
   const [transferErrorModalVisible, setTransferErrorModalVisible] = useState(
     false,
   );
+  const [offline, handleChangeOffline] = useState(false);
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
   const { balance, currency, walletAddress, id } = navigation.state.params;
   const { salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
+
+  useEffect(() => {
+    if (!netinfo) {
+      handleChangeOffline(true);
+    }
+    if (netinfo) {
+      handleChangeOffline(false);
+    }
+  }, [netinfo]);
 
   useEffect(() => {
     if (
@@ -301,27 +314,32 @@ function SendScreen({
         />
         <TransferSummaryModal
           onPress={() => {
-            if (currency === "xrp") {
-              transferXrp({
-                account: walletAddress,
-                destination,
-                value: amountToSend,
-                passphrase,
-                salt,
-                encrypted,
-                publicKey,
-              });
+            if (offline) {
+              setErrorModalVisible(true);
+              setSummaryModalVisible(false);
             } else {
-              transferSolo({
-                account: walletAddress,
-                destination,
-                value: amountToSend,
-                passphrase,
-                salt,
-                encrypted,
-                publicKey,
-              });
-            }
+              if (currency === "xrp") {
+                transferXrp({
+                  account: walletAddress,
+                  destination,
+                  value: amountToSend,
+                  passphrase,
+                  salt,
+                  encrypted,
+                  publicKey,
+                });
+              } else {
+                transferSolo({
+                  account: walletAddress,
+                  destination,
+                  value: amountToSend,
+                  passphrase,
+                  salt,
+                  encrypted,
+                  publicKey,
+                });
+              }
+            };
           }}
           modalVisible={summaryModalVisible}
           showSpinner={transferXrpPending || transferSoloPending}
@@ -366,6 +384,14 @@ function SendScreen({
             setTransferErrorModalVisible(false);
             navigation.goBack();
           }}
+          // errorMessage={offline ? "Your transfer cannot be processed. Your device is offline." : ""}
+        />
+        <ErrorModal
+          value="Your transfer cannot be processed. Your device is offline."
+          modalVisible={errorModalVisible}
+          onClose={() => {
+            setErrorModalVisible(false);
+          }}
         />
       </ScrollView>
     </View>
@@ -399,6 +425,7 @@ const mapStateToProps = ({
   baseCurrency,
   marketData,
   wallet,
+  netinfo,
 }) => ({
   transferXrpSuccess,
   transferXrpError,
@@ -412,6 +439,7 @@ const mapStateToProps = ({
   baseCurrency,
   marketData,
   wallet,
+  netinfo,
 });
 const mapDispatchToProps = dispatch => ({
   transferXrp: ({

@@ -5,68 +5,79 @@ import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
 import { connect } from "react-redux";
 import { MenuProvider } from "react-native-popup-menu";
 import { createAppContainer } from "react-navigation";
+import NetInfo from "@react-native-community/netinfo";
 
 import MainStack from "../navigation/MainStack";
 import OrientationStack from "../navigation/OrientationStack";
 import Fonts from "../constants/Fonts";
 import { imagesArray } from "../constants/Images";
-import { connectToRippleApi } from "../actions";
+import { connectToRippleApi, getNetInfo } from "../actions";
 const App = createAppContainer(MainStack);
 const Orientation = createAppContainer(OrientationStack);
 
-class RootContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoadingComplete: false,
-    };
-  }
-
-  // change to componentDidUpdate and make sure connect only gets executed once
-  componentDidMount = async () => {
-    this.props.connectToRippleApi();
-    await this.setup();
-  };
-
-  setup = async () => {
-    await loadResourcesAsync().then(() => {
-      this.setState({ isLoadingComplete: true });
+const RootContainer = ({
+  skipLoadingScreen,
+  isOrientationComplete,
+  authSetupComplete,
+  isAuthenticated,
+  getNetInfo,
+  connectToRippleApi,
+}) => {
+  const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const setup = async () => {
+    await loadResourcesAsync();
+    await setLoadingComplete(true);
+    const unsubscribe = await NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      getNetInfo(state.isConnected);
     });
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    await connectToRippleApi();
   };
 
-  render() {
-    const {
-      skipLoadingScreen,
-      isOrientationComplete,
-      authSetupComplete,
-      isAuthenticated,
-    } = this.props;
-    const { isLoadingComplete } = this.state;
+  useEffect(() => {
+    setup();
+  }, []);
 
-    if (!isLoadingComplete && !skipLoadingScreen) {
-      return (
-        <View>
-          <Text>Loading...</Text>
-        </View>
-      );
-    } else {
-      if (isOrientationComplete) {
-        return (
-          <View style={styles.container}>
-            {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
-            <MenuProvider>
-              <App screenProps={{ authSetupComplete, isAuthenticated }} />
-            </MenuProvider>
-          </View>
-        );
-      }
+  // setup = async () => {
+  //   await loadResourcesAsync().then(() => {
+  //     this.setState({ isLoadingComplete: true });
+  //   });
+  // };
+
+  // render() {
+    // const {
+    //   skipLoadingScreen,
+    //   isOrientationComplete,
+    //   authSetupComplete,
+    //   isAuthenticated,
+    // } = this.props;
+    // const { isLoadingComplete } = this.state;
+
+  if (!isLoadingComplete && !skipLoadingScreen) {
+    return (
+      <View>
+        <Text>Loading...</Text>
+      </View>
+    );
+  } else {
+    if (isOrientationComplete) {
       return (
         <View style={styles.container}>
           {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
-          <Orientation />
+          <MenuProvider>
+            <App screenProps={{ authSetupComplete, isAuthenticated }} />
+          </MenuProvider>
         </View>
       );
     }
+    return (
+      <View style={styles.container}>
+        {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
+        <Orientation />
+      </View>
+    );
   }
 }
 
@@ -106,6 +117,7 @@ const mapStateToProps = ({
 
 const mapDispatchToProps = dispatch => ({
   connectToRippleApi: () => dispatch(connectToRippleApi()),
+  getNetInfo: status => dispatch(getNetInfo(status)),
 });
 
 export default connect(

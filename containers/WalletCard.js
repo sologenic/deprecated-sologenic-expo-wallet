@@ -16,16 +16,20 @@ function WalletCard({
   baseCurrency,
   marketData,
   soloData,
-  getBalance,
+  getBalance
 }) {
   const { nickname, balance, walletAddress, id } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
-  const soloMarketPrice = soloData[baseCurrency.value];
-  const xrpBalanceInFiat = xrp * marketData.last;
-  const soloBalanceInFiat = solo * soloMarketPrice;
-  const totalBalance = formatWalletTotalBalance(
-    xrpBalanceInFiat + soloBalanceInFiat,
-  );
+  const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
+  const xrpBalanceInFiat = marketData ? xrp * marketData.last : "";
+  const soloBalanceInFiat = soloMarketPrice ? solo * soloMarketPrice : "";
+  // console.log(typeof solo, typeof xrp)
+  const totalBalance =
+    xrp === 0 && solo === 0
+      ? 0
+      : xrpBalanceInFiat
+      ? formatWalletTotalBalance(xrpBalanceInFiat + soloBalanceInFiat)
+      : "";
   useEffect(() => {
     fetchBalance();
     const getBalanceInterval = setInterval(() => {
@@ -50,8 +54,8 @@ function WalletCard({
             params: {
               navigation,
               walletAddress,
-              nickname,
-            },
+              nickname
+            }
           });
         }}
         activeOpacity={0.5}
@@ -68,7 +72,7 @@ function WalletCard({
                 backgroundColor: Colors.lighterGray,
                 height: 24,
                 width: 24,
-                borderRadius: 12,
+                borderRadius: 12
               }}
             />
           </View>
@@ -77,7 +81,7 @@ function WalletCard({
               flex: 8,
               justifyContent: "center",
               alignItems: "flex-start",
-              paddingLeft: 12,
+              paddingLeft: 12
             }}
           >
             <Custom_Text value={nickname} size={Fonts.size.medium} isBold />
@@ -92,7 +96,7 @@ function WalletCard({
           <View
             style={{
               flex: 1,
-              paddingLeft: 47,
+              paddingLeft: 47
             }}
           >
             <Custom_Text
@@ -110,34 +114,45 @@ function WalletCard({
           </View>
           <View
             style={{
-              flex: 1,
+              flex: 1
             }}
           >
-            <View style={{ flexDirection: "row" }}>
-              <View style={{ marginRight: 5, flexDirection: "row" }}>
-                <Custom_Text
-                  value={`${baseCurrency.symbol}`}
-                  numberOfLines={1}
-                  size={Fonts.size.small}
-                  isBold
-                />
-                <Custom_Text
-                  value={`${totalBalance}`}
-                  size={Fonts.size.small}
-                  numberOfLines={1}
-                  isBold
-                />
+            {totalBalance || totalBalance === 0 ? (
+              <View style={{ flexDirection: "row" }}>
+                <View style={{ marginRight: 5, flexDirection: "row" }}>
+                  <Custom_Text
+                    value={`${baseCurrency.symbol}`}
+                    numberOfLines={1}
+                    size={Fonts.size.small}
+                    isBold
+                  />
+                  <Custom_Text
+                    value={`${totalBalance === 0 ? totalBalance.toFixed(2) : totalBalance}`}
+                    size={Fonts.size.small}
+                    numberOfLines={1}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value={`${baseCurrency.label}`}
+                    // value={`${defaultCurrency}`}
+                    size={Fonts.size.small}
+                    color={Colors.lighterGray}
+                    isBold
+                  />
+                </View>
               </View>
+            ) : (
               <View>
                 <Custom_Text
-                  value={`${baseCurrency.label}`}
-                  // value={`${defaultCurrency}`}
+                  value="Your device is offline"
                   size={Fonts.size.small}
-                  color={Colors.lighterGray}
+                  numberOfLines={1}
                   isBold
                 />
               </View>
-            </View>
+            )}
             <Custom_Text
               value={`${tokenizedAssets}`}
               size={Fonts.size.small}
@@ -249,28 +264,25 @@ function WalletCard({
 
 const styles = StyleSheet.create({
   container: {
-    height: 176,
+    height: 176
   },
   upperStyle: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     height: 88,
-    backgroundColor: Colors.gray,
+    backgroundColor: Colors.gray
   },
   lowerStyle: {
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     height: 88,
     backgroundColor: Colors.headerBackground,
-    justifyContent: "center",
-  },
+    justifyContent: "center"
+  }
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBalance: (id, address) => dispatch(getBalance(id, address)),
+  getBalance: (id, address) => dispatch(getBalance(id, address))
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(WalletCard);
+export default connect(null, mapDispatchToProps)(WalletCard);

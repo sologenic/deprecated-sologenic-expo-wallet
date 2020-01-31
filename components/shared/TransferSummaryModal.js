@@ -26,6 +26,7 @@ export default function TransferSummaryModal({
   style,
   showSpinner,
 }) {
+  const isSolo = currency !== "xrp" ? true : false;
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
       <TouchableOpacity style={styles.modalContainer} activeOpacity={1}>
@@ -53,6 +54,34 @@ export default function TransferSummaryModal({
                   isBold
                 />
               </View>
+              <View
+                style={[
+                  styles.sectionAddress,
+                  { marginBottom: 20, width: 244 },
+                ]}
+              >
+                <Custom_Text
+                  value="Tx Fee:"
+                  size={Fonts.size.small}
+                  color={Colors.lightGray}
+                />
+                <Custom_Text value={`${0.000012} ${currency.toUpperCase()}`} size={Fonts.size.small} />
+              </View>
+              {isSolo && (
+                <View
+                  style={[
+                    styles.sectionAddress,
+                    { marginBottom: 20, width: 244 },
+                  ]}
+                >
+                  <Custom_Text
+                    value="Burn Amount:"
+                    size={Fonts.size.small}
+                    color={Colors.lightGray}
+                  />
+                  <Custom_Text value={`${Number(amountToSend) * 0.0001} ${currency.toUpperCase()}`} size={Fonts.size.small} />
+                </View>
+              )}
               <View
                 style={[
                   styles.sectionAddress,

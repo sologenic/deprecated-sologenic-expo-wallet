@@ -160,6 +160,7 @@ function* requestGetBalance(action) {
     const soloBalance = response.find(
       item => item.currency === appConfig.soloHash,
     );
+    // console.log("response is", response)
     if (response) {
       // const { xrpBalance, soloBalance } = yield call(filterBalances, response);
       // console.log("==", xrpBalance);
@@ -203,7 +204,7 @@ function* requestPullToRefresh(action) {
       yield put(pullToRefreshBalanceError());
     }
   } catch (error) {
-    console.log("REQUEST_GET_BALANCE_ERROR", error);
+    console.log("REQUEST_PULL_TO_REFRESH_ERROR", error);
   }
 }
 

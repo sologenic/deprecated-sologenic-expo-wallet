@@ -25,6 +25,10 @@ import {
   getMoreTransactions,
   pullToRefreshBalance,
   createTrustlineReset,
+  getMarketData,
+  getSoloData,
+  getMarketSevens,
+  connectToRippleApi,
 } from "../actions";
 import { headerHeight } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
@@ -58,6 +62,11 @@ function WalletSoloTab({
   pullToRefreshBalancePending,
   createTrustlineError,
   createTrustlineErrorStr,
+  netinfo,
+  getMarketData,
+  getSoloData,
+  getMarketSevens,
+  connectToRippleApi,
 }) {
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
@@ -73,6 +82,20 @@ function WalletSoloTab({
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
   );
+
+  useEffect(() => {
+    if (netinfo) {
+      fetchData();
+      // connectToRippleApi();
+    }
+  }, [netinfo]);
+
+  const fetchData = () => {
+    getMarketData(baseCurrency.value);
+    getSoloData();
+    getMarketSevens();
+  };
+
   useEffect(() => {
     if (createTrustlineSuccess) {
       setActivateModalVisible(false);
@@ -107,7 +130,7 @@ function WalletSoloTab({
   const { id, isActive, salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
 
-  const soloMarketPrice = soloData[baseCurrency.value];
+  const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
   // const priceChange = getPriceChange(marketData.last, marketData.open);
   // const priceColor = getPriceColor(priceChange);
 
@@ -361,14 +384,14 @@ function WalletSoloTab({
                 </View>
               </View>
             </View>
-            <View>
+            {/* <View>
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
-              >
+              > */}
                 {/* <View style={{ paddingRight: 5 }}>
                 <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
               </View>
@@ -378,38 +401,49 @@ function WalletSoloTab({
                   size={Fonts.size.medium}
                 />
               </View> */}
-              </View>
-            </View>
-            <View style={styles.marketInfoContainer}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <View style={{ paddingRight: 15 }}>
-                  <Custom_Text
-                    value="Market Price:"
-                    size={Fonts.size.medium}
-                    color={Colors.lightGray}
-                    style={{ textAlign: "center" }}
-                  />
-                  <Custom_Text
-                    value={`${baseCurrency.symbol} ${soloMarketPrice}`}
-                    size={Fonts.size.medium}
-                    style={{ textAlign: "center" }}
-                  />
+              {/* </View>
+            </View> */}
+            {netinfo ? (
+              <View style={styles.marketInfoContainer}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View style={{ paddingRight: 15 }}>
+                    <Custom_Text
+                      value="Market Price:"
+                      size={Fonts.size.medium}
+                      color={Colors.lightGray}
+                      style={{ textAlign: "center" }}
+                    />
+                    <Custom_Text
+                      value={`${baseCurrency.symbol} ${soloMarketPrice}`}
+                      size={Fonts.size.medium}
+                      style={{ textAlign: "center" }}
+                    />
+                  </View>
+                  <View>
+                    {/* <Custom_Text
+                    value={`${-0.61}%`}
+                    size={Fonts.size.small}
+                    color={Colors.errorBackground}
+                  /> */}
+                  </View>
                 </View>
+              </View>
+            ) : (
+              <View style={{ height: 100, justifyContent: "center", alignItems: "center" }}>
                 <View>
-                  {/* <Custom_Text
-                  value={`${-0.61}%`}
-                  size={Fonts.size.small}
-                  color={Colors.errorBackground}
-                /> */}
+                  <Custom_Text
+                    value="Your device is now offline."
+                    size={Fonts.size.normal}
+                  />
                 </View>
               </View>
-            </View>
+            )}
             <View style={styles.buttonsContainer}>
               <View style={styles.leftButtonContainer}>
                 <Custom_Button
@@ -454,6 +488,7 @@ function WalletSoloTab({
                   }}
                   size={Fonts.size.large}
                   style={{ height: 40 }}
+                  disabled={!netinfo ? true : false}
                 />
               </View>
             </View>
@@ -632,6 +667,7 @@ const mapStateToProps = ({
   soloData,
   createTrustlineError,
   createTrustlineErrorStr,
+  netinfo,
 }) => ({
   createTrustlineSuccess,
   createTrustlinePending,
@@ -646,6 +682,7 @@ const mapStateToProps = ({
   soloData,
   createTrustlineError,
   createTrustlineErrorStr,
+  netinfo,
 });
 const mapDispatchToProps = dispatch => ({
   createTrustline: ({ address, id, passphrase, salt, encrypted, publicKey }) =>
@@ -657,6 +694,10 @@ const mapDispatchToProps = dispatch => ({
   pullToRefreshBalance: (id, address) =>
     dispatch(pullToRefreshBalance(id, address)),
   createTrustlineReset: () => dispatch(createTrustlineReset()),
+  getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
+  getSoloData: () => dispatch(getSoloData()),
+  getMarketSevens: () => dispatch(getMarketSevens()),
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
 export default connect(

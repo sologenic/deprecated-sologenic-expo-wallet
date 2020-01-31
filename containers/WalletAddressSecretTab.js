@@ -185,7 +185,7 @@ function WalletAddressSecretTab({
         />
       </View>
       <ErrorModal
-        value="You have entered an invalid wallet address and secret combination. Please check your details and try again."
+        value="You have entered an invalid wallet address and secret combination. Please check your details and try again. Your XRP wallet needs at least 21 XRP."
         modalVisible={errorModalVisible}
         onClose={() => {
           getTrustlinesReset();
