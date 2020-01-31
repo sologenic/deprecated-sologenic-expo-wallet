@@ -74,7 +74,7 @@ function WalletTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
-      connectToRippleApi();
+      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -260,6 +260,7 @@ function WalletTab({
                     }}
                     size={Fonts.size.large}
                     style={{ height: 40 }}
+                    disabled={!netinfo ? true : false}
                   />
                 </View>
               </View>

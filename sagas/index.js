@@ -152,14 +152,16 @@ function* requestGetBalance(action) {
   try {
     const { id, address } = action;
     // const response = yield call(getAccountInfo, address);
-    console.log("action ----", action);
-    console.log("id ----", id);
-    console.log("add----", address);
+    // console.log("=========get balance a lot============")
+    // console.log("action ----======", action);
+    // console.log("id ----", id);
+    // console.log("add----", address);
     const response = yield call(getBalances, address);
     const xrpBalance = response.find(item => item.currency === "XRP");
     const soloBalance = response.find(
       item => item.currency === appConfig.soloHash,
     );
+    // console.log("response is", response)
     if (response) {
       // const { xrpBalance, soloBalance } = yield call(filterBalances, response);
       // console.log("==", xrpBalance);
@@ -182,11 +184,12 @@ function* requestPullToRefresh(action) {
   try {
     const { id, address } = action;
     // const response = yield call(getAccountInfo, address);
-    console.log("action ----", action);
-    console.log("id ----", id);
-    console.log("add----", address);
+    // console.log("=========pull to refresh============")
+    // console.log("action =====", action);
+    // console.log("id ----", id);
+    // console.log("add----", address);
     const response = yield call(getBalances, address);
-    console.log("----", response);
+    // console.log("----", response);
     const xrpBalance = response.find(item => item.currency === "XRP");
     const soloBalance = response.find(
       item => item.currency === appConfig.soloHash,
@@ -203,7 +206,7 @@ function* requestPullToRefresh(action) {
       yield put(pullToRefreshBalanceError());
     }
   } catch (error) {
-    console.log("REQUEST_GET_BALANCE_ERROR", error);
+    console.log("REQUEST_PULL_TO_REFRESH_ERROR", error);
   }
 }
 

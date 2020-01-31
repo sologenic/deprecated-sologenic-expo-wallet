@@ -78,7 +78,10 @@ function SendScreen({
     if (!netinfo) {
       handleChangeOffline(true);
     }
-  }, []);
+    if (netinfo) {
+      handleChangeOffline(false);
+    }
+  }, [netinfo]);
 
   useEffect(() => {
     if (

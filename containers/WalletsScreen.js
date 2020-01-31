@@ -44,33 +44,26 @@ function WalletsScreen({
   netinfo,
   screenProps: { rootNavigation },
 }) {
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      // console.log("---------------------------------------------------------------")
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
-      // console.log("---------------------------------------------------------------")
-      getNetInfo(state.isConnected);
-    });
-  }, []);
-
   // useEffect(() => {
-  //   if (!netinfo) {
-  //     clearInterval(getMarketDataInterval);
-  //   }
-  // }, [netinfo]);
-
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     // console.log("---------------------------------------------------------------")
+  //     console.log("Connection type", state.type);
+  //     console.log("Is connected?", state.isConnected);
+  //     // console.log("---------------------------------------------------------------")
+  //     getNetInfo(state.isConnected);
+  //   });
+  // }, []);
   useEffect(() => {
+    console.log("netinfo is true", netinfo);
     if (netinfo) {
-      console.log("netinfo is true", netinfo);
       fetchData();
-      connectToRippleApi();
     }
   }, [netinfo]);
 
-  useEffect(() => {
-    connectToRippleApi();
-  }, []);
+  // useEffect(() => {
+  //   console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+  //   connectToRippleApi();
+  // }, []);
 
   // const getMarketDataInterval = setInterval(() => {
   //   fetchData();
@@ -82,7 +75,7 @@ function WalletsScreen({
       fetchData();
     }, 30000);
     if (!netinfo) {
-      console.log("netinfo =====", netinfo)
+      // console.log("netinfo =====", netinfo)
       clearInterval(getMarketDataInterval);
     };
 

@@ -111,26 +111,35 @@ export default function TransactionCard({ transaction, walletAddress }) {
             <Custom_Text value={ledgerVersion} size={Fonts.size.small} isBold />
           </View>
           <View style={styles.feeContainer}>
-            <Custom_Text value="Tx Fee" size={10} />
-            <View style={{ flexDirection: "row" }}>
-              <Custom_Text
-                value={isSolo ? "Ƨ" : currency.toUpperCase()}
-                size={9}
-                style={{ marginTop: 2 }}
-              />
-              <Custom_Text value={` ${fee}`} size={Fonts.size.small} isBold />
-            </View>
+            {fundsRecevied === "-" && (
+              <View>
+                <Custom_Text value="Tx Fee" size={10} />
+                <View style={{ flexDirection: "row" }}>
+                  <Custom_Text
+                    // value={isSolo ? "Ƨ" : currency.toUpperCase()}
+                    value="XRP"
+                    size={9}
+                    style={{ marginTop: 2 }}
+                  />
+                  <Custom_Text value={` ${fee}`} size={Fonts.size.small} isBold />
+                </View>
+              </View>
+            )}
           </View>
           <View style={styles.burnAmountContainer}>
-            <Custom_Text value="Burn Amount" size={10} />
-            <View style={{ flexDirection: "row" }}>
-              <Custom_Text
-                value={isSolo ? "Ƨ" : currency.toUpperCase()}
-                size={9}
-                style={{ marginTop: 2 }}
-              />
-              <Custom_Text value={` ${burnAmount.toFixed(4)}`} size={Fonts.size.small} isBold />
-            </View>
+            {(isSolo && fundsRecevied === "-") && (
+              <View>
+                <Custom_Text value="Burn Amount" size={10} />
+                <View style={{ flexDirection: "row" }}>
+                  <Custom_Text
+                    value={isSolo ? "Ƨ" : currency.toUpperCase()}
+                    size={9}
+                    style={{ marginTop: 2 }}
+                  />
+                  <Custom_Text value={` ${burnAmount.toFixed(4)}`} size={Fonts.size.small} isBold />
+                </View>
+              </View>
+            )}
           </View>
         </TouchableOpacity>
         <TouchableOpacity
@@ -242,11 +251,11 @@ export default function TransactionCard({ transaction, walletAddress }) {
             //     : `- ${currency.toUpperCase()} ${value}`
             // }
             size={Fonts.size.small}
-            color={
-              result === "tesSUCCESS"
-                ? Colors.freshGreen
-                : Colors.errorBackground
-            }
+            // color={
+            //   result === "tesSUCCESS"
+            //     ? Colors.freshGreen
+            //     : Colors.errorBackground
+            // }
             isBold
           />
         </View>

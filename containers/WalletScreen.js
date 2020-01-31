@@ -93,7 +93,7 @@ function WalletScreen({
   netinfo,
   connectToRippleApi,
 }) {
-  console.log(wallet);
+  // console.log(wallet);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(5);
@@ -109,8 +109,9 @@ function WalletScreen({
 
   useEffect(() => {
     if (netinfo) {
+      console.log("????")
       fetchData();
-      connectToRippleApi();
+      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -226,7 +227,7 @@ function WalletScreen({
           style={{ position: "relative", bottom: 10 }}
         />
         <Custom_Text
-          value={` ${defaultCurrency.symbol}${totalBalance}`}
+          value={netinfo ? ` ${defaultCurrency.symbol}${totalBalance}` : "  Your device is now offline"}
           style={{ position: "relative", bottom: 10 }}
           isBold
         />

@@ -5,11 +5,13 @@ import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
 import { connect } from "react-redux";
 import { MenuProvider } from "react-native-popup-menu";
 import { createAppContainer } from "react-navigation";
+import NetInfo from "@react-native-community/netinfo";
 
 import MainStack from "../navigation/MainStack";
 import OrientationStack from "../navigation/OrientationStack";
 import Fonts from "../constants/Fonts";
 import { imagesArray } from "../constants/Images";
+import { connectToRippleApi, getNetInfo } from "../actions";
 const App = createAppContainer(MainStack);
 const Orientation = createAppContainer(OrientationStack);
 
@@ -18,17 +20,23 @@ const RootContainer = ({
   isOrientationComplete,
   authSetupComplete,
   isAuthenticated,
+  getNetInfo,
+  connectToRippleApi,
 }) => {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
   const setup = async () => {
     await loadResourcesAsync();
     await setLoadingComplete(true);
+    const unsubscribe = await NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      getNetInfo(state.isConnected);
+    });
+    console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    await connectToRippleApi();
   };
   useEffect(() => {
     setup();
-    // return () => {
-    //   cleanup
-    // };
   }, []);
 
   if (!isLoadingComplete && !skipLoadingScreen) {
@@ -96,7 +104,10 @@ const mapStateToProps = ({
   authSetupComplete,
 });
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
+  getNetInfo: status => dispatch(getNetInfo(status)),
+});
 
 export default connect(
   mapStateToProps,

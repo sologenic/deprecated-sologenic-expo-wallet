@@ -80,7 +80,7 @@ function WalletSoloTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
-      connectToRippleApi();
+      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -460,6 +460,7 @@ function WalletSoloTab({
                   }}
                   size={Fonts.size.large}
                   style={{ height: 40 }}
+                  disabled={!netinfo ? true : false}
                 />
               </View>
             </View>
