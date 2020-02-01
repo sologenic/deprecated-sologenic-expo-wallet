@@ -392,7 +392,7 @@ function WalletSoloTab({
                   alignItems: "center",
                 }}
               > */}
-                {/* <View style={{ paddingRight: 5 }}>
+            {/* <View style={{ paddingRight: 5 }}>
                 <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
               </View>
               <View>
@@ -401,7 +401,7 @@ function WalletSoloTab({
                   size={Fonts.size.medium}
                 />
               </View> */}
-              {/* </View>
+            {/* </View>
             </View> */}
             {netinfo ? (
               <View style={styles.marketInfoContainer}>
@@ -435,7 +435,13 @@ function WalletSoloTab({
                 </View>
               </View>
             ) : (
-              <View style={{ height: 100, justifyContent: "center", alignItems: "center" }}>
+              <View
+                style={{
+                  height: 100,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <View>
                   <Custom_Text
                     value="Your device is now offline."

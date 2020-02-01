@@ -90,7 +90,7 @@ export const getWalletFromMnemonic = mnemonic => {
 // Encode an X-Address
 export const getXAddressFromRippleClassicAddress = (
   rippleClassicAddress,
-  tag
+  tag,
 ) => {
   const xAddress = Utils.encodeXAddress(rippleClassicAddress, tag);
   return xAddress;
@@ -123,14 +123,14 @@ export const isValidClassicAddress = address => {
 export const sologenic = new s.SologenicTxHandler(
   // RippleAPI Options
   {
-    server: "wss://testnet.xrpl-labs.com" // Kudos to Wietse Wind
+    server: "wss://testnet.xrpl-labs.com", // Kudos to Wietse Wind
   },
   // Sologenic Options, hash or redis
   {
     // clearCache: true,
     queueType: "hash",
-    hash: {}
-  }
+    hash: {},
+  },
 );
 
 export const isValidSecret = secret => {
@@ -199,7 +199,7 @@ export const transferXrp = (account, destination, value) => {
     TransactionType: "Payment",
     Account: account,
     Destination: destination,
-    Amount: `${valueAmount}`
+    Amount: `${valueAmount}`,
   });
 };
 
@@ -285,16 +285,16 @@ export const filterTransactions = (transactions, currentLedger) => {
           ...item,
           outcome: {
             ...item.outcome,
-            ledgerVersion: currentLedger - item.outcome.ledgerVersion
-          }
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+          },
         });
       } else {
         xrpTransactions.push({
           ...item,
           outcome: {
             ...item.outcome,
-            ledgerVersion: currentLedger - item.outcome.ledgerVersion
-          }
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+          },
         });
       }
     } else {
@@ -307,16 +307,16 @@ export const filterTransactions = (transactions, currentLedger) => {
             ...item,
             outcome: {
               ...item.outcome,
-              ledgerVersion: currentLedger - item.outcome.ledgerVersion
-            }
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+            },
           });
         } else if (item.specification.source.maxAmount.currency === "XRP") {
           xrpTransactions.push({
             ...item,
             outcome: {
               ...item.outcome,
-              ledgerVersion: currentLedger - item.outcome.ledgerVersion
-            }
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
+            },
           });
         }
       }
@@ -324,37 +324,9 @@ export const filterTransactions = (transactions, currentLedger) => {
   });
   return {
     xrpTransactions,
-    soloTransactions
+    soloTransactions,
   };
 };
-
-export function formatBalance(value, precision = 6) {
-  const regex = new RegExp("^-?\\d+(?:\\.\\d{0," + precision + "})?", "g");
-  const a = value.toString().match(regex)[0];
-  const dot = a.indexOf(".");
-
-  if (dot === -1) {
-    return a + "." + "0".repeat(precision);
-  }
-
-  const b = precision - (a.length - dot) + 1;
-  return b > 0 ? a + "0".repeat(b) : a;
-}
-
-export function format(value, precision = 6) {
-  const regex = new RegExp("^-?\\d+(?:\\.\\d{0," + precision + "})?", "g");
-  const a = value.toString().match(regex)[0];
-  const dot = a.indexOf(".");
-
-  if (dot === -1) {
-    return a + "." + "0".repeat(precision);
-  }
-
-  const b = precision - (a.length - dot) + 1;
-  return b > 0
-    ? a + "0".repeat(b).replace(/\d(?=(\d{3})+\.)/g, "$&,")
-    : a.replace(/\d(?=(\d{3})+\.)/g, "$&,");
-}
 
 function getPositionOfLeadingZeros(data) {
   var a = data.split(".");
@@ -382,13 +354,33 @@ function getPositionOfLeadingZeros(data) {
   }
 }
 
+export function formatBalance(value, precision = 6) {
+  var p = "0,0.";
+  for (var i = 0; i < precision; i++) {
+    p += "0";
+  }
+
+  var styledVolume = numbro(value).format(p);
+  var position = getPositionOfLeadingZeros(styledVolume);
+  var a = styledVolume.substring(0, position);
+  var b = styledVolume.substring(position);
+
+  if (a === "") {
+    return 0;
+  }
+
+  a = a.split(".");
+
+  return a[0] + "." + a[1].replace(".", "");
+}
+
 export const encrypt = (string, salt, address, passphrase) => {
   var cipher = forge.cipher.createCipher("AES-CBC", "FdlPhVMO4Ho_Pb9a");
   cipher.start({
     iv: crypto
       .createHmac("sha256", salt + passphrase)
       .update(address)
-      .digest("hex")
+      .digest("hex"),
   });
   cipher.update(forge.util.createBuffer(string));
   cipher.finish();
@@ -403,7 +395,7 @@ export const decrypt = (encrypted, salt, address, passphrase) => {
     iv: crypto
       .createHmac("sha256", salt + passphrase)
       .update(address)
-      .digest("hex")
+      .digest("hex"),
   });
   decipher.update(forge.util.createBuffer(forge.util.decode64(encrypted)));
   decipher.finish();

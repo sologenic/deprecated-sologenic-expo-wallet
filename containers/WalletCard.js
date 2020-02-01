@@ -16,7 +16,7 @@ function WalletCard({
   baseCurrency,
   marketData,
   soloData,
-  getBalance
+  getBalance,
 }) {
   const { nickname, balance, walletAddress, id, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
@@ -53,8 +53,8 @@ function WalletCard({
             params: {
               navigation,
               walletAddress,
-              nickname
-            }
+              nickname,
+            },
           });
         }}
         activeOpacity={0.5}
@@ -69,9 +69,9 @@ function WalletCard({
             <View
               style={{
                 backgroundColor: Colors.lighterGray,
-                height: 24,
-                width: 24,
-                borderRadius: 12
+                height: 12,
+                width: 12,
+                borderRadius: 6,
               }}
             />
           </View>
@@ -80,7 +80,7 @@ function WalletCard({
               flex: 8,
               justifyContent: "center",
               alignItems: "flex-start",
-              paddingLeft: 12
+              paddingLeft: 5,
             }}
           >
             <Custom_Text value={nickname} size={Fonts.size.medium} numberOfLines={1} isBold />
@@ -95,7 +95,7 @@ function WalletCard({
           <View
             style={{
               flex: 1,
-              paddingLeft: 47
+              paddingLeft: 47,
             }}
           >
             <Custom_Text
@@ -113,7 +113,7 @@ function WalletCard({
           </View>
           <View
             style={{
-              flex: 1
+              flex: 1,
             }}
           >
             {totalBalance || totalBalance === 0 ? (
@@ -126,7 +126,11 @@ function WalletCard({
                     isBold
                   />
                   <Custom_Text
-                    value={`${totalBalance === 0 ? totalBalance.toFixed(2) : String(totalBalance)}`}
+                    value={`${
+                      totalBalance === 0
+                        ? totalBalance.toFixed(2)
+                        : String(totalBalance)
+                    }`}
                     size={Fonts.size.small}
                     numberOfLines={1}
                     isBold
@@ -271,25 +275,28 @@ function WalletCard({
 
 const styles = StyleSheet.create({
   container: {
-    height: 176
+    height: 176,
   },
   upperStyle: {
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     height: 88,
-    backgroundColor: Colors.gray
+    backgroundColor: Colors.gray,
   },
   lowerStyle: {
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
     height: 88,
     backgroundColor: Colors.headerBackground,
-    justifyContent: "center"
-  }
+    justifyContent: "center",
+  },
 });
 
 const mapDispatchToProps = dispatch => ({
-  getBalance: (id, address) => dispatch(getBalance(id, address))
+  getBalance: (id, address) => dispatch(getBalance(id, address)),
 });
 
-export default connect(null, mapDispatchToProps)(WalletCard);
+export default connect(
+  null,
+  mapDispatchToProps,
+)(WalletCard);
