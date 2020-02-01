@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, TextInput } from "react-native";
 import { connect } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -40,7 +40,7 @@ function RecoveryPhraseTestScreen({
     setWalletCreationSuccessfulModalVisible,
   ] = useState(false);
   const [testResult, handleTestResult] = useState("");
-
+  const [value, onChangeValue] = useState("");
   const {
     randomNumbers,
     phrase,
@@ -56,7 +56,7 @@ function RecoveryPhraseTestScreen({
     updatePhraseTestValue2("");
     updatePhraseTestValue3("");
   }, []);
-
+  console.log("testResult", testResult)
   console.log(phraseTestValue1, phraseTestValue2, phraseTestValue3);
 
   console.log(

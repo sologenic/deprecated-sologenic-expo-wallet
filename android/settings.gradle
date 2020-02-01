@@ -1,11 +1,8 @@
 apply from: '../node_modules/react-native-unimodules/gradle.groovy'
-<<<<<<< HEAD
 include ':@react-native-community_netinfo'
 project(':@react-native-community_netinfo').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/netinfo/android')
-=======
 include ':react-native-splash-screen'
 project(':react-native-splash-screen').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-splash-screen/android')
->>>>>>> 1966435cd9e761c80976dbbca0df7bfa1f355062
 include ':react-native-randombytes'
 project(':react-native-randombytes').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-randombytes/android')
 include ':react-native-svg'

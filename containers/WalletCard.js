@@ -83,7 +83,7 @@ function WalletCard({
               paddingLeft: 12
             }}
           >
-            <Custom_Text value={nickname} size={Fonts.size.medium} isBold />
+            <Custom_Text value={nickname} size={Fonts.size.medium} numberOfLines={1} isBold />
           </View>
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}

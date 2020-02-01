@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TextInput } from "react-native";
+import { StyleSheet, View, TextInput, Platform } from "react-native";
 import { connect } from "react-redux";
 
 import Custom_Text from "./Custom_Text";
@@ -11,8 +11,9 @@ import {
   updatePhraseTestValue3,
 } from "../../actions"
 
+const isAndroid = Platform.OS === 'android';
+
 function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeholder, returnKeyType, keyboardType, onBlur, onFocus, index, updatePhraseTestValue1, updatePhraseTestValue2, updatePhraseTestValue3, phraseTestValue1, phraseTestValue2, phraseTestValue3 }) { 
-  // const [value, onChangeText] = useState("");
 
   const generateLengthArray = phraseLength => {
     const array = [];
@@ -22,27 +23,18 @@ function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeho
     return array;
   }
   const lengthArray = generateLengthArray(phraseLength);
-  
   if (count === 1) {
     return (
       <View style={styles.wordContainer}>
         <View style={styles.word}>
           <TextInput
             placeholder={placeholder}
-            // value={value}
-            // onChangeText={onChangeText}
             value={phraseTestValue1}
             onChangeText={text => {
               updatePhraseTestValue1(text);
-              // onChangeText(text);
-              // if (count === 1) {
-              //   updatePhraseTestValue1(text);
-              // } else if (count === 2) {
-              //   updatePhraseTestValue2(text);
-              // } else if (count === 3) {
-              //   updatePhraseTestValue3(text);
-              // }
             }}
+            // keyboardType="default"
+            // returnKeyType="done"
             returnKeyType={returnKeyType}
             keyboardType={keyboardType}
             onBlur={onBlur}
@@ -50,7 +42,7 @@ function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeho
             autoCapitalize="none"
             style={[styles.defaultTextInput, { color: color }]}
           />
-          <View style={{ flexDirection: "row"}}>
+          <View style={{ flexDirection: "row", marginBottom: isAndroid ? 15 : 0, marginLeft: isAndroid ? 4 : 0}}>
             {lengthArray.map(item => {
               return (
                 <View style={{ height: 1, width: 5, backgroundColor: indexColor, marginRight: 1 }}/>
@@ -86,7 +78,7 @@ function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeho
             autoCapitalize="none"
             style={[styles.defaultTextInput, { color: color }]}
           />
-          <View style={{ flexDirection: "row"}}>
+          <View style={{ flexDirection: "row", marginBottom: isAndroid ? 15 : 0, marginLeft: isAndroid ? 4 : 0 }}>
             {lengthArray.map(item => {
               return (
                 <View style={{ height: 1, width: 5, backgroundColor: indexColor, marginRight: 1 }}/>
@@ -122,7 +114,7 @@ function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeho
             autoCapitalize="none"
             style={[styles.defaultTextInput, { color: color }]}
           />
-          <View style={{ flexDirection: "row"}}>
+          <View style={{ flexDirection: "row", marginBottom: isAndroid ? 15 : 0, marginLeft: isAndroid ? 4 : 0 }}>
             {lengthArray.map(item => {
               return (
                 <View style={{ height: 1, width: 5, backgroundColor: indexColor, marginRight: 1 }}/>
@@ -154,14 +146,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     marginRight: 10,
     marginLeft: 5,
-    paddingVertical: 5,
+    paddingVertical: isAndroid ? 0 : 5,
     marginVertical: 5,
     backgroundColor: Colors.headerBackground,
   },
   word: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
   },
   index: {
     flex: 1,
@@ -172,8 +164,9 @@ const styles = StyleSheet.create({
     fontFamily: "DMSans",
     fontSize: Fonts.size.small,
     color: Colors.text,
-    backgroundColor: Colors.headerBackground,
     width: 70,
+    paddingBottom: isAndroid ? 0 : 5,
+    paddingTop: isAndroid  ? 15 : 5,
   }
 });
 

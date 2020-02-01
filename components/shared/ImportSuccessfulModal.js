@@ -19,7 +19,7 @@ export default function ImportSuccessfulModal({
   onPress,
   onClose,
   modalVisible,
-  style,
+  style
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -40,16 +40,25 @@ export default function ImportSuccessfulModal({
                   isBold
                 />
               </View>
-              <View style={[styles.section, { marginBottom: 20, flexDirection: "row" }]}>
+              <View
+                style={[
+                  styles.section,
+                  { marginBottom: 20, flexDirection: "row" }
+                ]}
+              >
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Your wallet was imported successfully.`}
+                    value={`Your wallet was imported \nsuccessfully.`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
                 </View>
                 <View style={{ flex: 2, alignItems: "flex-end" }}>
-                  <Ionicons name="ios-checkmark-circle" size={Fonts.size.h5} color={Colors.freshGreen} />
+                  <Ionicons
+                    name="ios-checkmark-circle"
+                    size={Fonts.size.h5}
+                    color={Colors.freshGreen}
+                  />
                 </View>
               </View>
               <View style={styles.line} />
@@ -110,11 +119,11 @@ const styles = StyleSheet.create({
   },
   section: {
     justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 20
+    alignItems: "flex-start",
+    marginHorizontal: 24
   },
   line: {
-    height: 1,
+    height: StyleSheet.hairlineWidth,
     backgroundColor: Colors.grayText
   }
 });
