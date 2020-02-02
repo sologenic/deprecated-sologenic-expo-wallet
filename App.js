@@ -6,14 +6,19 @@ import createSagaMiddleware from "redux-saga";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore, persistReducer } from "redux-persist";
 import SplashScreen from "react-native-splash-screen";
+import * as Sentry from '@sentry/react-native';
 
 import reducer from "./reducers";
 import rootSaga from "./sagas";
 import RootContainer from "./containers/RootContainer";
-
+import ErrorBoundary from "./containers/ErrorBoundary";
 // const persistedState = createFilter('root', [
 //   'updateIsOrientationComplete',
 // ]);
+
+Sentry.init({ 
+  dsn: 'https://6890bc8315f34207a0f891f774602ea9@sentry.io/2143718', 
+});
 
 const persistConfig = {
   key: "root",
@@ -56,10 +61,12 @@ export default function App(props) {
   }, []);
 
   return (
-    <Provider store={{ ...store, persistor }}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RootContainer />
-      </PersistGate>
-    </Provider>
+    <ErrorBoundary>
+      <Provider store={{ ...store, persistor }}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RootContainer />
+        </PersistGate>
+      </Provider>
+    </ErrorBoundary>
   );
 }
