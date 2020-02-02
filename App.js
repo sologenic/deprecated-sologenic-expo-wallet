@@ -26,8 +26,6 @@ const persistConfig = {
     "authSetupComplete",
     "unlockMethod",
     "wallets",
-    "marketData",
-    "soloData",
   ],
   // transforms: [persistedUserState],
   // blacklist: ["isAuthenticated"],
@@ -50,16 +48,17 @@ const { store, persistor } = setUpStore();
 
 sagaMiddleware.run(rootSaga);
 
-export default function App(props) {
-  useEffect(() => {
+export default class App extends React.Component {
+  componentDidMount() {
     SplashScreen.hide();
-  }, []);
-
-  return (
-    <Provider store={{ ...store, persistor }}>
-      <PersistGate loading={null} persistor={persistor}>
-        <RootContainer />
-      </PersistGate>
-    </Provider>
-  );
+  }
+  render() {
+    return (
+      <Provider store={{ ...store, persistor }}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RootContainer />
+        </PersistGate>
+      </Provider>
+    );
+  }
 }

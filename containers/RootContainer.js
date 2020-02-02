@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Asset } from "expo-asset";
 import * as Font from "expo-font";
-import { Platform, StatusBar, StyleSheet, View, Image } from "react-native";
+import { Platform, StatusBar, StyleSheet, View, Text } from "react-native";
 import { connect } from "react-redux";
 import { MenuProvider } from "react-native-popup-menu";
 import { createAppContainer } from "react-navigation";
@@ -41,14 +41,13 @@ class RootContainer extends React.Component {
 
   render() {
     const {
-      skipLoadingScreen,
       isOrientationComplete,
       authSetupComplete,
       isAuthenticated,
     } = this.props;
     const { isLoadingComplete } = this.state;
 
-    if (!isLoadingComplete && !skipLoadingScreen) {
+    if (!isLoadingComplete) {
       return (
         <View
           style={{
@@ -58,7 +57,9 @@ class RootContainer extends React.Component {
             alignItems: "center",
           }}
         >
+          {Platform.OS === "ios" && <StatusBar barStyle="light-content" />}
           {/* <Image source={images.splashLogo} /> */}
+          {/* <Text style={{ color: "#fff" }}>Stuck here</Text> */}
         </View>
       );
     } else {
