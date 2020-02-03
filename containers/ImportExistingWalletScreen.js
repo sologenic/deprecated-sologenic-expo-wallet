@@ -1,27 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Clipboard,
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
 import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
-import Custom_Button from "../components/shared/Custom_Button";
-import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_RadioButton from "../components/shared/Custom_RadioButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
-import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
-import Images from "../constants/Images";
-import { countWords } from "../utils";
 import PassphraseTab from "./PassphraseTab";
 import WalletAddressSecretTab from "./WalletAddressSecretTab";
+import { screenWidth } from "../constants/Layout";
 
 export default function ImportExistingWalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
@@ -30,22 +18,6 @@ export default function ImportExistingWalletScreen({ navigation }) {
     importSuccessfulModalVisible,
     setImportSuccessfulModalVisible,
   ] = useState(false);
-  // const [textValue, onChangeText] = useState("");
-  // const [completed, handleIsCompleted] = useState(false);
-
-  // const getContentFromClipboard = async () => {
-  //   const content = await Clipboard.getString();
-  //   await onChangeText(content);
-  // };
-
-  // useEffect(() => {
-  //   const result = countWords(textValue);
-  //   if (textValue) {
-  //     handleIsCompleted(true);
-  //   } else {
-  //     handleIsCompleted(false);
-  //   }
-  // });
 
   return (
     <View style={styles.container}>
@@ -114,23 +86,26 @@ export default function ImportExistingWalletScreen({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-      {tab === 1 ? (
-        <PassphraseTab
-          navigation={navigation}
-          errorModalVisible={errorModalVisible}
-          setErrorModalVisible={setErrorModalVisible}
-          importSuccessfulModalVisible={importSuccessfulModalVisible}
-          setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
-        />
-      ) : (
-        <WalletAddressSecretTab
-          navigation={navigation}
-          errorModalVisible={errorModalVisible}
-          setErrorModalVisible={setErrorModalVisible}
-          importSuccessfulModalVisible={importSuccessfulModalVisible}
-          setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
-        />
-      )}
+      <ScrollView>
+        {tab === 1 ? (
+          <PassphraseTab
+            navigation={navigation}
+            errorModalVisible={errorModalVisible}
+            setErrorModalVisible={setErrorModalVisible}
+            importSuccessfulModalVisible={importSuccessfulModalVisible}
+            setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+          />
+        ) : (
+          <WalletAddressSecretTab
+            navigation={navigation}
+            errorModalVisible={errorModalVisible}
+            setErrorModalVisible={setErrorModalVisible}
+            importSuccessfulModalVisible={importSuccessfulModalVisible}
+            setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+          />
+        )}
+        <View style={{ height: 40, width: screenWidth }} />
+      </ScrollView>
     </View>
   );
 }
