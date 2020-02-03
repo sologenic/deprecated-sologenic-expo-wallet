@@ -123,7 +123,7 @@ export const isValidClassicAddress = address => {
 export const sologenic = new s.SologenicTxHandler(
   // RippleAPI Options
   {
-    server: "wss://testnet.xrpl-labs.com", // Kudos to Wietse Wind
+    server: appConfig.server, // Kudos to Wietse Wind
   },
   // Sologenic Options, hash or redis
   {
