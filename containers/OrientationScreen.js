@@ -75,9 +75,13 @@ class OrientationScreen extends Component {
             text="Get Started"
             onPress={() =>
               navigation.navigate({
-                key: "TermsScreen",
-                routeName: "TermsScreen",
+                key: "ReceiveEmailUpdatesScreen",
+                routeName: "ReceiveEmailUpdatesScreen",
               })
+              // navigation.navigate({
+              //   key: "TermsScreen",
+              //   routeName: "TermsScreen",
+              // })
             }
             color={Colors.darkRed}
             size={14}
