@@ -146,17 +146,21 @@ function SettingsScreen({
             isBold
           />
           <Custom_NavButton
-            value="Terms & Conditions"
+            value="License Agreement"
             handleOnPress={() => {
-              handleOpenWithWebBrowser(config.termsUrl);
+              // handleOpenWithWebBrowser(config.termsUrl);
+              navigation.navigate({
+                key: "LicenseAgreementScreen",
+                routeName: "LicenseAgreementScreen",
+              });
             }}
           />
-          <Custom_NavButton
+          {/* <Custom_NavButton
             value="Privacy Policy"
             handleOnPress={() => {
               handleOpenWithWebBrowser(config.privacyUrl);
             }}
-          />
+          /> */}
         </View>
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text

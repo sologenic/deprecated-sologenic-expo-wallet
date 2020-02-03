@@ -66,7 +66,10 @@ function WalletTab({
   const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
   const [xrpWarningModalVisible, setXrpWarningModalVisible] = useState(false);
-  const priceChange = marketData ? getPriceChange(marketData.last, marketData.open) : "";
+  const priceChange =
+    marketData && marketData.last
+      ? getPriceChange(marketData.last, marketData.open)
+      : "";
   const priceColor = getPriceColor(priceChange);
   const { id, isActive } = wallet;
   const [isWalletActive, setIsWalletActive] = useState(isActive);
@@ -118,8 +121,12 @@ function WalletTab({
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    setCopiedModalVisible(true);
-    setTimeout(() => setCopiedModalVisible(false), 2500);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
   };
 
   if (isWalletActive) {
@@ -182,7 +189,11 @@ function WalletTab({
                         color={Colors.lightGray}
                       />
                       <Custom_Text
-                        value={`${defaultCurrency.symbol} ${marketData.last}`}
+                        value={
+                          marketData && marketData.last
+                            ? `${defaultCurrency.symbol} ${marketData.last}`
+                            : "0"
+                        }
                         size={Fonts.size.medium}
                       />
                     </View>
@@ -201,7 +212,13 @@ function WalletTab({
                   </View>
                 </View>
               ) : (
-                <View style={{ height: 100, justifyContent: "center", alignItems: "center" }}>
+                <View
+                  style={{
+                    height: 100,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <View>
                     <Custom_Text
                       value="Your device is now offline."
@@ -332,6 +349,7 @@ function WalletTab({
                           key={`${item.address}${index}`}
                           transaction={item}
                           walletAddress={id}
+                          writeToClipboard={writeToClipboard}
                         />
                       );
                     }
@@ -380,7 +398,7 @@ function WalletTab({
             modalVisible={xrpWarningModalVisible}
             onClose={() => setXrpWarningModalVisible(false)}
           />
-          <View style={{ height: 30, width: screenWidth }} />
+          <View style={{ height: 40, width: screenWidth }} />
         </ScrollView>
         <CopiedModal showModal={copiedModalVisible} />
       </View>

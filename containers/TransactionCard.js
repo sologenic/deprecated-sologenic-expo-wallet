@@ -11,6 +11,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import appConfig from "../app.config";
 import config from "../constants/config";
+import { formatBalance } from "../utils";
 
 // const propTypes = {
 //   transaction: P.shape({
@@ -44,7 +45,11 @@ import config from "../constants/config";
 //   }
 // }
 
-export default function TransactionCard({ transaction, walletAddress }) {
+export default function TransactionCard({
+  transaction,
+  walletAddress,
+  writeToClipboard,
+}) {
   const { outcome, specification, type, id } = transaction;
   // const failedTransaction = outcome.result === 'tecUNFUNDED_PAYMENT';
   const currency = outcome.deliveredAmount
@@ -55,7 +60,7 @@ export default function TransactionCard({ transaction, walletAddress }) {
   const timestamp = outcome ? outcome.timestamp : "";
   const result = outcome ? outcome.result : "";
   const fee = outcome ? outcome.fee : "";
-  
+
   const burnAmount = Number(value) * 0.0001;
 
   const ledgerVersion = outcome ? outcome.ledgerVersion : "";
@@ -108,12 +113,17 @@ export default function TransactionCard({ transaction, walletAddress }) {
         >
           <View style={styles.confirmationContainer}>
             <Custom_Text value="Confirmations" size={10} />
-            <Custom_Text value={ledgerVersion} size={Fonts.size.small} isBold />
+            <Custom_Text
+              value={ledgerVersion}
+              size={Fonts.size.small}
+              isBold
+              numberOfLines={1}
+            />
           </View>
           <View style={styles.feeContainer}>
             {fundsRecevied === "-" && (
               <View>
-                <Custom_Text value="Tx Fee" size={10} />
+                <Custom_Text value="Tx Fee" size={10} numberOfLines={1} />
                 <View style={{ flexDirection: "row" }}>
                   <Custom_Text
                     // value={isSolo ? "Ƨ" : currency.toUpperCase()}
@@ -121,13 +131,18 @@ export default function TransactionCard({ transaction, walletAddress }) {
                     size={9}
                     style={{ marginTop: 2 }}
                   />
-                  <Custom_Text value={` ${fee}`} size={Fonts.size.small} isBold />
+                  <Custom_Text
+                    value={` ${fee}`}
+                    size={Fonts.size.small}
+                    isBold
+                    numberOfLines={1}
+                  />
                 </View>
               </View>
             )}
           </View>
           <View style={styles.burnAmountContainer}>
-            {(isSolo && fundsRecevied === "-") && (
+            {isSolo && fundsRecevied === "-" && (
               <View>
                 <Custom_Text value="Burn Amount" size={10} />
                 <View style={{ flexDirection: "row" }}>
@@ -136,7 +151,12 @@ export default function TransactionCard({ transaction, walletAddress }) {
                     size={9}
                     style={{ marginTop: 2 }}
                   />
-                  <Custom_Text value={` ${burnAmount.toFixed(4)}`} size={Fonts.size.small} isBold />
+                  <Custom_Text
+                    value={` ${burnAmount.toFixed(4)}`}
+                    size={Fonts.size.small}
+                    isBold
+                    numberOfLines={1}
+                  />
                 </View>
               </View>
             )}
@@ -198,7 +218,7 @@ export default function TransactionCard({ transaction, walletAddress }) {
             </View>
           </View>
           <View style={styles.viewBithompContainer}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={{ borderBottomColor: Colors.text, borderBottomWidth: 0.5 }}
               onPress={() => {
                 WebBrowser.openBrowserAsync(`${config.bithompUrl}/${txId}`);
@@ -214,11 +234,6 @@ export default function TransactionCard({ transaction, walletAddress }) {
         </TouchableOpacity>
       </View>
     );
-  };
-
-  const writeToClipboard = async address => {
-    // const input = txid ? txid : rid;
-    await Clipboard.setString(address);
   };
 
   return (
@@ -244,6 +259,7 @@ export default function TransactionCard({ transaction, walletAddress }) {
             style={{ marginTop: 1 }}
           />
           <Custom_Text
+            // value={` ${formatBalance(value)}`}
             value={` ${value}`}
             // value={
             //   result === "tesSUCCESS"
@@ -256,6 +272,7 @@ export default function TransactionCard({ transaction, walletAddress }) {
             //     ? Colors.freshGreen
             //     : Colors.errorBackground
             // }
+            numberOfLines={1}
             isBold
           />
         </View>
@@ -346,12 +363,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     // paddingLeft: 10,
-    // paddingRight: 30,
   },
   statusContainer: {
     height: 40,
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
   },
   arrowIconContainer: {
     height: 40,

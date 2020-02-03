@@ -52,8 +52,26 @@ export default function TransferSummaryModal({
                   size={24}
                   color={Colors.text}
                   isBold
+                  numberOfLines={1}
                 />
               </View>
+              {currency === "solo" && (
+                <View style={[styles.section, { marginBottom: 20 }]}>
+                  <Custom_Text
+                    value="Amount to Receive:"
+                    size={Fonts.size.small}
+                    color={Colors.lightGray}
+                  />
+                  <Custom_Text
+                    value={`${amountToSend -
+                      amountToSend * 0.0001} ${currency.toUpperCase()}`}
+                    size={24}
+                    color={Colors.text}
+                    isBold
+                    numberOfLines={1}
+                  />
+                </View>
+              )}
               <View
                 style={[
                   styles.sectionAddress,
@@ -65,7 +83,10 @@ export default function TransferSummaryModal({
                   size={Fonts.size.small}
                   color={Colors.lightGray}
                 />
-                <Custom_Text value={`${0.000012} ${currency.toUpperCase()}`} size={Fonts.size.small} />
+                <Custom_Text
+                  value={`${0.000012} ${currency.toUpperCase()}`}
+                  size={Fonts.size.small}
+                />
               </View>
               {isSolo && (
                 <View
@@ -79,7 +100,11 @@ export default function TransferSummaryModal({
                     size={Fonts.size.small}
                     color={Colors.lightGray}
                   />
-                  <Custom_Text value={`${Number(amountToSend) * 0.0001} ${currency.toUpperCase()}`} size={Fonts.size.small} />
+                  <Custom_Text
+                    value={`${Number(amountToSend) *
+                      0.0001} ${currency.toUpperCase()}`}
+                    size={Fonts.size.small}
+                  />
                 </View>
               )}
               <View

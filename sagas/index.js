@@ -221,10 +221,6 @@ const setAccount = (address, passphrase, salt, encrypted, publicKey) => {
   const rippleApi = sologenic.getRippleApi();
   const isValidSecret = rippleApi.isValidSecret(decrypted);
   const isValidPrivateKey = /[0-9A-Fa-f]{66}/g;
-  console.log("SET ACCOUNT DESCRYPTED =====", {
-    decrypted,
-    isValidSecret,
-  });
   if (isValidSecret) {
     return sologenic.setAccount({
       address,

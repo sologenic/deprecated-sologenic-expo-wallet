@@ -101,7 +101,8 @@ function WalletScreen({
   const { id, balance, nickname, rippleClassicAddress, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
   const soloMarketPrice = soloData[defaultCurrency.value];
-  const xrpBalanceInFiat = marketData ? xrp * marketData.last : "";
+  const xrpBalanceInFiat =
+    marketData && marketData.last ? xrp * marketData.last : "";
   const soloBalanceInFiat = soloData ? solo * soloMarketPrice : "";
   const totalBalance = formatWalletTotalBalance(
     xrpBalanceInFiat + soloBalanceInFiat,
@@ -109,13 +110,13 @@ function WalletScreen({
 
   useEffect(() => {
     if (netinfo) {
-      console.log("????")
+      console.log("????");
       fetchData();
       // connectToRippleApi();
     }
   }, [netinfo]);
 
-  console.log("HEREEE", netinfo)
+  console.log("HEREEE", netinfo);
   useEffect(() => {
     setWallet(walletAddress);
     if (walletAddress && walletAddress !== "") {
@@ -228,7 +229,11 @@ function WalletScreen({
           style={{ position: "relative", bottom: 10 }}
         />
         <Custom_Text
-          value={netinfo ? ` ${defaultCurrency.symbol}${totalBalance}` : "  Your device is now offline"}
+          value={
+            netinfo
+              ? ` ${defaultCurrency.symbol}${totalBalance}`
+              : "  Your device is now offline"
+          }
           style={{ position: "relative", bottom: 10 }}
           isBold
         />

@@ -21,7 +21,8 @@ function WalletCard({
   const { nickname, balance, walletAddress, id, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
   const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
-  const xrpBalanceInFiat = marketData ? xrp * marketData.last : "";
+  const xrpBalanceInFiat =
+    marketData && marketData.last ? xrp * marketData.last : "";
   const soloBalanceInFiat = soloMarketPrice ? solo * soloMarketPrice : "";
   const totalBalance =
     xrp === 0 && solo === 0
@@ -83,7 +84,12 @@ function WalletCard({
               paddingLeft: 5,
             }}
           >
-            <Custom_Text value={nickname} size={Fonts.size.medium} numberOfLines={1} isBold />
+            <Custom_Text
+              value={nickname}
+              size={Fonts.size.medium}
+              numberOfLines={1}
+              isBold
+            />
           </View>
           <View
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}

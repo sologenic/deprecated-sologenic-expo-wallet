@@ -33,10 +33,13 @@ export default function ReceiveScreen({ navigation }) {
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    setCopiedModalVisible(true);
-    setTimeout(() => setCopiedModalVisible(false), 2500);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
   };
-
   return (
     <View style={styles.container}>
       <Custom_Header

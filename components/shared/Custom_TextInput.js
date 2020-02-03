@@ -22,6 +22,7 @@ export default function Custom_TextInput({
   placeholder,
   placeholderTextColor,
   currency,
+  editable,
 }) {
   const [isFocused, handleIsFocused] = useState(false);
   const handleFocus = () => handleIsFocused(true);
@@ -54,6 +55,7 @@ export default function Custom_TextInput({
         onFocus={handleFocus}
         style={styles.defaultTextInput}
         autoCapitalize="none"
+        editable={editable}
       />
       {currency && (
         <Text
@@ -87,6 +89,7 @@ Custom_TextInput.propTypes = {
   returnKeyType: PropTypes.string,
   autoFocus: PropTypes.bool,
   showSecureTextEntryButton: PropTypes.bool,
+  editable: PropTypes.bool,
 };
 
 Custom_TextInput.defaultProps = {
@@ -102,6 +105,7 @@ Custom_TextInput.defaultProps = {
   returnKeyType: "done",
   autoFocus: false,
   showSecureTextEntryButton: false,
+  editable: true,
 };
 
 const styles = StyleSheet.create({

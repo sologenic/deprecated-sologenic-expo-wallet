@@ -56,7 +56,7 @@ function RecoveryPhraseTestScreen({
     updatePhraseTestValue2("");
     updatePhraseTestValue3("");
   }, []);
-  console.log("testResult", testResult)
+  console.log("testResult", testResult);
   console.log(phraseTestValue1, phraseTestValue2, phraseTestValue3);
 
   console.log(
@@ -186,10 +186,6 @@ function RecoveryPhraseTestScreen({
                   salt,
                   walletAddress,
                   passphrase,
-                );
-                console.log(
-                  "PRIVATE KEY =========================>",
-                  newWallet.wallet.privateKey,
                 );
                 const secureNewWallet = {
                   derivationPath: newWallet.derivationPath,

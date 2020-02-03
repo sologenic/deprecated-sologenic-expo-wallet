@@ -104,7 +104,7 @@ export default function LinksScreen({ navigation }) {
           </View> */}
         <View style={styles.section}>
           <Custom_Text
-            value="The sequence of words below is your Recovery Words. You need this to regain access to your XRP. You should never share this with anyone"
+            value="The sequence of words below is your Recovery Words. You need this to regain access to your digital assets. You should never share this with anyone"
             size={Fonts.size.normal}
             color={Colors.text}
           />

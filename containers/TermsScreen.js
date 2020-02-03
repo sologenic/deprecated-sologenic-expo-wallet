@@ -37,7 +37,7 @@ function TermsScreen({ navigation, completeOrientation }) {
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Terms & Conditions" />}
+        center={<Custom_HeaderTitle text="License Agreement" />}
         right={<View />}
       />
       <View

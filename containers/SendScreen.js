@@ -31,7 +31,12 @@ import {
   transferSolo,
   transferSoloReset,
 } from "../actions";
-import { formatWalletTotalBalance, excludeLettersExceptForNumber, formatInput } from "../utils";
+import {
+  formatWalletTotalBalance,
+  excludeLettersExceptForNumber,
+  formatInput,
+  getRippleClassicAddressFromXAddress,
+} from "../utils";
 
 function SendScreen({
   navigation,
@@ -72,6 +77,7 @@ function SendScreen({
   );
   const [offline, handleChangeOffline] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+  const [isUsingXAddress, setIsUsingXAddress] = useState(false);
   const { balance, currency, walletAddress, id } = navigation.state.params;
   const { salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
@@ -98,8 +104,10 @@ function SendScreen({
     } else {
       handleIsCompleted(false);
     }
-    setConvertedAmount(amountToSend * marketData.last);
-  }, [amountToSend, destination, passphrase]);
+    if (marketData && marketData.last) {
+      setConvertedAmount(amountToSend * marketData.last);
+    }
+  }, [amountToSend, destination, passphrase, tag, isUsingXAddress]);
 
   useEffect(() => {
     if (transferXrpSuccess) {
@@ -189,7 +197,7 @@ function SendScreen({
               onChangeText={text => {
                 // var t = text.replace(/[^0-9.]/g, "");
                 const formattedText = excludeLettersExceptForNumber(
-                  formatInput(text, 6)
+                  formatInput(text, 6),
                 );
                 handleChangeAmountToSend(formattedText);
               }}
@@ -225,6 +233,13 @@ function SendScreen({
             <Custom_TextInput
               value={destination}
               onChangeText={text => {
+                const startsWithX = text.startsWith("X");
+                if (startsWithX) {
+                  setIsUsingXAddress(true);
+                  handleChangeTag("");
+                } else {
+                  setIsUsingXAddress(false);
+                }
                 handleChangeDestination(text);
               }}
               label="Destination Wallet Address"
@@ -232,7 +247,6 @@ function SendScreen({
               returnKeyType="done"
             />
           </View>
-
           <View style={{ marginTop: 25 }}>
             <Custom_TextInput
               value={tag}
@@ -241,9 +255,10 @@ function SendScreen({
                 handleChangeTag(t);
               }}
               label="Destination Tag"
-              placeholder="Optional"
+              placeholder={isUsingXAddress ? "Disabled" : "Optional"}
               keyboardType="default"
               returnKeyType="done"
+              editable={!isUsingXAddress}
             />
             {/* <View style={{ marginLeft: 30, marginTop: 5 }}>
               <Custom_Text
@@ -314,6 +329,7 @@ function SendScreen({
         </View>
         <InstructionsModal
           modalVisible={instructionsModalVisible}
+          currency={currency}
           onClose={() => setInstructionsModalVisible(false)}
         />
         <TransferSummaryModal
@@ -325,7 +341,9 @@ function SendScreen({
               if (currency === "xrp") {
                 transferXrp({
                   account: walletAddress,
-                  destination,
+                  destination: isUsingXAddress
+                    ? getRippleClassicAddressFromXAddress(destination)
+                    : destination,
                   tag,
                   value: amountToSend,
                   passphrase,
@@ -336,7 +354,9 @@ function SendScreen({
               } else {
                 transferSolo({
                   account: walletAddress,
-                  destination,
+                  destination: isUsingXAddress
+                    ? getRippleClassicAddressFromXAddress(destination)
+                    : destination,
                   tag,
                   value: amountToSend,
                   passphrase,
@@ -345,7 +365,7 @@ function SendScreen({
                   publicKey,
                 });
               }
-            };
+            }
           }}
           modalVisible={summaryModalVisible}
           showSpinner={transferXrpPending || transferSoloPending}

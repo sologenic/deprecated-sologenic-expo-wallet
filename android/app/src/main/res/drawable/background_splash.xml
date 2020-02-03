@@ -5,9 +5,9 @@
         android:drawable="@color/splashscreen_bg"/>
 
     <item
-        android:width="300dp"
-        android:height="300dp"
-        android:drawable="@mipmap/ic_launcher"
+        android:width="100dp"
+        android:height="100dp"
+        android:drawable="@mipmap/ic_launcher_round"
         android:gravity="center" />
 
 </layer-list>

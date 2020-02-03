@@ -29,9 +29,14 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    setCopiedModalVisible(true);
-    setTimeout(() => setCopiedModalVisible(false), 2500);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
   };
+
   const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
@@ -177,7 +182,10 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
         modalVisible={walletAddressModalVisible}
         onClose={() => setWalletAddressModalVisible(false)}
       />
-      <CopiedModal showModal={copiedModalVisible} />
+      <CopiedModal
+        showModal={copiedModalVisible}
+        textValue="Recovery words copied to clipboard"
+      />
     </View>
   );
 }

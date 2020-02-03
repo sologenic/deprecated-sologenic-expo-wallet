@@ -30,7 +30,7 @@ import {
   getMarketSevens,
   connectToRippleApi,
 } from "../actions";
-import { headerHeight } from "../constants/Layout";
+import { headerHeight, screenWidth } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
 import { formatBalance } from "../utils";
 import EnterPasswordModal from "../components/shared/EnterPasswordModal";
@@ -136,8 +136,12 @@ function WalletSoloTab({
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    setCopiedModalVisible(true);
-    setTimeout(() => setCopiedModalVisible(false), 2500);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
   };
 
   if (!soloActive) {
@@ -573,6 +577,7 @@ function WalletSoloTab({
                         key={`${item.address}${index}`}
                         transaction={item}
                         walletAddress={id}
+                        writeToClipboard={writeToClipboard}
                       />
                     );
                   }
@@ -613,6 +618,7 @@ function WalletSoloTab({
           modalVisible={walletAddressModalVisible}
           onClose={() => setWalletAddressModalVisible(false)}
         />
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <CopiedModal showModal={copiedModalVisible} />
     </View>

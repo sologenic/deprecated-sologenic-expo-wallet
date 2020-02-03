@@ -8,10 +8,12 @@ import { screenWidth } from "../../constants/Layout";
 
 const propTypes = {
   showModal: P.bool,
+  textValue: P.string,
 };
 
 const defaultProps = {
   showModal: true,
+  textValue: "Copied to clipboard",
 };
 
 class CopiedModal extends React.Component {
@@ -43,7 +45,7 @@ class CopiedModal extends React.Component {
         <Animated.View style={[style, { opacity: this.state.fadeAnim }]}>
           <View style={containerStyle}>
             <Custom_Text
-              value="Address copied to clipboard"
+              value={this.props.textValue}
               color={colors.secondaryText}
             />
           </View>
