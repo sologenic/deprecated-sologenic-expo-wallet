@@ -99,7 +99,7 @@ class CreatePinScreen extends React.Component {
           <View
             style={{
               justifyContent: "center",
-              marginHorizontal: 15,
+              // marginHorizontal: 15,
             }}
           >
             {showCodeError && (

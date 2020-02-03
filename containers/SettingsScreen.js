@@ -17,6 +17,7 @@ import { updateBaseCurrency, getMarketData, purgeStore } from "../actions";
 import config from "../constants/config";
 import appConfig from "../app.config";
 import ResetDataModal from "../components/shared/ResetDataModal";
+import { screenWidth } from "../constants/Layout";
 
 function SettingsScreen({
   navigation,
@@ -196,6 +197,7 @@ function SettingsScreen({
             isBold
           />
         </View>
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <ResetDataModal
         modalVisible={showModal}

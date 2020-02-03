@@ -42,7 +42,7 @@ const slides = [
   },
   {
     key: "slide4",
-    title: `Hodl and Transfer your XRP & SOLO \nfrom a single Wallet Address`,
+    title: `Hodl and Transfer your XRP & \nSOLO from a single Wallet Address`,
     subtitle: "",
     image: images.slide4,
     imageOverlay: images.slide4Overlay,
@@ -70,7 +70,13 @@ class OrientationScreen extends Component {
             style={styles.title}
           />
         </View>
-        <View style={{ alignSelf: "center", position: "absolute", bottom: 24 }}>
+        <View
+          style={{
+            alignSelf: "center",
+            // backgroundColor: "blue",
+            marginBottom: 20,
+          }}
+        >
           <Custom_Button
             text="Get Started"
             onPress={() =>
@@ -105,7 +111,7 @@ class OrientationScreen extends Component {
         showNextButton={false}
         paginationStyle={{
           position: "absolute",
-          bottom: 70,
+          bottom: "8%",
         }}
       />
     );
