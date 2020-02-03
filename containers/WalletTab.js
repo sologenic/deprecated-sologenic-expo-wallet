@@ -77,7 +77,6 @@ function WalletTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
-      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -102,7 +101,7 @@ function WalletTab({
   }, [xrpBalanceWarning, transactions, getTransactionsPending]);
 
   useEffect(() => {
-    if (isActive && !isWalletActive) {
+    if (isActive && !isWalletActive && marketData) {
       setIsWalletActive(true);
     }
   }, [wallet]);
