@@ -74,7 +74,6 @@ function WalletTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
-      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -99,7 +98,7 @@ function WalletTab({
   }, [xrpBalanceWarning, transactions, getTransactionsPending]);
 
   useEffect(() => {
-    if (isActive && !isWalletActive) {
+    if (isActive && !isWalletActive && marketData) {
       setIsWalletActive(true);
     }
   }, [wallet]);
@@ -182,7 +181,7 @@ function WalletTab({
                         color={Colors.lightGray}
                       />
                       <Custom_Text
-                        value={`${defaultCurrency.symbol} ${marketData.last}`}
+                        value={marketData ? `${defaultCurrency.symbol} ${marketData.last}` : "Temporary disconnet"}
                         size={Fonts.size.medium}
                       />
                     </View>

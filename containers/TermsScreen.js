@@ -252,7 +252,7 @@ function TermsScreen({ navigation, completeOrientation }) {
             disabled={!isActive || !isSecondActive}
           />
         </View>
-        <View
+        {/* <View
           style={{
             alignItems: "center",
             position: "absolute",
@@ -287,7 +287,7 @@ function TermsScreen({ navigation, completeOrientation }) {
             {`© 2019-2020 SOLO CORE TEAM. All Rights Reserved. 
            Software Version ${appConfig.version}`}
           </Text>
-        </View>
+        </View> */}
       </View>
     </View>
   );

@@ -15,6 +15,7 @@ import {
 import P from "prop-types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { connect } from "react-redux";
+import NetInfo from "@react-native-community/netinfo";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -40,6 +41,7 @@ import {
   getSoloData,
   getMarketSevens,
   connectToRippleApi,
+  getNetInfo,
 } from "../actions";
 import { formatWalletTotalBalance } from "../utils";
 
@@ -92,8 +94,8 @@ function WalletScreen({
   soloData,
   netinfo,
   connectToRippleApi,
+  getNetInfo,
 }) {
-  // console.log("HEREEEEE", netinfo);
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(5);
@@ -108,14 +110,21 @@ function WalletScreen({
   );
 
   useEffect(() => {
-    if (netinfo) {
-      console.log("????")
+    if (!netinfo && marketData) {
+      NetInfo.fetch().then(state => {
+        console.log("Re-Connection type", state.type);
+        console.log("Is re-connected?", state.isConnected);
+        getNetInfo(state.isConnected);
+      });      
+    }
+  }, []);
+
+  useEffect(() => {
+    if (netinfo || netinfo === null) {
       fetchData();
-      // connectToRippleApi();
     }
   }, [netinfo]);
 
-  console.log("HEREEE", netinfo)
   useEffect(() => {
     setWallet(walletAddress);
     if (walletAddress && walletAddress !== "") {
@@ -412,6 +421,7 @@ const mapDispatchToProps = dispatch => ({
   getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
+  getNetInfo: status => dispatch(getNetInfo(status)),
 });
 
 export default connect(

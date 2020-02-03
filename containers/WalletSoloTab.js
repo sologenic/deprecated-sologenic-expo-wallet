@@ -86,7 +86,6 @@ function WalletSoloTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
-      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -105,7 +104,6 @@ function WalletSoloTab({
       setActivateModalVisible(true);
     }
     if (createTrustlineError) {
-      console.log("yayayayaya");
       setActivateModalVisible(false);
       setTrustlineErrorModalVisible(true);
     }
@@ -121,18 +119,10 @@ function WalletSoloTab({
     isActive,
   ]);
 
-  // useEffect(() => {
-  //   if (isActive && !isWalletActive) {
-  //     setIsWalletActive(true);
-  //   }
-  // }, [wallet]);
-
   const { id, isActive, salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
 
   const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
-  // const priceChange = getPriceChange(marketData.last, marketData.open);
-  // const priceColor = getPriceColor(priceChange);
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
