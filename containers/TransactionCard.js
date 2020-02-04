@@ -183,7 +183,7 @@ export default function TransactionCard({
                 size={8}
                 fontSize={Fonts.size.tiny}
                 style={{
-                  paddingHorizontal: 8,
+                  paddingHorizontal: 6,
                   backgroundColor: "transparent",
                   justifyContent: "center",
                   alignItems: "center",
@@ -207,7 +207,7 @@ export default function TransactionCard({
                 size={8}
                 fontSize={Fonts.size.tiny}
                 style={{
-                  paddingHorizontal: 8,
+                  paddingHorizontal: 6,
                   backgroundColor: "transparent",
                   justifyContent: "center",
                   alignItems: "center",
@@ -280,8 +280,8 @@ export default function TransactionCard({
           style={{
             flex: 4,
             flexDirection: "row",
-            // justifyContent: "flex-start",
-            justifyContent: "space-between",
+            justifyContent: "flex-end",
+            // justifyContent: "space-between",
           }}
         >
           <View style={styles.statusContainer}>
@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     flexDirection: "row",
+    justifyContent: "center",
     // paddingLeft: 10,
   },
   statusContainer: {
@@ -406,12 +407,12 @@ const styles = StyleSheet.create({
     flex: 4,
     height: 40,
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "center",
   },
   viewBithompContainer: {
     flex: 4,
     height: 40,
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "flex-end",
   },
 });

@@ -61,27 +61,23 @@ function WalletCard({
         activeOpacity={0.5}
         style={styles.upperStyle}
       >
-        <View
-          style={{ flexDirection: "row", marginHorizontal: 12, marginTop: 15 }}
-        >
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <View
-              style={{
-                backgroundColor: Colors.lighterGray,
-                height: 12,
-                width: 12,
-                borderRadius: 6,
-              }}
-            />
-          </View>
+        <View style={{ position: "absolute", left: 15, top: 18 }}>
           <View
             style={{
-              flex: 8,
+              backgroundColor: Colors.lighterGray,
+              height: 12,
+              width: 12,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", marginLeft: 40, marginTop: 15 }}>
+          <View
+            style={{
+              flex: 10,
               justifyContent: "center",
               alignItems: "flex-start",
-              paddingLeft: 5,
+              // paddingLeft: 5,
             }}
           >
             <Custom_Text
@@ -92,16 +88,16 @@ function WalletCard({
             />
           </View>
           <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            style={{ justifyContent: "center", alignItems: "center", flex: 2 }}
           >
             <Ionicons name="ios-arrow-forward" size={16} color={Colors.text} />
           </View>
         </View>
-        <View style={{ flexDirection: "row", marginTop: 5 }}>
+        <View style={{ flexDirection: "row", marginTop: 5, marginLeft: 40 }}>
+          {/* <View style={{ flex: 1 }} /> */}
           <View
             style={{
-              flex: 1,
-              paddingLeft: 47,
+              flex: 6,
             }}
           >
             <Custom_Text
@@ -117,11 +113,7 @@ function WalletCard({
               isBold
             />
           </View>
-          <View
-            style={{
-              flex: 1,
-            }}
-          >
+          <View style={{ flex: 6 }}>
             {totalBalance || totalBalance === 0 ? (
               <View style={{ flexDirection: "row" }}>
                 <View style={{ marginRight: 5, flexDirection: "row" }}>

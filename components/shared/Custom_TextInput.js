@@ -28,7 +28,7 @@ export default function Custom_TextInput({
   const handleFocus = () => handleIsFocused(true);
   const handleBlur = () => handleIsFocused(false);
   return (
-    <TouchableOpacity onPress={handleFocus} activeOpacity={0.5}>
+    <View onPress={handleFocus} activeOpacity={0.5}>
       <Text
         style={{
           position: "absolute",
@@ -72,7 +72,7 @@ export default function Custom_TextInput({
           {currency.toUpperCase()}
         </Text>
       )}
-    </TouchableOpacity>
+    </View>
   );
 }
 

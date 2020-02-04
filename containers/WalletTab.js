@@ -288,7 +288,11 @@ function WalletTab({
                   size={Fonts.size.small}
                   color={Colors.grayText}
                 />
-                <Custom_Text value={walletAddress} size={Fonts.size.small} />
+                <Custom_Text
+                  value={walletAddress}
+                  size={Fonts.size.small}
+                  numberOfLines={1}
+                />
               </View>
               <View style={{ flex: 1 }}>
                 <View style={{ paddingVertical: 2.5 }}>
@@ -519,7 +523,11 @@ function WalletTab({
                 color={Colors.grayText}
                 style={{ marginBottom: 3 }}
               />
-              <Custom_Text value={walletAddress} size={Fonts.size.small} />
+              <Custom_Text
+                value={walletAddress}
+                size={Fonts.size.small}
+                numberOfLines={1}
+              />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>

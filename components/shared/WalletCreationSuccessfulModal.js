@@ -35,7 +35,6 @@ export default function WalletCreationSuccessfulModal({
                     width: 230,
                     height: 100,
                     alignItems: "flex-start",
-                    marginRight: 60,
                   },
                 ]}
               >
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40,
+    // paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
