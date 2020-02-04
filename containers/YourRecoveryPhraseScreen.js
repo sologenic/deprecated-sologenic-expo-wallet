@@ -16,6 +16,7 @@ import Images from "../constants/Images";
 import { genereateRandomNumbers } from "../utils";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
 import CopiedModal from "../components/shared/CopiedModal";
+import { screenWidth } from "../constants/Layout";
 
 export default function YourRecoveryPhraseScreen({ navigation }) {
   const [pressed, handlePressDots] = useState(false);
@@ -62,7 +63,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
       <ScrollView>
         <View style={styles.section}>
           <Custom_Text
-            value="The sequence of words below is your Recovery Words. You need this to regain access to your XRP. You should never share this with anyone."
+            value="The sequence of words below are your Recovery Words. You need these to regain access to your XRP. You should never share these words with anyone."
             style={{ textAlign: "center" }}
             size={Fonts.size.normal}
             color={Colors.text}
@@ -127,7 +128,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 60,
+              marginTop: 40,
             },
           ]}
         >
@@ -176,6 +177,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
             disabled={!pressed}
           />
         </View>
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <WalletAddressModal
         data={mnemonic.join(" ")}

@@ -80,14 +80,14 @@ class OrientationScreen extends Component {
           <Custom_Button
             text="Get Started"
             onPress={() =>
-              navigation.navigate({
-                key: "ReceiveEmailUpdatesScreen",
-                routeName: "ReceiveEmailUpdatesScreen",
-              })
               // navigation.navigate({
-              //   key: "TermsScreen",
-              //   routeName: "TermsScreen",
+              //   key: "ReceiveEmailUpdatesScreen",
+              //   routeName: "ReceiveEmailUpdatesScreen",
               // })
+              navigation.navigate({
+                key: "TermsScreen",
+                routeName: "TermsScreen",
+              })
             }
             color={Colors.darkRed}
             size={14}

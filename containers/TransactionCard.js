@@ -183,7 +183,7 @@ export default function TransactionCard({
                 size={8}
                 fontSize={Fonts.size.tiny}
                 style={{
-                  paddingHorizontal: 8,
+                  paddingHorizontal: 6,
                   backgroundColor: "transparent",
                   justifyContent: "center",
                   alignItems: "center",
@@ -207,7 +207,7 @@ export default function TransactionCard({
                 size={8}
                 fontSize={Fonts.size.tiny}
                 style={{
-                  paddingHorizontal: 8,
+                  paddingHorizontal: 6,
                   backgroundColor: "transparent",
                   justifyContent: "center",
                   alignItems: "center",

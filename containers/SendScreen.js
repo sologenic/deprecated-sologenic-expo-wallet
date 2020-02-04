@@ -37,6 +37,7 @@ import {
   formatInput,
   getRippleClassicAddressFromXAddress,
 } from "../utils";
+import { screenWidth } from "../constants/Layout";
 
 function SendScreen({
   navigation,
@@ -419,6 +420,7 @@ function SendScreen({
             setErrorModalVisible(false);
           }}
         />
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
     </View>
   );

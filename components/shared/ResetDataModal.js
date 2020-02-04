@@ -119,14 +119,14 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 20,
+    // paddingHorizontal: 20,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
     borderRadius: 10,
     // height: 100,
-    width: screenWidth - 80,
+    width: screenWidth - 50,
     // zIndex: 20,
   },
   section: {

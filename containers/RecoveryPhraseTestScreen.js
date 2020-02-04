@@ -20,6 +20,7 @@ import {
 } from "../actions";
 import WalletCreationSuccessfulModal from "../components/shared/WalletCreationSuccessfulModal";
 import { encrypt, decrypt } from "../utils";
+import { screenWidth } from "../constants/Layout";
 
 function RecoveryPhraseTestScreen({
   navigation,
@@ -222,6 +223,7 @@ function RecoveryPhraseTestScreen({
             disabled={!pressed}
           />
         </View>
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <ExitProcessModal
         modalVisible={modalVisible}
