@@ -75,6 +75,7 @@ function PassphraseTab({
 
   return (
     <View>
+      {/* <ScrollView> */}
       <View
         style={[
           styles.section,
@@ -143,7 +144,7 @@ function PassphraseTab({
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ marginBottom: 30 }}>
+      <View style={{ marginBottom: 15 }}>
         <Custom_TextInput
           value={nicknameValue}
           onChangeText={text => {
@@ -239,6 +240,7 @@ function PassphraseTab({
           isPending={getTrustlinesPending}
         />
       </View>
+      {/* </ScrollView> */}
       <ErrorModal
         value="You have entered invalid mnemonic recovery words. It should consist of 12 words, each separated by a space. Please check your words and try again. Your XRP wallet needs at least 21 XRP."
         modalVisible={errorModalVisible}
@@ -281,7 +283,7 @@ const styles = StyleSheet.create({
   passphraseTextInputContainer: {
     marginHorizontal: 40,
     marginTop: 30,
-    marginBottom: 30,
+    marginBottom: 20,
   },
   passphraseTextInput: {
     borderBottomColor: Colors.text,
