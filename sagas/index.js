@@ -70,6 +70,24 @@ function* requestGetMarketData(action) {
   }
 }
 
+const postEmailNewLetter = email =>
+  api.post(`/newsletter-solo-wallet?email=${email}`);
+
+function* requestPostEmailNewLetter(action) {
+  const { email } = action;
+  try {
+    const response = yield call(postEmailNewLetter, email);
+    console.log("post email for newsletter response", response)
+    if (response.ok) {
+      yield put(postEmailNewLetterSuccess(response.data));
+    } else {
+      yield put(gpostEmailNewLetterError(response.data));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 const getSoloData = () => api.get("https://ops.coinfield.com/solo_rates.json");
 
 export function* requestGetSoloData() {
@@ -791,4 +809,5 @@ export default function* rootSaga() {
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),
   ]);
+
 }

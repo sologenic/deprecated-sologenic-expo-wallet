@@ -69,13 +69,8 @@ export default function ReceiveEmailUpdatesScreen({ navigation }) {
               text="Submit"
               onPress={() =>
                 navigation.navigate({
-                  key: "TermsScreen",
-                  routeName: "TermsScreen",
-                  // params: {
-                  //   availableUnlockMethods,
-                  //   unlockText,
-                  //   isChangeScreen
-                  // }
+                  key: "HomeScreen",
+                  routeName: "HomeScreen",
                 })
               }
               color={Colors.secondaryBackground}

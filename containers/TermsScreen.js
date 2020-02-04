@@ -235,7 +235,13 @@ function TermsScreen({ navigation, completeOrientation }) {
         <View style={{ alignItems: "flex-end", zIndex: 100 }}>
           <Custom_Button
             text="Next"
-            onPress={() => completeOrientation(true)}
+            onPress={() => {
+              completeOrientation(true);
+              navigation.navigate({
+                key: "ReceiveEmailUpdatesScreen",
+                routeName: "ReceiveEmailUpdatesScreen",
+              })
+            }}
             color={isActive && isSecondActive ? Colors.text : Colors.grayText}
             size={14}
             textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
