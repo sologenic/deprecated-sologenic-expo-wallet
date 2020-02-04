@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import {
-  Image,
-  ScrollView,
   StyleSheet,
   View,
   TouchableOpacity
@@ -15,20 +13,12 @@ import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Colors from "../constants/Colors";
 import Custom_Button from "../components/shared/Custom_Button";
-// import { setupAuthentication, authSuccess } from "../actions";
-// import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
+import { updateIsOrientationComplete } from "../actions";
 
-export default function ReceiveEmailUpdatesScreen({ navigation }) {
+function ReceiveEmailUpdatesScreen({ navigation, completeOrientation }) {
   const [emailValue, onChangeEmailValue] = useState("");
-  const {} = navigation.state.params;
-
   const skipSetup = () => {
-    navigation.dispatch(
-      StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: "HomeScreen" })]
-      })
-    );
+    completeOrientation(true);
   };
 
   return (
@@ -38,13 +28,16 @@ export default function ReceiveEmailUpdatesScreen({ navigation }) {
         center={<Custom_HeaderTitle text="Receive Email Updates?" />}
         right={<View />}
       />
-      <ScrollView>
-        <View style={{ marginTop: 42 }}>
-          <Custom_Text
-            value="Enter your email and receive the latest updates and airdrops from Sologenic."
-            style={{ textAlign: "center", marginBottom: 15 }}
-            size={14}
-          />
+      <View>
+        <View style={{}}>
+          <View style={{ marginHorizontal: 47, marginTop: 30, marginBottom: 20 }}>
+            <Custom_Text
+              value="Enter your email and receive the latest updates and airdrops from Sologenic."
+              style={{ textAlign: "center", marginBottom: 15 }}
+              style={{ marginBottom: 15 }}
+              size={14}
+            />
+          </View>
           <View>
             <Custom_TextInput
               value={emailValue}
@@ -55,24 +48,19 @@ export default function ReceiveEmailUpdatesScreen({ navigation }) {
               keyboardType="default"
               returnKeyType="done"
               // secureTextEntry={secureEntry}
-              // placeholder="Optional"
-              // placeholderTextColor={Colors.grayText}
             />
-            <Custom_Text
-              value="Optional"
-              color={Colors.freshGreen}
-              size={12}
-            />
+            <View style={{ marginTop: 5, marginLeft: 30 }}>
+              <Custom_Text
+                value="Optional"
+                color={Colors.freshGreen}
+                size={12}
+              />
+            </View>
           </View>
-          <View style={{ alignItems: "center" }}>
+          <View style={{ alignItems: "center", marginTop: 40 }}>
             <Custom_Button
               text="Submit"
-              onPress={() =>
-                navigation.navigate({
-                  key: "HomeScreen",
-                  routeName: "HomeScreen",
-                })
-              }
+              onPress={() => completeOrientation(true)}
               color={Colors.secondaryBackground}
               size={14}
               textStyle={{
@@ -87,7 +75,7 @@ export default function ReceiveEmailUpdatesScreen({ navigation }) {
             />
           </View>
         </View>
-      </ScrollView>
+      </View>
       <View style={{ position: "absolute", bottom: 60, alignSelf: "center" }}>
         <TouchableOpacity onPress={() => skipSetup()}>
           <Custom_Text value="Skip this step >" style={{}} size={14} />
@@ -104,14 +92,14 @@ const styles = StyleSheet.create({
   }
 });
 
-// const mapStateToProps = ({}) => ({});
+const mapStateToProps = ({}) => ({});
 
-// const mapDispatchToProps = dispatch => ({
-//   completeAuthSetup: () => dispatch(setupAuthentication()),
-//   authenticateUser: () => dispatch(authSuccess()),
-// });
+const mapDispatchToProps = dispatch => ({
+  completeOrientation: isComplete =>
+    dispatch(updateIsOrientationComplete(isComplete)),
+});
 
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps,
-// )(CreatePinScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ReceiveEmailUpdatesScreen);

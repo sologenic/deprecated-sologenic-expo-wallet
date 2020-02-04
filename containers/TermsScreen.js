@@ -236,7 +236,7 @@ function TermsScreen({ navigation, completeOrientation }) {
           <Custom_Button
             text="Next"
             onPress={() => {
-              completeOrientation(true);
+              // completeOrientation(true);
               navigation.navigate({
                 key: "ReceiveEmailUpdatesScreen",
                 routeName: "ReceiveEmailUpdatesScreen",
