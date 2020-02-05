@@ -173,7 +173,7 @@ function WalletAddressSecretTab({
           }}
           style={{
             height: 40,
-            width: 100,
+            width: 120,
             backgroundColor: !completed
               ? Colors.headerBackground
               : Colors.darkRed,

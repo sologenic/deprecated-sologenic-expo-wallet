@@ -751,6 +751,30 @@ const purgeStore = state => {
   return Object.assign({}, state, defaultState);
 };
 
+const postEmailNewsLetter = state => {
+  return Object.assign({}, state, {
+    postEmailNewsLetterPending: true,
+    postEmailNewsLetterSuccess: false,
+    postEmailNewsLetterError: false,
+  });
+};
+
+const postEmailNewsLetterSuccess = state => {
+  return Object.assign({}, state, {
+    postEmailNewsLetterPending: false,
+    postEmailNewsLetterSuccess: true,
+    postEmailNewsLetterError: false,
+  });
+};
+
+const postEmailNewsLetterError = state => {
+  return Object.assign({}, state, {
+    postEmailNewsLetterPending: false,
+    postEmailNewsLetterSuccess: false,
+    postEmailNewsLetterError: true,
+  });
+};
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":

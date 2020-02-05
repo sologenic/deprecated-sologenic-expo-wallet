@@ -7,7 +7,7 @@ import Colors from "../constants/Colors";
 import Custom_Text from "../components/shared/Custom_Text";
 import Fonts from "../constants/Fonts";
 import Custom_Button from "../components/shared/Custom_Button";
-import { updateIsOrientationComplete } from "../actions";
+// import { updateIsOrientationComplete } from "../actions";
 import images from "../constants/Images";
 
 const width = 360;
@@ -146,8 +146,8 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = dispatch => ({
-  completeOrientation: isComplete =>
-    dispatch(updateIsOrientationComplete(isComplete)),
+  // completeOrientation: isComplete =>
+  //   dispatch(updateIsOrientationComplete(isComplete)),
 });
 
 export default connect(
