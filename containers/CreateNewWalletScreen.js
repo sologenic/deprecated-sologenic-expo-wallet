@@ -96,7 +96,7 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
           </TouchableOpacity>
         </View>
         <Custom_Text
-          value="Note: You will need to enter your password every time you want to make a transaction."
+          value="Note: You will need this password to make transactions with this wallet. Please, write down the password and store it in a safe place, if you lose it, there is no way to recover it."
           style={{ marginHorizontal: 40, marginTop: 5 }}
           size={10}
         />

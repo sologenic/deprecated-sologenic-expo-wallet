@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import {
-  Image,
+  Text,
   ScrollView,
   StyleSheet,
   View,
   TouchableOpacity,
 } from "react-native";
 import { connect } from "react-redux";
+import * as WebBrowser from "expo-web-browser";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -20,6 +21,9 @@ import {
 } from "../actions";
 import ErrorModal from "../components/shared/ErrorModal";
 import SuccessModal from "../components/shared/SuccessModal";
+import colors from "../constants/Colors";
+import config from "../constants/config";
+import Fonts from "../constants/Fonts";
 
 function ReceiveEmailUpdatesScreen({
   requestNewsLetterSignup,
@@ -92,6 +96,29 @@ function ReceiveEmailUpdatesScreen({
                 isBold
               />
             )}
+          </View>
+          <View style={{ marginHorizontal: 15, marginTop: 20 }}>
+            <Text
+              style={{
+                textAlign: "center",
+                marginBottom: 15,
+                fontFamily: "DMSans",
+                color: colors.text,
+                fontSize: Fonts.size.small,
+              }}
+              size={14}
+            >
+              By entering your email address, you confirm that you agree with
+              the{" "}
+              <Text
+                onPress={() => WebBrowser.openBrowserAsync(config.privacyUrl)}
+                style={{
+                  textDecorationLine: "underline",
+                }}
+              >
+                privacy policy.
+              </Text>
+            </Text>
           </View>
           <View style={{ alignItems: "center" }}>
             <Custom_Button
