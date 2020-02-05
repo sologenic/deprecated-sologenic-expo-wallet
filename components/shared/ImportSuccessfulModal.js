@@ -14,6 +14,7 @@ import Colors from "../../constants/Colors";
 import Fonts from "../../constants/Fonts";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
+import { screenWidth } from "../../constants/Layout";
 
 export default function ImportSuccessfulModal({
   onPress,
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'red',
     borderRadius: 10,
     // height: 100,
-    // width: 200,
+    width: screenWidth - 60,
     // zIndex: 20,
   },
   section: {

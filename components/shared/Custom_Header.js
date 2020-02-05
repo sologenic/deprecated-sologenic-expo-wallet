@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: Colors.headerBackground,
     height: headerHeight,
-    marginTop: Constants.statusBarHeight,
+    paddingTop: Constants.statusBarHeight,
     alignItems: "center",
     justifyContent: "center",
   },
