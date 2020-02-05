@@ -15,7 +15,7 @@ import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
 import { screenWidth } from "../../constants/Layout";
 
-export default function ErrorModal({
+export default function SuccessModal({
   onPress,
   onClose,
   modalVisible,
@@ -39,7 +39,7 @@ export default function ErrorModal({
                 ]}
               >
                 <Custom_Text
-                  value="Error"
+                  value="Thank you"
                   size={20}
                   color={Colors.text}
                   isBold
@@ -63,9 +63,9 @@ export default function ErrorModal({
                 ]}
               >
                 <Custom_Button
-                  text="DISMISS"
+                  text="CONTINUE"
                   onPress={onClose}
-                  color={Colors.lightGray}
+                  color={Colors.freshGreen}
                   size={16}
                   textStyle={{ letterSpacing: 1.2 }}
                   style={{ backgroundColor: "transparent" }}
@@ -79,14 +79,14 @@ export default function ErrorModal({
   );
 }
 
-ErrorModal.propTypes = {
+SuccessModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
   style: PropTypes.shape({}),
 };
 
-ErrorModal.defaultProps = {
+SuccessModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
   pressed: false,

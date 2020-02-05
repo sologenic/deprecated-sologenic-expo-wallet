@@ -84,7 +84,7 @@ export default function TransferSummaryModal({
                   color={Colors.lightGray}
                 />
                 <Custom_Text
-                  value={`${0.000012} ${currency.toUpperCase()}`}
+                  value={`${0.000012} XRP`}
                   size={Fonts.size.small}
                 />
               </View>

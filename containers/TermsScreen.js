@@ -264,7 +264,12 @@ function TermsScreen({ navigation, completeOrientation }) {
           </View>
           <Custom_Button
             text="Next"
-            onPress={() => completeOrientation(true)}
+            onPress={() => {
+              navigation.navigate({
+                key: "ReceiveEmailUpdatesScreen",
+                routeName: "ReceiveEmailUpdatesScreen",
+              });
+            }}
             color={isActive && isSecondActive ? Colors.text : Colors.grayText}
             size={14}
             textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}

@@ -33,6 +33,8 @@ import {
   getSoloDataSuccess,
   getSoloDataError,
   createTrustlineReset,
+  requestNewsLetterSignupSuccess,
+  requestNewsLetterSignupError,
 } from "../actions";
 import {
   createSevensObj,
@@ -53,6 +55,16 @@ const api = create({
   timeout: 10000,
 });
 
+const sologenicApi = create({
+  baseURL: "https://sologenic.com/",
+  headers: {
+    post: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  },
+  timeout: 10000,
+});
+
 const getMarketData = defaultCurrency =>
   api.get(`tickers/xrp${defaultCurrency}`);
 
@@ -64,6 +76,24 @@ function* requestGetMarketData(action) {
       yield put(getMarketDataSuccess(response.data.markets[0]));
     } else {
       yield put(getMarketDataError(response.data));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const postNewsLetterSignup = email =>
+  sologenicApi.post(`/newsletter-solo-wallet?email=${email}`);
+
+function* requestNewsLetterSignup(action) {
+  const { email } = action;
+  try {
+    const response = yield call(postNewsLetterSignup, email);
+    console.log("post email for newsletter response", response);
+    if (response.ok) {
+      yield put(requestNewsLetterSignupSuccess(response.data));
+    } else {
+      yield put(requestNewsLetterSignupError(response.data));
     }
   } catch (error) {
     console.log(error);
@@ -788,6 +818,7 @@ export default function* rootSaga() {
     takeEvery("GET_TRANSACTIONS", requestGetTransactions),
     takeEvery("GET_MORE_TRANSACTIONS", requestGetMoreTransactions),
     takeEvery("GET_TRUSTLINES", requestGetTrustlines),
+    takeEvery("NEWS_LETTER_SIGNUP", requestNewsLetterSignup),
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),
   ]);

@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   ScrollView,
   StyleSheet,
   View,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { connect } from "react-redux";
-import { StackActions, NavigationActions } from "react-navigation";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -15,20 +14,46 @@ import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Colors from "../constants/Colors";
 import Custom_Button from "../components/shared/Custom_Button";
-// import { setupAuthentication, authSuccess } from "../actions";
-// import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
+import {
+  updateIsOrientationComplete,
+  requestNewsLetterSignup,
+} from "../actions";
+import ErrorModal from "../components/shared/ErrorModal";
+import SuccessModal from "../components/shared/SuccessModal";
 
-export default function ReceiveEmailUpdatesScreen({ navigation }) {
+function ReceiveEmailUpdatesScreen({
+  requestNewsLetterSignup,
+  completeOrientation,
+  requestNewsLetterSignupPending,
+  requestNewsLetterSignupSuccess,
+  requestNewsLetterSignupError,
+}) {
   const [emailValue, onChangeEmailValue] = useState("");
-  const {} = navigation.state.params;
+  const [emailIsValid, setEmailIsValid] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
-  const skipSetup = () => {
-    navigation.dispatch(
-      StackActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({ routeName: "HomeScreen" })]
-      })
-    );
+  useEffect(() => {
+    if (requestNewsLetterSignupError) {
+      setShowErrorModal(true);
+    }
+    if (requestNewsLetterSignupSuccess) {
+      setShowSuccessModal(true);
+    }
+  }, [
+    requestNewsLetterSignupPending,
+    requestNewsLetterSignupSuccess,
+    requestNewsLetterSignupError,
+  ]);
+
+  const validateEmail = email => {
+    var re = /^([a-zA-Z0-9_\-\.+]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+    if (re.test(email)) {
+      setEmailIsValid(true);
+      requestNewsLetterSignup(emailValue);
+    } else {
+      setEmailIsValid(false);
+    }
   };
 
   return (
@@ -58,46 +83,59 @@ export default function ReceiveEmailUpdatesScreen({ navigation }) {
               // placeholder="Optional"
               // placeholderTextColor={Colors.grayText}
             />
-            <Custom_Text
-              value="Optional"
-              color={Colors.freshGreen}
-              size={12}
-            />
+            {!emailIsValid && (
+              <Custom_Text
+                value="Please enter a valid email address."
+                color={Colors.errorBackground}
+                size={12}
+                style={{ marginLeft: 40, marginTop: 5 }}
+                isBold
+              />
+            )}
           </View>
           <View style={{ alignItems: "center" }}>
             <Custom_Button
               text="Submit"
-              onPress={() =>
-                navigation.navigate({
-                  key: "TermsScreen",
-                  routeName: "TermsScreen",
-                  // params: {
-                  //   availableUnlockMethods,
-                  //   unlockText,
-                  //   isChangeScreen
-                  // }
-                })
+              onPress={() => validateEmail(emailValue)}
+              color={
+                emailValue !== "" ? Colors.secondaryBackground : Colors.grayText
               }
-              color={Colors.secondaryBackground}
               size={14}
               textStyle={{
-                letterSpacing: 0.24
+                letterSpacing: 0.24,
               }}
               style={{
-                backgroundColor: Colors.darkRed,
+                backgroundColor:
+                  emailValue !== "" ? Colors.darkRed : Colors.gray,
                 paddingHorizontal: 15,
                 paddingVertical: 10,
-                marginBottom: 24
+                marginBottom: 24,
+                marginTop: 40,
               }}
+              disabled={emailValue === ""}
+              isPending={requestNewsLetterSignupPending}
             />
           </View>
         </View>
       </ScrollView>
       <View style={{ position: "absolute", bottom: 60, alignSelf: "center" }}>
-        <TouchableOpacity onPress={() => skipSetup()}>
+        <TouchableOpacity onPress={() => completeOrientation(true)}>
           <Custom_Text value="Skip this step >" style={{}} size={14} />
         </TouchableOpacity>
       </View>
+      <ErrorModal
+        onClose={() => setShowErrorModal(false)}
+        modalVisible={showErrorModal}
+        value="An error occured, please try again."
+      />
+      <SuccessModal
+        onClose={() => {
+          setShowSuccessModal(false);
+          completeOrientation(true);
+        }}
+        modalVisible={showSuccessModal}
+        value="You have been signed up to receive the latest updates from Sologenic."
+      />
     </View>
   );
 }
@@ -105,18 +143,27 @@ export default function ReceiveEmailUpdatesScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
-  }
+    backgroundColor: Colors.background,
+  },
 });
 
-// const mapStateToProps = ({}) => ({});
+const mapStateToProps = ({
+  requestNewsLetterSignupPending,
+  requestNewsLetterSignupSuccess,
+  requestNewsLetterSignupError,
+}) => ({
+  requestNewsLetterSignupPending,
+  requestNewsLetterSignupSuccess,
+  requestNewsLetterSignupError,
+});
 
-// const mapDispatchToProps = dispatch => ({
-//   completeAuthSetup: () => dispatch(setupAuthentication()),
-//   authenticateUser: () => dispatch(authSuccess()),
-// });
+const mapDispatchToProps = dispatch => ({
+  completeOrientation: isComplete =>
+    dispatch(updateIsOrientationComplete(isComplete)),
+  requestNewsLetterSignup: email => dispatch(requestNewsLetterSignup(email)),
+});
 
-// export default connect(
-//   mapStateToProps,
-//   mapDispatchToProps,
-// )(CreatePinScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ReceiveEmailUpdatesScreen);

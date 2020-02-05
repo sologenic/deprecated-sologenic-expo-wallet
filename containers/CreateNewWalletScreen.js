@@ -26,6 +26,7 @@ import {
 } from "../utils";
 import { generateNewWallet, saveNickname } from "../actions";
 import Custom_Text from "../components/shared/Custom_Text";
+import colors from "../constants/Colors";
 
 function CreateNewWallet({ navigation, generateNewWallet }) {
   const [textValue, onChangeText] = useState("");
@@ -94,7 +95,11 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             /> */}
           </TouchableOpacity>
         </View>
-          <Custom_Text value="Note: You will need to enter your password every time you want to make a transaction." style={{ marginHorizontal: 40, marginTop: 5 }} size={10} />
+        <Custom_Text
+          value="Note: You will need to enter your password every time you want to make a transaction."
+          style={{ marginHorizontal: 40, marginTop: 5 }}
+          size={10}
+        />
       </View>
       <View style={styles.footer}>
         <Custom_Button
@@ -139,7 +144,14 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             //   address === walletFromMnemonic.getAddress()
             // );
           }}
-          style={{ height: 40, width: 80 }}
+          disabled={passphraseValue === ""}
+          style={{
+            height: 40,
+            width: 80,
+            backgroundColor:
+              passphraseValue === "" ? colors.headerBackground : colors.darkRed,
+          }}
+          color={passphraseValue === "" ? colors.grayText : colors.text}
           icon="ios-arrow-forward"
         />
       </View>

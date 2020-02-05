@@ -90,6 +90,9 @@ const defaultState = {
     type: "fiat",
   },
   netinfo: null,
+  requestNewsLetterSignupPending: false,
+  requestNewsLetterSignupSuccess: false,
+  requestNewsLetterSignupError: false,
 };
 
 const getMarketData = (state, action) => {
@@ -716,7 +719,34 @@ const getNetInfo = (state, action) => {
   return Object.assign({}, state, {
     netinfo,
   });
-}
+};
+
+const requestNewsLetterSignup = (state, action) => {
+  console.log("hereeeeeee");
+  return Object.assign({}, state, {
+    requestNewsLetterSignupPending: true,
+    requestNewsLetterSignupSuccess: false,
+    requestNewsLetterSignupError: false,
+  });
+};
+
+const requestNewsLetterSignupSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    requestNewsLetterSignupPending: false,
+    requestNewsLetterSignupSuccess: true,
+    requestNewsLetterSignupError: false,
+  });
+};
+
+const requestNewsLetterSignupError = (state, action) => {
+  console.log("errrrrrrrror");
+  return Object.assign({}, state, {
+    requestNewsLetterSignupPending: false,
+    requestNewsLetterSignupSuccess: false,
+    requestNewsLetterSignupError: true,
+  });
+};
+
 const purgeStore = state => {
   return Object.assign({}, state, defaultState);
 };
@@ -855,6 +885,12 @@ export default (state = defaultState, action) => {
       return getNetInfo(state, action);
     case "PURGE_STORE":
       return purgeStore(state, action);
+    case "NEWS_LETTER_SIGNUP":
+      return requestNewsLetterSignup(state, action);
+    case "NEWS_LETTER_SIGNUP_SUCCESS":
+      return requestNewsLetterSignupSuccess(state, action);
+    case "NEWS_LETTER_SIGNUP_ERROR":
+      return requestNewsLetterSignupError(state, action);
 
     default:
       return state;
