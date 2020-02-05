@@ -551,9 +551,10 @@ export const purgeStore = () => {
   };
 };
 
-export const requestNewsLetterSignup = () => {
+export const requestNewsLetterSignup = (data) => {
   return {
     type: "NEWS_LETTER_SIGNUP",
+    email: data
   };
 };
 

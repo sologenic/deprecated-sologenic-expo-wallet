@@ -83,7 +83,7 @@ function* requestGetMarketData(action) {
 }
 
 const postNewsLetterSignup = email =>
-  sologenicApi.post(`/newsletter-solo-wallet?email=${email}`);
+  sologenicApi.post(`newsletter-solo-wallet?email=${email}`);
 
 function* requestNewsLetterSignup(action) {
   const { email } = action;
