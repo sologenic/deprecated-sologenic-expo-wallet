@@ -90,6 +90,9 @@ const defaultState = {
     type: "fiat",
   },
   netinfo: null,
+  postEmailNewLetterPending: null,
+  postEmailNewLetterSuccess: null,
+  postEmailNewLetterError: null,
 };
 
 const getMarketData = (state, action) => {
@@ -721,6 +724,30 @@ const purgeStore = state => {
   return Object.assign({}, state, defaultState);
 };
 
+const postEmailNewsLetter = state => {
+  return Object.assign({}, state, {
+    postEmailNewsLetterPending: true,
+    postEmailNewsLetterSuccess: false,
+    postEmailNewsLetterError: false,
+  });
+}
+
+const postEmailNewsLetterSuccess = state => {
+  return Object.assign({}, state, {
+    postEmailNewsLetterPending: false,
+    postEmailNewsLetterSuccess: true,
+    postEmailNewsLetterError: false,
+  });
+}
+
+const postEmailNewsLetterError = state => {
+  return Object.assign({}, state, {
+    postEmailNewsLetterPending: false,
+    postEmailNewsLetterSuccess: false,
+    postEmailNewsLetterError: true,
+  });
+}
+
 export default (state = defaultState, action) => {
   switch (action.type) {
     case "GET_MARKET_DATA":
@@ -855,7 +882,12 @@ export default (state = defaultState, action) => {
       return getNetInfo(state, action);
     case "PURGE_STORE":
       return purgeStore(state, action);
-
+    case "POST_EMAIL_NEWS_LETTER":
+      return postEmailNewsLetter(state, action);
+    case "POST_EMAIL_NEWS_LETTER_SUCCESS":
+      return postEmailNewsLetterSuccess(state, action);
+    case "POST_EMAIL_NEWS_LETTER_ERROR":
+      return postEmailNewsLetterError(state, action);
     default:
       return state;
   }

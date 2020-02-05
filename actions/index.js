@@ -549,3 +549,22 @@ export const purgeStore = () => {
     type: "PURGE_STORE",
   };
 };
+
+export const postEmailNewsLetter = email => {
+  return {
+    type: "POST_EMAIL_NEWS_LETTER",
+    email,
+  }
+}
+
+export const postEmailNewsLetterSuccess = () => {
+  return {
+    type: "POST_EMAIL_NEWS_LETTER_SUCCESS",
+  }
+}
+
+export const postEmailNewsLetterSuccess = () => {
+  return {
+    type: "POST_EMAIL_NEWS_LETTER_ERROR",
+  }
+}
