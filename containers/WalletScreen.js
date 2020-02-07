@@ -102,7 +102,7 @@ function WalletScreen({
   const { walletAddress } = navigation.state.params;
   const { id, balance, nickname, rippleClassicAddress, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
-  const soloMarketPrice = soloData[defaultCurrency.value];
+  const soloMarketPrice = soloData ? soloData[defaultCurrency.value] : "";
   const xrpBalanceInFiat =
     marketData && marketData.last ? xrp * marketData.last : "";
   const soloBalanceInFiat = soloData ? solo * soloMarketPrice : "";

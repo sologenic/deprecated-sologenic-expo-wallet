@@ -451,6 +451,7 @@ function WalletTab({
                     params: {
                       currency: currency.toLowerCase(),
                       walletAddress,
+                      wallet,
                     },
                   });
                 }}

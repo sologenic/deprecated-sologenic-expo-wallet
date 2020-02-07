@@ -16,9 +16,9 @@ import ErrorBoundary from "./containers/ErrorBoundary";
 //   'updateIsOrientationComplete',
 // ]);
 
-Sentry.init({
-  dsn: "https://6890bc8315f34207a0f891f774602ea9@sentry.io/2143718",
-});
+// Sentry.init({
+//   dsn: "https://6890bc8315f34207a0f891f774602ea9@sentry.io/2143718",
+// });
 
 const persistConfig = {
   key: "root",
@@ -58,13 +58,13 @@ export default class App extends React.Component {
   }
   render() {
     return (
-      <ErrorBoundary>
+      // <ErrorBoundary>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
             <RootContainer />
           </PersistGate>
         </Provider>
-      </ErrorBoundary>
+      // </ErrorBoundary>
     );
   }
 }

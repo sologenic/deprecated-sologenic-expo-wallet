@@ -27,11 +27,19 @@ import Images from "../constants/Images";
 import { headerHeight } from "../constants/Layout";
 import { generateQRCode } from "../utils";
 import CopiedModal from "../components/shared/CopiedModal";
+import DeleteWalletModal from "../components/shared/DeleteWalletModal";
+import {
+  deleteWallet,
+  clearTransactions,
+  resetWallet,
+} from "../actions";
 
-export default function ActivateWalletScreen({ navigation }) {
-  const { currency, walletAddress } = navigation.state.params;
+function ActivateWalletScreen({ navigation }) {
+  const { currency, walletAddress, wallet } = navigation.state.params;
   const uri = generateQRCode(walletAddress);
   const [copiedModalVisible, setCopiedModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
     if (!copiedModalVisible) {
@@ -47,7 +55,6 @@ export default function ActivateWalletScreen({ navigation }) {
         left={
           <Custom_HeaderButton
             onPress={() => {
-              console.log("Press!!");
               navigation.goBack();
             }}
             type="icon"
@@ -61,7 +68,21 @@ export default function ActivateWalletScreen({ navigation }) {
           />
         }
         right={
-          <Menu onSelect={value => alert(`Selected number: ${value}`)}>
+          <Menu
+            onSelect={value => {
+              if (value === 2) {
+                setModalVisible(true);
+              } else {
+                navigation.navigate({
+                  routeName: "ChangeWalletNicknameScreen",
+                  key: "ChangeWalletNicknameScreen",
+                  params: {
+                    id: wallet.id,
+                  },
+                });
+              }
+            }}
+          >
             <MenuTrigger
               children={
                 <View style={{ paddingHorizontal: 15 }}>
@@ -192,6 +213,17 @@ export default function ActivateWalletScreen({ navigation }) {
           </View>
         </View>
       </View>
+      <DeleteWalletModal
+        modalVisible={modalVisible}
+        onPress={() => {
+          deleteWallet(id);
+          setModalVisible(false);
+          clearTransactions();
+          resetWallet();
+          navigation.popToTop();
+        }}
+        onClose={() => setModalVisible(false)}
+      />
       <CopiedModal showModal={copiedModalVisible} />
     </View>
   );
@@ -219,3 +251,16 @@ const styles = StyleSheet.create({
     marginVertical: 24,
   },
 });
+
+const mapStateToProps = ({}) => ({});
+
+const mapDispatchToProps = dispatch => ({
+  deleteWallet: id => dispatch(deleteWallet(id)),
+  clearTransactions: () => dispatch(clearTransactions()),
+  resetWallet: () => dispatch(resetWallet()),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ActivateWalletScreen);
