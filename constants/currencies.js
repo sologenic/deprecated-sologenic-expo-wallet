@@ -38,7 +38,7 @@ export default [
     label: "AED",
     value: "aed",
     key: "aed",
-    symbol: "AED",
+    symbol: "د.إ",
     type: "fiat",
   },
 ];

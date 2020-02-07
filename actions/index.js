@@ -1,6 +1,7 @@
-export const getMarketData = () => {
+export const getMarketData = data => {
   return {
     type: "GET_MARKET_DATA",
+    payload: data,
   };
 };
 
@@ -14,6 +15,26 @@ export const getMarketDataSuccess = data => {
 export const getMarketDataError = data => {
   return {
     type: "GET_MARKET_DATA_ERROR",
+    payload: data,
+  };
+};
+
+export const getSoloData = () => {
+  return {
+    type: "GET_SOLO_DATA",
+  };
+};
+
+export const getSoloDataSuccess = data => {
+  return {
+    type: "GET_SOLO_DATA_SUCCESS",
+    payload: data,
+  };
+};
+
+export const getSoloDataError = data => {
+  return {
+    type: "GET_SOLO_DATA_ERROR",
     payload: data,
   };
 };
@@ -65,16 +86,45 @@ export const updatePhraseTestValue3 = value => {
   };
 };
 
-export const getBalance = () => {
+export const pullToRefreshBalance = (id, address) => {
   return {
-    type: "GET_BALANCE",
+    type: "PULL_TO_REFRESH",
+    id,
+    address,
   };
 };
 
-export const getBalanceSuccess = data => {
+export const pullToRefreshBalanceSuccess = (id, data) => {
+  console.log("xrpBal ", data.xrp);
+  return {
+    type: "PULL_TO_REFRESH_SUCCESS",
+    id,
+    xrpBalance: data.xrp,
+    soloBalance: data.solo,
+  };
+};
+
+export const pullToRefreshBalanceError = data => {
+  return {
+    type: "PULL_TO_REFRESH_ERROR",
+    payload: data,
+  };
+};
+
+export const getBalance = (id, address) => {
+  return {
+    type: "GET_BALANCE",
+    id,
+    address,
+  };
+};
+
+export const getBalanceSuccess = (id, data) => {
   return {
     type: "GET_BALANCE_SUCCESS",
-    payload: data,
+    id,
+    xrpBalance: data.xrp,
+    soloBalance: data.solo,
   };
 };
 
@@ -189,6 +239,335 @@ export const updateUnlockMethod = data => {
 export const updateBaseCurrency = data => {
   return {
     type: "UPDATE_BASE_CURRENCY",
+    payload: data,
+  };
+};
+
+export const generateNewWallet = newWallet => {
+  return {
+    type: "GENERATE_NEW_WALLET",
+    newWallet,
+  };
+};
+
+export const addNewWallet = ({
+  newWallet,
+  nickname,
+  walletAddress,
+  rippleClassicAddress,
+  trustline,
+  encrypted,
+  salt,
+}) => {
+  return {
+    type: "ADD_NEW_WALLET",
+    newWallet,
+    nickname,
+    walletAddress,
+    rippleClassicAddress,
+    trustline,
+    encrypted,
+    salt,
+  };
+};
+
+export const saveNickname = nickname => {
+  return {
+    type: "SAVE_NICKNAME",
+    nickname,
+  };
+};
+
+export const changeNickname = (id, nickname) => {
+  return {
+    type: "CHANGE_NICKNAME",
+    nickname,
+    id,
+  };
+};
+
+export const setWallet = data => {
+  return {
+    type: "SET_WALLET",
+    payload: data,
+  };
+};
+
+export const resetWallet = () => {
+  return {
+    type: "RESET_WALLET",
+  };
+};
+
+export const deleteWallet = id => {
+  return {
+    type: "DELETE_WALLET",
+    id,
+  };
+};
+
+export const createTrustline = ({
+  address,
+  id,
+  passphrase,
+  salt,
+  encrypted,
+  publicKey,
+}) => {
+  console.log("HEHERE id", id);
+  return {
+    type: "CREATE_TRUSTLINE",
+    address,
+    id,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
+  };
+};
+
+export const createTrustlineSuccess = id => {
+  console.log("HEHEREFFFFFF id", id);
+  return {
+    type: "CREATE_TRUSTLINE_SUCCESS",
+    id,
+  };
+};
+
+export const createTrustlineError = data => {
+  return {
+    type: "CREATE_TRUSTLINE_ERROR",
+    payload: data,
+  };
+};
+
+export const createTrustlineReset = () => {
+  return {
+    type: "CREATE_TRUSTLINE_RESET",
+  };
+};
+
+export const transferXrp = ({
+  account,
+  keypair,
+  secret,
+  destination,
+  tag,
+  value,
+  passphrase,
+  salt,
+  encrypted,
+  publicKey,
+}) => {
+  return {
+    type: "TRANSFER_XRP",
+    account,
+    keypair,
+    secret,
+    destination,
+    tag,
+    value,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
+  };
+};
+
+export const transferXrpSuccess = () => {
+  return {
+    type: "TRANSFER_XRP_SUCCESS",
+  };
+};
+
+export const transferXrpReset = () => {
+  return {
+    type: "TRANSFER_XRP_RESET",
+  };
+};
+
+export const transferXrpError = data => {
+  return {
+    type: "TRANSFER_XRP_ERROR",
+    payload: data,
+  };
+};
+
+export const transferSolo = ({
+  account,
+  keypair,
+  secret,
+  destination,
+  tag,
+  value,
+  passphrase,
+  salt,
+  encrypted,
+  publicKey,
+}) => {
+  return {
+    type: "TRANSFER_SOLO",
+    account,
+    keypair,
+    secret,
+    destination,
+    tag,
+    value,
+    passphrase,
+    salt,
+    encrypted,
+    publicKey,
+  };
+};
+
+export const transferSoloSuccess = () => {
+  return {
+    type: "TRANSFER_SOLO_SUCCESS",
+  };
+};
+
+export const transferSoloReset = () => {
+  return {
+    type: "TRANSFER_SOLO_RESET",
+  };
+};
+
+export const transferSoloError = data => {
+  return {
+    type: "TRANSFER_SOLO_ERROR",
+    payload: data,
+  };
+};
+
+export const getTransactions = (address, limit, walletType) => {
+  return {
+    type: "GET_TRANSACTIONS",
+    address,
+    limit,
+    walletType,
+  };
+};
+
+export const getMoreTransactions = (address, limit, walletType) => {
+  return {
+    type: "GET_MORE_TRANSACTIONS",
+    address,
+    limit,
+    walletType,
+  };
+};
+
+export const clearTransactions = () => {
+  return {
+    type: "CLEAR_TRANSACTIONS",
+  };
+};
+
+export const getTransactionsSuccess = payload => {
+  return {
+    type: "GET_TRANSACTIONS_SUCCESS",
+    payload,
+  };
+};
+
+export const getTransactionsError = payload => {
+  return {
+    type: "GET_TRANSACTIONS_ERROR",
+    payload,
+  };
+};
+
+export const getMoreTransactionsSuccess = payload => {
+  return {
+    type: "GET_MORE_TRANSACTIONS_SUCCESS",
+    payload,
+  };
+};
+
+export const getMoreTransactionsError = payload => {
+  return {
+    type: "GET_MORE_TRANSACTIONS_ERROR",
+    payload,
+  };
+};
+
+export const getTrustlines = ({
+  walletAddress,
+  rippleClassicAddress,
+  nickname,
+  salt,
+  encrypted,
+  details,
+}) => {
+  return {
+    type: "GET_TRUSTLINES",
+    walletAddress,
+    rippleClassicAddress,
+    nickname,
+    salt,
+    encrypted,
+    details,
+  };
+};
+
+export const getTrustlinesSuccess = (address, trustline) => {
+  return {
+    type: "GET_TRUSTLINES_SUCCESS",
+    address,
+    trustline,
+  };
+};
+
+export const getTrustlinesError = data => {
+  return {
+    type: "GET_TRUSTLINES_ERROR",
+    payload: data,
+  };
+};
+
+export const getTrustlinesReset = () => {
+  return {
+    type: "GET_TRUSTLINES_RESET",
+  };
+};
+
+export const activateWallet = id => {
+  return {
+    type: "ACTIVATE_WALLET",
+    payload: id,
+  };
+};
+
+export const getNetInfo = status => {
+  return {
+    type: "GET_NET_INFO",
+    netinfo: status,
+  };
+};
+
+export const purgeStore = () => {
+  return {
+    type: "PURGE_STORE",
+  };
+};
+
+export const requestNewsLetterSignup = (data) => {
+  return {
+    type: "NEWS_LETTER_SIGNUP",
+    email: data
+  };
+};
+
+export const requestNewsLetterSignupSuccess = data => {
+  return {
+    type: "NEWS_LETTER_SIGNUP_SUCCESS",
+    payload: data,
+  };
+};
+
+export const requestNewsLetterSignupError = data => {
+  return {
+    type: "NEWS_LETTER_SIGNUP_ERROR",
     payload: data,
   };
 };

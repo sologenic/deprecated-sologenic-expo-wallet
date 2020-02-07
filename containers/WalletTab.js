@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ScrollView,
   StyleSheet,
   View,
+  ActivityIndicator,
+  Clipboard,
+  Text,
   TouchableOpacity,
-  Image,
-  Text
+  RefreshControl,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -18,29 +20,396 @@ import TransactionCard from "./TransactionCard";
 import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
-import { getPriceChange, getPriceColor } from "../utils"
+import XrpWarningModal from "../components/shared/XrpWarningModal";
+import { getPriceChange, getPriceColor, formatBalance } from "../utils";
 import SevenChart from "../components/shared/SevenChart";
+import { screenWidth, headerHeight } from "../constants/Layout";
+import {
+  getMoreTransactions,
+  getBalance,
+  pullToRefreshBalance,
+  getMarketData,
+  getSoloData,
+  getMarketSevens,
+  connectToRippleApi,
+} from "../actions";
+import CopiedModal from "../components/shared/CopiedModal";
 
 function WalletTab({
   navigation,
-  balance,
+  transactions,
+  transactionCount,
+  setTransactionCount,
   currency,
   xrpBalance,
-  soloBalance,
   defaultCurrency,
-  activate,
+  walletAddress,
   marketData,
   marketSevens,
+  wallet,
+  activateWallet,
+  getTransactionsPending,
+  getMoreTransactions,
+  getMoreTransactionsPending,
+  getBalance,
+  pullToRefreshBalance,
+  pullToRefreshBalancePending,
+  getTransactions,
+  netinfo,
+  connectToRippleApi,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
-    false
+    false,
   );
-  const priceChange = getPriceChange(marketData.last, marketData.open);
+  const [copiedModalVisible, setCopiedModalVisible] = useState(false);
+  const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
+  const [xrpWarningModalVisible, setXrpWarningModalVisible] = useState(false);
+  const priceChange =
+    marketData && marketData.last
+      ? getPriceChange(marketData.last, marketData.open)
+      : "";
   const priceColor = getPriceColor(priceChange);
-  if (!activate) {
+  const { id, isActive } = wallet;
+  const [isWalletActive, setIsWalletActive] = useState(isActive);
+
+  useEffect(() => {
+    if (netinfo) {
+      fetchData();
+    }
+  }, [netinfo]);
+
+  const fetchData = () => {
+    getMarketData(defaultCurrency.value);
+    getSoloData();
+    getMarketSevens();
+  };
+
+  useEffect(() => {
+    getBalance(id, walletAddress);
+  }, []);
+
+  if (xrpBalance >= 20 && !isActive) {
+    activateWallet(id);
+  }
+
+  useEffect(() => {
+    if (isActive && xrpBalance < 21) {
+      setXrpBalanceWarning(true);
+    }
+  }, [xrpBalanceWarning, transactions, getTransactionsPending]);
+
+  useEffect(() => {
+    if (isActive && !isWalletActive && marketData) {
+      setIsWalletActive(true);
+    }
+  }, [wallet]);
+
+  // let keypair = null;
+  // let secret = null;
+  // const { privateKey, publicKey } = wallet.details.wallet;
+  // if (privateKey && publicKey) {
+  //   keypair = {
+  //     privateKey,
+  //     publicKey,
+  //   };
+  // } else {
+  //   secret = wallet.details.wallet.secret;
+  // }
+
+  const writeToClipboard = async address => {
+    await Clipboard.setString(address);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
+  };
+
+  if (isWalletActive) {
     return (
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={pullToRefreshBalancePending}
+              onRefresh={() => {
+                pullToRefreshBalance(id, walletAddress);
+                getMoreTransactions(walletAddress, transactionCount, "xrp");
+              }}
+              progressViewOffset={headerHeight + 100}
+            />
+          }
+        >
+          <View>
+            <View style={styles.container}>
+              <View style={styles.section}>
+                <Custom_Text
+                  value="Your Balance:"
+                  size={Fonts.size.medium}
+                  color={Colors.lightGray}
+                />
+              </View>
+              <View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View style={{ paddingRight: 10 }}>
+                    <Custom_Text
+                      // value={`${formatBalance(xrpBalance)}`}
+                      value={`${xrpBalance}`}
+                      size={Fonts.size.h3}
+                      isBold
+                    />
+                  </View>
+                  <View>
+                    <Custom_Text value={currency} size={Fonts.size.h4} />
+                  </View>
+                </View>
+              </View>
+              {netinfo ? (
+                <View style={styles.marketInfoContainer}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <View style={{ paddingRight: 15 }}>
+                      <Custom_Text
+                        value="Market Price:"
+                        size={Fonts.size.medium}
+                        color={Colors.lightGray}
+                      />
+                      <Custom_Text
+                        value={
+                          marketData && marketData.last
+                            ? `${defaultCurrency.symbol} ${marketData.last}`
+                            : "0"
+                        }
+                        size={Fonts.size.medium}
+                      />
+                    </View>
+                    <View>
+                      <SevenChart
+                        marketSevens={marketSevens}
+                        color={priceColor}
+                      />
+                      <Custom_Text
+                        value={`${priceChange}`}
+                        size={Fonts.size.small}
+                        // color={Colors.errorBackground}
+                        color={priceColor}
+                      />
+                    </View>
+                  </View>
+                </View>
+              ) : (
+                <View
+                  style={{
+                    height: 100,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View>
+                    <Custom_Text
+                      value="Your device is now offline."
+                      size={Fonts.size.normal}
+                    />
+                  </View>
+                </View>
+              )}
+              <View style={styles.buttonsContainer}>
+                <View style={styles.leftButtonContainer}>
+                  <Custom_Button
+                    text="RECEIVE"
+                    onPress={() => {
+                      console.log("Press RECEIVE");
+                      navigation.navigate({
+                        routeName: "ReceiveScreen",
+                        key: "ReceiveScreen",
+                        params: {
+                          navigation,
+                          balance: xrpBalance,
+                          currency: currency.toLowerCase(),
+                          walletAddress,
+                        },
+                      });
+                    }}
+                    size={Fonts.size.large}
+                    style={{
+                      height: 40,
+                      backgroundColor: Colors.headerBackground,
+                      borderWidth: 0.5,
+                      borderColor: Colors.text,
+                    }}
+                  />
+                </View>
+                <View style={styles.rightButtonContainer}>
+                  <Custom_Button
+                    text="SEND"
+                    onPress={() => {
+                      console.log("Press SEND");
+                      if (xrpBalanceWarning) {
+                        setXrpWarningModalVisible(true);
+                      } else {
+                        navigation.navigate({
+                          routeName: "SendScreen",
+                          key: "SendScreen",
+                          params: {
+                            navigation,
+                            balance: xrpBalance,
+                            currency: currency.toLowerCase(),
+                            walletAddress,
+                            id,
+                            wallet,
+                          },
+                        });
+                      }
+                    }}
+                    size={Fonts.size.large}
+                    style={{ height: 40 }}
+                    disabled={!netinfo ? true : false}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={styles.walletAddressContainer}>
+                <Custom_Text
+                  value="Wallet Address"
+                  size={Fonts.size.small}
+                  color={Colors.grayText}
+                />
+                <Custom_Text
+                  value={walletAddress}
+                  size={Fonts.size.small}
+                  numberOfLines={1}
+                />
+              </View>
+              <View style={{ flex: 1 }}>
+                <View style={{ paddingVertical: 2.5 }}>
+                  <Custom_IconButton
+                    onPress={() => writeToClipboard(walletAddress)}
+                    icon="content-copy"
+                    size={Fonts.size.normal}
+                    style={{
+                      height: 20,
+                      width: 20,
+                      borderRadius: 0,
+                      backgroundColor: "transparent",
+                    }}
+                  />
+                </View>
+                <View style={{ paddingVertical: 2.5 }}>
+                  <Custom_IconButton
+                    onPress={() => {
+                      setWalletAddressModalVisible(true);
+                    }}
+                    icon="qrcode"
+                    size={Fonts.size.normal}
+                    style={{
+                      height: 20,
+                      width: 20,
+                      borderRadius: 0,
+                      backgroundColor: "transparent",
+                    }}
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ marginLeft: 38, marginBottom: 5 }}>
+              <Custom_Text
+                value="Recent Transactions"
+                size={Fonts.size.small}
+                isBold
+              />
+            </View>
+            <View>
+              {!transactions || (transactions && transactions.length == 0) ? (
+                <View style={{ marginTop: 10 }}>
+                  <Custom_Text
+                    value="No recent transactions"
+                    style={{ textAlign: "center" }}
+                  />
+                </View>
+              ) : !getTransactionsPending && transactions ? (
+                <View>
+                  {transactions.map((item, index) => {
+                    if (
+                      item.type === "payment" &&
+                      !item.specification.counterparty
+                    ) {
+                      return (
+                        <TransactionCard
+                          key={`${item.address}${index}`}
+                          transaction={item}
+                          walletAddress={id}
+                          writeToClipboard={writeToClipboard}
+                        />
+                      );
+                    }
+                  })}
+                  <View
+                    style={{ justifyContent: "center", alignItems: "center" }}
+                  >
+                    {/* transactions.length < transactionsLength */}
+                    <TouchableOpacity
+                      text="Load More"
+                      onPress={() => {
+                        // set default tab to wallet tab and reset to default on goBack() event
+                        getMoreTransactions(
+                          walletAddress,
+                          transactionCount + 10,
+                          "xrp",
+                        );
+                        setTransactionCount(transactionCount + 10);
+                      }}
+                    >
+                      {getMoreTransactionsPending ? (
+                        <ActivityIndicator
+                          size="small"
+                          color={Colors.grayText}
+                        />
+                      ) : (
+                        <Custom_Text value="Load More" />
+                      )}
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              ) : (
+                <View style={{ marginTop: 15 }}>
+                  <ActivityIndicator size="small" color={Colors.grayText} />
+                </View>
+              )}
+            </View>
+          </View>
+          <WalletAddressModal
+            data={walletAddress}
+            modalVisible={walletAddressModalVisible}
+            onClose={() => setWalletAddressModalVisible(false)}
+          />
+          <XrpWarningModal
+            data={walletAddress}
+            modalVisible={xrpWarningModalVisible}
+            onClose={() => setXrpWarningModalVisible(false)}
+          />
+          <View style={{ height: 40, width: screenWidth }} />
+        </ScrollView>
+        <CopiedModal showModal={copiedModalVisible} />
+      </View>
+    );
+  }
+  return (
+    <View style={{ flex: 1 }}>
       <ScrollView>
         <View>
           <View style={styles.container}>
@@ -50,7 +419,7 @@ function WalletTab({
                   fontFamily: "DMSans",
                   color: Colors.text,
                   fontSize: Fonts.size.small,
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -63,7 +432,7 @@ function WalletTab({
                     fontFamily: "DMSansBold",
                     color: Colors.text,
                     fontSize: Fonts.size.small,
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                 >
                   21 XRP
@@ -76,15 +445,13 @@ function WalletTab({
               <Custom_Button
                 text="Activate"
                 onPress={() => {
-                  console.log("Press Activate");
-                  // setActivateModalVisible(true);
                   navigation.navigate({
                     routeName: "ActivateWalletScreen",
                     key: "ActivateWalletScreen",
                     params: {
                       currency: currency.toLowerCase(),
-                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
-                    }
+                      walletAddress,
+                    },
                   });
                 }}
                 style={{ height: 40, width: 100 }}
@@ -100,10 +467,10 @@ function WalletTab({
                 style={{
                   height: 12,
                   width: 12,
-                  backgroundColor: "#FFF"
+                  backgroundColor: "#FFF",
                 }}
                 textStyle={{
-                  paddingRight: 5
+                  paddingRight: 5,
                 }}
                 onPress={() => {
                   setModalVisible(true);
@@ -115,7 +482,7 @@ function WalletTab({
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 50,
-                opacity: 0.3
+                opacity: 0.3,
               }}
             >
               <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
@@ -130,7 +497,7 @@ function WalletTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text
+                      borderColor: Colors.text,
                     }}
                     disabled
                   />
@@ -155,23 +522,25 @@ function WalletTab({
                 value="Wallet Address"
                 size={Fonts.size.small}
                 color={Colors.grayText}
+                style={{ marginBottom: 3 }}
               />
               <Custom_Text
-                value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+                value={walletAddress}
                 size={Fonts.size.small}
+                numberOfLines={1}
               />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>
                 <Custom_IconButton
-                  onPress={() => {}}
+                  onPress={() => writeToClipboard(walletAddress)}
                   icon="content-copy"
                   size={Fonts.size.normal}
                   style={{
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -186,7 +555,7 @@ function WalletTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -203,197 +572,13 @@ function WalletTab({
           currency="xrp"
         />
         <WalletAddressModal
-          data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
+          data={walletAddress}
           modalVisible={walletAddressModalVisible}
           onClose={() => setWalletAddressModalVisible(false)}
         />
       </ScrollView>
-    );
-  }
-
-  return (
-    <ScrollView>
-      <View>
-        <View style={styles.container}>
-          <View style={styles.section}>
-            <Custom_Text
-              value="Your Balance:"
-              size={Fonts.size.medium}
-              color={Colors.lightGray}
-            />
-          </View>
-          <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <View style={{ paddingRight: 10 }}>
-                <Custom_Text value={xrpBalance} size={Fonts.size.h3} isBold />
-              </View>
-              <View>
-                <Custom_Text value={currency} size={Fonts.size.h4} />
-              </View>
-            </View>
-          </View>
-          {/* <View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <View style={{ paddingRight: 5 }}>
-                <Custom_Text value={`$${5.04}`} size={Fonts.size.medium} />
-              </View>
-              <View>
-                <Custom_Text
-                  value={defaultCurrency.toUpperCase()}
-                  size={Fonts.size.medium}
-                />
-              </View>
-            </View>
-          </View> */}
-          <View style={styles.marketInfoContainer}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                alignItems: "center"
-              }}
-            >
-              <View style={{ paddingRight: 15 }}>
-                <Custom_Text
-                  value="Market Price:"
-                  size={Fonts.size.medium}
-                  color={Colors.lightGray}
-                />
-                <Custom_Text value={`$${marketData.open}`} size={Fonts.size.medium} />
-              </View>
-              <View>
-                <SevenChart
-                  marketSevens={marketSevens}
-                  color={priceColor}
-                />
-                <Custom_Text
-                  value={`${priceChange}`}
-                  size={Fonts.size.small}
-                  // color={Colors.errorBackground}
-                  color={priceColor}
-                />
-              </View>
-            </View>
-          </View>
-          <View style={styles.buttonsContainer}>
-            <View style={styles.leftButtonContainer}>
-              <Custom_Button
-                text="RECEIVE"
-                onPress={() => {
-                  console.log("Press RECEIVE");
-                  navigation.navigate({
-                    routeName: "ReceiveScreen",
-                    key: "ReceiveScreen",
-                    params: {
-                      navigation,
-                      balance: xrpBalance,
-                      currency: currency.toLowerCase(),
-                      walletAddress: "r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh",
-                    }
-                  });
-                }}
-                size={Fonts.size.large}
-                style={{
-                  height: 40,
-                  backgroundColor: Colors.headerBackground,
-                  borderWidth: 0.5,
-                  borderColor: Colors.text
-                }}
-              />
-            </View>
-            <View style={styles.rightButtonContainer}>
-              <Custom_Button
-                text="SEND"
-                onPress={() => {
-                  console.log("Press SEND");
-                  navigation.navigate({
-                    routeName: "SendScreen",
-                    key: "SendScreen",
-                    params: {
-                      navigation,
-                      balance: xrpBalance,
-                      currency: currency.toLowerCase(),
-                    }
-                  });
-                }}
-                size={Fonts.size.large}
-                style={{ height: 40 }}
-              />
-            </View>
-          </View>
-        </View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <View style={styles.walletAddressContainer}>
-            <Custom_Text
-              value="Wallet Address"
-              size={Fonts.size.small}
-              color={Colors.grayText}
-            />
-            <Custom_Text
-              value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
-              size={Fonts.size.small}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <View style={{ paddingVertical: 2.5 }}>
-              <Custom_IconButton
-                onPress={() => {}}
-                icon="content-copy"
-                size={Fonts.size.normal}
-                style={{
-                  height: 20,
-                  width: 20,
-                  borderRadius: 0,
-                  backgroundColor: "transparent"
-                }}
-              />
-            </View>
-            <View style={{ paddingVertical: 2.5 }}>
-              <Custom_IconButton
-                onPress={() => {
-                  setWalletAddressModalVisible(true);
-                }}
-                icon="qrcode"
-                size={Fonts.size.normal}
-                style={{
-                  height: 20,
-                  width: 20,
-                  borderRadius: 0,
-                  backgroundColor: "transparent"
-                }}
-              />
-            </View>
-          </View>
-        </View>
-        <View style={{ marginLeft: 38, marginBottom: 5 }}>
-          <Custom_Text
-            value="Recent Transactions"
-            size={Fonts.size.small}
-            isBold
-          />
-        </View>
-        <View>
-          <TransactionCard currency="xrp" amount="1000.00" />
-        </View>
-      </View>
-      <WalletAddressModal
-        data={"r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"}
-        modalVisible={walletAddressModalVisible}
-        onClose={() => setWalletAddressModalVisible(false)}
-      />
-    </ScrollView>
+      <CopiedModal showModal={copiedModalVisible} />
+    </View>
   );
 }
 
@@ -402,26 +587,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.headerBackground,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
-    marginTop: 20
+    marginTop: 20,
   },
   marketInfoContainer: {
-    marginVertical: 24
+    marginVertical: 24,
   },
   buttonsContainer: {
     flexDirection: "row",
     marginBottom: 24,
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   leftButtonContainer: {
     flex: 1,
-    marginRight: 10
+    marginRight: 10,
   },
   rightButtonContainer: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
   },
   walletAddressContainer: {
     flex: 9,
@@ -433,22 +618,44 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24
-  }
+    marginVertical: 24,
+  },
 });
 
 const mapStateToProps = ({
   marketData,
   marketSevens,
-}, props) => {
-  console.log("defaultCurrency", props.defaultCurrency)
+  baseCurrency,
+  getTransactionsPending,
+  transactionsLength,
+  getMoreTransactionsPending,
+  getBalancePending,
+  pullToRefreshBalancePending,
+  netinfo,
+}) => {
   return {
+    getTransactionsPending,
+    getBalancePending,
+    getMoreTransactionsPending,
+    transactionsLength,
     marketData,
-    marketSevens: marketSevens ? marketSevens["xrpusd"] : {},
-  }
+    pullToRefreshBalancePending,
+    marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
+    netinfo,
+  };
 };
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getMoreTransactions: (address, limit, walletType) =>
+    dispatch(getMoreTransactions(address, limit, walletType)),
+  getBalance: (id, address) => dispatch(getBalance(id, address)),
+  pullToRefreshBalance: (id, address) =>
+    dispatch(pullToRefreshBalance(id, address)),
+  getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
+  getSoloData: () => dispatch(getSoloData()),
+  getMarketSevens: () => dispatch(getMarketSevens()),
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
+});
 
 export default connect(
   mapStateToProps,

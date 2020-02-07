@@ -19,8 +19,11 @@ export default function TransferFailedModal({
   onPress,
   onClose,
   modalVisible,
+  value,
   style,
   currency,
+  navigation,
+  errorMessage
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -41,16 +44,27 @@ export default function TransferFailedModal({
                   isBold
                 />
               </View>
-              <View style={[styles.section, { marginBottom: 20, flexDirection: "row", width: 230 }]}>
+              <View
+                style={[
+                  styles.section,
+                  { marginBottom: 20, flexDirection: "row", width: 230 }
+                ]}
+              >
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Your transfer cannot be processed. Please try again or contact our support team if the problem persists.`}
+                    value={value}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
                 </View>
-                <View style={{ flex: 2, alignItems: "flex-end", paddingTop: 10, }}>
-                  <Ionicons name="ios-close-circle" size={Fonts.size.h5} color={Colors.errorBackground} />
+                <View
+                  style={{ flex: 2, alignItems: "flex-end", paddingTop: 10 }}
+                >
+                  <Ionicons
+                    name="ios-close-circle"
+                    size={Fonts.size.h5}
+                    color={Colors.errorBackground}
+                  />
                 </View>
               </View>
               <View style={styles.line} />
@@ -70,8 +84,13 @@ export default function TransferFailedModal({
                   style={{ backgroundColor: "transparent" }}
                 />
               </View> */}
-              <View style={{ flexDirection: 'row' }}>
-                <View style={[styles.section, { height: 50, position: 'absolute', right: 130, bottom: 0 }]}>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={[
+                    styles.section,
+                    { height: 50, position: "absolute", right: 130, bottom: 0 }
+                  ]}
+                >
                   <Custom_Button
                     text="CANCEL"
                     onPress={onClose}
@@ -81,10 +100,15 @@ export default function TransferFailedModal({
                     style={{ backgroundColor: "transparent" }}
                   />
                 </View>
-                <View style={[styles.section, { height: 50, position: 'absolute', right: 0, bottom: 0 }]}>
+                <View
+                  style={[
+                    styles.section,
+                    { height: 50, position: "absolute", right: 0, bottom: 0 }
+                  ]}
+                >
                   <Custom_Button
                     text="TRY AGAIN"
-                    onPress={onClose}
+                    onPress={onPress}
                     size={16}
                     textStyle={{ letterSpacing: 1.2 }}
                     style={{ backgroundColor: "transparent" }}
@@ -136,7 +160,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24
   },
   line: {
-    height: 1,
+    height: StyleSheet.hairlineWidth,
     backgroundColor: Colors.grayText
   }
 });

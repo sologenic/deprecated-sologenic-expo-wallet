@@ -5,7 +5,7 @@ import {
   View,
   TouchableOpacity,
   Image,
-  Text
+  Text,
 } from "react-native";
 
 import Custom_Text from "../components/shared/Custom_Text";
@@ -25,28 +25,29 @@ export default function WalletTokenizedAssetTab({
   xrpBalance,
   soloBalance,
   defaultCurrency,
-  activate
+  activate,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   if (!activate) {
     return (
       <ScrollView>
-
         <View>
           <View style={styles.container}>
-            <View style={{ marginTop: 50, marginHorizontal: 45, marginBottom: 120 }}>
+            <View
+              style={{ marginTop: 50, marginHorizontal: 45, marginBottom: 120 }}
+            >
               <Text
                 style={{
                   fontFamily: "DMSans",
                   color: Colors.text,
                   fontSize: Fonts.size.small,
-                  textAlign: "center"
+                  textAlign: "center",
                 }}
                 numberOfLines={2}
                 ellipsizeMode="tail"
               >
-                Tokenized assets trading coming in Q3 2020
+                Tokenized assets are coming in Q3 2020
               </Text>
             </View>
             <View
@@ -54,7 +55,7 @@ export default function WalletTokenizedAssetTab({
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 50,
-                opacity: 0.3
+                opacity: 0.3,
               }}
             >
               <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
@@ -69,7 +70,7 @@ export default function WalletTokenizedAssetTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text
+                      borderColor: Colors.text,
                     }}
                     disabled
                   />
@@ -98,6 +99,7 @@ export default function WalletTokenizedAssetTab({
               <Custom_Text
                 value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
                 size={Fonts.size.small}
+                numberOfLines={1}
               />
             </View>
             <View style={{ flex: 1 }}>
@@ -110,7 +112,7 @@ export default function WalletTokenizedAssetTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -123,7 +125,7 @@ export default function WalletTokenizedAssetTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -158,7 +160,7 @@ export default function WalletTokenizedAssetTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <View style={{ paddingRight: 10 }}>
@@ -174,7 +176,7 @@ export default function WalletTokenizedAssetTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <View style={{ paddingRight: 5 }}>
@@ -193,7 +195,7 @@ export default function WalletTokenizedAssetTab({
               style={{
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
               }}
             >
               <View style={{ paddingRight: 15 }}>
@@ -225,7 +227,7 @@ export default function WalletTokenizedAssetTab({
                   height: 40,
                   backgroundColor: Colors.headerBackground,
                   borderWidth: 0.5,
-                  borderColor: Colors.text
+                  borderColor: Colors.text,
                 }}
               />
             </View>
@@ -263,7 +265,7 @@ export default function WalletTokenizedAssetTab({
                   height: 20,
                   width: 20,
                   borderRadius: 0,
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
                 }}
               />
             </View>
@@ -276,7 +278,7 @@ export default function WalletTokenizedAssetTab({
                   height: 20,
                   width: 20,
                   borderRadius: 0,
-                  backgroundColor: "transparent"
+                  backgroundColor: "transparent",
                 }}
               />
             </View>
@@ -302,26 +304,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.headerBackground,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
-    marginTop: 20
+    marginTop: 20,
   },
   marketInfoContainer: {
-    marginVertical: 24
+    marginVertical: 24,
   },
   buttonsContainer: {
     flexDirection: "row",
     marginBottom: 24,
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   leftButtonContainer: {
     flex: 1,
-    marginRight: 10
+    marginRight: 10,
   },
   rightButtonContainer: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
   },
   walletAddressContainer: {
     flex: 9,
@@ -333,6 +335,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24
-  }
+    marginVertical: 24,
+  },
 });

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View, TextInput } from "react-native";
 import { connect } from "react-redux";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -16,8 +16,11 @@ import {
   updatePhraseTestValue1,
   updatePhraseTestValue2,
   updatePhraseTestValue3,
-} from "../actions"
+  addNewWallet,
+} from "../actions";
 import WalletCreationSuccessfulModal from "../components/shared/WalletCreationSuccessfulModal";
+import { encrypt, decrypt } from "../utils";
+import { screenWidth } from "../constants/Layout";
 
 function RecoveryPhraseTestScreen({
   navigation,
@@ -27,31 +30,26 @@ function RecoveryPhraseTestScreen({
   updatePhraseTestValue1,
   updatePhraseTestValue2,
   updatePhraseTestValue3,
+  newWallet,
+  addNewWallet,
+  // nickname,
 }) {
-  // const [phraseTestValue1, onChangePhraseTestValue1] = useState("");
-  // const [phraseTestValue2, onChangePhraseTestValue2] = useState("");
-  // const [phraseTestValue3, onChangePhraseTestValue3] = useState("");
-
   const [pressed, handlePressButton] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-  const [walletCreationSuccessfulModalVisible, setWalletCreationSuccessfulModalVisible] = useState(false);
+  const [
+    walletCreationSuccessfulModalVisible,
+    setWalletCreationSuccessfulModalVisible,
+  ] = useState(false);
   const [testResult, handleTestResult] = useState("");
-  
-  const { randomNumbers } = navigation.state.params;
-  const phrase = [
-    "tree",
-    "dog",
-    "eleven",
-    "night",
-    "treehouse",
-    "cone",
-    "cat",
-    "ticket",
-    "pig",
-    "part",
-    "pickles",
-    "nice"
-  ];
+  const [value, onChangeValue] = useState("");
+  const {
+    randomNumbers,
+    phrase,
+    nickname,
+    walletAddress,
+    rippleClassicAddress,
+    passphrase,
+  } = navigation.state.params;
   let count = 0;
 
   useEffect(() => {
@@ -59,18 +57,26 @@ function RecoveryPhraseTestScreen({
     updatePhraseTestValue2("");
     updatePhraseTestValue3("");
   }, []);
+  console.log("testResult", testResult);
+  console.log(phraseTestValue1, phraseTestValue2, phraseTestValue3);
 
   console.log(
-    phraseTestValue1,
-    phraseTestValue2,
-    phraseTestValue3,
+    "new wallet",
+    newWallet,
+    "nickname",
+    nickname,
+    "passphrase",
+    passphrase,
   );
 
   useEffect(() => {
     if (
-      phraseTestValue1 && phraseTestValue1.length > 0 &&
-      phraseTestValue2 && phraseTestValue2.length > 0 &&
-      phraseTestValue3 && phraseTestValue3.length > 0
+      phraseTestValue1 &&
+      phraseTestValue1.length > 0 &&
+      phraseTestValue2 &&
+      phraseTestValue2.length > 0 &&
+      phraseTestValue3 &&
+      phraseTestValue3.length > 0
     ) {
       handlePressButton(true);
     } else {
@@ -83,14 +89,20 @@ function RecoveryPhraseTestScreen({
     phrase,
     phraseTestValue1,
     phraseTestValue2,
-    phraseTestValue3
+    phraseTestValue3,
   ) => {
-    const sortedRandomNumbers = randomNumbers.sort((a, b) => a < b ? -1 : 1);
-    return phrase[sortedRandomNumbers[0] - 1] === phraseTestValue1 &&
+    const sortedRandomNumbers = randomNumbers.sort((a, b) => (a < b ? -1 : 1));
+    return (
+      phrase[sortedRandomNumbers[0] - 1] === phraseTestValue1 &&
       phrase[sortedRandomNumbers[1] - 1] === phraseTestValue2 &&
       phrase[sortedRandomNumbers[2] - 1] === phraseTestValue3
+    );
   };
-
+  console.log(
+    phraseTestValue1,
+    phraseTestValue2,
+    phraseTestValue3,
+  )
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -105,26 +117,36 @@ function RecoveryPhraseTestScreen({
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Recovery Phrase Test" />}
+        center={<Custom_HeaderTitle text="Recovery Words Test" />}
         right={<View />}
       />
       <ScrollView>
-        <View style={[styles.section, { justifyContent: "center", alignItems: "center" }]}>
+        <View
+          style={[
+            styles.section,
+            { justifyContent: "center", alignItems: "center" },
+          ]}
+        >
           {testResult === "" && (
             <Custom_Text
-              value="To ensure that you have complied with the steps as instructed, please enter the missing info of your given Recovery Phrase below."
+              value="To ensure that you have complied with the steps as instructed, please enter the missing info of your given Recovery Words below."
               size={Fonts.size.normal}
               color={Colors.text}
+              style={{ textAlign: "center" }}
             />
           )}
           {testResult === "error" && (
             <View style={{ justifyContent: "center", alignItems: "center" }}>
               <View style={{ marginTop: 35, marginBottom: 10 }}>
-                <AntDesign name="exclamationcircle" size={Fonts.size.medium} color={Colors.text} />
+                <AntDesign
+                  name="exclamationcircle"
+                  size={Fonts.size.medium}
+                  color={Colors.text}
+                />
               </View>
               <View style={{ marginHorizontal: 45 }}>
                 <Custom_Text
-                  value="The information you entered was incorrect. Please double check your written Recovery Phrase and try again."
+                  value="The information you entered was incorrect. Please double check your written Recovery Words and try again."
                   size={Fonts.size.normal}
                   color={Colors.text}
                 />
@@ -132,12 +154,21 @@ function RecoveryPhraseTestScreen({
             </View>
           )}
         </View>
-        <View style={[styles.section, { justifyContent: "center", alignItems: "center" }]}>
+        <View
+          style={[
+            styles.section,
+            { justifyContent: "center", alignItems: "center" },
+          ]}
+        >
           <RecoveryPhrase
             phrase={phrase}
             randomNumbers={randomNumbers}
-            color={testResult === "error" ? Colors.errorBackground : Colors.text}
-            indexColor={testResult === "error" ? Colors.errorBackground : Colors.lightGray}
+            color={
+              testResult === "error" ? Colors.errorBackground : Colors.text
+            }
+            indexColor={
+              testResult === "error" ? Colors.errorBackground : Colors.lightGray
+            }
           />
         </View>
         <View style={[styles.section, { alignItems: "center" }]}>
@@ -149,10 +180,34 @@ function RecoveryPhraseTestScreen({
                 phrase,
                 phraseTestValue1,
                 phraseTestValue2,
-                phraseTestValue3
+                phraseTestValue3,
               );
               if (result === true) {
+                const salt = Math.random()
+                  .toString(36)
+                  .slice(2);
+                const encrypted = encrypt(
+                  newWallet.wallet.privateKey,
+                  salt,
+                  walletAddress,
+                  passphrase,
+                );
+                const secureNewWallet = {
+                  derivationPath: newWallet.derivationPath,
+                  wallet: {
+                    publicKey: newWallet.wallet.publicKey,
+                    test: newWallet.wallet.test,
+                  },
+                };
                 handleTestResult("correct");
+                addNewWallet({
+                  newWallet: secureNewWallet,
+                  nickname,
+                  walletAddress,
+                  rippleClassicAddress,
+                  encrypted,
+                  salt,
+                });
                 setWalletCreationSuccessfulModalVisible(true);
               } else {
                 handleTestResult("error");
@@ -166,15 +221,17 @@ function RecoveryPhraseTestScreen({
               width: 120,
               backgroundColor: !pressed
                 ? Colors.headerBackground
-                : Colors.darkRed
+                : Colors.darkRed,
             }}
             color={!pressed ? Colors.grayText : Colors.text}
             disabled={!pressed}
           />
         </View>
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <ExitProcessModal
         modalVisible={modalVisible}
+        closeModal={() => setModalVisible(false)}
         onClose={() => {
           setModalVisible(false);
           navigation.goBack();
@@ -189,7 +246,7 @@ function RecoveryPhraseTestScreen({
           setWalletCreationSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
-            key: "WalletsScreen"
+            key: "WalletsScreen",
           });
         }}
       />
@@ -198,37 +255,61 @@ function RecoveryPhraseTestScreen({
 }
 
 RecoveryPhraseTestScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   section: {
     marginHorizontal: 20,
-    marginTop: 20
-  }
+    marginTop: 20,
+  },
 });
 
 const mapStateToProps = ({
   phraseTestValue1,
   phraseTestValue2,
   phraseTestValue3,
+  newWallet,
+  // nickname,
 }) => ({
   phraseTestValue1,
   phraseTestValue2,
   phraseTestValue3,
+  newWallet,
+  // nickname,
 });
 
 const mapDispatchToProps = dispatch => ({
   updatePhraseTestValue1: value => dispatch(updatePhraseTestValue1(value)),
   updatePhraseTestValue2: value => dispatch(updatePhraseTestValue2(value)),
   updatePhraseTestValue3: value => dispatch(updatePhraseTestValue3(value)),
+  addNewWallet: ({
+    newWallet,
+    nickname,
+    walletAddress,
+    rippleClassicAddress,
+    trustline,
+    encrypted,
+    salt,
+  }) =>
+    dispatch(
+      addNewWallet({
+        newWallet,
+        nickname,
+        walletAddress,
+        rippleClassicAddress,
+        trustline,
+        encrypted,
+        salt,
+      }),
+    ),
 });
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(RecoveryPhraseTestScreen)
+)(RecoveryPhraseTestScreen);

@@ -1,47 +1,23 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  TextInput,
-  Clipboard
-} from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
 import Custom_HeaderTitle from "../components/shared/Custom_HeaderTitle";
 import Custom_HeaderButton from "../components/shared/Custom_HeaderButton";
-import Custom_Button from "../components/shared/Custom_Button";
-import Custom_IconButton from "../components/shared/Custom_IconButton";
-import Custom_RadioButton from "../components/shared/Custom_RadioButton";
-import Custom_Modal from "../components/shared/Custom_Modal";
-import Custom_TextInput from "../components/shared/Custom_TextInput";
 import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
-import Images from "../constants/Images";
-import { countWords } from "../utils";
 import PassphraseTab from "./PassphraseTab";
 import WalletAddressSecretTab from "./WalletAddressSecretTab";
+import { screenWidth } from "../constants/Layout";
 
 export default function ImportExistingWalletScreen({ navigation }) {
   const [tab, handleTabView] = useState(1);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
-  // const [textValue, onChangeText] = useState("");
-  // const [completed, handleIsCompleted] = useState(false);
-
-  // const getContentFromClipboard = async () => {
-  //   const content = await Clipboard.getString();
-  //   await onChangeText(content);
-  // };
-
-  // useEffect(() => {
-  //   const result = countWords(textValue);
-  //   if (textValue) {
-  //     handleIsCompleted(true);
-  //   } else {
-  //     handleIsCompleted(false);
-  //   }
-  // });
+  const [
+    importSuccessfulModalVisible,
+    setImportSuccessfulModalVisible,
+  ] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -63,7 +39,7 @@ export default function ImportExistingWalletScreen({ navigation }) {
         style={{
           flexDirection: "row",
           height: 50,
-          backgroundColor: Colors.headerBackground
+          backgroundColor: Colors.headerBackground,
         }}
       >
         <TouchableOpacity
@@ -74,17 +50,17 @@ export default function ImportExistingWalletScreen({ navigation }) {
             {
               flex: 1,
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             },
             tab === 1
               ? {
                   borderBottomColor: Colors.text,
-                  borderBottomWidth: 2
+                  borderBottomWidth: 2,
                 }
-              : {}
+              : {},
           ]}
         >
-          <Custom_Text value="Passphrase" size={Fonts.size.normal} />
+          <Custom_Text value="Recovery Words" size={Fonts.size.normal} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
@@ -94,14 +70,14 @@ export default function ImportExistingWalletScreen({ navigation }) {
             {
               flex: 1,
               justifyContent: "center",
-              alignItems: "center"
+              alignItems: "center",
             },
             tab === 2
               ? {
                   borderBottomColor: Colors.text,
-                  borderBottomWidth: 2
+                  borderBottomWidth: 2,
                 }
-              : {}
+              : {},
           ]}
         >
           <Custom_Text
@@ -110,191 +86,61 @@ export default function ImportExistingWalletScreen({ navigation }) {
           />
         </TouchableOpacity>
       </View>
-      {tab === 1 ? (
-        <PassphraseTab 
-          navigation={navigation}
-          errorModalVisible={errorModalVisible}
-          setErrorModalVisible={setErrorModalVisible}
-        />
-        // <View>
-        //   <View
-        //     style={[
-        //       styles.section,
-        //       { marginHorizontal: 40, marginTop: 30, marginBottom: 10 }
-        //     ]}
-        //   >
-        //     <Custom_Text
-        //       value="Enter the 12 word passphrase that was given to you when you created your account."
-        //       size={Fonts.size.small}
-        //       isBold
-        //     />
-        //   </View>
-        //   <View
-        //     style={[
-        //       styles.section,
-        //       { marginHorizontal: 40, marginTop: 10, marginBottom: 10 }
-        //     ]}
-        //   >
-        //     <Custom_Text
-        //       value="You should have written it down in a safe place upon creation as prompted."
-        //       size={Fonts.size.small}
-        //     />
-        //   </View>
-        //   <View style={styles.passphraseTextInputContainer}>
-        //     <View>
-        //       <Custom_Text
-        //         value="Passphrase"
-        //         size={Fonts.size.small}
-        //         color={Colors.lightGray}
-        //       />
-        //     </View>
-        //     <View style={styles.passphraseTextInput}>
-        //       <TextInput
-        //         value={textValue}
-        //         onChangeText={text => {
-        //           onChangeText(text);
-        //         }}
-        //         multiline={true}
-        //         numberOfLines={2}
-        //         keyboardType="default"
-        //         returnKeyType="done"
-        //         blurOnSubmit={true}
-        //         style={{
-        //           fontFamily: "Titillium",
-        //           fontSize: Fonts.size.medium,
-        //           color: Colors.text,
-        //           height: 60,
-        //           marginBottom: 5
-        //         }}
-        //       />
-        //     </View>
-        //     <View
-        //       style={{
-        //         justifyContent: "center",
-        //         alignItems: "flex-end",
-        //         marginVertical: 5
-        //       }}
-        //     >
-        //       <TouchableOpacity onPress={getContentFromClipboard}>
-        //         <Custom_Text
-        //           value="Paste"
-        //           size={Fonts.size.small}
-        //           color={Colors.freshGreen}
-        //         />
-        //       </TouchableOpacity>
-        //     </View>
-        //   </View>
-        //   <View style={styles.addWalletContainer}>
-        //     <Custom_Button
-        //       text="Add Wallet"
-        //       onPress={() => {
-        //         console.log("Press Add Wallet");
-        //       }}
-        //       style={{
-        //         height: 40,
-        //         width: 100,
-        //         backgroundColor: !completed
-        //           ? Colors.headerBackground
-        //           : Colors.darkRed
-        //       }}
-        //       color={!completed ? Colors.grayText : Colors.text}
-        //       disabled
-        //     />
-        //   </View>
-        // </View>
-      ) : (
-        <WalletAddressSecretTab navigation={navigation}/>
-        // <View>
-        //   <View style={{ marginTop: 50, marginBottom: 10 }}>
-        //     <Custom_TextInput
-        //       value={textValue}
-        //       onChangeText={text => {
-        //         onChangeText(text);
-        //       }}
-        //       label="Account Address"
-        //       keyboardType="default"
-        //       returnKeyType="done"
-        //     />
-        //   </View>
-        //   <View style={{ marginTop: 5, marginBottom: 10 }}>
-        //     <Custom_TextInput
-        //       value={textValue}
-        //       onChangeText={text => {
-        //         onChangeText(text);
-        //       }}
-        //       label="Account Secrent"
-        //       keyboardType="default"
-        //       returnKeyType="done"
-        //     />
-        //   </View>
-        //   <View style={{ marginTop: 5 }}>
-        //     <Custom_TextInput
-        //       value={textValue}
-        //       onChangeText={text => {
-        //         onChangeText(text);
-        //       }}
-        //       label="Account Nickname"
-        //       keyboardType="default"
-        //       returnKeyType="done"
-        //     />
-        //     <View style={{ marginLeft: 30 }}>
-        //       <Custom_Text value="Optional" size={Fonts.size.normal} color={Colors.freshGreen}/>
-        //     </View>
-        //   </View>
-        //   <View style={[styles.addWalletContainer, { marginTop: 70 }]}>
-        //     <Custom_Button
-        //       text="Add Wallet"
-        //       onPress={() => {
-        //         console.log("Press Add Wallet");
-        //       }}
-        //       style={{
-        //         height: 40,
-        //         width: 100,
-        //         backgroundColor: !completed
-        //           ? Colors.headerBackground
-        //           : Colors.darkRed
-        //       }}
-        //       color={!completed ? Colors.grayText : Colors.text}
-        //       disabled
-        //     />
-        //   </View>
-        // </View>
-      )}
+      <ScrollView>
+        {tab === 1 ? (
+          <PassphraseTab
+            navigation={navigation}
+            errorModalVisible={errorModalVisible}
+            setErrorModalVisible={setErrorModalVisible}
+            importSuccessfulModalVisible={importSuccessfulModalVisible}
+            setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+          />
+        ) : (
+          <WalletAddressSecretTab
+            navigation={navigation}
+            errorModalVisible={errorModalVisible}
+            setErrorModalVisible={setErrorModalVisible}
+            importSuccessfulModalVisible={importSuccessfulModalVisible}
+            setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+          />
+        )}
+        <View style={{ height: 40, width: screenWidth }} />
+      </ScrollView>
     </View>
   );
 }
 
 ImportExistingWalletScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   addWalletContainer: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   passphraseTextInputContainer: {
     marginHorizontal: 40,
     marginTop: 30,
-    marginBottom: 60
+    marginBottom: 60,
   },
   passphraseTextInput: {
     borderBottomColor: Colors.text,
-    borderBottomWidth: 1
+    borderBottomWidth: 1,
   },
   footer: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "flex-end",
     marginHorizontal: 20,
-    marginVertical: 50
-  }
+    marginVertical: 50,
+  },
 });

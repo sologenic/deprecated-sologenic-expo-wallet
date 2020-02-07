@@ -23,33 +23,64 @@ import RecoveryPhraseTestScreen from "../containers/RecoveryPhraseTestScreen";
 import ChangeWalletNicknameScreen from "../containers/ChangeWalletNicknameScreen";
 import ConfirmUnlockMethodScreen from "../containers/ConfirmUnlockMethodScreen";
 import TermsScreen from "../containers/TermsScreen";
+import LicenseAgreementScreen from "../containers/LicenseAgreementScreen";
+import ReceiveEmailUpdatesScreen from "../containers/ReceiveEmailUpdatesScreen";
 
 const MainStack = createStackNavigator(
   {
     // HomeScreen: HomeScreen,
-    HomeScreen: ({ navigation, screenProps }) => {
-      if (!screenProps.isAuthenticated) {
-        if (!screenProps.authSetupComplete) {
-          return (
-            <CreatePinScreen
-              screenProps={{
-                rootNavigation: navigation,
-              }}
-            />
-          );
+    HomeScreen: {
+      name: "HomeScreen",
+      screen: ({ navigation, screenProps }) => {
+        if (!screenProps.isAuthenticated) {
+          if (!screenProps.authSetupComplete) {
+            return (
+              <CreatePinScreen
+                screenProps={{
+                  rootNavigation: navigation,
+                }}
+              />
+            );
+          } else {
+            return (
+              <UnlockScreen
+                screenProps={{
+                  rootNavigation: navigation,
+                }}
+              />
+            );
+          }
         } else {
-          return (
-            <UnlockScreen
-              screenProps={{
-                rootNavigation: navigation,
-              }}
-            />
-          );
+          return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
         }
-      } else {
-        return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
-      }
+      },
+      navigationOptions: {
+        gesturesEnabled: false,
+      },
     },
+    // HomeScreen: ({ navigation, screenProps }) => {
+    //   if (!screenProps.isAuthenticated) {
+    //     if (!screenProps.authSetupComplete) {
+    //       return (
+    //         <CreatePinScreen
+    //           screenProps={{
+    //             rootNavigation: navigation,
+    //           }}
+    //         />
+    //       );
+    //     } else {
+    //       return (
+    //         <UnlockScreen
+    //           screenProps={{
+    //             rootNavigation: navigation,
+    //           }}
+    //         />
+    //       );
+    //     }
+    //   } else {
+    //     return <WalletsScreen screenProps={{ rootNavigation: navigation }} />;
+    //   }
+    // },
     LinksScreen: LinksScreen,
     SettingsScreen: SettingsScreen,
     WalletsScreen: WalletsScreen,
@@ -69,6 +100,8 @@ const MainStack = createStackNavigator(
     RecoveryPhraseTestScreen: RecoveryPhraseTestScreen,
     ChangeWalletNicknameScreen: ChangeWalletNicknameScreen,
     TermsScreen: TermsScreen,
+    LicenseAgreementScreen: LicenseAgreementScreen,
+    ReceiveEmailUpdatesScreen: ReceiveEmailUpdatesScreen,
   },
   {
     headerMode: "none",

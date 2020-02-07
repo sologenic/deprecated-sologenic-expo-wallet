@@ -6,7 +6,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
-  Text
+  Text,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -14,6 +14,7 @@ import Colors from "../../constants/Colors";
 import Fonts from "../../constants/Fonts";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
+import { screenWidth } from "../../constants/Layout";
 
 export default function ImportSuccessfulModal({
   onPress,
@@ -30,7 +31,7 @@ export default function ImportSuccessfulModal({
               <View
                 style={[
                   styles.section,
-                  { height: 70, alignItems: "flex-start" }
+                  { height: 70, alignItems: "flex-start" },
                 ]}
               >
                 <Custom_Text
@@ -40,16 +41,25 @@ export default function ImportSuccessfulModal({
                   isBold
                 />
               </View>
-              <View style={[styles.section, { marginBottom: 20, flexDirection: "row" }]}>
+              <View
+                style={[
+                  styles.section,
+                  { marginBottom: 20, flexDirection: "row" },
+                ]}
+              >
                 <View style={{ flex: 8, marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Your wallet was imported successfully.`}
+                    value={`Your wallet was imported \nsuccessfully.`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
                 </View>
                 <View style={{ flex: 2, alignItems: "flex-end" }}>
-                  <Ionicons name="ios-checkmark-circle" size={Fonts.size.h5} color={Colors.freshGreen} />
+                  <Ionicons
+                    name="ios-checkmark-circle"
+                    size={Fonts.size.h5}
+                    color={Colors.freshGreen}
+                  />
                 </View>
               </View>
               <View style={styles.line} />
@@ -57,12 +67,12 @@ export default function ImportSuccessfulModal({
               <View
                 style={[
                   styles.section,
-                  { height: 50, position: "absolute", right: 0, bottom: 0 }
+                  { height: 50, position: "absolute", right: 0, bottom: 0 },
                 ]}
               >
                 <Custom_Button
                   text="VIEW WALLET"
-                  onPress={onClose}
+                  onPress={onPress}
                   color={Colors.freshGreen}
                   size={16}
                   textStyle={{ letterSpacing: 1.2 }}
@@ -81,13 +91,13 @@ ImportSuccessfulModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 ImportSuccessfulModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
@@ -98,23 +108,23 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40
+    paddingHorizontal: 10,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10
+    borderRadius: 10,
     // height: 100,
-    // width: 200,
+    width: screenWidth - 60,
     // zIndex: 20,
   },
   section: {
     justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: 20
+    alignItems: "flex-start",
+    marginHorizontal: 24,
   },
   line: {
-    height: 1,
-    backgroundColor: Colors.grayText
-  }
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: Colors.grayText,
+  },
 });

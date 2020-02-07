@@ -6,7 +6,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
-  Text
+  Text,
 } from "react-native";
 
 import Colors from "../../constants/Colors";
@@ -18,7 +18,7 @@ export default function Why21XRPModal({
   onPress,
   onClose,
   modalVisible,
-  style
+  style,
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -29,7 +29,7 @@ export default function Why21XRPModal({
               <View
                 style={[
                   styles.section,
-                  { height: 70, alignItems: "flex-start" }
+                  { height: 70, alignItems: "flex-start" },
                 ]}
               >
                 <Custom_Text
@@ -42,12 +42,18 @@ export default function Why21XRPModal({
               <View style={[styles.section, { marginBottom: 20 }]}>
                 <View style={{ marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Similar to some bank accounts, Ripple Wallets require a minimum balance of 20 XRP to facilitate use of the XRP Ledger.`}
+                    value={`There is a 20 XRP reserve requirement to activate any XRP wallet. Once an XRP address is funded with the 20 XRP, the activation fee will be locked by the XRP ledger network and is non-refundable and non-recoverable unless the network lowers the reserve requirement.`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
+                  <Custom_Text
+                    value={`In addition, the user must transfer and maintain at least 1 XRP to cover transaction fees for SOLO or other tokenized asset transactions. The current minimum transaction cost required by the network for a standard transaction is 0.00001 XRP (10 drops). It sometimes increases due to higher than usual load.`}
+                    size={Fonts.size.small}
+                    color={Colors.text}
+                    style={{ marginTop: 10 }}
+                  />
                 </View>
-                <Text
+                {/* <Text
                   style={{
                     fontFamily: "DMSans",
                     color: Colors.text,
@@ -64,7 +70,7 @@ export default function Why21XRPModal({
                       fontFamily: "DMSansBold",
                       color: Colors.text,
                       fontSize: Fonts.size.small,
-                      textAlign: "center"
+                      textAlign: "center",
                     }}
                   >
                     21 XRP
@@ -73,14 +79,14 @@ export default function Why21XRPModal({
                   here instead, in order to facilitate the activation of your
                   SOLO Wallet, which you can do as soon as your XRP Wallet is
                   activated.
-                </Text>
+                </Text> */}
               </View>
               <View style={styles.line} />
               <View style={[styles.section, { height: 50 }]} />
               <View
                 style={[
                   styles.section,
-                  { height: 50, position: "absolute", right: 0, bottom: 0 }
+                  { height: 50, position: "absolute", right: 0, bottom: 0 },
                 ]}
               >
                 <Custom_Button
@@ -126,13 +132,13 @@ Why21XRPModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 Why21XRPModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
@@ -143,12 +149,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10
+    borderRadius: 10,
     // height: 100,
     // width: 200,
     // zIndex: 20,
@@ -156,10 +162,10 @@ const styles = StyleSheet.create({
   section: {
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   line: {
     height: 1,
-    backgroundColor: Colors.grayText
-  }
+    backgroundColor: Colors.grayText,
+  },
 });

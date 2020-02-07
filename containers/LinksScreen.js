@@ -6,7 +6,7 @@ import {
   Menu,
   MenuOptions,
   MenuOption,
-  MenuTrigger
+  MenuTrigger,
 } from "react-native-popup-menu";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Constants from "expo-constants";
@@ -42,7 +42,7 @@ export default function LinksScreen({ navigation }) {
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Your Recovery Phrase" />}
+        center={<Custom_HeaderTitle text="Your Recovery Words" />}
         right={
           <Menu onSelect={value => alert(`Selected number: ${value}`)}>
             <MenuTrigger
@@ -50,7 +50,7 @@ export default function LinksScreen({ navigation }) {
                 <View style={{ paddingHorizontal: 15 }}>
                   <MaterialCommunityIcons
                     name="dots-vertical"
-                    size={30}
+                    size={24}
                     color={Colors.text}
                   />
                 </View>
@@ -64,8 +64,8 @@ export default function LinksScreen({ navigation }) {
                   borderWidth: 0.5,
                   borderColor: Colors.grayText,
                   padding: 5,
-                  marginTop: headerHeight
-                }
+                  marginTop: headerHeight,
+                },
               }}
             >
               <MenuOption value={1}>
@@ -80,7 +80,7 @@ export default function LinksScreen({ navigation }) {
                   height: 0.4,
                   backgroundColor: Colors.grayText,
                   marginHorizontal: 3,
-                  marginVertical: 2
+                  marginVertical: 2,
                 }}
               />
               <MenuOption value={2}>
@@ -104,7 +104,7 @@ export default function LinksScreen({ navigation }) {
           </View> */}
         <View style={styles.section}>
           <Custom_Text
-            value="The sequence of words below is your Recovery Phrase. You need this to regain access to your XRP. You should never share this with anyone"
+            value="The sequence of words below is your Recovery Words. You need this to regain access to your digital assets. You should never share this with anyone"
             size={Fonts.size.normal}
             color={Colors.text}
           />
@@ -123,14 +123,14 @@ export default function LinksScreen({ navigation }) {
               "lamb",
               "part",
               "pickles",
-              "nice"
+              "nice",
             ]}
           />
         </View>
         <View
           style={[
             styles.section,
-            { justifyContent: "center", alignItems: "center" }
+            { justifyContent: "center", alignItems: "center" },
           ]}
         >
           <View style={{ flexDirection: "row" }}>
@@ -183,8 +183,8 @@ export default function LinksScreen({ navigation }) {
               flexDirection: "row",
               justifyContent: "center",
               alignItems: "center",
-              marginTop: 60
-            }
+              marginTop: 60,
+            },
           ]}
         >
           <View style={{ flex: 8.5 }}>
@@ -208,7 +208,7 @@ export default function LinksScreen({ navigation }) {
             onPress={() => {
               navigation.navigate({
                 routeName: "SettingsScreen",
-                key: "SettingsScreen"
+                key: "SettingsScreen",
               });
             }}
             style={{
@@ -216,7 +216,7 @@ export default function LinksScreen({ navigation }) {
               width: 80,
               backgroundColor: !pressed
                 ? Colors.headerBackground
-                : Colors.darkRed
+                : Colors.darkRed,
             }}
             icon="ios-arrow-forward"
             disabled={!pressed}
@@ -229,16 +229,16 @@ export default function LinksScreen({ navigation }) {
 }
 
 LinksScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
+    backgroundColor: Colors.background,
   },
   section: {
     marginHorizontal: 20,
-    marginTop: 20
-  }
+    marginTop: 20,
+  },
 });

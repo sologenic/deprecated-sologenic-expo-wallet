@@ -4,7 +4,7 @@ import {
   ScrollView,
   StyleSheet,
   View,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import { connect } from "react-redux";
 import * as LocalAuthentication from "expo-local-authentication";
@@ -22,7 +22,7 @@ import {
   createPinSuccess,
   setupAuthentication,
   authSuccess,
-  updateUnlockMethod,
+  updateUnlockMethod
 } from "../actions";
 import { screenWidth } from "../constants/Layout";
 
@@ -34,7 +34,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
       showAuthError: false,
       showAuthSuccess: false,
       authErrorStr: "",
-      authSuccessStr: "",
+      authSuccessStr: ""
     };
   }
 
@@ -75,7 +75,11 @@ class ConfirmUnlockMethodScreen extends React.Component {
                   .catch(err => console.log("err: ", err));
               } else {
                 this.showAuthError(
-                  `To use this feature you need to first\nset up Face ID on your device.`,
+                  `To use this feature you need to first\nset up ${
+                    availableUnlockMethods === "fingerprint"
+                      ? "Fingerprint"
+                      : "Face"
+                  } ID on your device.`
                 );
               }
             })
@@ -93,7 +97,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
       showAuthError: false,
       showAuthSuccess: false,
       authErrorStr: "",
-      authSuccessStr: "",
+      authSuccessStr: ""
     });
   };
 
@@ -101,14 +105,14 @@ class ConfirmUnlockMethodScreen extends React.Component {
     this.setState({
       showAuthError: true,
       authErrorStr: error,
-      text: "Try Again",
+      text: "Try Again"
     });
   };
 
   showAuthSuccess = str => {
     this.setState({
       showAuthSuccess: true,
-      authSuccessStr: str,
+      authSuccessStr: str
     });
     this.completeSetup();
   };
@@ -138,7 +142,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
       completeAuthSetup,
       authenticateUser,
       navigation,
-      saveUnlockMethod,
+      saveUnlockMethod
     } = this.props;
     const { availableUnlockMethods, isChangeScreen } = navigation.state.params;
     if (isChangeScreen) {
@@ -150,8 +154,8 @@ class ConfirmUnlockMethodScreen extends React.Component {
       navigation.dispatch(
         StackActions.reset({
           index: 0,
-          actions: [NavigationActions.navigate({ routeName: "HomeScreen" })],
-        }),
+          actions: [NavigationActions.navigate({ routeName: "HomeScreen" })]
+        })
       );
       setTimeout(() => saveUnlockMethod(availableUnlockMethods), 100);
     }
@@ -165,7 +169,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
       showAuthError,
       showAuthSuccess,
       authSuccessStr,
-      authErrorStr,
+      authErrorStr
     } = this.state;
 
     const getUnlockImage = () => {
@@ -210,7 +214,7 @@ class ConfirmUnlockMethodScreen extends React.Component {
               source={getUnlockImage()}
               style={{
                 alignSelf: "center",
-                marginBottom: 24,
+                marginBottom: 24
               }}
             />
             {showAuthError && (
@@ -244,13 +248,13 @@ class ConfirmUnlockMethodScreen extends React.Component {
                   color={Colors.secondaryBackground}
                   size={14}
                   textStyle={{
-                    letterSpacing: 0.24,
+                    letterSpacing: 0.24
                   }}
                   style={{
                     backgroundColor: Colors.darkRed,
                     paddingHorizontal: 15,
                     paddingVertical: 10,
-                    marginTop: 50,
+                    marginTop: 50
                   }}
                 />
               </View>
@@ -272,8 +276,8 @@ class ConfirmUnlockMethodScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
-  },
+    backgroundColor: Colors.background
+  }
 });
 
 const mapStateToProps = ({ unlockMethod }) => ({ unlockMethod });
@@ -281,10 +285,10 @@ const mapStateToProps = ({ unlockMethod }) => ({ unlockMethod });
 const mapDispatchToProps = dispatch => ({
   completeAuthSetup: () => dispatch(setupAuthentication()),
   authenticateUser: () => dispatch(authSuccess()),
-  saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
+  saveUnlockMethod: data => dispatch(updateUnlockMethod(data))
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(ConfirmUnlockMethodScreen);

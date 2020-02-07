@@ -13,7 +13,7 @@ export default function RecoveryPhrase({ phrase, randomNumbers, color, indexColo
           if (randomNumbers.includes(index + 1)) {
             count = count + 1;
             return (
-              <RecoveryWordTextInput color={color} indexColor={indexColor} count={count} phraseLength={item.length} index={String(index + 1)} key={index}/>
+              <RecoveryWordTextInput color={color} indexColor={indexColor} count={count} phraseLength={item.length} index={String(index + 1)} key={`${index}${count}`}/>
             )
           } else {
             return (

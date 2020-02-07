@@ -6,7 +6,7 @@ import {
   View,
   Modal,
   TouchableWithoutFeedback,
-  Text
+  Text,
 } from "react-native";
 
 import Colors from "../../constants/Colors";
@@ -18,7 +18,8 @@ export default function ExitProcessModal({
   onPress,
   onClose,
   modalVisible,
-  style
+  closeModal,
+  style,
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -29,7 +30,7 @@ export default function ExitProcessModal({
               <View
                 style={[
                   styles.section,
-                  { height: 70, alignItems: "flex-start" }
+                  { height: 70, alignItems: "flex-start" },
                 ]}
               >
                 <Custom_Text
@@ -65,22 +66,32 @@ export default function ExitProcessModal({
                   style={{ backgroundColor: "transparent" }}
                 />
               </View> */}
-              <View style={{ flexDirection: 'row'}}>
-                <View style={[ styles.section, { height: 50, position: 'absolute', right: 110, bottom: 0 }]}>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={[
+                    styles.section,
+                    { height: 50, position: "absolute", right: 110, bottom: 0 },
+                  ]}
+                >
                   <Custom_Button
-                    text="EXIT"
-                    onPress={onClose}
-                    color={Colors.errorBackground}
+                    text="CANCEL"
+                    onPress={closeModal}
+                    color={Colors.lightGray}
                     size={16}
                     textStyle={{ letterSpacing: 1.2 }}
                     style={{ backgroundColor: "transparent" }}
                   />
                 </View>
-                <View style={[ styles.section, { height: 50, position: 'absolute', right: 0, bottom: 0 }]}>
+                <View
+                  style={[
+                    styles.section,
+                    { height: 50, position: "absolute", right: 0, bottom: 0 },
+                  ]}
+                >
                   <Custom_Button
                     text="CONFIRM"
                     onPress={onClose}
-                    color={Colors.lightGray}
+                    color={Colors.freshGreen}
                     size={16}
                     textStyle={{ letterSpacing: 1.2 }}
                     style={{ backgroundColor: "transparent" }}
@@ -99,13 +110,13 @@ ExitProcessModal.propTypes = {
   onPress: PropTypes.func,
   onClose: PropTypes.func,
   pressed: PropTypes.bool,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
 };
 
 ExitProcessModal.defaultProps = {
   onPress: () => {},
   onClose: () => {},
-  pressed: false
+  pressed: false,
 };
 
 const styles = StyleSheet.create({
@@ -116,12 +127,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40
+    paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
     // backgroundColor: 'red',
-    borderRadius: 10
+    borderRadius: 10,
     // height: 100,
     // width: 200,
     // zIndex: 20,
@@ -129,10 +140,10 @@ const styles = StyleSheet.create({
   section: {
     justifyContent: "center",
     alignItems: "center",
-    marginHorizontal: 20
+    marginHorizontal: 20,
   },
   line: {
     height: 1,
-    backgroundColor: Colors.grayText
-  }
+    backgroundColor: Colors.grayText,
+  },
 });

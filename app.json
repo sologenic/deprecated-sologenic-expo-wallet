@@ -4,11 +4,7 @@
     "slug": "sologenic-expo-wallet",
     "privacy": "public",
     "sdkVersion": "36.0.0",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,19 +16,20 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
     },
     "description": "",
-    "extra": {
-      "config": {
-        "termsUrl": "https://www.sologenic.com/terms-and-conditions",
-        "privacyUrl": "https://www.sologenic.com/privacy-policy",
-        "contactUsUrl": "https://www.coinfield.com/company/contactus"
-      }
+    "entryPoint": "node_modules/expo/AppEntry.js"
+  },
+  "displayName": "Sologenic Wallet",
+  "name": "SologenicWallet",
+  "extra": {
+    "config": {
+      "termsUrl": "https://www.sologenic.com/terms-and-conditions",
+      "privacyUrl": "https://www.sologenic.com/privacy-policy",
+      "contactUsUrl": "https://www.coinfield.com/company/contactus"
     }
   }
 }

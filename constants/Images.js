@@ -3,7 +3,7 @@ const images = {
   face: require("../assets/images/icons/face.png"),
   faceRed: require("../assets/images/icons/faceRed.png"),
   faceGreen: require("../assets/images/icons/faceGreen.png"),
-  fingerPrint: require("../assets/images/icons/fingerPrint.png"),
+  fingerPrint: require("../assets/images/icons/fingerprint.png"),
   fingerPrintGreen: require("../assets/images/icons/fingerPrintGreen.png"),
   fingerPrintRed: require("../assets/images/icons/fingerPrintRed.png"),
   smallErrIcon: require("../assets/images/icons/smallErrIcon.png"),
@@ -24,6 +24,8 @@ const images = {
   slide3Overlay: require("../assets/images/orientation/slide3Overlay.png"),
   slide4: require("../assets/images/orientation/background4.png"),
   slide4Overlay: require("../assets/images/orientation/slide4Overlay.png"),
+  gradient: require("../assets/images/gradient.png"),
+  splashLogo: require("../assets/images/splashLogo.png"),
 };
 
 export default images;

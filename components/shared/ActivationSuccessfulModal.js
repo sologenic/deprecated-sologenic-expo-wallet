@@ -63,7 +63,7 @@ export default function ActivationSuccessfulModal({
               >
                 <Custom_Button
                   text="VIEW WALLET"
-                  onPress={onClose}
+                  onPress={onPress}
                   color={Colors.freshGreen}
                   size={16}
                   textStyle={{ letterSpacing: 1.2 }}

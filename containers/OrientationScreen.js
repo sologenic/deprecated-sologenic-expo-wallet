@@ -7,7 +7,7 @@ import Colors from "../constants/Colors";
 import Custom_Text from "../components/shared/Custom_Text";
 import Fonts from "../constants/Fonts";
 import Custom_Button from "../components/shared/Custom_Button";
-import { updateIsOrientationComplete } from "../actions";
+// import { updateIsOrientationComplete } from "../actions";
 import images from "../constants/Images";
 
 const width = 360;
@@ -42,7 +42,7 @@ const slides = [
   },
   {
     key: "slide4",
-    title: `Hodl and Transfer your XRP & SOLO \nfrom a single Wallet Address`,
+    title: `Hodl and Transfer your XRP & \nSOLO from a single Wallet Address`,
     subtitle: "",
     image: images.slide4,
     imageOverlay: images.slide4Overlay,
@@ -70,7 +70,13 @@ class OrientationScreen extends Component {
             style={styles.title}
           />
         </View>
-        <View style={{ alignSelf: "center", position: "absolute", bottom: 24 }}>
+        <View
+          style={{
+            alignSelf: "center",
+            // backgroundColor: "blue",
+            marginBottom: 20,
+          }}
+        >
           <Custom_Button
             text="Get Started"
             onPress={() =>
@@ -105,7 +111,7 @@ class OrientationScreen extends Component {
         showNextButton={false}
         paginationStyle={{
           position: "absolute",
-          bottom: 70,
+          bottom: "8%",
         }}
       />
     );
@@ -140,8 +146,8 @@ const styles = StyleSheet.create({
 });
 
 const mapDispatchToProps = dispatch => ({
-  completeOrientation: isComplete =>
-    dispatch(updateIsOrientationComplete(isComplete)),
+  // completeOrientation: isComplete =>
+  //   dispatch(updateIsOrientationComplete(isComplete)),
 });
 
 export default connect(

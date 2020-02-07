@@ -5,7 +5,7 @@ import {
   StyleSheet,
   Modal,
   View,
-  TouchableOpacity,
+  TouchableOpacity
 } from "react-native";
 import { connect } from "react-redux";
 import PinView from "react-native-pin-view";
@@ -37,7 +37,7 @@ class UnlockScreen extends React.Component {
       text: "",
       isModalVisible: false,
       showAuthError: false,
-      showAuthSuccess: false,
+      showAuthSuccess: false
     };
   }
 
@@ -54,12 +54,12 @@ class UnlockScreen extends React.Component {
             if (unlockMethod === "fingerprint") {
               this.setState({
                 unlockText: "Unlock with Fingerprint",
-                isModalVisible: true,
+                isModalVisible: true
               });
             } else if (unlockMethod === "faceId") {
               this.setState({
                 unlockText: "Unlock with Face ID",
-                isModalVisible: true,
+                isModalVisible: true
               });
             }
 
@@ -87,7 +87,11 @@ class UnlockScreen extends React.Component {
                     .catch(err => console.log("err: ", err));
                 } else {
                   this.showAuthError(
-                    `To use this feature you need to first\nset up Face ID on your device.`,
+                    `To use this feature you need to first\nset up ${
+                      availableUnlockMethods === "fingerprint"
+                        ? "Fingerprint"
+                        : "Face"
+                    } on your device.`
                   );
                 }
               })
@@ -104,7 +108,7 @@ class UnlockScreen extends React.Component {
       showAuthError: false,
       showAuthSuccess: false,
       authErrorStr: "",
-      authSuccessStr: "",
+      authSuccessStr: ""
     });
   };
 
@@ -112,14 +116,14 @@ class UnlockScreen extends React.Component {
     this.setState({
       showAuthError: true,
       authErrorStr: error,
-      text: "Try Again",
+      text: "Try Again"
     });
   };
 
   showAuthSuccess = str => {
     this.setState({
       showAuthSuccess: true,
-      authSuccessStr: str,
+      authSuccessStr: str
     });
   };
 
@@ -161,7 +165,7 @@ class UnlockScreen extends React.Component {
       unlockText,
       showAuthError,
       authErrorStr,
-      text,
+      text
     } = this.state;
     return (
       <View style={styles.container}>
@@ -173,7 +177,7 @@ class UnlockScreen extends React.Component {
                 value="Wallet"
                 style={{
                   textAlign: "center",
-                  marginBottom: 24,
+                  marginBottom: 24
                 }}
                 size={48}
               />
@@ -184,21 +188,21 @@ class UnlockScreen extends React.Component {
                   style={{
                     position: "absolute",
                     top: 40,
-                    alignSelf: "center",
+                    alignSelf: "center"
                   }}
                 >
                   <View
                     style={{
                       flexDirection: "row",
                       justifyContent: "center",
-                      alignItems: "center",
+                      alignItems: "center"
                     }}
                   >
                     <Custom_Text
                       value="PIN is incorrect"
                       style={{
                         textAlign: "center",
-                        marginRight: 10,
+                        marginRight: 10
                       }}
                       color={Colors.errorBackground}
                       size={16}
@@ -211,16 +215,17 @@ class UnlockScreen extends React.Component {
                 <PinView
                   disabled={codeMatched}
                   onComplete={(val, clear) => {
-                    if (val === pin) {
+                    const v = val.length > 4 ? val.substring(0, 3) : val;
+                    if (v === pin) {
                       this.setState({
                         codeMatched: true,
-                        showCodeError: false,
+                        showCodeError: false
                       });
                       setTimeout(() => authenticateUser(), 1000);
                     } else {
                       this.setState({
                         codeMatched: false,
-                        showCodeError: true,
+                        showCodeError: true
                       });
                       clear();
                     }
@@ -232,7 +237,7 @@ class UnlockScreen extends React.Component {
                     height: 16,
                     borderRadius: 8,
                     borderWidth: 2,
-                    borderColor: codeMatched ? Colors.freshGreen : Colors.text,
+                    borderColor: codeMatched ? Colors.freshGreen : Colors.text
                   }}
                   inputBgOpacity={1}
                   inputBgColor={Colors.buttonText}
@@ -244,19 +249,19 @@ class UnlockScreen extends React.Component {
                     fontFamily: "DMSansBold",
                     fontSize: 24,
                     color: Colors.text,
-                    tintColor: Colors.text,
+                    tintColor: Colors.text
                   }}
                   keyboardViewStyle={{
                     marginVertical: 8,
                     height: 64,
-                    width: 64,
+                    width: 64
                   }}
                   keyboardContainerStyle={{
                     marginTop: 48,
-                    marginBottom: 0,
+                    marginBottom: 0
                   }}
                   keyboardViewItemText={{
-                    tintColor: Colors.text,
+                    tintColor: Colors.text
                   }}
                 />
               </View>
@@ -274,7 +279,7 @@ class UnlockScreen extends React.Component {
             style={{
               flex: 1,
               justifyContent: "center",
-              backgroundColor: Colors.modalBackground,
+              backgroundColor: Colors.modalBackground
             }}
           >
             <View
@@ -282,7 +287,7 @@ class UnlockScreen extends React.Component {
                 backgroundColor: Colors.buttonText,
                 marginHorizontal: 40,
                 borderRadius: 10,
-                padding: 20,
+                padding: 20
               }}
             >
               <View>
@@ -290,7 +295,7 @@ class UnlockScreen extends React.Component {
                   value={unlockText}
                   style={{
                     marginBottom: 30,
-                    textAlign: "center",
+                    textAlign: "center"
                   }}
                   color={Colors.text}
                   size={20}
@@ -304,14 +309,14 @@ class UnlockScreen extends React.Component {
                     alignSelf: "center",
                     height: 66,
                     width: 66,
-                    marginBottom: 16,
+                    marginBottom: 16
                   }}
                 />
                 {showAuthError && (
                   <Custom_Text
                     value={authErrorStr}
                     style={{
-                      textAlign: "center",
+                      textAlign: "center"
                     }}
                     color={Colors.text}
                     size={12}
@@ -322,7 +327,7 @@ class UnlockScreen extends React.Component {
                     value={text}
                     style={{
                       textAlign: "center",
-                      marginTop: 8,
+                      marginTop: 8
                     }}
                     color={Colors.grayText}
                     size={12}
@@ -336,7 +341,7 @@ class UnlockScreen extends React.Component {
                   <Custom_Text
                     value="Use PIN"
                     style={{
-                      marginTop: 10,
+                      marginTop: 10
                     }}
                     size={14}
                     isBold
@@ -354,21 +359,18 @@ class UnlockScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
-  },
+    backgroundColor: Colors.background
+  }
 });
 
 const mapStateToProps = ({ pin, unlockMethod, isAuthenticated }) => ({
   pin,
   unlockMethod,
-  isAuthenticated,
+  isAuthenticated
 });
 
 const mapDispatchToProps = dispatch => ({
-  authenticateUser: () => dispatch(authSuccess()),
+  authenticateUser: () => dispatch(authSuccess())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(UnlockScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(UnlockScreen);

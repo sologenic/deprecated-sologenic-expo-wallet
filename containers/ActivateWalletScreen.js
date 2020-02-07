@@ -2,18 +2,18 @@ import React, { useState, useEffect } from "react";
 import {
   Image,
   Platform,
-  ScrollView,
+  Clipboard,
   StyleSheet,
   Text,
-  View
+  View,
 } from "react-native";
 import { connect } from "react-redux";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import {
-    Menu,
-    MenuOptions,
-    MenuOption,
-    MenuTrigger
+  Menu,
+  MenuOptions,
+  MenuOption,
+  MenuTrigger,
 } from "react-native-popup-menu";
 
 import Custom_Text from "../components/shared/Custom_Text";
@@ -26,15 +26,21 @@ import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { headerHeight } from "../constants/Layout";
 import { generateQRCode } from "../utils";
+import CopiedModal from "../components/shared/CopiedModal";
 
-export default function ActivateWalletScreen({
-  navigation,
-}) {
-  const {
-    currency,
-    walletAddress
-  } = navigation.state.params;
+export default function ActivateWalletScreen({ navigation }) {
+  const { currency, walletAddress } = navigation.state.params;
   const uri = generateQRCode(walletAddress);
+  const [copiedModalVisible, setCopiedModalVisible] = useState(false);
+  const writeToClipboard = async address => {
+    await Clipboard.setString(address);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
+  };
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -49,59 +55,70 @@ export default function ActivateWalletScreen({
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text={`Activate ${currency.toUpperCase()} Wallet`} />}
+        center={
+          <Custom_HeaderTitle
+            text={`Activate ${currency.toUpperCase()} Wallet`}
+          />
+        }
         right={
           <Menu onSelect={value => alert(`Selected number: ${value}`)}>
-          <MenuTrigger
-            children={
-              <View style={{ paddingHorizontal: 15 }}>
-                <MaterialCommunityIcons
-                  name="dots-vertical"
-                  size={30}
+            <MenuTrigger
+              children={
+                <View style={{ paddingHorizontal: 15 }}>
+                  <MaterialCommunityIcons
+                    name="dots-vertical"
+                    size={24}
+                    color={Colors.text}
+                  />
+                </View>
+              }
+            />
+            <MenuOptions
+              customStyles={{
+                optionsContainer: {
+                  width: 170,
+                  backgroundColor: Colors.background,
+                  borderWidth: 0.5,
+                  borderColor: Colors.grayText,
+                  padding: 5,
+                  marginTop: headerHeight,
+                },
+              }}
+            >
+              <MenuOption value={1}>
+                <Custom_Text
+                  value="Change Wallet Nickname"
+                  size={Fonts.size.small}
                   color={Colors.text}
                 />
-              </View>
-            }
-          />
-          <MenuOptions
-            customStyles={{
-              optionsContainer: {
-                width: 170,
-                backgroundColor: Colors.background,
-                borderWidth: 0.5,
-                borderColor: Colors.grayText,
-                padding: 5,
-                marginTop: headerHeight
-              }
-            }}
-          >
-            <MenuOption value={1}>
-              <Custom_Text
-                value="Change Wallet Nickname"
-                size={Fonts.size.small}
-                color={Colors.text}
+              </MenuOption>
+              <View
+                style={{
+                  height: 0.4,
+                  backgroundColor: Colors.grayText,
+                  marginHorizontal: 3,
+                  marginVertical: 2,
+                }}
               />
-            </MenuOption>
-            <View
-              style={{
-                height: 0.4,
-                backgroundColor: Colors.grayText,
-                marginHorizontal: 3,
-                marginVertical: 2
-              }}
-            />
-            <MenuOption value={2}>
-              <Custom_Text
-                value="Delete Wallet"
-                size={Fonts.size.small}
-                color={Colors.text}
-              />
-            </MenuOption>
-          </MenuOptions>
-        </Menu>
+              <MenuOption value={2}>
+                <Custom_Text
+                  value="Delete Wallet"
+                  size={Fonts.size.small}
+                  color={Colors.text}
+                />
+              </MenuOption>
+            </MenuOptions>
+          </Menu>
         }
       />
-      <View style={{ justifyContent: "center", alignItems: "center", height: 36, backgroundColor: Colors.headerBackground }}>
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          height: 36,
+          backgroundColor: Colors.headerBackground,
+        }}
+      >
         <Text
           style={{
             fontFamily: "DMSans",
@@ -119,7 +136,7 @@ export default function ActivateWalletScreen({
               fontFamily: "DMSansBold",
               color: Colors.text,
               fontSize: Fonts.size.small,
-              textAlign: "center"
+              textAlign: "center",
             }}
           >
             at least 21 XRP
@@ -128,14 +145,21 @@ export default function ActivateWalletScreen({
           to below address to activate
         </Text>
       </View>
-        
-      <View style={{ justifyContent: "center", alignItems: "center", marginTop: 30, marginBottom: 10 }}>
+
+      <View
+        style={{
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 30,
+          marginBottom: 10,
+        }}
+      >
         <Image
           source={{ uri }}
           style={{
             width: 200,
             height: 200,
-            backgroundColor: Colors.headerBackground
+            backgroundColor: Colors.headerBackground,
           }}
         />
       </View>
@@ -147,32 +171,34 @@ export default function ActivateWalletScreen({
             color={Colors.grayText}
           />
           <Custom_Text
-            value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
+            value={walletAddress}
             size={Fonts.size.small}
+            numberOfLines={1}
           />
         </View>
         <View style={{ flex: 1 }}>
           <View style={{ paddingVertical: 2.5 }}>
             <Custom_IconButton
-              onPress={() => {}}
+              onPress={() => writeToClipboard(walletAddress)}
               icon="content-copy"
               size={Fonts.size.normal}
               style={{
                 height: 20,
                 width: 20,
                 borderRadius: 0,
-                backgroundColor: "transparent"
+                backgroundColor: "transparent",
               }}
             />
           </View>
         </View>
       </View>
+      <CopiedModal showModal={copiedModalVisible} />
     </View>
   );
 }
 
 ActivateWalletScreen.navigationOptions = {
-  header: null
+  header: null,
 };
 
 const styles = StyleSheet.create({
@@ -190,6 +216,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24
-  }
+    marginVertical: 24,
+  },
 });
