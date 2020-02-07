@@ -21,7 +21,7 @@ import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
 import XrpWarningModal from "../components/shared/XrpWarningModal";
-import { getPriceChange, getPriceColor, getAddress } from "../utils";
+import { getPriceChange, getPriceColor, formatBalance } from "../utils";
 import SevenChart from "../components/shared/SevenChart";
 import { screenWidth, headerHeight } from "../constants/Layout";
 import {
@@ -162,6 +162,7 @@ function WalletTab({
                 >
                   <View style={{ paddingRight: 10 }}>
                     <Custom_Text
+                      // value={`${formatBalance(xrpBalance)}`}
                       value={`${xrpBalance}`}
                       size={Fonts.size.h3}
                       isBold

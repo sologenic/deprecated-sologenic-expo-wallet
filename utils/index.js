@@ -90,7 +90,7 @@ export const getWalletFromMnemonic = mnemonic => {
 // Encode an X-Address
 export const getXAddressFromRippleClassicAddress = (
   rippleClassicAddress,
-  tag,
+  tag
 ) => {
   const xAddress = Utils.encodeXAddress(rippleClassicAddress, tag);
   return xAddress;
@@ -123,14 +123,14 @@ export const isValidClassicAddress = address => {
 export const sologenic = new s.SologenicTxHandler(
   // RippleAPI Options
   {
-    server: appConfig.server, // Kudos to Wietse Wind
+    server: appConfig.server // Kudos to Wietse Wind
   },
   // Sologenic Options, hash or redis
   {
     // clearCache: true,
     queueType: "hash",
-    hash: {},
-  },
+    hash: {}
+  }
 );
 
 export const isValidSecret = secret => {
@@ -199,7 +199,7 @@ export const transferXrp = (account, destination, value) => {
     TransactionType: "Payment",
     Account: account,
     Destination: destination,
-    Amount: `${valueAmount}`,
+    Amount: `${valueAmount}`
   });
 };
 
@@ -285,16 +285,16 @@ export const filterTransactions = (transactions, currentLedger) => {
           ...item,
           outcome: {
             ...item.outcome,
-            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-          },
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion
+          }
         });
       } else {
         xrpTransactions.push({
           ...item,
           outcome: {
             ...item.outcome,
-            ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-          },
+            ledgerVersion: currentLedger - item.outcome.ledgerVersion
+          }
         });
       }
     } else {
@@ -307,16 +307,16 @@ export const filterTransactions = (transactions, currentLedger) => {
             ...item,
             outcome: {
               ...item.outcome,
-              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-            },
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion
+            }
           });
         } else if (item.specification.source.maxAmount.currency === "XRP") {
           xrpTransactions.push({
             ...item,
             outcome: {
               ...item.outcome,
-              ledgerVersion: currentLedger - item.outcome.ledgerVersion,
-            },
+              ledgerVersion: currentLedger - item.outcome.ledgerVersion
+            }
           });
         }
       }
@@ -324,7 +324,7 @@ export const filterTransactions = (transactions, currentLedger) => {
   });
   return {
     xrpTransactions,
-    soloTransactions,
+    soloTransactions
   };
 };
 
@@ -380,7 +380,7 @@ export const encrypt = (string, salt, address, passphrase) => {
     iv: crypto
       .createHmac("sha256", salt + passphrase)
       .update(address)
-      .digest("hex"),
+      .digest("hex")
   });
   cipher.update(forge.util.createBuffer(string));
   cipher.finish();
@@ -395,7 +395,7 @@ export const decrypt = (encrypted, salt, address, passphrase) => {
     iv: crypto
       .createHmac("sha256", salt + passphrase)
       .update(address)
-      .digest("hex"),
+      .digest("hex")
   });
   decipher.update(forge.util.createBuffer(forge.util.decode64(encrypted)));
   decipher.finish();
@@ -419,3 +419,48 @@ export const decrypt = (encrypted, salt, address, passphrase) => {
 //     "aB123456",
 //   ),
 // );
+
+export const formatRecoveryWord = string => {
+  return string.replace(/\s+/g, "");
+};
+
+export const getDigits = data => {
+  const exponentialNotatedData = parseFloat(data).toExponential();
+  const position = exponentialNotatedData.indexOf("e");
+  return Math.abs(exponentialNotatedData.substring(position + 1));
+};
+
+// export const formatBurnAmount = data => {
+//   const point = getDigits(data);
+//   return data.toFixed(point);
+// };
+
+export const formatBurnAmount = data => {
+  if (typeof data !== "number") {
+    return data;
+  };
+
+  const fixedData = data.toFixed(10);
+  const lastNonZeroPosition = getPositionLastNonZeroInDigits(fixedData);
+  const result = fixedData.substring(0, lastNonZeroPosition + 1);
+  if (result[result.length - 1] === ".") {
+    return result.substring(0, result.length - 1);
+  };
+  return result;
+};
+
+export const getPositionLastNonZeroInDigits = data => {
+  if (typeof data !== "string") {
+    return 0;
+  };
+
+  const array = data.split("");
+  let result;
+  for (let i = 0; i < array.length; i += 1) {
+    if (array[i] !== "0") {
+      result = i;
+    }
+  };
+
+  return result;
+};

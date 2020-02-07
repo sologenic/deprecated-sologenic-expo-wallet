@@ -11,7 +11,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import appConfig from "../app.config";
 import config from "../constants/config";
-import { formatBalance } from "../utils";
+import { formatBurnAmount } from "../utils";
 
 // const propTypes = {
 //   transaction: P.shape({
@@ -152,7 +152,7 @@ export default function TransactionCard({
                     style={{ marginTop: 2 }}
                   />
                   <Custom_Text
-                    value={` ${burnAmount.toFixed(4)}`}
+                    value={` ${formatBurnAmount(burnAmount)}`}
                     size={Fonts.size.small}
                     isBold
                     numberOfLines={1}

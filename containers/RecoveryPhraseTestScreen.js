@@ -98,7 +98,11 @@ function RecoveryPhraseTestScreen({
       phrase[sortedRandomNumbers[2] - 1] === phraseTestValue3
     );
   };
-
+  console.log(
+    phraseTestValue1,
+    phraseTestValue2,
+    phraseTestValue3,
+  )
   return (
     <View style={styles.container}>
       <Custom_Header

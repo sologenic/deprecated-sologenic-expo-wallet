@@ -8,20 +8,37 @@ import Fonts from "../../constants/Fonts";
 import {
   updatePhraseTestValue1,
   updatePhraseTestValue2,
+  updatePhraseTestValue3
+} from "../../actions";
+import { formatRecoveryWord } from "../../utils"
+
+const isAndroid = Platform.OS === "android";
+
+function RecoveryWordTextInput({
+  color,
+  indexColor,
+  count,
+  phraseLength,
+  placeholder,
+  returnKeyType,
+  keyboardType,
+  onBlur,
+  onFocus,
+  index,
+  updatePhraseTestValue1,
+  updatePhraseTestValue2,
   updatePhraseTestValue3,
-} from "../../actions"
-
-const isAndroid = Platform.OS === 'android';
-
-function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeholder, returnKeyType, keyboardType, onBlur, onFocus, index, updatePhraseTestValue1, updatePhraseTestValue2, updatePhraseTestValue3, phraseTestValue1, phraseTestValue2, phraseTestValue3 }) { 
-
+  phraseTestValue1,
+  phraseTestValue2,
+  phraseTestValue3
+}) {
   const generateLengthArray = phraseLength => {
     const array = [];
     for (let i = 0; i < phraseLength; i += 1) {
       array.push(i);
     }
     return array;
-  }
+  };
   const lengthArray = generateLengthArray(phraseLength);
   if (count === 1) {
     return (
@@ -31,21 +48,34 @@ function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeho
             placeholder={placeholder}
             value={phraseTestValue1}
             onChangeText={text => {
-              updatePhraseTestValue1(text);
+              const formattedText = formatRecoveryWord(text);
+              updatePhraseTestValue1(formattedText);
             }}
-            // keyboardType="default"
-            // returnKeyType="done"
             returnKeyType={returnKeyType}
             keyboardType={keyboardType}
             onBlur={onBlur}
             onFocus={onFocus}
             autoCapitalize="none"
+            autoCorrect={false}
             style={[styles.defaultTextInput, { color: color }]}
           />
-          <View style={{ flexDirection: "row", marginBottom: isAndroid ? 15 : 0, marginLeft: isAndroid ? 4 : 0}}>
+          <View
+            style={{
+              flexDirection: "row",
+              marginBottom: isAndroid ? 15 : 0,
+              marginLeft: isAndroid ? 4 : 0
+            }}
+          >
             {lengthArray.map(item => {
               return (
-                <View style={{ height: 1, width: 5, backgroundColor: indexColor, marginRight: 1 }}/>
+                <View
+                  style={{
+                    height: 1,
+                    width: 5,
+                    backgroundColor: indexColor,
+                    marginRight: 1
+                  }}
+                />
               );
             })}
           </View>
@@ -69,19 +99,34 @@ function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeho
             placeholder={placeholder}
             value={phraseTestValue2}
             onChangeText={text => {
-              updatePhraseTestValue2(text);
+              const formattedText = formatRecoveryWord(text);
+              updatePhraseTestValue2(formattedText);
             }}
             returnKeyType={returnKeyType}
             keyboardType={keyboardType}
             onBlur={onBlur}
             onFocus={onFocus}
             autoCapitalize="none"
+            autoCorrect={false}
             style={[styles.defaultTextInput, { color: color }]}
           />
-          <View style={{ flexDirection: "row", marginBottom: isAndroid ? 15 : 0, marginLeft: isAndroid ? 4 : 0 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              marginBottom: isAndroid ? 15 : 0,
+              marginLeft: isAndroid ? 4 : 0
+            }}
+          >
             {lengthArray.map(item => {
               return (
-                <View style={{ height: 1, width: 5, backgroundColor: indexColor, marginRight: 1 }}/>
+                <View
+                  style={{
+                    height: 1,
+                    width: 5,
+                    backgroundColor: indexColor,
+                    marginRight: 1
+                  }}
+                />
               );
             })}
           </View>
@@ -105,19 +150,34 @@ function RecoveryWordTextInput({ color, indexColor, count, phraseLength, placeho
             placeholder={placeholder}
             value={phraseTestValue3}
             onChangeText={text => {
-              updatePhraseTestValue3(text);
+              const formattedText = formatRecoveryWord(text);
+              updatePhraseTestValue3(formattedText);
             }}
             returnKeyType={returnKeyType}
             keyboardType={keyboardType}
             onBlur={onBlur}
             onFocus={onFocus}
             autoCapitalize="none"
+            autoCorrect={false}
             style={[styles.defaultTextInput, { color: color }]}
           />
-          <View style={{ flexDirection: "row", marginBottom: isAndroid ? 15 : 0, marginLeft: isAndroid ? 4 : 0 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              marginBottom: isAndroid ? 15 : 0,
+              marginLeft: isAndroid ? 4 : 0
+            }}
+          >
             {lengthArray.map(item => {
               return (
-                <View style={{ height: 1, width: 5, backgroundColor: indexColor, marginRight: 1 }}/>
+                <View
+                  style={{
+                    height: 1,
+                    width: 5,
+                    backgroundColor: indexColor,
+                    marginRight: 1
+                  }}
+                />
               );
             })}
           </View>
@@ -148,12 +208,12 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     paddingVertical: isAndroid ? 0 : 5,
     marginVertical: 5,
-    backgroundColor: Colors.headerBackground,
+    backgroundColor: Colors.headerBackground
   },
   word: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "flex-start",
+    alignItems: "flex-start"
   },
   index: {
     flex: 1,
@@ -166,27 +226,27 @@ const styles = StyleSheet.create({
     color: Colors.text,
     width: 70,
     paddingBottom: isAndroid ? 0 : 5,
-    paddingTop: isAndroid  ? 15 : 5,
+    paddingTop: isAndroid ? 15 : 5
   }
 });
 
 const mapStateToProps = ({
   phraseTestValue1,
   phraseTestValue2,
-  phraseTestValue3,
+  phraseTestValue3
 }) => ({
   phraseTestValue1,
   phraseTestValue2,
-  phraseTestValue3,
+  phraseTestValue3
 });
 
 const mapDispatchToProps = dispatch => ({
   updatePhraseTestValue1: value => dispatch(updatePhraseTestValue1(value)),
   updatePhraseTestValue2: value => dispatch(updatePhraseTestValue2(value)),
-  updatePhraseTestValue3: value => dispatch(updatePhraseTestValue3(value)),
+  updatePhraseTestValue3: value => dispatch(updatePhraseTestValue3(value))
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(RecoveryWordTextInput);

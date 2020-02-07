@@ -107,7 +107,7 @@ function WalletCard({
               isBold
             />
             <Custom_Text
-              value="Toknized Assets:"
+              value="Tokenized Assets:"
               size={Fonts.size.small}
               color={Colors.lighterGray}
               isBold

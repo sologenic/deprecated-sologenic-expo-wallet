@@ -26,6 +26,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
     walletAddress,
     rippleClassicAddress,
     passphrase,
+    onChangePressed,
   } = navigation.state.params;
 
   const writeToClipboard = async address => {
@@ -50,6 +51,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
           <Custom_HeaderButton
             onPress={() => {
               console.log("Press!!");
+              onChangePressed(false);
               navigation.goBack();
             }}
             type="icon"
@@ -63,7 +65,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
       <ScrollView>
         <View style={styles.section}>
           <Custom_Text
-            value="The sequence of words below are your Recovery Words. You need these to regain access to your XRP. You should never share these words with anyone."
+            value="The sequence of words below are your Recovery Words. You need these to regain access to your digital assets. You should never share these words with anyone."
             style={{ textAlign: "center" }}
             size={Fonts.size.normal}
             color={Colors.text}

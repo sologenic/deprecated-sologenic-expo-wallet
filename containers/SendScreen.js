@@ -36,6 +36,7 @@ import {
   excludeLettersExceptForNumber,
   formatInput,
   getRippleClassicAddressFromXAddress,
+  formatBalance,
 } from "../utils";
 import { screenWidth } from "../constants/Layout";
 
@@ -180,7 +181,7 @@ function SendScreen({
             }}
           >
             <View style={{ paddingRight: 7.5 }}>
-              <Custom_Text value={`${balance}`} size={Fonts.size.h5} isBold />
+              <Custom_Text value={`${formatBalance(balance)}`} size={Fonts.size.h5} isBold />
             </View>
             <View>
               <Custom_Text
