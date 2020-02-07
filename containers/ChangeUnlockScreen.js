@@ -5,7 +5,7 @@ import {
   StyleSheet,
   View,
   TouchableOpacity,
-  Modal
+  Modal,
 } from "react-native";
 import { connect } from "react-redux";
 import * as LocalAuthentication from "expo-local-authentication";
@@ -23,7 +23,7 @@ import {
   createPinSuccess,
   setupAuthentication,
   authSuccess,
-  updateUnlockMethod
+  updateUnlockMethod,
 } from "../actions";
 import { screenWidth, borderWidth } from "../constants/Layout";
 
@@ -36,7 +36,7 @@ class ChangeUnlockScreen extends React.Component {
       showAuthSuccess: false,
       authErrorStr: "",
       authSuccessStr: "",
-      isModalVisible: false
+      isModalVisible: false,
     };
   }
 
@@ -81,7 +81,7 @@ class ChangeUnlockScreen extends React.Component {
                     availableUnlockMethods === "fingerprint"
                       ? "Fingerprint"
                       : "Face"
-                  } ID on your device.`
+                  } ID on your device.`,
                 );
               }
             })
@@ -99,7 +99,7 @@ class ChangeUnlockScreen extends React.Component {
       showAuthError: false,
       showAuthSuccess: false,
       authErrorStr: "",
-      authSuccessStr: ""
+      authSuccessStr: "",
     });
   };
 
@@ -107,14 +107,14 @@ class ChangeUnlockScreen extends React.Component {
     this.setState({
       showAuthError: true,
       authErrorStr: error,
-      text: "Try Again"
+      text: "Try Again",
     });
   };
 
   showAuthSuccess = str => {
     this.setState({
       showAuthSuccess: true,
-      authSuccessStr: str
+      authSuccessStr: str,
     });
     this.completeSetup();
   };
@@ -156,7 +156,7 @@ class ChangeUnlockScreen extends React.Component {
       showAuthSuccess,
       authSuccessStr,
       authErrorStr,
-      isModalVisible
+      isModalVisible,
     } = this.state;
 
     const getUnlockImage = () => {
@@ -201,7 +201,7 @@ class ChangeUnlockScreen extends React.Component {
               source={getUnlockImage()}
               style={{
                 alignSelf: "center",
-                marginBottom: 24
+                marginBottom: 24,
               }}
             />
             {showAuthError && (
@@ -235,13 +235,13 @@ class ChangeUnlockScreen extends React.Component {
                   color={Colors.secondaryBackground}
                   size={14}
                   textStyle={{
-                    letterSpacing: 0.24
+                    letterSpacing: 0.24,
                   }}
                   style={{
                     backgroundColor: Colors.darkRed,
                     paddingHorizontal: 15,
                     paddingVertical: 10,
-                    marginTop: 50
+                    marginTop: 50,
                   }}
                 />
               </View>
@@ -265,7 +265,7 @@ class ChangeUnlockScreen extends React.Component {
             style={{
               flex: 1,
               justifyContent: "center",
-              backgroundColor: Colors.modalBackground
+              backgroundColor: Colors.modalBackground,
             }}
           >
             <View
@@ -273,14 +273,14 @@ class ChangeUnlockScreen extends React.Component {
                 backgroundColor: Colors.buttonText,
                 marginHorizontal: 40,
                 borderRadius: 10,
-                padding: 20
+                padding: 20,
               }}
             >
               <View>
                 <Custom_Text
                   value={`Disable ${unlockText}`}
                   style={{
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                   color={Colors.text}
                   size={20}
@@ -292,7 +292,7 @@ class ChangeUnlockScreen extends React.Component {
                   marginVertical: 24,
                   paddingBottom: 24,
                   borderBottomWidth: borderWidth,
-                  borderColor: Colors.borderColor
+                  borderColor: Colors.borderColor,
                 }}
               >
                 <Custom_Text
@@ -304,8 +304,8 @@ class ChangeUnlockScreen extends React.Component {
                 <TouchableOpacity
                   onPress={() => {
                     this.resetAuth();
-                    this.authenticateAsync();
                     this.setState({ isModalVisible: false });
+                    navigation.goBack();
                   }}
                   style={{ flex: 1 }}
                 >
@@ -313,7 +313,7 @@ class ChangeUnlockScreen extends React.Component {
                     value="CANCEL"
                     style={{
                       letterSpacing: 1.25,
-                      textAlign: "right"
+                      textAlign: "right",
                     }}
                     color={Colors.grayText}
                     size={14}
@@ -332,7 +332,7 @@ class ChangeUnlockScreen extends React.Component {
                     value="CONFIRM"
                     style={{
                       textAlign: "right",
-                      letterSpacing: 1.25
+                      letterSpacing: 1.25,
                     }}
                     color={Colors.freshGreen}
                     size={14}
@@ -350,14 +350,17 @@ class ChangeUnlockScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background
-  }
+    backgroundColor: Colors.background,
+  },
 });
 
 const mapStateToProps = ({ unlockMethod }) => ({ unlockMethod });
 
 const mapDispatchToProps = dispatch => ({
-  saveUnlockMethod: data => dispatch(updateUnlockMethod(data))
+  saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChangeUnlockScreen);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChangeUnlockScreen);

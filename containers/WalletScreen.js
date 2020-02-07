@@ -98,7 +98,7 @@ function WalletScreen({
 }) {
   const [tab, handleTabView] = useState(1);
   const [modalVisible, setModalVisible] = useState(false);
-  const [transactionCount, setTransactionCount] = useState(5);
+  const [transactionCount, setTransactionCount] = useState(30);
   const { walletAddress } = navigation.state.params;
   const { id, balance, nickname, rippleClassicAddress, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;

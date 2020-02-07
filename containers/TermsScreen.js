@@ -163,130 +163,134 @@ function TermsScreen({ navigation, completeOrientation }) {
           marginHorizontal: 15,
         }}
       >
-        <View>
-          <Text
-            style={[
-              styles.textStyle,
-              {
-                fontSize: 9,
-                width: "90%",
-              },
-            ]}
-          >
-            By clicking on the button below or using this decentralized wallet,
-            I confirm that I agree with the above{" "}
-            <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
-              “License Agreement”
-            </Text>{" "}
-            and{" "}
-            <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
-              “Disclaimer"
-            </Text>
-          </Text>
-
-          <Custom_RadioButton
-            pressed={isActive}
-            onPress={() => (!isActive ? setIsActive(true) : setIsActive(false))}
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              height: 20,
-              width: 20,
-              borderRadius: 10,
-            }}
-            imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
-          />
-        </View>
-        <View style={{ marginTop: 10 }}>
-          <Text
-            style={[
-              styles.textStyle,
-              {
-                fontSize: 9,
-                width: "90%",
-              },
-            ]}
-          >
-            By clicking on the button below or using this decentralized wallet,
-            I understand that If I lose my passwords, pins, phrases or backup
-            keys, they will not be retrievable and there is NO support team to
-            help me.
-          </Text>
-
-          <Custom_RadioButton
-            pressed={isSecondActive}
-            onPress={() =>
-              !isSecondActive
-                ? setIsSecondActive(true)
-                : setIsSecondActive(false)
-            }
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 5,
-              height: 20,
-              width: 20,
-              borderRadius: 10,
-            }}
-            imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
-          />
-        </View>
-        <View
-          style={{
-            flex: 1,
-          }}
-        >
+        <ScrollView>
           <View>
-            <Text
-              style={[
-                styles.textBoldStyle,
-                {
-                  fontSize: 9,
-                  marginTop: 10,
-                  marginBottom: 5,
-                },
-              ]}
-            >
-              {`If you do NOT agree, please close and remove this application immediately.`}
-            </Text>
             <Text
               style={[
                 styles.textStyle,
                 {
-                  fontSize: 8,
-                  marginBottom: 5,
+                  fontSize: 9,
+                  width: "90%",
                 },
               ]}
             >
-              {`© 2019-2020 SOLO CORE TEAM. All Rights Reserved. Software Version ${appConfig.version}`}
+              By clicking on the button below or using this decentralized
+              wallet, I confirm that I agree with the above{" "}
+              <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
+                “License Agreement”
+              </Text>{" "}
+              and{" "}
+              <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
+                “Disclaimer"
+              </Text>
             </Text>
+
+            <Custom_RadioButton
+              pressed={isActive}
+              onPress={() =>
+                !isActive ? setIsActive(true) : setIsActive(false)
+              }
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 0,
+                height: 20,
+                width: 20,
+                borderRadius: 10,
+              }}
+              imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
+            />
           </View>
-          <Custom_Button
-            text="Next"
-            onPress={() => {
-              navigation.navigate({
-                key: "ReceiveEmailUpdatesScreen",
-                routeName: "ReceiveEmailUpdatesScreen",
-              });
-            }}
-            color={isActive && isSecondActive ? Colors.text : Colors.grayText}
-            size={14}
-            textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
+          <View style={{ marginTop: 10 }}>
+            <Text
+              style={[
+                styles.textStyle,
+                {
+                  fontSize: 9,
+                  width: "90%",
+                },
+              ]}
+            >
+              By clicking on the button below or using this decentralized
+              wallet, I understand that If I lose my passwords, pins, phrases or
+              backup keys, they will not be retrievable and there is NO support
+              team to help me.
+            </Text>
+
+            <Custom_RadioButton
+              pressed={isSecondActive}
+              onPress={() =>
+                !isSecondActive
+                  ? setIsSecondActive(true)
+                  : setIsSecondActive(false)
+              }
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 5,
+                height: 20,
+                width: 20,
+                borderRadius: 10,
+              }}
+              imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
+            />
+          </View>
+          <View
             style={{
-              marginTop: 5,
-              backgroundColor:
-                isActive && isSecondActive
-                  ? Colors.darkRed
-                  : Colors.headerBackground,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              width: 100,
-              alignSelf: "flex-end",
+              flex: 1,
             }}
-            disabled={!isActive || !isSecondActive}
-          />
-        </View>
+          >
+            <View>
+              <Text
+                style={[
+                  styles.textBoldStyle,
+                  {
+                    fontSize: 9,
+                    marginTop: 10,
+                    marginBottom: 5,
+                  },
+                ]}
+              >
+                {`If you do NOT agree, please close and remove this application immediately.`}
+              </Text>
+              <Text
+                style={[
+                  styles.textStyle,
+                  {
+                    fontSize: 8,
+                    marginBottom: 5,
+                  },
+                ]}
+              >
+                {`© 2019-2020 SOLO CORE TEAM. All Rights Reserved. Software Version ${appConfig.version}`}
+              </Text>
+            </View>
+            <Custom_Button
+              text="Next"
+              onPress={() => {
+                navigation.navigate({
+                  key: "ReceiveEmailUpdatesScreen",
+                  routeName: "ReceiveEmailUpdatesScreen",
+                });
+              }}
+              color={isActive && isSecondActive ? Colors.text : Colors.grayText}
+              size={14}
+              textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
+              style={{
+                marginTop: 5,
+                backgroundColor:
+                  isActive && isSecondActive
+                    ? Colors.darkRed
+                    : Colors.headerBackground,
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                width: 100,
+                alignSelf: "flex-end",
+              }}
+              disabled={!isActive || !isSecondActive}
+            />
+          </View>
+        </ScrollView>
       </View>
     </View>
   );

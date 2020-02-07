@@ -67,84 +67,81 @@ function ReceiveEmailUpdatesScreen({
         center={<Custom_HeaderTitle text="Receive Email Updates?" />}
         right={<View />}
       />
-      <ScrollView>
-        <View style={{ marginTop: 42 }}>
-          <Custom_Text
-            value="Enter your email and receive the latest updates and airdrops from Sologenic."
-            style={{ textAlign: "center", marginBottom: 15 }}
-            size={14}
+
+      <View style={{ marginTop: 42 }}>
+        <Custom_Text
+          value="Enter your email and receive the latest updates and airdrops from Sologenic."
+          style={{ textAlign: "center", marginBottom: 15 }}
+          size={14}
+        />
+        <View>
+          <Custom_TextInput
+            value={emailValue}
+            onChangeText={text => {
+              onChangeEmailValue(text);
+            }}
+            label="Enter your Email Address"
+            keyboardType="default"
+            returnKeyType="done"
+            // secureTextEntry={secureEntry}
+            // placeholder="Optional"
+            // placeholderTextColor={Colors.grayText}
           />
-          <View>
-            <Custom_TextInput
-              value={emailValue}
-              onChangeText={text => {
-                onChangeEmailValue(text);
-              }}
-              label="Enter your Email Address"
-              keyboardType="default"
-              returnKeyType="done"
-              // secureTextEntry={secureEntry}
-              // placeholder="Optional"
-              // placeholderTextColor={Colors.grayText}
+          {!emailIsValid && (
+            <Custom_Text
+              value="Please enter a valid email address."
+              color={Colors.errorBackground}
+              size={12}
+              style={{ marginLeft: 40, marginTop: 5 }}
+              isBold
             />
-            {!emailIsValid && (
-              <Custom_Text
-                value="Please enter a valid email address."
-                color={Colors.errorBackground}
-                size={12}
-                style={{ marginLeft: 40, marginTop: 5 }}
-                isBold
-              />
-            )}
-          </View>
-          <View style={{ marginHorizontal: 15, marginTop: 20 }}>
-            <Text
-              style={{
-                textAlign: "center",
-                marginBottom: 15,
-                fontFamily: "DMSans",
-                color: colors.text,
-                fontSize: Fonts.size.small,
-              }}
-              size={14}
-            >
-              By entering your email address, you confirm that you agree with
-              the{" "}
-              <Text
-                onPress={() => WebBrowser.openBrowserAsync(config.privacyUrl)}
-                style={{
-                  textDecorationLine: "underline",
-                }}
-              >
-                privacy policy.
-              </Text>
-            </Text>
-          </View>
-          <View style={{ alignItems: "center" }}>
-            <Custom_Button
-              text="Submit"
-              onPress={() => validateEmail(emailValue)}
-              color={
-                emailValue !== "" ? Colors.secondaryBackground : Colors.grayText
-              }
-              size={14}
-              textStyle={{
-                letterSpacing: 0.24,
-              }}
-              style={{
-                backgroundColor:
-                  emailValue !== "" ? Colors.darkRed : Colors.gray,
-                paddingHorizontal: 15,
-                paddingVertical: 10,
-                marginBottom: 24,
-                marginTop: 40,
-              }}
-              disabled={emailValue === ""}
-              isPending={requestNewsLetterSignupPending}
-            />
-          </View>
+          )}
         </View>
-      </ScrollView>
+        <View style={{ marginHorizontal: 15, marginTop: 20 }}>
+          <Text
+            style={{
+              textAlign: "center",
+              marginBottom: 15,
+              fontFamily: "DMSans",
+              color: colors.text,
+              fontSize: Fonts.size.small,
+            }}
+            size={14}
+          >
+            By entering your email address, you confirm that you agree with the{" "}
+            <Text
+              onPress={() => WebBrowser.openBrowserAsync(config.privacyUrl)}
+              style={{
+                textDecorationLine: "underline",
+              }}
+            >
+              privacy policy.
+            </Text>
+          </Text>
+        </View>
+        <View style={{ alignItems: "center" }}>
+          <Custom_Button
+            text="Submit"
+            onPress={() => validateEmail(emailValue)}
+            color={
+              emailValue !== "" ? Colors.secondaryBackground : Colors.grayText
+            }
+            size={14}
+            textStyle={{
+              letterSpacing: 0.24,
+            }}
+            style={{
+              backgroundColor: emailValue !== "" ? Colors.darkRed : Colors.gray,
+              paddingHorizontal: 15,
+              paddingVertical: 10,
+              marginBottom: 24,
+              marginTop: 40,
+            }}
+            disabled={emailValue === ""}
+            isPending={requestNewsLetterSignupPending}
+          />
+        </View>
+      </View>
       <View style={{ position: "absolute", bottom: 60, alignSelf: "center" }}>
         <TouchableOpacity onPress={() => completeOrientation(true)}>
           <Custom_Text value="Skip this step >" style={{}} size={14} />
