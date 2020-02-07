@@ -26,6 +26,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
     walletAddress,
     rippleClassicAddress,
     passphrase,
+    onChangePressed,
   } = navigation.state.params;
 
   const writeToClipboard = async address => {
@@ -50,6 +51,7 @@ export default function YourRecoveryPhraseScreen({ navigation }) {
           <Custom_HeaderButton
             onPress={() => {
               console.log("Press!!");
+              onChangePressed(false);
               navigation.goBack();
             }}
             type="icon"

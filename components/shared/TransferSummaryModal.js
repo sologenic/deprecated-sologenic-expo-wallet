@@ -13,7 +13,7 @@ import Colors from "../../constants/Colors";
 import Fonts from "../../constants/Fonts";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
-
+import { formatBurnAmount } from "../../utils";
 export default function TransferSummaryModal({
   onPress,
   onClose,
@@ -101,8 +101,8 @@ export default function TransferSummaryModal({
                     color={Colors.lightGray}
                   />
                   <Custom_Text
-                    value={`${Number(amountToSend) *
-                      0.0001} ${currency.toUpperCase()}`}
+                    value={`${amountToSend ? formatBurnAmount(Number(amountToSend) *
+                      0.0001) : ""} ${currency.toUpperCase()}`}
                     size={Fonts.size.small}
                   />
                 </View>
