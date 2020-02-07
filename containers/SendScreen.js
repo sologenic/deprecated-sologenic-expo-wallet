@@ -56,6 +56,7 @@ function SendScreen({
   getBalance,
   baseCurrency,
   marketData,
+  soloData,
   wallet,
   netinfo,
 }) {
@@ -106,7 +107,11 @@ function SendScreen({
       handleIsCompleted(false);
     }
     if (marketData && marketData.last) {
-      setConvertedAmount(amountToSend * marketData.last);
+      if (currency === "xrp") {
+        setConvertedAmount(amountToSend * marketData.last);
+      } else {
+        setConvertedAmount(amountToSend * soloData[baseCurrency.value]);
+      }
     }
   }, [amountToSend, destination, passphrase, tag, isUsingXAddress]);
 
@@ -454,6 +459,7 @@ const mapStateToProps = ({
   marketData,
   wallet,
   netinfo,
+  soloData,
 }) => ({
   transferXrpSuccess,
   transferXrpError,
@@ -466,6 +472,7 @@ const mapStateToProps = ({
   transferSoloErrorStr,
   baseCurrency,
   marketData,
+  soloData,
   wallet,
   netinfo,
 });
