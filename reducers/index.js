@@ -93,6 +93,9 @@ const defaultState = {
   requestNewsLetterSignupPending: false,
   requestNewsLetterSignupSuccess: false,
   requestNewsLetterSignupError: false,
+  importingWalletPending: null,
+  importingWalletSuccess: null,
+  importingWalletError: null,
 };
 
 const getMarketData = (state, action) => {
@@ -417,6 +420,7 @@ const addNewWallet = (state, action) => {
   console.log("REDUCER =====================", wallet);
   return Object.assign({}, state, {
     wallets: [...wallets, wallet],
+    // importingWalletSuccess: true,
   });
 };
 
@@ -639,6 +643,38 @@ const getTransactionsError = (state, action) => {
     error: action.payload,
   });
 };
+
+const addNewWalletWithTrustline = (state, action) => {
+  return Object.assign({}, state, {
+    importingWalletPending: true,
+    importingWalletSuccess: false,
+    importingWalletError: false,    
+  });
+}
+
+const addNewWalletWithTrustlineSuccess = (state, action) => {
+  return Object.assign({}, state, {
+    importingWalletPending: false,
+    importingWalletSuccess: true,
+    importingWalletError: false,
+  });
+}
+
+const addNewWalletWithTrustlineError = (state, action) => {
+  return Object.assign({}, state, {
+    importingWalletPending: false,
+    importingWalletSuccess: false,
+    importingWalletError: true,
+  });
+}
+
+const importingWalletReset = state => {
+  return Object.assign({}, state, {
+    importingWalletPending: false,
+    importingWalletSuccess: false,
+    importingWalletError: false,
+  });
+}
 
 const getTrustlines = (state, action) => {
   return Object.assign({}, state, {
@@ -915,7 +951,14 @@ export default (state = defaultState, action) => {
       return requestNewsLetterSignupSuccess(state, action);
     case "NEWS_LETTER_SIGNUP_ERROR":
       return requestNewsLetterSignupError(state, action);
-
+    case "ADD_NEW_WALLET_WITH_TRUSTLINE":
+      return addNewWalletWithTrustline(state, action);
+    case "ADD_NEW_WALLET_WITH_TRUSTLINE_SUCCESS":
+      return addNewWalletWithTrustlineSuccess(state, action);
+    case "ADD_NEW_WALLET_WITH_TRUSTLINE_ERROR":
+      return addNewWalletWithTrustlineError(state, action);
+    case "IMPORTING_WALLET_RESET":
+      return importingWalletReset(state, action);
     default:
       return state;
   }

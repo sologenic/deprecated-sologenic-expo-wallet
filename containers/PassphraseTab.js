@@ -22,7 +22,7 @@ import {
   encrypt,
 } from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
-import { getTrustlines, getTrustlinesReset } from "../actions";
+import { getTrustlines, getTrustlinesReset, addNewWalletWithTrustline, importingWalletReset } from "../actions";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 import colors from "../constants/Colors";
 
@@ -39,6 +39,11 @@ function PassphraseTab({
   getTrustlinesErrorStr,
   getTrustlinesSuccess,
   getTrustlinesPending,
+  importingWalletSuccess,
+  importingWalletError, 
+  importingWalletPending,
+  addNewWalletWithTrustline,
+  importingWalletReset,
 }) {
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
@@ -64,14 +69,21 @@ function PassphraseTab({
     }
   }, [textValue, passphrase]);
 
+  // useEffect(() => {
+  //   if (getTrustlinesError) {
+  //     setErrorModalVisible(true);
+  //   }
+  //   if (getTrustlinesSuccess) {
+  //     setImportSuccessfulModalVisible(true);
+  //   }
+  // }, [getTrustlinesSuccess, getTrustlinesError, getTrustlinesPending]);
+
   useEffect(() => {
-    if (getTrustlinesError) {
-      setErrorModalVisible(true);
-    }
-    if (getTrustlinesSuccess) {
+    console.log("importingWalletSuccess", importingWalletSuccess)
+    if (importingWalletSuccess) {
       setImportSuccessfulModalVisible(true);
     }
-  }, [getTrustlinesSuccess, getTrustlinesError, getTrustlinesPending]);
+  }, [importingWalletSuccess, importingWalletError, importingWalletPending]);
 
   return (
     <View>
@@ -212,7 +224,15 @@ function PassphraseTab({
                       publicKey: importedWallet.publicKey,
                     },
                   };
-                  getTrustlinesWithAddNewWallet({
+                  // getTrustlinesWithAddNewWallet({
+                  //   walletAddress: rippleClassicAddress,
+                  //   rippleClassicAddress,
+                  //   nickname: nicknameValue ? nicknameValue : "",
+                  //   details: secureNewWallet,
+                  //   encrypted,
+                  //   salt,
+                  // });
+                  addNewWalletWithTrustline({
                     walletAddress: rippleClassicAddress,
                     rippleClassicAddress,
                     nickname: nicknameValue ? nicknameValue : "",
@@ -246,6 +266,7 @@ function PassphraseTab({
         modalVisible={errorModalVisible}
         onClose={() => {
           getTrustlinesReset();
+          importingWalletReset();
           setErrorModalVisible(false);
         }}
       />
@@ -260,6 +281,7 @@ function PassphraseTab({
         modalVisible={importSuccessfulModalVisible}
         onPress={() => {
           getTrustlinesReset();
+          importingWalletReset();
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
@@ -297,12 +319,18 @@ const mapStateToProps = ({
   getTrustlinesError,
   getTrustlinesErrorStr,
   wallets,
+  importingWalletSuccess,
+  importingWalletError, 
+  importingWalletPending,
 }) => ({
   getTrustlinesError,
   getTrustlinesErrorStr,
   getTrustlinesSuccess,
   getTrustlinesPending,
   wallets,
+  importingWalletSuccess,
+  importingWalletError, 
+  importingWalletPending,
 });
 const mapDispatchToProps = dispatch => ({
   getTrustlinesWithAddNewWallet: ({
@@ -324,6 +352,22 @@ const mapDispatchToProps = dispatch => ({
       }),
     ),
   getTrustlinesReset: () => dispatch(getTrustlinesReset()),
+  addNewWalletWithTrustline: ({
+    walletAddress,
+    rippleClassicAddress,
+    nickname,
+    details,
+    encrypted,
+    salt,
+  }) => dispatch(addNewWalletWithTrustline({
+    walletAddress,
+    rippleClassicAddress,
+    nickname,
+    details,
+    encrypted,
+    salt,
+  })),
+  importingWalletReset: () => dispatch(importingWalletReset())
 });
 
 export default connect(

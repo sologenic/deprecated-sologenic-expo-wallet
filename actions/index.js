@@ -571,3 +571,40 @@ export const requestNewsLetterSignupError = data => {
     payload: data,
   };
 };
+
+export const addNewWalletWithTrustline = ({
+  walletAddress,
+  rippleClassicAddress,
+  nickname,
+  salt,
+  encrypted,
+  details,
+}) => {
+  return {
+    type: "ADD_NEW_WALLET_WITH_TRUSTLINE",
+    walletAddress,
+    rippleClassicAddress,
+    nickname,
+    salt,
+    encrypted,
+    details,
+  };
+};
+
+export const addNewWalletWithTrustlineSuccess = () => {
+  return {
+    type: "ADD_NEW_WALLET_WITH_TRUSTLINE_SUCCESS",
+  };
+};
+
+export const addNewWalletWithTrustlineError = () => {
+  return {
+    type: "ADD_NEW_WALLET_WITH_TRUSTLINE_ERROR",
+  };
+};
+
+export const importingWalletReset = () => {
+  return {
+    type: "IMPORTING_WALLET_RESET",
+  };
+};

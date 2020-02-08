@@ -119,6 +119,7 @@ function WalletSoloTab({
     isActive,
   ]);
 
+  console.log("HERE wallet", wallet)
   const { id, isActive, salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
 
