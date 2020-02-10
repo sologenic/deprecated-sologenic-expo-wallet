@@ -22,7 +22,7 @@ import {
   encrypt,
 } from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
-import { getTrustlines, getTrustlinesReset, addNewWalletWithTrustline, importingWalletReset } from "../actions";
+import { addNewWalletWithTrustline, importingWalletReset } from "../actions";
 import ImportSuccessfulModal from "../components/shared/ImportSuccessfulModal";
 import colors from "../constants/Colors";
 
@@ -33,12 +33,6 @@ function PassphraseTab({
   importSuccessfulModalVisible,
   setImportSuccessfulModalVisible,
   wallets,
-  getTrustlinesReset,
-  getTrustlinesWithAddNewWallet,
-  getTrustlinesError,
-  getTrustlinesErrorStr,
-  getTrustlinesSuccess,
-  getTrustlinesPending,
   importingWalletSuccess,
   importingWalletError, 
   importingWalletPending,
@@ -69,19 +63,12 @@ function PassphraseTab({
     }
   }, [textValue, passphrase]);
 
-  // useEffect(() => {
-  //   if (getTrustlinesError) {
-  //     setErrorModalVisible(true);
-  //   }
-  //   if (getTrustlinesSuccess) {
-  //     setImportSuccessfulModalVisible(true);
-  //   }
-  // }, [getTrustlinesSuccess, getTrustlinesError, getTrustlinesPending]);
-
   useEffect(() => {
-    console.log("importingWalletSuccess", importingWalletSuccess)
     if (importingWalletSuccess) {
       setImportSuccessfulModalVisible(true);
+    }
+    if (importingWalletError) {
+      setErrorModalVisible(true);
     }
   }, [importingWalletSuccess, importingWalletError, importingWalletPending]);
 
@@ -224,14 +211,6 @@ function PassphraseTab({
                       publicKey: importedWallet.publicKey,
                     },
                   };
-                  // getTrustlinesWithAddNewWallet({
-                  //   walletAddress: rippleClassicAddress,
-                  //   rippleClassicAddress,
-                  //   nickname: nicknameValue ? nicknameValue : "",
-                  //   details: secureNewWallet,
-                  //   encrypted,
-                  //   salt,
-                  // });
                   addNewWalletWithTrustline({
                     walletAddress: rippleClassicAddress,
                     rippleClassicAddress,
@@ -256,16 +235,15 @@ function PassphraseTab({
               : Colors.darkRed,
           }}
           color={!completed ? Colors.grayText : Colors.text}
-          disabled={getTrustlinesPending || !completed}
-          isPending={getTrustlinesPending}
+          disabled={importingWalletPending || !completed}
+          isPending={importingWalletPending}
         />
       </View>
       {/* </ScrollView> */}
       <ErrorModal
-        value="You have entered invalid mnemonic recovery words. It should consist of 12 words, each separated by a space. Please check your words and try again. Your XRP wallet needs at least 21 XRP."
+        value="You have entered invalid mnemonic recovery words. It should consist of 12 words, each separated by a space. Please check your words and try again."
         modalVisible={errorModalVisible}
         onClose={() => {
-          getTrustlinesReset();
           importingWalletReset();
           setErrorModalVisible(false);
         }}
@@ -280,7 +258,6 @@ function PassphraseTab({
       <ImportSuccessfulModal
         modalVisible={importSuccessfulModalVisible}
         onPress={() => {
-          getTrustlinesReset();
           importingWalletReset();
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
@@ -314,44 +291,17 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = ({
-  getTrustlinesSuccess,
-  getTrustlinesPending,
-  getTrustlinesError,
-  getTrustlinesErrorStr,
   wallets,
   importingWalletSuccess,
   importingWalletError, 
   importingWalletPending,
 }) => ({
-  getTrustlinesError,
-  getTrustlinesErrorStr,
-  getTrustlinesSuccess,
-  getTrustlinesPending,
   wallets,
   importingWalletSuccess,
   importingWalletError, 
   importingWalletPending,
 });
 const mapDispatchToProps = dispatch => ({
-  getTrustlinesWithAddNewWallet: ({
-    walletAddress,
-    rippleClassicAddress,
-    nickname,
-    details,
-    salt,
-    encrypted,
-  }) =>
-    dispatch(
-      getTrustlines({
-        walletAddress,
-        rippleClassicAddress,
-        nickname,
-        details,
-        salt,
-        encrypted,
-      }),
-    ),
-  getTrustlinesReset: () => dispatch(getTrustlinesReset()),
   addNewWalletWithTrustline: ({
     walletAddress,
     rippleClassicAddress,

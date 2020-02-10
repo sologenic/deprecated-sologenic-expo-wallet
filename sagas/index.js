@@ -700,7 +700,6 @@ function* requestGetTrustlines(action) {
 }
 
 function* requestAddNewWalletWithTrustline(action) {
-  console.log("HERE 1")
   const {
     walletAddress,
     rippleClassicAddress,
@@ -724,7 +723,6 @@ function* requestAddNewWalletWithTrustline(action) {
           salt,
         }),
       );
-      // yield put(getTrustlinesSuccess());
       yield put(addNewWalletWithTrustlineSuccess());
       yield call(requestGetBalance, {
         address: walletAddress,

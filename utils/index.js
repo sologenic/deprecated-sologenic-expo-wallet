@@ -108,6 +108,13 @@ export const isValidRippleAddress = address => {
   return address ? Utils.isValidAddress(address) : false;
 };
 
+export const isValidRippleAddressWithSecret = (address, secret) => {
+  const rippleApi = sologenic.getRippleApi();
+  const keypair = rippleApi.deriveKeypair(secret);
+  const drivedAddressFromSecret = rippleApi.deriveAddress(keypair.publicKey);
+  return address ? address === drivedAddressFromSecret : true; 
+};
+
 //Validate ripple XAddress or not
 //XAddress only returns true
 export const isValidXAddress = address => {
@@ -214,6 +221,20 @@ export const roundDown = (value, precision) => {
   const regExp = new RegExp(`(\\d+\\.\\d{${precision}})`, "g");
   const result = String(value).match(regExp);
   return result ? result[0] : String(value);
+};
+
+export const groupThousandsInText = text => {
+  if (typeof text !== 'string') {
+      text = String(text);
+  }
+  if (text.split('').filter(word => word === '.').length > 0) {
+      const integerPortion = text
+          .split('.')[0]
+          .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+      const fractionalPortion = text.split('.')[1];
+      return integerPortion + '.' + fractionalPortion;
+  }
+  return text.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 };
 
 export const formatInput = (text, numberOfDecimals) => {

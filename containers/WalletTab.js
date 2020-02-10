@@ -7,7 +7,7 @@ import {
   Clipboard,
   Text,
   TouchableOpacity,
-  RefreshControl,
+  RefreshControl
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -21,7 +21,13 @@ import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
 import XrpWarningModal from "../components/shared/XrpWarningModal";
-import { getPriceChange, getPriceColor, formatBalance } from "../utils";
+import {
+  getPriceChange,
+  getPriceColor,
+  formatBalance,
+  groupThousandsInText,
+  formatInput
+} from "../utils";
 import SevenChart from "../components/shared/SevenChart";
 import { screenWidth, headerHeight } from "../constants/Layout";
 import {
@@ -31,7 +37,7 @@ import {
   getMarketData,
   getSoloData,
   getMarketSevens,
-  connectToRippleApi,
+  connectToRippleApi
 } from "../actions";
 import CopiedModal from "../components/shared/CopiedModal";
 
@@ -56,12 +62,12 @@ function WalletTab({
   pullToRefreshBalancePending,
   getTransactions,
   netinfo,
-  connectToRippleApi,
+  connectToRippleApi
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
-    false,
+    false
   );
   const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
@@ -157,13 +163,14 @@ function WalletTab({
                   style={{
                     flexDirection: "row",
                     justifyContent: "center",
-                    alignItems: "center",
+                    alignItems: "center"
                   }}
                 >
                   <View style={{ paddingRight: 10 }}>
                     <Custom_Text
-                      // value={`${formatBalance(xrpBalance)}`}
-                      value={`${xrpBalance}`}
+                      value={`${groupThousandsInText(
+                        formatInput(String(xrpBalance), 6)
+                      )}`}
                       size={Fonts.size.h3}
                       isBold
                     />
@@ -179,7 +186,7 @@ function WalletTab({
                     style={{
                       flexDirection: "row",
                       justifyContent: "center",
-                      alignItems: "center",
+                      alignItems: "center"
                     }}
                   >
                     <View style={{ paddingRight: 15 }}>
@@ -216,7 +223,7 @@ function WalletTab({
                   style={{
                     height: 100,
                     justifyContent: "center",
-                    alignItems: "center",
+                    alignItems: "center"
                   }}
                 >
                   <View>
@@ -240,8 +247,8 @@ function WalletTab({
                           navigation,
                           balance: xrpBalance,
                           currency: currency.toLowerCase(),
-                          walletAddress,
-                        },
+                          walletAddress
+                        }
                       });
                     }}
                     size={Fonts.size.large}
@@ -249,7 +256,7 @@ function WalletTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text,
+                      borderColor: Colors.text
                     }}
                   />
                 </View>
@@ -270,8 +277,8 @@ function WalletTab({
                             currency: currency.toLowerCase(),
                             walletAddress,
                             id,
-                            wallet,
-                          },
+                            wallet
+                          }
                         });
                       }
                     }}
@@ -305,7 +312,7 @@ function WalletTab({
                       height: 20,
                       width: 20,
                       borderRadius: 0,
-                      backgroundColor: "transparent",
+                      backgroundColor: "transparent"
                     }}
                   />
                 </View>
@@ -320,7 +327,7 @@ function WalletTab({
                       height: 20,
                       width: 20,
                       borderRadius: 0,
-                      backgroundColor: "transparent",
+                      backgroundColor: "transparent"
                     }}
                   />
                 </View>
@@ -369,7 +376,7 @@ function WalletTab({
                         getMoreTransactions(
                           walletAddress,
                           transactionCount + 10,
-                          "xrp",
+                          "xrp"
                         );
                         setTransactionCount(transactionCount + 10);
                       }}
@@ -419,7 +426,7 @@ function WalletTab({
                   fontFamily: "DMSans",
                   color: Colors.text,
                   fontSize: Fonts.size.small,
-                  textAlign: "center",
+                  textAlign: "center"
                 }}
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -432,7 +439,7 @@ function WalletTab({
                     fontFamily: "DMSansBold",
                     color: Colors.text,
                     fontSize: Fonts.size.small,
-                    textAlign: "center",
+                    textAlign: "center"
                   }}
                 >
                   21 XRP
@@ -451,8 +458,8 @@ function WalletTab({
                     params: {
                       currency: currency.toLowerCase(),
                       walletAddress,
-                      wallet,
-                    },
+                      wallet
+                    }
                   });
                 }}
                 style={{ height: 40, width: 100 }}
@@ -468,10 +475,10 @@ function WalletTab({
                 style={{
                   height: 12,
                   width: 12,
-                  backgroundColor: "#FFF",
+                  backgroundColor: "#FFF"
                 }}
                 textStyle={{
-                  paddingRight: 5,
+                  paddingRight: 5
                 }}
                 onPress={() => {
                   setModalVisible(true);
@@ -483,7 +490,7 @@ function WalletTab({
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 50,
-                opacity: 0.3,
+                opacity: 0.3
               }}
             >
               <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
@@ -498,7 +505,7 @@ function WalletTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text,
+                      borderColor: Colors.text
                     }}
                     disabled
                   />
@@ -541,7 +548,7 @@ function WalletTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent",
+                    backgroundColor: "transparent"
                   }}
                 />
               </View>
@@ -556,7 +563,7 @@ function WalletTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent",
+                    backgroundColor: "transparent"
                   }}
                 />
               </View>
@@ -588,26 +595,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.headerBackground,
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "center"
   },
   section: {
-    marginTop: 20,
+    marginTop: 20
   },
   marketInfoContainer: {
-    marginVertical: 24,
+    marginVertical: 24
   },
   buttonsContainer: {
     flexDirection: "row",
     marginBottom: 24,
-    marginHorizontal: 24,
+    marginHorizontal: 24
   },
   leftButtonContainer: {
     flex: 1,
-    marginRight: 10,
+    marginRight: 10
   },
   rightButtonContainer: {
     flex: 1,
-    marginLeft: 10,
+    marginLeft: 10
   },
   walletAddressContainer: {
     flex: 9,
@@ -619,8 +626,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24,
-  },
+    marginVertical: 24
+  }
 });
 
 const mapStateToProps = ({
@@ -632,7 +639,7 @@ const mapStateToProps = ({
   getMoreTransactionsPending,
   getBalancePending,
   pullToRefreshBalancePending,
-  netinfo,
+  netinfo
 }) => {
   return {
     getTransactionsPending,
@@ -642,7 +649,7 @@ const mapStateToProps = ({
     marketData,
     pullToRefreshBalancePending,
     marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
-    netinfo,
+    netinfo
   };
 };
 
@@ -655,10 +662,7 @@ const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
-  connectToRippleApi: () => dispatch(connectToRippleApi()),
+  connectToRippleApi: () => dispatch(connectToRippleApi())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(WalletTab);
+export default connect(mapStateToProps, mapDispatchToProps)(WalletTab);
