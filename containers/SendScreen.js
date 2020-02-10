@@ -37,6 +37,7 @@ import {
   formatInput,
   getRippleClassicAddressFromXAddress,
   formatBalance,
+  splitAddress,
 } from "../utils";
 import { screenWidth } from "../constants/Layout";
 
@@ -81,6 +82,7 @@ function SendScreen({
   const [offline, handleChangeOffline] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const [isUsingXAddress, setIsUsingXAddress] = useState(false);
+  const [isIncludingDt, setIsIncludingDt] = useState(false);
   const { balance, currency, walletAddress, id } = navigation.state.params;
   const { salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
@@ -246,13 +248,33 @@ function SendScreen({
                   handleChangeTag("");
                 } else {
                   setIsUsingXAddress(false);
-                }
+                };
+                
+                const splittedAddres = splitAddress(text);
+                if (splittedAddres && splittedAddres.length > 1) {
+                  setIsIncludingDt(true);
+                } else {
+                  setIsIncludingDt(false);
+                };
                 handleChangeDestination(text);
               }}
               label="Destination Wallet Address"
               keyboardType="default"
               returnKeyType="done"
+              style={{
+                borderColor: isIncludingDt ? Colors.error : Colors.headerBackground,
+                borderWidth: 2,
+              }}
             />
+            {isIncludingDt && (
+              <View style={{ marginHorizontal: 24, marginTop: 5 }}>
+                <Custom_Text
+                  value="?dt should not be included in the destination wallet address. Destination tag has to be entered in the field below"
+                  color={Colors.error}
+                  size={Fonts.size.small}
+                />
+              </View>
+            )}
           </View>
           <View style={{ marginTop: 25 }}>
             <Custom_TextInput

@@ -23,6 +23,7 @@ export default function Custom_TextInput({
   placeholderTextColor,
   currency,
   editable,
+  style,
 }) {
   const [isFocused, handleIsFocused] = useState(false);
   const handleFocus = () => handleIsFocused(true);
@@ -53,7 +54,7 @@ export default function Custom_TextInput({
         secureTextEntry={secureTextEntry}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        style={styles.defaultTextInput}
+        style={[styles.defaultTextInput, style]}
         autoCapitalize="none"
         editable={editable}
       />

@@ -485,3 +485,7 @@ export const getPositionLastNonZeroInDigits = data => {
 
   return result;
 };
+
+export const splitAddress = address => {
+  return address ? address.split('?dt=') : '';
+};
