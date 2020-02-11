@@ -262,15 +262,24 @@ function SendScreen({
               keyboardType="default"
               returnKeyType="done"
               style={{
-                borderColor: isIncludingDt ? Colors.error : Colors.headerBackground,
+                borderColor: isIncludingDt ? Colors.errorBackground : Colors.headerBackground,
                 borderWidth: 2,
               }}
             />
-            {isIncludingDt && (
+            {(isIncludingDt && !isUsingXAddress) && (
               <View style={{ marginHorizontal: 24, marginTop: 5 }}>
                 <Custom_Text
-                  value="?dt should not be included in the destination wallet address. Destination tag has to be entered in the field below"
-                  color={Colors.error}
+                  value="?dt should not be included in the destination wallet address. Destination tag has to be entered in the Destination Tag field."
+                  color={Colors.errorBackground}
+                  size={Fonts.size.small}
+                />
+              </View>
+            )}
+            {(isIncludingDt && isUsingXAddress) && (
+              <View style={{ marginHorizontal: 24, marginTop: 5 }}>
+                <Custom_Text
+                  value="XAddress should not have dt?=. You must remove it from the wallet address."
+                  color={Colors.errorBackground}
                   size={Fonts.size.small}
                 />
               </View>

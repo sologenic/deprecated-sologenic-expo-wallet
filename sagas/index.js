@@ -514,7 +514,7 @@ function* requestTransferSolo(action) {
     if (validCredentials === "invalid") {
       yield put(
         transferSoloError(
-          "Transfer failed. Please make sure you enetered the correct password.",
+          "Transfer failed. Please make sure you entered the correct password.",
         ),
       );
     } else {
