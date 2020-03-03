@@ -23,6 +23,7 @@ export default function Custom_TextInput({
   placeholderTextColor,
   currency,
   editable,
+  autoCorrect,
   style,
 }) {
   const [isFocused, handleIsFocused] = useState(false);
@@ -56,6 +57,7 @@ export default function Custom_TextInput({
         onFocus={handleFocus}
         style={[styles.defaultTextInput, style]}
         autoCapitalize="none"
+        autoCorrect={autoCorrect}
         editable={editable}
       />
       {currency && (

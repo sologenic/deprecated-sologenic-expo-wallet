@@ -42,6 +42,7 @@ import {
   getMarketSevens,
   connectToRippleApi,
   getNetInfo,
+  getReserve,
 } from "../actions";
 import { formatWalletTotalBalance } from "../utils";
 
@@ -81,6 +82,7 @@ function WalletScreen({
   navigation,
   deleteWallet,
   getBalance,
+  getReserve,
   getTransactions,
   activateWallet,
   transactions,
@@ -139,6 +141,7 @@ function WalletScreen({
 
   const fetchData = () => {
     getBalance(walletAddress, walletAddress);
+    getReserve(walletAddress);
     getMarketData(defaultCurrency.value);
     getSoloData();
     getMarketSevens();
@@ -416,6 +419,7 @@ const mapStateToProps = ({
 const mapDispatchToProps = dispatch => ({
   deleteWallet: id => dispatch(deleteWallet(id)),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
+  getReserve: address => dispatch(getReserve(address)),
   getTransactions: (address, limit, walletType) =>
     dispatch(getTransactions(address, limit, walletType)),
   activateWallet: id => dispatch(activateWallet(id)),

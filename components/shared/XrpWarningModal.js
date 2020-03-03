@@ -13,7 +13,7 @@ import Colors from "../../constants/Colors";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_HeaderButton from "./Custom_HeaderButton";
 
-export default function XrpWarningModal({ data, modalVisible, onClose }) {
+export default function XrpWarningModal({ data, modalVisible, onClose, reserve }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
       <TouchableOpacity style={styles.modalContainer} activeOpacity={1}>
@@ -42,7 +42,7 @@ export default function XrpWarningModal({ data, modalVisible, onClose }) {
                 </View>
               </View>
               <View style={{ justifyContent: "center", alignItems: "center", marginBottom: 20, marginTop: 10 }}>
-                <Custom_Text value="Your XRP balance is running low. You need at least 21 XRP to pay for transaction fees."  style={{textAlign: 'center'}}/>
+                <Custom_Text value={`Your XRP balance is running low. You need at least ${reserve} XRP to cover your network reserve.`}  style={{textAlign: 'center'}}/>
               </View>
             </View>
         </View>

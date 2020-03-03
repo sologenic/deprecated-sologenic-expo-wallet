@@ -8,6 +8,7 @@ import {
   Text,
   RefreshControl,
   Clipboard,
+  Image,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -32,9 +33,11 @@ import {
 } from "../actions";
 import { headerHeight, screenWidth } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
-import { formatBalance } from "../utils";
+import { formatBalance, groupThousandsInText, formatInput } from "../utils";
 import EnterPasswordModal from "../components/shared/EnterPasswordModal";
 import ErrorModal from "../components/shared/ErrorModal";
+import ReserveModal from "../components/shared/ReserveModal";
+import images from "../constants/Images";
 
 function WalletSoloTab({
   navigation,
@@ -67,8 +70,10 @@ function WalletSoloTab({
   getSoloData,
   getMarketSevens,
   connectToRippleApi,
+  reserve,
 }) {
   const [activateModalVisible, setActivateModalVisible] = useState(false);
+  const [reserveModalVisible, setReserveModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [trustlineErrorModalVisible, setTrustlineErrorModalVisible] = useState(
     false,
@@ -119,7 +124,6 @@ function WalletSoloTab({
     isActive,
   ]);
 
-  console.log("HERE wallet", wallet)
   const { id, isActive, salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
 
@@ -142,6 +146,27 @@ function WalletSoloTab({
           <View>
             <View style={styles.container}>
               <View style={{ marginTop: 50, marginHorizontal: 45 }}>
+                <View
+                  style={[
+                    {
+                      flexDirection: "row",
+                      marginBottom: 5,
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
+                  <Custom_Text
+                    value={`Network Reserve = ${reserve ? reserve : "--"} XRP`}
+                    size={10}
+                    color={Colors.lightGray}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setReserveModalVisible(true)}
+                    style={{ paddingHorizontal: 5 }}
+                  >
+                    <Image source={images.questionIcon} />
+                  </TouchableOpacity>
+                </View>
                 {isActive ? (
                   <Text
                     style={{
@@ -149,6 +174,7 @@ function WalletSoloTab({
                       color: Colors.text,
                       fontSize: Fonts.size.small,
                       textAlign: "center",
+                      marginTop: 15,
                     }}
                     numberOfLines={2}
                     ellipsizeMode="tail"
@@ -163,6 +189,7 @@ function WalletSoloTab({
                       color: Colors.text,
                       fontSize: Fonts.size.small,
                       textAlign: "center",
+                      marginTop: 15,
                     }}
                     numberOfLines={2}
                     ellipsizeMode="tail"
@@ -178,7 +205,7 @@ function WalletSoloTab({
                         textAlign: "center",
                       }}
                     >
-                      21 XRP
+                      20 XRP
                     </Text>
                     <Text> </Text>
                     to this address
@@ -336,6 +363,10 @@ function WalletSoloTab({
             setPasswordValue("");
           }}
         />
+        <ReserveModal
+          modalVisible={reserveModalVisible}
+          onClose={() => setReserveModalVisible(false)}
+        />
       </View>
     );
   }
@@ -356,12 +387,23 @@ function WalletSoloTab({
       >
         <View>
           <View style={styles.container}>
-            <View style={styles.section}>
+            <View
+              style={[
+                styles.section,
+                { flexDirection: "row", marginBottom: 5, marginTop: 50 },
+              ]}
+            >
               <Custom_Text
-                value="Your Balance:"
-                size={Fonts.size.medium}
+                value={`Network Reserve = ${reserve ? reserve : "--"} XRP`}
+                size={10}
                 color={Colors.lightGray}
               />
+              <TouchableOpacity
+                onPress={() => setReserveModalVisible(true)}
+                style={{ paddingHorizontal: 5 }}
+              >
+                <Image source={images.questionIcon} />
+              </TouchableOpacity>
             </View>
             <View>
               <View
@@ -381,6 +423,22 @@ function WalletSoloTab({
                 <View>
                   <Custom_Text value={currency} size={Fonts.size.h4} />
                 </View>
+              </View>
+              <View>
+                <Custom_Text
+                  value={
+                    soloData
+                      ? `${baseCurrency.symbol}${groupThousandsInText(
+                          formatInput(
+                            String(soloData[baseCurrency.value] * soloBalance),
+                            6,
+                          ),
+                        )} ${baseCurrency.label}`
+                      : "0"
+                  }
+                  style={{ textAlign: "center" }}
+                  size={Fonts.size.medium}
+                />
               </View>
             </View>
             {/* <View>
@@ -620,6 +678,10 @@ function WalletSoloTab({
         <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <CopiedModal showModal={copiedModalVisible} />
+      <ReserveModal
+        modalVisible={reserveModalVisible}
+        onClose={() => setReserveModalVisible(false)}
+      />
     </View>
   );
 }
@@ -679,6 +741,7 @@ const mapStateToProps = ({
   createTrustlineError,
   createTrustlineErrorStr,
   netinfo,
+  reserve,
 }) => ({
   createTrustlineSuccess,
   createTrustlinePending,
@@ -694,6 +757,7 @@ const mapStateToProps = ({
   createTrustlineError,
   createTrustlineErrorStr,
   netinfo,
+  reserve,
 });
 const mapDispatchToProps = dispatch => ({
   createTrustline: ({ address, id, passphrase, salt, encrypted, publicKey }) =>

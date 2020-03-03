@@ -7,7 +7,8 @@ import {
   Clipboard,
   Text,
   TouchableOpacity,
-  RefreshControl
+  Image,
+  RefreshControl,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -26,7 +27,7 @@ import {
   getPriceColor,
   formatBalance,
   groupThousandsInText,
-  formatInput
+  formatInput,
 } from "../utils";
 import SevenChart from "../components/shared/SevenChart";
 import { screenWidth, headerHeight } from "../constants/Layout";
@@ -37,9 +38,11 @@ import {
   getMarketData,
   getSoloData,
   getMarketSevens,
-  connectToRippleApi
+  connectToRippleApi,
 } from "../actions";
 import CopiedModal from "../components/shared/CopiedModal";
+import images from "../constants/Images";
+import ReserveModal from "../components/shared/ReserveModal";
 
 function WalletTab({
   navigation,
@@ -62,12 +65,13 @@ function WalletTab({
   pullToRefreshBalancePending,
   getTransactions,
   netinfo,
-  connectToRippleApi
+  reserve,
 }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const [reserveModalVisible, setReserveModalVisible] = useState(false);
   const [activateModalVisible, setActivateModalVisible] = useState(false);
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
-    false
+    false,
   );
   const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
@@ -101,7 +105,7 @@ function WalletTab({
   }
 
   useEffect(() => {
-    if (isActive && xrpBalance < 21) {
+    if (isActive && xrpBalance < reserve) {
       setXrpBalanceWarning(true);
     }
   }, [xrpBalanceWarning, transactions, getTransactionsPending]);
@@ -151,25 +155,43 @@ function WalletTab({
         >
           <View>
             <View style={styles.container}>
-              <View style={styles.section}>
+              <View
+                style={[
+                  styles.section,
+                  { flexDirection: "row", marginBottom: 5, marginTop: 50 },
+                ]}
+              >
+                <Custom_Text
+                  value={`Network Reserve = ${reserve ? reserve : "--"} XRP`}
+                  size={10}
+                  color={Colors.lightGray}
+                />
+                <TouchableOpacity
+                  onPress={() => setReserveModalVisible(true)}
+                  style={{ paddingHorizontal: 5 }}
+                >
+                  <Image source={images.questionIcon} />
+                </TouchableOpacity>
+              </View>
+              {/* <View style={styles.section}>
                 <Custom_Text
                   value="Your Balance:"
                   size={Fonts.size.medium}
                   color={Colors.lightGray}
                 />
-              </View>
+              </View> */}
               <View>
                 <View
                   style={{
                     flexDirection: "row",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
                   }}
                 >
                   <View style={{ paddingRight: 10 }}>
                     <Custom_Text
                       value={`${groupThousandsInText(
-                        formatInput(String(xrpBalance), 6)
+                        formatInput(String(xrpBalance), 6),
                       )}`}
                       size={Fonts.size.h3}
                       isBold
@@ -179,6 +201,22 @@ function WalletTab({
                     <Custom_Text value={currency} size={Fonts.size.h4} />
                   </View>
                 </View>
+                <View>
+                  <Custom_Text
+                    value={
+                      marketData && marketData.last
+                        ? `${defaultCurrency.symbol}${groupThousandsInText(
+                            formatInput(
+                              String(marketData.last * xrpBalance),
+                              6,
+                            ),
+                          )} ${defaultCurrency.label}`
+                        : "0"
+                    }
+                    style={{ textAlign: "center" }}
+                    size={Fonts.size.medium}
+                  />
+                </View>
               </View>
               {netinfo ? (
                 <View style={styles.marketInfoContainer}>
@@ -186,7 +224,7 @@ function WalletTab({
                     style={{
                       flexDirection: "row",
                       justifyContent: "center",
-                      alignItems: "center"
+                      alignItems: "center",
                     }}
                   >
                     <View style={{ paddingRight: 15 }}>
@@ -223,7 +261,7 @@ function WalletTab({
                   style={{
                     height: 100,
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
                   }}
                 >
                   <View>
@@ -247,8 +285,8 @@ function WalletTab({
                           navigation,
                           balance: xrpBalance,
                           currency: currency.toLowerCase(),
-                          walletAddress
-                        }
+                          walletAddress,
+                        },
                       });
                     }}
                     size={Fonts.size.large}
@@ -256,7 +294,7 @@ function WalletTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text
+                      borderColor: Colors.text,
                     }}
                   />
                 </View>
@@ -277,8 +315,8 @@ function WalletTab({
                             currency: currency.toLowerCase(),
                             walletAddress,
                             id,
-                            wallet
-                          }
+                            wallet,
+                          },
                         });
                       }
                     }}
@@ -312,7 +350,7 @@ function WalletTab({
                       height: 20,
                       width: 20,
                       borderRadius: 0,
-                      backgroundColor: "transparent"
+                      backgroundColor: "transparent",
                     }}
                   />
                 </View>
@@ -327,7 +365,7 @@ function WalletTab({
                       height: 20,
                       width: 20,
                       borderRadius: 0,
-                      backgroundColor: "transparent"
+                      backgroundColor: "transparent",
                     }}
                   />
                 </View>
@@ -376,7 +414,7 @@ function WalletTab({
                         getMoreTransactions(
                           walletAddress,
                           transactionCount + 10,
-                          "xrp"
+                          "xrp",
                         );
                         setTransactionCount(transactionCount + 10);
                       }}
@@ -406,11 +444,16 @@ function WalletTab({
           />
           <XrpWarningModal
             data={walletAddress}
+            reserve={reserve}
             modalVisible={xrpWarningModalVisible}
             onClose={() => setXrpWarningModalVisible(false)}
           />
           <View style={{ height: 40, width: screenWidth }} />
         </ScrollView>
+        <ReserveModal
+          modalVisible={reserveModalVisible}
+          onClose={() => setReserveModalVisible(false)}
+        />
         <CopiedModal showModal={copiedModalVisible} />
       </View>
     );
@@ -421,12 +464,32 @@ function WalletTab({
         <View>
           <View style={styles.container}>
             <View style={{ marginTop: 50, marginHorizontal: 45 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginBottom: 5,
+                  justifyContent: "center",
+                }}
+              >
+                <Custom_Text
+                  value={`Network Reserve = ${reserve ? reserve : "--"} XRP`}
+                  size={10}
+                  color={Colors.lightGray}
+                />
+                <TouchableOpacity
+                  onPress={() => setReserveModalVisible(true)}
+                  style={{ paddingHorizontal: 5 }}
+                >
+                  <Image source={images.questionIcon} />
+                </TouchableOpacity>
+              </View>
               <Text
                 style={{
                   fontFamily: "DMSans",
                   color: Colors.text,
                   fontSize: Fonts.size.small,
-                  textAlign: "center"
+                  textAlign: "center",
+                  marginTop: 15,
                 }}
                 numberOfLines={2}
                 ellipsizeMode="tail"
@@ -439,10 +502,10 @@ function WalletTab({
                     fontFamily: "DMSansBold",
                     color: Colors.text,
                     fontSize: Fonts.size.small,
-                    textAlign: "center"
+                    textAlign: "center",
                   }}
                 >
-                  21 XRP
+                  20 XRP
                 </Text>
                 <Text> </Text>
                 to this address
@@ -458,31 +521,11 @@ function WalletTab({
                     params: {
                       currency: currency.toLowerCase(),
                       walletAddress,
-                      wallet
-                    }
+                      wallet,
+                    },
                   });
                 }}
                 style={{ height: 40, width: 100 }}
-              />
-            </View>
-            <View>
-              <Custom_IconButton
-                icon="questioncircle"
-                color={Colors.grayText}
-                text="Why 21 XRP"
-                textSize={Fonts.size.small}
-                size={13}
-                style={{
-                  height: 12,
-                  width: 12,
-                  backgroundColor: "#FFF"
-                }}
-                textStyle={{
-                  paddingRight: 5
-                }}
-                onPress={() => {
-                  setModalVisible(true);
-                }}
               />
             </View>
             <View
@@ -490,7 +533,7 @@ function WalletTab({
                 justifyContent: "center",
                 alignItems: "center",
                 zIndex: 50,
-                opacity: 0.3
+                opacity: 0.3,
               }}
             >
               <View style={[styles.buttonsContainer, { marginTop: 50 }]}>
@@ -505,7 +548,7 @@ function WalletTab({
                       height: 40,
                       backgroundColor: Colors.headerBackground,
                       borderWidth: 0.5,
-                      borderColor: Colors.text
+                      borderColor: Colors.text,
                     }}
                     disabled
                   />
@@ -548,7 +591,7 @@ function WalletTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
@@ -563,17 +606,13 @@ function WalletTab({
                     height: 20,
                     width: 20,
                     borderRadius: 0,
-                    backgroundColor: "transparent"
+                    backgroundColor: "transparent",
                   }}
                 />
               </View>
             </View>
           </View>
         </View>
-        <Why21XRPModal
-          modalVisible={modalVisible}
-          onClose={() => setModalVisible(false)}
-        />
         <ActivationSuccessfulModal
           modalVisible={activateModalVisible}
           onClose={() => setActivateModalVisible(false)}
@@ -586,6 +625,10 @@ function WalletTab({
         />
       </ScrollView>
       <CopiedModal showModal={copiedModalVisible} />
+      <ReserveModal
+        modalVisible={reserveModalVisible}
+        onClose={() => setReserveModalVisible(false)}
+      />
     </View>
   );
 }
@@ -595,26 +638,26 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.headerBackground,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
-    marginTop: 20
+    marginTop: 40,
   },
   marketInfoContainer: {
-    marginVertical: 24
+    marginVertical: 24,
   },
   buttonsContainer: {
     flexDirection: "row",
     marginBottom: 24,
-    marginHorizontal: 24
+    marginHorizontal: 24,
   },
   leftButtonContainer: {
     flex: 1,
-    marginRight: 10
+    marginRight: 10,
   },
   rightButtonContainer: {
     flex: 1,
-    marginLeft: 10
+    marginLeft: 10,
   },
   walletAddressContainer: {
     flex: 9,
@@ -626,8 +669,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginLeft: 24,
     marginRight: 12,
-    marginVertical: 24
-  }
+    marginVertical: 24,
+  },
 });
 
 const mapStateToProps = ({
@@ -639,7 +682,8 @@ const mapStateToProps = ({
   getMoreTransactionsPending,
   getBalancePending,
   pullToRefreshBalancePending,
-  netinfo
+  netinfo,
+  reserve,
 }) => {
   return {
     getTransactionsPending,
@@ -649,7 +693,8 @@ const mapStateToProps = ({
     marketData,
     pullToRefreshBalancePending,
     marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
-    netinfo
+    netinfo,
+    reserve,
   };
 };
 
@@ -662,7 +707,10 @@ const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   getSoloData: () => dispatch(getSoloData()),
   getMarketSevens: () => dispatch(getMarketSevens()),
-  connectToRippleApi: () => dispatch(connectToRippleApi())
+  connectToRippleApi: () => dispatch(connectToRippleApi()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(WalletTab);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WalletTab);

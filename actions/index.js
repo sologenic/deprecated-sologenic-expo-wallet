@@ -551,10 +551,10 @@ export const purgeStore = () => {
   };
 };
 
-export const requestNewsLetterSignup = (data) => {
+export const requestNewsLetterSignup = data => {
   return {
     type: "NEWS_LETTER_SIGNUP",
-    email: data
+    email: data,
   };
 };
 
@@ -569,6 +569,26 @@ export const requestNewsLetterSignupError = data => {
   return {
     type: "NEWS_LETTER_SIGNUP_ERROR",
     payload: data,
+  };
+};
+
+export const getReserve = data => {
+  return {
+    type: "GET_RESERVE",
+    payload: data,
+  };
+};
+
+export const getReserveSuccess = data => {
+  return {
+    type: "GET_RESERVE_SUCCESS",
+    payload: data,
+  };
+};
+
+export const getReserveError = () => {
+  return {
+    type: "GET_RESERVE_Error",
   };
 };
 
