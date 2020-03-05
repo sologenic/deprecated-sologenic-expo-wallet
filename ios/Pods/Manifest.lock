@@ -260,14 +260,8 @@ PODS:
     - React
   - RNScreens (2.0.0-alpha.12):
     - React
-  - RNSentry (1.2.2):
-    - React
-    - Sentry (~> 4.4.0)
   - RNSVG (10.1.0):
     - React
-  - Sentry (4.4.3):
-    - Sentry/Core (= 4.4.3)
-  - Sentry/Core (4.4.3)
   - UMBarCodeScannerInterface (5.0.0)
   - UMCameraInterface (5.0.0)
   - UMConstantsInterface (5.0.0)
@@ -331,7 +325,6 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler/RNGestureHandler.podspec`)
   - RNReanimated (from `../node_modules/react-native-reanimated/RNReanimated.podspec`)
   - RNScreens (from `../node_modules/react-native-screens`)
-  - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - UMBarCodeScannerInterface (from `../node_modules/unimodules-barcode-scanner-interface/ios`)
   - UMCameraInterface (from `../node_modules/unimodules-camera-interface/ios`)
@@ -350,7 +343,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
-    - Sentry
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -449,8 +441,6 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native-reanimated/RNReanimated.podspec"
   RNScreens:
     :path: "../node_modules/react-native-screens"
-  RNSentry:
-    :path: "../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   UMBarCodeScannerInterface:
@@ -536,9 +526,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 02905abe54e1f6e59c081a10b4bd689721e17aa6
   RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
   RNScreens: 254da4b84f25971cbb30ed3ddc84131f23cac812
-  RNSentry: 9cfa3717b1e6bf9ad4b124683e78e3b98b01d3af
   RNSVG: 069864be08c9fe065a2cf7e63656a34c78653c99
-  Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
   UMBarCodeScannerInterface: 550e7ffd7a789289260bde3d547be29407e75437
   UMCameraInterface: 51e4568d64e77615557afaad9a3acdaad5d32d9f
   UMConstantsInterface: 23d658b73efc2b8090519b32007c3de725339492
@@ -553,6 +541,6 @@ SPEC CHECKSUMS:
   UMTaskManagerInterface: ee5b1ee1056eb338ff2d521ba79460d8cd0bae7d
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
-PODFILE CHECKSUM: bb9883974bb16a0b73a628dcafff0b09fdffda42
+PODFILE CHECKSUM: 2d866eb28ce8b458f96a77b6b8f47a3d48d00ed3
 
 COCOAPODS: 1.8.4
