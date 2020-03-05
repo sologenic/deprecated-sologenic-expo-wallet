@@ -5,9 +5,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View,
+  View
 } from "react-native";
 import { connect } from "react-redux";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -29,7 +30,7 @@ import {
   getBalance,
   transferXrpReset,
   transferSolo,
-  transferSoloReset,
+  transferSoloReset
 } from "../actions";
 import {
   formatWalletTotalBalance,
@@ -37,7 +38,7 @@ import {
   formatInput,
   getRippleClassicAddressFromXAddress,
   formatBalance,
-  splitAddress,
+  splitAddress
 } from "../utils";
 import { screenWidth } from "../constants/Layout";
 
@@ -61,7 +62,7 @@ function SendScreen({
   soloData,
   wallet,
   netinfo,
-  reserve,
+  reserve
 }) {
   const [completed, handleIsCompleted] = useState(false);
   const [amountToSend, handleChangeAmountToSend] = useState("");
@@ -69,17 +70,17 @@ function SendScreen({
   const [destination, handleChangeDestination] = useState("");
   const [destinationError, setDestinationError] = useState(null);
   const [instructionsModalVisible, setInstructionsModalVisible] = useState(
-    false,
+    false
   );
   const [tag, handleChangeTag] = useState("");
   const [passphrase, handleChangePassphrase] = useState("");
   const [summaryModalVisible, setSummaryModalVisible] = useState(false);
   const [
     transferSuccessfulModalVisible,
-    setTransferSuccessfulModalVisible,
+    setTransferSuccessfulModalVisible
   ] = useState(false);
   const [transferErrorModalVisible, setTransferErrorModalVisible] = useState(
-    false,
+    false
   );
   const [offline, handleChangeOffline] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
@@ -151,7 +152,7 @@ function SendScreen({
     transferSoloSuccess,
     transferSoloError,
     transferSuccessfulModalVisible,
-    summaryModalVisible,
+    summaryModalVisible
   ]);
 
   return (
@@ -171,349 +172,349 @@ function SendScreen({
         right={<View />}
       />
       <ScrollView keyboardShouldPersistTaps="handled">
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            marginVertical: 33,
-          }}
-        >
-          <View style={{ paddingRight: 10 }}>
-            <Image
-              source={Images[currency]}
-              style={{ height: 40, width: 40 }}
-            />
+        <KeyboardAwareScrollView>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+              marginVertical: 33
+            }}
+          >
+            <View style={{ paddingRight: 10 }}>
+              <Image
+                source={Images[currency]}
+                style={{ height: 40, width: 40 }}
+              />
+            </View>
+            <View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center"
+                }}
+              >
+                <View style={{ paddingRight: 7.5 }}>
+                  <Custom_Text
+                    value={`${formatBalance(balance)}`}
+                    size={Fonts.size.h5}
+                    isBold
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value={`${currency.toUpperCase()}`}
+                    size={Fonts.size.h5}
+                  />
+                </View>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center"
+                }}
+              >
+                <View>
+                  <Custom_Text
+                    value="Network Reserve: "
+                    size={12}
+                    color={Colors.lightGray}
+                  />
+                </View>
+                <View>
+                  <Custom_Text
+                    value={reserve}
+                    size={12}
+                    color={Colors.lightGray}
+                  />
+                </View>
+              </View>
+            </View>
           </View>
           <View>
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <View style={{ paddingRight: 7.5 }}>
-                <Custom_Text
-                  value={`${formatBalance(balance)}`}
-                  size={Fonts.size.h5}
-                  isBold
-                />
-              </View>
-              <View>
-                <Custom_Text
-                  value={`${currency.toUpperCase()}`}
-                  size={Fonts.size.h5}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-              }}
-            >
-              <View>
-                <Custom_Text
-                  value="Network Reserve: "
-                  size={12}
-                  color={Colors.lightGray}
-                />
-              </View>
-              <View>
-                <Custom_Text
-                  value={reserve}
-                  size={12}
-                  color={Colors.lightGray}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View>
-          <View style={{ marginTop: 20, marginBottom: 10 }}>
-            <Custom_TextInput
-              value={amountToSend}
-              onChangeText={text => {
-                // var t = text.replace(/[^0-9.]/g, "");
-                const formattedText = excludeLettersExceptForNumber(
-                  formatInput(text, 6),
-                );
-                handleChangeAmountToSend(formattedText);
-              }}
-              label="Amount to send"
-              keyboardType="default"
-              returnKeyType="done"
-              currency={currency}
-            />
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginHorizontal: 40,
-                borderBottomColor: Colors.grayText,
-                borderBottomWidth: 2,
-                marginTop: 10,
-              }}
-            >
-              <Custom_Text
-                value={formatWalletTotalBalance(convertedAmount)}
-                color={Colors.grayText}
-                size={16}
+            <View style={{ marginTop: 20, marginBottom: 10 }}>
+              <Custom_TextInput
+                value={amountToSend}
+                onChangeText={text => {
+                  // var t = text.replace(/[^0-9.]/g, "");
+                  const formattedText = excludeLettersExceptForNumber(
+                    formatInput(text, 6)
+                  );
+                  handleChangeAmountToSend(formattedText);
+                }}
+                label="Amount to send"
+                keyboardType="default"
+                returnKeyType="done"
+                currency={currency}
               />
-              <Custom_Text
-                value={baseCurrency.label}
-                color={Colors.grayText}
-                size={16}
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  marginHorizontal: 40,
+                  borderBottomColor: Colors.grayText,
+                  borderBottomWidth: 2,
+                  marginTop: 10
+                }}
+              >
+                <Custom_Text
+                  value={formatWalletTotalBalance(convertedAmount)}
+                  color={Colors.grayText}
+                  size={16}
+                />
+                <Custom_Text
+                  value={baseCurrency.label}
+                  color={Colors.grayText}
+                  size={16}
+                />
+              </View>
+            </View>
+            <View style={{ marginTop: 25, marginBottom: 10 }}>
+              <Custom_TextInput
+                value={destination}
+                onChangeText={text => {
+                  const startsWithX = text.startsWith("X");
+                  if (startsWithX) {
+                    setIsUsingXAddress(true);
+                    handleChangeTag("");
+                  } else {
+                    setIsUsingXAddress(false);
+                  }
+
+                  const splittedAddres = splitAddress(text);
+                  if (splittedAddres && splittedAddres.length > 1) {
+                    setIsIncludingDt(true);
+                  } else {
+                    setIsIncludingDt(false);
+                  }
+                  handleChangeDestination(text);
+                }}
+                label="Destination Wallet Address"
+                keyboardType="default"
+                returnKeyType="done"
+                style={{
+                  borderColor: isIncludingDt
+                    ? Colors.errorBackground
+                    : Colors.headerBackground,
+                  borderWidth: 1
+                }}
+              />
+              {isIncludingDt && !isUsingXAddress && (
+                <View style={{ marginHorizontal: 24, marginTop: 5 }}>
+                  <Custom_Text
+                    value="?dt should not be included in the destination wallet address. Destination tag has to be entered in the Destination Tag field."
+                    color={Colors.errorBackground}
+                    size={Fonts.size.small}
+                  />
+                </View>
+              )}
+              {isIncludingDt && isUsingXAddress && (
+                <View style={{ marginHorizontal: 24, marginTop: 5 }}>
+                  <Custom_Text
+                    value="XAddress should not have dt?=. You must remove it from the wallet address."
+                    color={Colors.errorBackground}
+                    size={Fonts.size.small}
+                  />
+                </View>
+              )}
+            </View>
+            <View style={{ marginTop: 25 }}>
+              <Custom_TextInput
+                value={tag}
+                onChangeText={text => {
+                  var t = text.replace(/[^0-9.]/g, "");
+                  handleChangeTag(t);
+                }}
+                label="Destination Tag"
+                placeholder={isUsingXAddress ? "Disabled" : "Optional"}
+                keyboardType="default"
+                returnKeyType="done"
+                editable={!isUsingXAddress}
+              />
+              {/* <View style={{ marginLeft: 30, marginTop: 5 }}>
+                <Custom_Text
+                  value="Optional"
+                  size={Fonts.size.normal}
+                  color={Colors.grayText}
+                  style={{ marginLeft: 10 }}
+                />
+              </View> */}
+            </View>
+
+            <View style={{ marginTop: 25 }}>
+              <Custom_TextInput
+                value={passphrase}
+                onChangeText={text => {
+                  handleChangePassphrase(text);
+                }}
+                label="Wallet Password"
+                keyboardType="default"
+                returnKeyType="done"
+                secureTextEntry
               />
             </View>
-          </View>
-
-          <View style={{ marginTop: 25, marginBottom: 10 }}>
-            <Custom_TextInput
-              value={destination}
-              onChangeText={text => {
-                const startsWithX = text.startsWith("X");
-                if (startsWithX) {
-                  setIsUsingXAddress(true);
-                  handleChangeTag("");
-                } else {
-                  setIsUsingXAddress(false);
+            <View style={{ marginHorizontal: 24, marginTop: 50 }}>
+              <Custom_IconButton
+                icon="questioncircle"
+                color={Colors.grayText}
+                text="Instructions"
+                textSize={Fonts.size.small}
+                size={13}
+                style={{
+                  height: 12,
+                  width: 12,
+                  backgroundColor: "#FFF"
+                }}
+                textStyle={{
+                  paddingRight: 5
+                }}
+                onPress={() => {
+                  setInstructionsModalVisible(true);
+                }}
+              />
+            </View>
+            <View
+              style={[
+                styles.sendButtonContainer,
+                { marginTop: 30, marginRight: 24 }
+              ]}
+            >
+              <Custom_Button
+                text="SEND"
+                onPress={() => {
+                  console.log("Press Send");
+                  setSummaryModalVisible(true);
+                }}
+                style={{
+                  height: 40,
+                  width: 100,
+                  backgroundColor:
+                    !completed || isIncludingDt
+                      ? Colors.headerBackground
+                      : Colors.darkRed
+                }}
+                color={
+                  !completed || isIncludingDt ? Colors.grayText : Colors.text
                 }
-
-                const splittedAddres = splitAddress(text);
-                if (splittedAddres && splittedAddres.length > 1) {
-                  setIsIncludingDt(true);
-                } else {
-                  setIsIncludingDt(false);
-                }
-                handleChangeDestination(text);
-              }}
-              label="Destination Wallet Address"
-              keyboardType="default"
-              returnKeyType="done"
-              style={{
-                borderColor: isIncludingDt
-                  ? Colors.errorBackground
-                  : Colors.headerBackground,
-                borderWidth: 1,
-              }}
-            />
-            {isIncludingDt && !isUsingXAddress && (
-              <View style={{ marginHorizontal: 24, marginTop: 5 }}>
-                <Custom_Text
-                  value="?dt should not be included in the destination wallet address. Destination tag has to be entered in the Destination Tag field."
-                  color={Colors.errorBackground}
-                  size={Fonts.size.small}
-                />
-              </View>
-            )}
-            {isIncludingDt && isUsingXAddress && (
-              <View style={{ marginHorizontal: 24, marginTop: 5 }}>
-                <Custom_Text
-                  value="XAddress should not have dt?=. You must remove it from the wallet address."
-                  color={Colors.errorBackground}
-                  size={Fonts.size.small}
-                />
-              </View>
-            )}
-          </View>
-          <View style={{ marginTop: 25 }}>
-            <Custom_TextInput
-              value={tag}
-              onChangeText={text => {
-                var t = text.replace(/[^0-9.]/g, "");
-                handleChangeTag(t);
-              }}
-              label="Destination Tag"
-              placeholder={isUsingXAddress ? "Disabled" : "Optional"}
-              keyboardType="default"
-              returnKeyType="done"
-              editable={!isUsingXAddress}
-            />
-            {/* <View style={{ marginLeft: 30, marginTop: 5 }}>
-              <Custom_Text
-                value="Optional"
-                size={Fonts.size.normal}
-                color={Colors.grayText}
-                style={{ marginLeft: 10 }}
+                disabled={!completed}
               />
-            </View> */}
+            </View>
           </View>
-
-          <View style={{ marginTop: 25 }}>
-            <Custom_TextInput
-              value={passphrase}
-              onChangeText={text => {
-                handleChangePassphrase(text);
-              }}
-              label="Wallet Password"
-              keyboardType="default"
-              returnKeyType="done"
-              secureTextEntry
-            />
-          </View>
-          <View style={{ marginHorizontal: 24, marginTop: 50 }}>
-            <Custom_IconButton
-              icon="questioncircle"
-              color={Colors.grayText}
-              text="Instructions"
-              textSize={Fonts.size.small}
-              size={13}
-              style={{
-                height: 12,
-                width: 12,
-                backgroundColor: "#FFF",
-              }}
-              textStyle={{
-                paddingRight: 5,
-              }}
-              onPress={() => {
-                setInstructionsModalVisible(true);
-              }}
-            />
-          </View>
-          <View
-            style={[
-              styles.sendButtonContainer,
-              { marginTop: 30, marginRight: 24 },
-            ]}
-          >
-            <Custom_Button
-              text="SEND"
-              onPress={() => {
-                console.log("Press Send");
-                setSummaryModalVisible(true);
-              }}
-              style={{
-                height: 40,
-                width: 100,
-                backgroundColor:
-                  !completed || isIncludingDt
-                    ? Colors.headerBackground
-                    : Colors.darkRed,
-              }}
-              color={
-                !completed || isIncludingDt ? Colors.grayText : Colors.text
-              }
-              disabled={!completed}
-            />
-          </View>
-        </View>
-        <InstructionsModal
-          modalVisible={instructionsModalVisible}
-          currency={currency}
-          onClose={() => setInstructionsModalVisible(false)}
-        />
-        <TransferSummaryModal
-          onPress={() => {
-            if (offline) {
-              setErrorModalVisible(true);
-              setSummaryModalVisible(false);
-            } else {
-              if (currency === "xrp") {
-                transferXrp({
-                  account: walletAddress,
-                  destination: isUsingXAddress
-                    ? getRippleClassicAddressFromXAddress(destination)
-                    : destination,
-                  tag,
-                  value: amountToSend,
-                  passphrase,
-                  salt,
-                  encrypted,
-                  publicKey,
-                  reserve,
-                });
-              } else {
-                transferSolo({
-                  account: walletAddress,
-                  destination: isUsingXAddress
-                    ? getRippleClassicAddressFromXAddress(destination)
-                    : destination,
-                  tag,
-                  value: amountToSend,
-                  passphrase,
-                  salt,
-                  encrypted,
-                  publicKey,
-                  reserve,
-                });
-              }
-            }
-          }}
-          modalVisible={summaryModalVisible}
-          showSpinner={transferXrpPending || transferSoloPending}
-          onClose={() => setSummaryModalVisible(false)}
-          currency={currency}
-          address={destination}
-          amountToSend={amountToSend}
-          tag={tag ? tag : ""}
-        />
-        <TransferSuccessfulModal
-          modalVisible={transferSuccessfulModalVisible}
-          onPress={() => {
-            // if solo
-            if (currency === "xrp") {
-              transferXrpReset();
-            } else {
-              transferSoloReset();
-            }
-            setTransferSuccessfulModalVisible(false);
-            getBalance(id, walletAddress);
-            navigation.goBack();
-          }}
-          currency={currency}
-        />
-        <TransferFailedModal
-          modalVisible={transferErrorModalVisible}
-          value={transferXrpError ? transferXrpErrorStr : transferSoloErrorStr}
-          onPress={() => {
-            if (currency === "xrp") {
-              transferXrpReset();
-            } else {
-              transferSoloReset();
-            }
-            setTransferErrorModalVisible(false);
-          }}
-          onClose={() => {
-            if (currency === "xrp") {
-              transferXrpReset();
-            } else {
-              transferSoloReset();
-            }
-            setTransferErrorModalVisible(false);
-            navigation.goBack();
-          }}
-          // errorMessage={offline ? "Your transfer cannot be processed. Your device is offline." : ""}
-        />
-        <ErrorModal
-          value="Your transfer cannot be processed. Your device is offline."
-          modalVisible={errorModalVisible}
-          onClose={() => {
-            setErrorModalVisible(false);
-          }}
-        />
-        <View style={{ height: 40, width: screenWidth }} />
+        </KeyboardAwareScrollView>
       </ScrollView>
+      <InstructionsModal
+        modalVisible={instructionsModalVisible}
+        currency={currency}
+        onClose={() => setInstructionsModalVisible(false)}
+      />
+      <TransferSummaryModal
+        onPress={() => {
+          if (offline) {
+            setErrorModalVisible(true);
+            setSummaryModalVisible(false);
+          } else {
+            if (currency === "xrp") {
+              transferXrp({
+                account: walletAddress,
+                destination: isUsingXAddress
+                  ? getRippleClassicAddressFromXAddress(destination)
+                  : destination,
+                tag,
+                value: amountToSend,
+                passphrase,
+                salt,
+                encrypted,
+                publicKey,
+                reserve
+              });
+            } else {
+              transferSolo({
+                account: walletAddress,
+                destination: isUsingXAddress
+                  ? getRippleClassicAddressFromXAddress(destination)
+                  : destination,
+                tag,
+                value: amountToSend,
+                passphrase,
+                salt,
+                encrypted,
+                publicKey,
+                reserve
+              });
+            }
+          }
+        }}
+        modalVisible={summaryModalVisible}
+        showSpinner={transferXrpPending || transferSoloPending}
+        onClose={() => setSummaryModalVisible(false)}
+        currency={currency}
+        address={destination}
+        amountToSend={amountToSend}
+        tag={tag ? tag : ""}
+      />
+      <TransferSuccessfulModal
+        modalVisible={transferSuccessfulModalVisible}
+        onPress={() => {
+          // if solo
+          if (currency === "xrp") {
+            transferXrpReset();
+          } else {
+            transferSoloReset();
+          }
+          setTransferSuccessfulModalVisible(false);
+          getBalance(id, walletAddress);
+          navigation.goBack();
+        }}
+        currency={currency}
+      />
+      <TransferFailedModal
+        modalVisible={transferErrorModalVisible}
+        value={transferXrpError ? transferXrpErrorStr : transferSoloErrorStr}
+        onPress={() => {
+          if (currency === "xrp") {
+            transferXrpReset();
+          } else {
+            transferSoloReset();
+          }
+          setTransferErrorModalVisible(false);
+        }}
+        onClose={() => {
+          if (currency === "xrp") {
+            transferXrpReset();
+          } else {
+            transferSoloReset();
+          }
+          setTransferErrorModalVisible(false);
+          navigation.goBack();
+        }}
+        // errorMessage={offline ? "Your transfer cannot be processed. Your device is offline." : ""}
+      />
+      <ErrorModal
+        value="Your transfer cannot be processed. Your device is offline."
+        modalVisible={errorModalVisible}
+        onClose={() => {
+          setErrorModalVisible(false);
+        }}
+      />
+      <View style={{ height: 40, width: screenWidth }} />
     </View>
   );
 }
 
 SendScreen.navigationOptions = {
-  header: null,
+  header: null
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
+    backgroundColor: Colors.background
   },
   sendButtonContainer: {
     justifyContent: "center",
-    alignItems: "flex-end",
-  },
+    alignItems: "flex-end"
+  }
 });
 
 const mapStateToProps = ({
@@ -530,7 +531,7 @@ const mapStateToProps = ({
   wallet,
   netinfo,
   soloData,
-  reserve,
+  reserve
 }) => ({
   transferXrpSuccess,
   transferXrpError,
@@ -546,7 +547,7 @@ const mapStateToProps = ({
   soloData,
   wallet,
   netinfo,
-  reserve,
+  reserve
 });
 const mapDispatchToProps = dispatch => ({
   transferXrp: ({
@@ -558,7 +559,7 @@ const mapDispatchToProps = dispatch => ({
     salt,
     encrypted,
     publicKey,
-    reserve,
+    reserve
   }) =>
     dispatch(
       transferXrp({
@@ -570,8 +571,8 @@ const mapDispatchToProps = dispatch => ({
         salt,
         encrypted,
         publicKey,
-        reserve,
-      }),
+        reserve
+      })
     ),
   transferSolo: ({
     account,
@@ -582,7 +583,7 @@ const mapDispatchToProps = dispatch => ({
     salt,
     encrypted,
     publicKey,
-    reserve,
+    reserve
   }) =>
     dispatch(
       transferSolo({
@@ -594,15 +595,12 @@ const mapDispatchToProps = dispatch => ({
         salt,
         encrypted,
         publicKey,
-        reserve,
-      }),
+        reserve
+      })
     ),
   getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)),
   transferXrpReset: () => dispatch(transferXrpReset()),
-  transferSoloReset: () => dispatch(transferSoloReset()),
+  transferSoloReset: () => dispatch(transferSoloReset())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(SendScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(SendScreen);

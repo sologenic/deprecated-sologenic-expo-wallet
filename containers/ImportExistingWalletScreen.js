@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TouchableOpacity, ScrollView } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scrollview";
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -87,24 +88,26 @@ export default function ImportExistingWalletScreen({ navigation }) {
         </TouchableOpacity>
       </View>
       <ScrollView>
-        {tab === 1 ? (
-          <PassphraseTab
-            navigation={navigation}
-            errorModalVisible={errorModalVisible}
-            setErrorModalVisible={setErrorModalVisible}
-            importSuccessfulModalVisible={importSuccessfulModalVisible}
-            setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
-          />
-        ) : (
-          <WalletAddressSecretTab
-            navigation={navigation}
-            errorModalVisible={errorModalVisible}
-            setErrorModalVisible={setErrorModalVisible}
-            importSuccessfulModalVisible={importSuccessfulModalVisible}
-            setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
-          />
-        )}
-        <View style={{ height: 40, width: screenWidth }} />
+        <KeyboardAwareScrollView>
+          {tab === 1 ? (
+            <PassphraseTab
+              navigation={navigation}
+              errorModalVisible={errorModalVisible}
+              setErrorModalVisible={setErrorModalVisible}
+              importSuccessfulModalVisible={importSuccessfulModalVisible}
+              setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+            />
+          ) : (
+            <WalletAddressSecretTab
+              navigation={navigation}
+              errorModalVisible={errorModalVisible}
+              setErrorModalVisible={setErrorModalVisible}
+              importSuccessfulModalVisible={importSuccessfulModalVisible}
+              setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+            />
+          )}
+          <View style={{ height: 40, width: screenWidth }} />
+        </KeyboardAwareScrollView>
       </ScrollView>
     </View>
   );
