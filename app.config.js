@@ -4,7 +4,7 @@
 //   soloIssuer: "rsoLo2S1kiGeCcn6hCUXVrCpGMWLrRrLZz",
 //   soloFlags: 2147614720,
 //   soloValue: "400000000",
-//   version: "1.0.4",
+//   version: "1.4.0",
 // };
 
 export default {
@@ -13,5 +13,5 @@ export default {
   soloIssuer: "rMiTTf8TA9co9Pmzuzy7bVBr1mTwXzmpyU",
   soloFlags: 2147614720,
   soloValue: "400000000",
-  version: "1.0.4",
+  version: "1.4.0",
 };

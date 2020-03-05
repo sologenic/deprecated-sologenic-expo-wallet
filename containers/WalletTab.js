@@ -239,6 +239,7 @@ function WalletTab({
                             ? `${defaultCurrency.symbol} ${marketData.last}`
                             : "0"
                         }
+                        style={{ textAlign: "center" }}
                         size={Fonts.size.medium}
                       />
                     </View>
