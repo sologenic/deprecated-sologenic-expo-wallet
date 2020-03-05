@@ -116,7 +116,7 @@ function SendScreen({
       if (currency === "xrp") {
         setConvertedAmount(amountToSend * marketData.last);
       } else {
-        setConvertedAmount(amountToSend * soloData[baseCurrency.value]);
+        setConvertedAmount(amountToSend * soloData.last);
       }
     }
     // if(destination.includes('?dt')) {
