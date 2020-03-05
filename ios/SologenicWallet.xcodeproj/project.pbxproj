@@ -89,7 +89,6 @@
 		C8883A58963F48EC865D6D85 /* splashLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = E75DF985A11E4005A588C824 /* splashLogo.png */; };
 		C8A45DE938EB4DC8A8A0FCBB /* tokenized_asset@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 747F8F810BF04197940E636E /* tokenized_asset@3x.png */; };
 		CA221281D651446E90815EF0 /* DMSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3567B516CA3D4E50AEB854AE /* DMSans-MediumItalic.ttf */; };
-		CA4C76EE23F33707003DDB2F /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = CA4C76ED23F33707003DDB2F /* main.jsbundle */; };
 		CAF7F49723E7753600423882 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = CAF7F49623E7753600423882 /* assets */; };
 		CBB13B0536BB417A810104CB /* DMSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F0F3A135F8784563A7981580 /* DMSans-Regular.ttf */; };
 		CD2071DF613C459B9E0D36B8 /* Roboto-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C2EE4589CD794B898E90AC4A /* Roboto-Italic.ttf */; };
@@ -212,7 +211,6 @@
 		C2EE4589CD794B898E90AC4A /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		C5ECD6F21986460FAA5ACC85 /* background3@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "background3@3x.png"; path = "../assets/images/orientation/background3@3x.png"; sourceTree = "<group>"; };
 		C71C9D33A6FC49379DBA57F5 /* DMSans-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "DMSans-BoldItalic.ttf"; path = "../assets/fonts/DMSans-BoldItalic.ttf"; sourceTree = "<group>"; };
-		CA4C76ED23F33707003DDB2F /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		CAD868104A94419F965A3A7E /* faceRed@3x.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "faceRed@3x.png"; path = "../assets/images/icons/faceRed@3x.png"; sourceTree = "<group>"; };
 		CAF7F49623E7753600423882 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		CC477E35F9454D799ECD9B1F /* tokenized_asset.png */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = tokenized_asset.png; path = ../assets/images/icons/tokenized_asset.png; sourceTree = "<group>"; };
@@ -250,7 +248,6 @@
 		13B07FAE1A68108700A75B9A /* SologenicWallet */ = {
 			isa = PBXGroup;
 			children = (
-				CA4C76ED23F33707003DDB2F /* main.jsbundle */,
 				CAF7F49623E7753600423882 /* assets */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -545,7 +542,6 @@
 				ADBCC203E4E24CD8BEBD95AE /* background4@3x.png in Resources */,
 				CDEC183E3BFD4BEA9C6F5556 /* slide1Overlay.png in Resources */,
 				BA74421CB6164C7399C5D660 /* slide1Overlay@2x.png in Resources */,
-				CA4C76EE23F33707003DDB2F /* main.jsbundle in Resources */,
 				A5E383E24FD74A71BA6D044C /* slide1Overlay@3x.png in Resources */,
 				CAF7F49723E7753600423882 /* assets in Resources */,
 				3E2213A288464AB7988931FA /* slide2Overlay.png in Resources */,

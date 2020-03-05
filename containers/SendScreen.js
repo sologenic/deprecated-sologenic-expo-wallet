@@ -424,6 +424,7 @@ function SendScreen({
                   salt,
                   encrypted,
                   publicKey,
+                  reserve,
                 });
               } else {
                 transferSolo({
@@ -437,6 +438,7 @@ function SendScreen({
                   salt,
                   encrypted,
                   publicKey,
+                  reserve,
                 });
               }
             }
@@ -556,6 +558,7 @@ const mapDispatchToProps = dispatch => ({
     salt,
     encrypted,
     publicKey,
+    reserve,
   }) =>
     dispatch(
       transferXrp({
@@ -567,6 +570,7 @@ const mapDispatchToProps = dispatch => ({
         salt,
         encrypted,
         publicKey,
+        reserve,
       }),
     ),
   transferSolo: ({
@@ -578,6 +582,7 @@ const mapDispatchToProps = dispatch => ({
     salt,
     encrypted,
     publicKey,
+    reserve,
   }) =>
     dispatch(
       transferSolo({
@@ -589,6 +594,7 @@ const mapDispatchToProps = dispatch => ({
         salt,
         encrypted,
         publicKey,
+        reserve,
       }),
     ),
   getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)),

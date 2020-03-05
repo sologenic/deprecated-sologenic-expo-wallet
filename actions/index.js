@@ -19,9 +19,10 @@ export const getMarketDataError = data => {
   };
 };
 
-export const getSoloData = () => {
+export const getSoloData = data => {
   return {
     type: "GET_SOLO_DATA",
+    payload: data,
   };
 };
 
@@ -39,9 +40,10 @@ export const getSoloDataError = data => {
   };
 };
 
-export const getMarketSevens = () => {
+export const getMarketSevens = data => {
   return {
     type: "GET_MARKET_SEVENS",
+    payload: data,
   };
 };
 
@@ -358,6 +360,7 @@ export const transferXrp = ({
   salt,
   encrypted,
   publicKey,
+  reserve,
 }) => {
   return {
     type: "TRANSFER_XRP",
@@ -371,6 +374,7 @@ export const transferXrp = ({
     salt,
     encrypted,
     publicKey,
+    reserve,
   };
 };
 
@@ -404,6 +408,7 @@ export const transferSolo = ({
   salt,
   encrypted,
   publicKey,
+  reserve,
 }) => {
   return {
     type: "TRANSFER_SOLO",
@@ -417,6 +422,7 @@ export const transferSolo = ({
     salt,
     encrypted,
     publicKey,
+    reserve,
   };
 };
 
@@ -626,5 +632,19 @@ export const addNewWalletWithTrustlineError = () => {
 export const importingWalletReset = () => {
   return {
     type: "IMPORTING_WALLET_RESET",
+  };
+};
+
+export const getAccountObjects = data => {
+  return {
+    type: "GET_ACCOUNT_OBJECTS",
+    payload: data,
+  };
+};
+
+export const updateAccountObjects = data => {
+  return {
+    type: "UPDATE_ACCOUNT_OBJECTS",
+    payload: data,
   };
 };

@@ -38,6 +38,7 @@ import {
   addNewWalletWithTrustlineSuccess,
   getReserveSuccess,
   getReserveError,
+  updateAccountObjects,
 } from "../actions";
 import {
   createSevensObj,
@@ -45,6 +46,8 @@ import {
   filterTransactions,
   decrypt,
   roundDown,
+  setAccountObjects,
+  convertXrpPriceToSoloPrice,
 } from "../utils";
 import appConfig from "../app.config";
 
@@ -70,6 +73,9 @@ const sologenicApi = create({
 
 const getMarketData = defaultCurrency =>
   api.get(`tickers/xrp${defaultCurrency}`);
+
+const getSoloData = defaultCurrency =>
+  api.get(`tickers/solo${defaultCurrency}`);
 
 function* requestGetMarketData(action) {
   const baseCurrency = action.payload;
@@ -103,13 +109,29 @@ function* requestNewsLetterSignup(action) {
   }
 }
 
-const getSoloData = () => api.get("https://ops.coinfield.com/solo_rates.json");
+// const getSoloData = () => api.get("https://ops.coinfield.com/solo_rates.json");
 
-export function* requestGetSoloData() {
+export function* requestGetSoloData(action) {
+  const baseCurrency = action.payload;
   try {
-    const response = yield call(getSoloData);
+    const response = yield call(getSoloData, baseCurrency);
+    console.log("GET SOLO: ", response.data);
     if (response.ok) {
-      yield put(getSoloDataSuccess(response.data));
+      yield put(getSoloDataSuccess(response.data.markets[0]));
+    } else if (!response.ok) {
+      const xrpInBaseCurrency = yield call(getMarketData, baseCurrency);
+      const xrpInUsd = yield call(getMarketData, "usd");
+      console.log("GET xrpInBaseCurrency: ", xrpInBaseCurrency.data.markets[0]);
+      const soloInUsd = yield call(getSoloData, "usd");
+      if (xrpInBaseCurrency.ok && xrpInUsd.ok && soloInUsd.ok) {
+        const soloData = yield call(
+          convertXrpPriceToSoloPrice,
+          xrpInBaseCurrency.data.markets[0],
+          xrpInUsd.data.markets[0],
+          soloInUsd.data.markets[0],
+        );
+        yield put(getSoloDataSuccess({ last: soloData.formatted }));
+      }
     } else {
       yield put(
         getSoloDataError("There was an error fetching the Solo market price"),
@@ -118,6 +140,17 @@ export function* requestGetSoloData() {
   } catch (error) {
     console.log(error);
   }
+
+  // try {
+  //   const response = yield call(getMarketData, baseCurrency);
+  //   if (response.ok) {
+  //     yield put(getMarketDataSuccess(response.data.markets[0]));
+  //   } else {
+  //     yield put(getMarketDataError(response.data));
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 }
 
 const mediatorApi = create({
@@ -221,6 +254,17 @@ function* requestGetReserve(action) {
     yield put(getReserveSuccess(reserve));
   } else {
     yield put(getReserveError());
+  }
+}
+
+function* requestGetAccountObjects(action) {
+  const { payload } = action;
+  const accountObjects = yield call(getAccountObjects, payload);
+  const state = yield call(setAccountObjects, accountObjects.account_objects);
+  if (state) {
+    yield put(updateAccountObjects(state));
+  } else {
+    console.log("requestGetAccountObjects ERROR");
   }
 }
 
@@ -390,6 +434,7 @@ function* requestTransferXrp(action) {
       salt,
       encrypted,
       publicKey,
+      reserve,
     } = action;
     // const secret = keypair ? keypair : "";
     // console.log("REQUEST_TRANSFER_XRP account ", account);
@@ -429,7 +474,10 @@ function* requestTransferXrp(action) {
         } else if (response.result.reason === "tecUNFUNDED_PAYMENT") {
           yield put(
             transferXrpError(
-              "Transfer failed. Please make sure you have enough funds in your wallet.",
+              `Please make sure you have a minimum of ${Number(value) +
+                Number(
+                  reserve,
+                )} XRP in your wallet to make this transaction. \n\nNote: Network Reserve = ${reserve}`,
             ),
           );
         } else if (
@@ -648,6 +696,15 @@ const calculateReserve = async address => {
   }
 };
 
+const getAccountObjects = async address => {
+  try {
+    const rippleApi = sologenic.getRippleApi();
+    return await rippleApi.getAccountObjects(address);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const getFormattedTransactions = async transactions => {
   const rippleApi = sologenic.getRippleApi();
   const currentLedger = await rippleApi.getLedgerVersion();
@@ -814,6 +871,7 @@ export default function* rootSaga() {
     takeEvery("GET_BALANCE", requestGetBalance),
     takeEvery("PULL_TO_REFRESH", requestPullToRefresh),
     takeEvery("GET_RESERVE", requestGetReserve),
+    takeEvery("GET_ACCOUNT_OBJECTS", requestGetAccountObjects),
     takeEvery("CONNECT_TO_RIPPLE_API", requestConnectToRippleApi),
     takeEvery("CREATE_TRUSTLINE", requestCreateTrustline),
     takeEvery("TRANSFER_XRP", requestTransferXrp),

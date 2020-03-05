@@ -33,11 +33,18 @@ import {
 } from "../actions";
 import { headerHeight, screenWidth } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
-import { formatBalance, groupThousandsInText, formatInput } from "../utils";
+import {
+  formatBalance,
+  groupThousandsInText,
+  formatInput,
+  getPriceChange,
+  getPriceColor,
+} from "../utils";
 import EnterPasswordModal from "../components/shared/EnterPasswordModal";
 import ErrorModal from "../components/shared/ErrorModal";
 import ReserveModal from "../components/shared/ReserveModal";
 import images from "../constants/Images";
+import SevenChart from "../components/shared/SevenChart";
 
 function WalletSoloTab({
   navigation,
@@ -52,7 +59,7 @@ function WalletSoloTab({
   wallet,
   // defaultCurrency,
   // marketData,
-  // marketSevens,
+  marketSevens,
   soloData,
   baseCurrency,
   getTransactionsPending,
@@ -87,6 +94,11 @@ function WalletSoloTab({
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
   );
+  const priceChange =
+    soloData && soloData.last && soloData.open
+      ? getPriceChange(soloData.last, soloData.open)
+      : null;
+  const priceColor = priceChange ? getPriceColor(priceChange) : "";
 
   useEffect(() => {
     if (netinfo) {
@@ -96,7 +108,7 @@ function WalletSoloTab({
 
   const fetchData = () => {
     getMarketData(baseCurrency.value);
-    getSoloData();
+    getSoloData(baseCurrency.value);
     getMarketSevens();
   };
 
@@ -127,7 +139,7 @@ function WalletSoloTab({
   const { id, isActive, salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
 
-  const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
+  const soloMarketPrice = soloData && soloData.last ? soloData.last : "";
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
@@ -429,10 +441,7 @@ function WalletSoloTab({
                   value={
                     soloData
                       ? `${baseCurrency.symbol}${groupThousandsInText(
-                          formatInput(
-                            String(soloData[baseCurrency.value] * soloBalance),
-                            6,
-                          ),
+                          formatInput(String(soloData.last * soloBalance), 6),
                         )} ${baseCurrency.label}`
                       : "0"
                   }
@@ -482,13 +491,21 @@ function WalletSoloTab({
                       style={{ textAlign: "center" }}
                     />
                   </View>
-                  <View>
-                    {/* <Custom_Text
-                    value={`${-0.61}%`}
-                    size={Fonts.size.small}
-                    color={Colors.errorBackground}
-                  /> */}
-                  </View>
+                  {priceChange ? (
+                    <View>
+                      <SevenChart
+                        marketSevens={marketSevens}
+                        color={priceColor}
+                      />
+                      <Custom_Text
+                        value={`${priceChange}`}
+                        size={Fonts.size.small}
+                        color={priceColor}
+                      />
+                    </View>
+                  ) : (
+                    <View />
+                  )}
                 </View>
               </View>
             ) : (
@@ -742,23 +759,26 @@ const mapStateToProps = ({
   createTrustlineErrorStr,
   netinfo,
   reserve,
-}) => ({
-  createTrustlineSuccess,
-  createTrustlinePending,
-  marketData,
-  marketSevens,
-  baseCurrency,
-  getTransactionsPending,
-  transactionsLength,
-  getMoreTransactionsPending,
-  getBalancePending,
-  pullToRefreshBalancePending,
-  soloData,
-  createTrustlineError,
-  createTrustlineErrorStr,
-  netinfo,
-  reserve,
-});
+}) => {
+  const marketPairId = `solo${baseCurrency.value}`;
+  return {
+    createTrustlineSuccess,
+    createTrustlinePending,
+    marketData,
+    marketSevens: marketSevens ? marketSevens[marketPairId] : {},
+    baseCurrency,
+    getTransactionsPending,
+    transactionsLength,
+    getMoreTransactionsPending,
+    getBalancePending,
+    pullToRefreshBalancePending,
+    soloData,
+    createTrustlineError,
+    createTrustlineErrorStr,
+    netinfo,
+    reserve,
+  };
+};
 const mapDispatchToProps = dispatch => ({
   createTrustline: ({ address, id, passphrase, salt, encrypted, publicKey }) =>
     dispatch(
@@ -770,7 +790,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(pullToRefreshBalance(id, address)),
   createTrustlineReset: () => dispatch(createTrustlineReset()),
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
-  getSoloData: () => dispatch(getSoloData()),
+  getSoloData: baseCurrency => dispatch(getSoloData(baseCurrency)),
   getMarketSevens: () => dispatch(getMarketSevens()),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
 });

@@ -97,6 +97,15 @@ const defaultState = {
   importingWalletSuccess: null,
   importingWalletError: null,
   reserve: null,
+  accountObjects: {
+    objs: [],
+    trustlines: 0,
+    offers: 0,
+    escrows: 0,
+    signLists: 0,
+    payChannels: 0,
+    checks: 0,
+  },
 };
 
 const getMarketData = (state, action) => {
@@ -776,6 +785,14 @@ const getReserveError = (state, action) => {
   });
 };
 
+const updateAccountObjects = (state, action) => {
+  const { payload } = action;
+  console.log("TRUSTLINES = ", payload);
+  return Object.assign({}, state, {
+    accountObjects: payload,
+  });
+};
+
 const requestNewsLetterSignup = (state, action) => {
   return Object.assign({}, state, {
     requestNewsLetterSignupPending: true,
@@ -982,6 +999,8 @@ export default (state = defaultState, action) => {
       return getReserveSuccess(state, action);
     case "GET_RESERVE_ERROR":
       return getReserveError(state, action);
+    case "UPDATE_ACCOUNT_OBJECTS":
+      return updateAccountObjects(state, action);
     default:
       return state;
   }

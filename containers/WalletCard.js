@@ -20,7 +20,7 @@ function WalletCard({
 }) {
   const { nickname, balance, walletAddress, id, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
-  const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
+  const soloMarketPrice = soloData && soloData.last ? soloData.last : "";
   const xrpBalanceInFiat =
     marketData && marketData.last ? xrp * marketData.last : "";
   const soloBalanceInFiat = soloMarketPrice ? solo * soloMarketPrice : "";

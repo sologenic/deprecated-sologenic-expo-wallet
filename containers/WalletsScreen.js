@@ -55,7 +55,7 @@ function WalletsScreen({
     }, 30000);
     if (!netinfo) {
       clearInterval(getMarketDataInterval);
-    };
+    }
 
     return () => {
       clearInterval(getMarketDataInterval);
@@ -64,11 +64,10 @@ function WalletsScreen({
 
   const fetchData = () => {
     getMarketData(baseCurrency.value);
-    getSoloData();
+    getSoloData(baseCurrency.value);
     getMarketSevens();
   };
 
-  
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -138,38 +137,36 @@ function WalletsScreen({
               />
             </View>
           )
+        ) : wallets.length > 0 ? (
+          <View style={styles.section}>
+            {wallets.map((item, index) => {
+              return (
+                <View key={index} style={{ marginBottom: 20 }}>
+                  <WalletCard
+                    navigation={navigation ? navigation : rootNavigation}
+                    baseCurrency={baseCurrency}
+                    wallet={item}
+                    key={index}
+                    marketData={marketData}
+                    soloData={soloData}
+                  />
+                </View>
+              );
+            })}
+          </View>
         ) : (
-          wallets.length > 0 ? (
-            <View style={styles.section}>
-              {wallets.map((item, index) => {
-                return (
-                  <View key={index} style={{ marginBottom: 20 }}>
-                    <WalletCard
-                      navigation={navigation ? navigation : rootNavigation}
-                      baseCurrency={baseCurrency}
-                      wallet={item}
-                      key={index}
-                      marketData={marketData}
-                      soloData={soloData}
-                    />
-                  </View>
-                );
-              })}
-            </View>
-          ) : (
-            <View
-              style={[
-                styles.section,
-                { justifyContent: "center", alignItems: "center" },
-              ]}
-            >
-              <Custom_Text
-                value="No Wallets Added"
-                size={Fonts.size.large}
-                color={Colors.text}
-              />
-            </View>
-          )
+          <View
+            style={[
+              styles.section,
+              { justifyContent: "center", alignItems: "center" },
+            ]}
+          >
+            <Custom_Text
+              value="No Wallets Added"
+              size={Fonts.size.large}
+              color={Colors.text}
+            />
+          </View>
         )}
         {/* {!marketData || !soloData ? (
           <View
@@ -277,7 +274,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = ({ marketData, wallets, baseCurrency, soloData, netinfo }) => ({
+const mapStateToProps = ({
+  marketData,
+  wallets,
+  baseCurrency,
+  soloData,
+  netinfo,
+}) => ({
   marketData,
   wallets,
   baseCurrency,
@@ -287,7 +290,7 @@ const mapStateToProps = ({ marketData, wallets, baseCurrency, soloData, netinfo 
 
 const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
-  getSoloData: () => dispatch(getSoloData()),
+  getSoloData: baseCurrency => dispatch(getSoloData(baseCurrency)),
   getMarketSevens: () => dispatch(getMarketSevens()),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
   connectToRippleApi: () => dispatch(connectToRippleApi()),

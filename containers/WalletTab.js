@@ -63,7 +63,7 @@ function WalletTab({
   getBalance,
   pullToRefreshBalance,
   pullToRefreshBalancePending,
-  getTransactions,
+  accountObjects,
   netinfo,
   reserve,
 }) {
@@ -92,7 +92,7 @@ function WalletTab({
 
   const fetchData = () => {
     getMarketData(defaultCurrency.value);
-    getSoloData();
+    getSoloData(defaultCurrency.value);
     getMarketSevens();
   };
 
@@ -684,6 +684,7 @@ const mapStateToProps = ({
   pullToRefreshBalancePending,
   netinfo,
   reserve,
+  accountObjects,
 }) => {
   return {
     getTransactionsPending,
@@ -695,6 +696,7 @@ const mapStateToProps = ({
     marketSevens: marketSevens ? marketSevens[`xrp${baseCurrency.value}`] : {},
     netinfo,
     reserve,
+    accountObjects,
   };
 };
 
@@ -705,7 +707,7 @@ const mapDispatchToProps = dispatch => ({
   pullToRefreshBalance: (id, address) =>
     dispatch(pullToRefreshBalance(id, address)),
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
-  getSoloData: () => dispatch(getSoloData()),
+  getSoloData: baseCurrency => dispatch(getSoloData(baseCurrency)),
   getMarketSevens: () => dispatch(getMarketSevens()),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
 });

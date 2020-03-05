@@ -489,3 +489,62 @@ export const getPositionLastNonZeroInDigits = data => {
 export const splitAddress = address => {
   return address ? address.split("?dt") : "";
 };
+
+export const setAccountObjects = accountObjects => {
+  let t = 0,
+    e = 0,
+    c = 0,
+    p = 0,
+    s = 0,
+    o = 0;
+
+  accountObjects.map(x => {
+    switch (x.LedgerEntryType) {
+      case "RippleState":
+        t++;
+        break;
+      case "Offer":
+        o++;
+        break;
+      case "SignerList":
+        s++;
+        break;
+      case "Escrow":
+        e++;
+        break;
+      case "PayChannel":
+        p++;
+        break;
+      case "Check":
+        c++;
+        break;
+    }
+
+    return x;
+  });
+
+  return {
+    objs: [...accountObjects],
+    trustlines: t,
+    offers: o,
+    escrows: e,
+    signLists: s,
+    payChannels: p,
+    checks: c,
+    updated: true,
+  };
+};
+
+export const convertXrpPriceToSoloPrice = (
+  xrpInBaseCurrency,
+  xrpInUsd,
+  soloInUsd,
+) => {
+  return {
+    formatted: formatBalance(
+      (soloInUsd.last / xrpInUsd.last) * xrpInBaseCurrency.last,
+      4,
+    ),
+    raw: (soloInUsd.last / xrpInUsd.last) * xrpInBaseCurrency.last,
+  };
+};
