@@ -132,6 +132,7 @@ function SendScreen({
     if (transferXrpError) {
       setTransferErrorModalVisible(true);
       setSummaryModalVisible(false);
+      handleChangePassphrase("");
     }
     if (transferSoloSuccess) {
       setTransferSuccessfulModalVisible(true);
@@ -140,6 +141,7 @@ function SendScreen({
     if (transferSoloError) {
       setTransferErrorModalVisible(true);
       setSummaryModalVisible(false);
+      handleChangePassphrase("");
     }
     // return () => {
     //   cleanup
