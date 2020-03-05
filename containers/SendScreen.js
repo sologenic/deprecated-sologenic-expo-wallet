@@ -61,11 +61,13 @@ function SendScreen({
   soloData,
   wallet,
   netinfo,
+  reserve,
 }) {
   const [completed, handleIsCompleted] = useState(false);
   const [amountToSend, handleChangeAmountToSend] = useState("");
   const [convertedAmount, setConvertedAmount] = useState(0);
   const [destination, handleChangeDestination] = useState("");
+  const [destinationError, setDestinationError] = useState(null);
   const [instructionsModalVisible, setInstructionsModalVisible] = useState(
     false,
   );
@@ -116,6 +118,9 @@ function SendScreen({
         setConvertedAmount(amountToSend * soloData[baseCurrency.value]);
       }
     }
+    // if(destination.includes('?dt')) {
+    //   setDestinationError(`?dt should not be included in the destination wallet address. Destination tag has to be entered in the Destination Tag field. \n\nXAddress should not have dt?=. You must remove it from the wallet address.`)
+    // }
   }, [amountToSend, destination, passphrase, tag, isUsingXAddress]);
 
   useEffect(() => {
@@ -180,21 +185,48 @@ function SendScreen({
               style={{ height: 40, width: 40 }}
             />
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View style={{ paddingRight: 7.5 }}>
-              <Custom_Text value={`${formatBalance(balance)}`} size={Fonts.size.h5} isBold />
+          <View>
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <View style={{ paddingRight: 7.5 }}>
+                <Custom_Text
+                  value={`${formatBalance(balance)}`}
+                  size={Fonts.size.h5}
+                  isBold
+                />
+              </View>
+              <View>
+                <Custom_Text
+                  value={`${currency.toUpperCase()}`}
+                  size={Fonts.size.h5}
+                />
+              </View>
             </View>
-            <View>
-              <Custom_Text
-                value={`${currency.toUpperCase()}`}
-                size={Fonts.size.h5}
-              />
+
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <View>
+                <Custom_Text
+                  value="Network Reserve: "
+                  size={12}
+                  color={Colors.lightGray}
+                />
+              </View>
+              <View>
+                <Custom_Text
+                  value={reserve}
+                  size={12}
+                  color={Colors.lightGray}
+                />
+              </View>
             </View>
           </View>
         </View>
@@ -248,25 +280,27 @@ function SendScreen({
                   handleChangeTag("");
                 } else {
                   setIsUsingXAddress(false);
-                };
-                
+                }
+
                 const splittedAddres = splitAddress(text);
                 if (splittedAddres && splittedAddres.length > 1) {
                   setIsIncludingDt(true);
                 } else {
                   setIsIncludingDt(false);
-                };
+                }
                 handleChangeDestination(text);
               }}
               label="Destination Wallet Address"
               keyboardType="default"
               returnKeyType="done"
               style={{
-                borderColor: isIncludingDt ? Colors.errorBackground : Colors.headerBackground,
-                borderWidth: 2,
+                borderColor: isIncludingDt
+                  ? Colors.errorBackground
+                  : Colors.headerBackground,
+                borderWidth: 1,
               }}
             />
-            {(isIncludingDt && !isUsingXAddress) && (
+            {isIncludingDt && !isUsingXAddress && (
               <View style={{ marginHorizontal: 24, marginTop: 5 }}>
                 <Custom_Text
                   value="?dt should not be included in the destination wallet address. Destination tag has to be entered in the Destination Tag field."
@@ -275,7 +309,7 @@ function SendScreen({
                 />
               </View>
             )}
-            {(isIncludingDt && isUsingXAddress) && (
+            {isIncludingDt && isUsingXAddress && (
               <View style={{ marginHorizontal: 24, marginTop: 5 }}>
                 <Custom_Text
                   value="XAddress should not have dt?=. You must remove it from the wallet address."
@@ -349,18 +383,20 @@ function SendScreen({
             <Custom_Button
               text="SEND"
               onPress={() => {
-                // 2;
                 console.log("Press Send");
                 setSummaryModalVisible(true);
               }}
               style={{
                 height: 40,
                 width: 100,
-                backgroundColor: !completed
-                  ? Colors.headerBackground
-                  : Colors.darkRed,
+                backgroundColor:
+                  !completed || isIncludingDt
+                    ? Colors.headerBackground
+                    : Colors.darkRed,
               }}
-              color={!completed ? Colors.grayText : Colors.text}
+              color={
+                !completed || isIncludingDt ? Colors.grayText : Colors.text
+              }
               disabled={!completed}
             />
           </View>
@@ -388,6 +424,7 @@ function SendScreen({
                   salt,
                   encrypted,
                   publicKey,
+                  reserve,
                 });
               } else {
                 transferSolo({
@@ -401,6 +438,7 @@ function SendScreen({
                   salt,
                   encrypted,
                   publicKey,
+                  reserve,
                 });
               }
             }
@@ -492,6 +530,7 @@ const mapStateToProps = ({
   wallet,
   netinfo,
   soloData,
+  reserve,
 }) => ({
   transferXrpSuccess,
   transferXrpError,
@@ -507,6 +546,7 @@ const mapStateToProps = ({
   soloData,
   wallet,
   netinfo,
+  reserve,
 });
 const mapDispatchToProps = dispatch => ({
   transferXrp: ({
@@ -518,6 +558,7 @@ const mapDispatchToProps = dispatch => ({
     salt,
     encrypted,
     publicKey,
+    reserve,
   }) =>
     dispatch(
       transferXrp({
@@ -529,6 +570,7 @@ const mapDispatchToProps = dispatch => ({
         salt,
         encrypted,
         publicKey,
+        reserve,
       }),
     ),
   transferSolo: ({
@@ -540,6 +582,7 @@ const mapDispatchToProps = dispatch => ({
     salt,
     encrypted,
     publicKey,
+    reserve,
   }) =>
     dispatch(
       transferSolo({
@@ -551,6 +594,7 @@ const mapDispatchToProps = dispatch => ({
         salt,
         encrypted,
         publicKey,
+        reserve,
       }),
     ),
   getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)),

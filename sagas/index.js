@@ -36,6 +36,9 @@ import {
   requestNewsLetterSignupSuccess,
   requestNewsLetterSignupError,
   addNewWalletWithTrustlineSuccess,
+  getReserveSuccess,
+  getReserveError,
+  updateAccountObjects,
 } from "../actions";
 import {
   createSevensObj,
@@ -43,6 +46,8 @@ import {
   filterTransactions,
   decrypt,
   roundDown,
+  setAccountObjects,
+  convertXrpPriceToSoloPrice,
 } from "../utils";
 import appConfig from "../app.config";
 
@@ -68,6 +73,9 @@ const sologenicApi = create({
 
 const getMarketData = defaultCurrency =>
   api.get(`tickers/xrp${defaultCurrency}`);
+
+const getSoloData = defaultCurrency =>
+  api.get(`tickers/solo${defaultCurrency}`);
 
 function* requestGetMarketData(action) {
   const baseCurrency = action.payload;
@@ -101,13 +109,29 @@ function* requestNewsLetterSignup(action) {
   }
 }
 
-const getSoloData = () => api.get("https://ops.coinfield.com/solo_rates.json");
+// const getSoloData = () => api.get("https://ops.coinfield.com/solo_rates.json");
 
-export function* requestGetSoloData() {
+export function* requestGetSoloData(action) {
+  const baseCurrency = action.payload;
   try {
-    const response = yield call(getSoloData);
+    const response = yield call(getSoloData, baseCurrency);
+    console.log("GET SOLO: ", response.data);
     if (response.ok) {
-      yield put(getSoloDataSuccess(response.data));
+      yield put(getSoloDataSuccess(response.data.markets[0]));
+    } else if (!response.ok) {
+      const xrpInBaseCurrency = yield call(getMarketData, baseCurrency);
+      const xrpInUsd = yield call(getMarketData, "usd");
+      console.log("GET xrpInBaseCurrency: ", xrpInBaseCurrency.data.markets[0]);
+      const soloInUsd = yield call(getSoloData, "usd");
+      if (xrpInBaseCurrency.ok && xrpInUsd.ok && soloInUsd.ok) {
+        const soloData = yield call(
+          convertXrpPriceToSoloPrice,
+          xrpInBaseCurrency.data.markets[0],
+          xrpInUsd.data.markets[0],
+          soloInUsd.data.markets[0],
+        );
+        yield put(getSoloDataSuccess({ last: soloData.formatted }));
+      }
     } else {
       yield put(
         getSoloDataError("There was an error fetching the Solo market price"),
@@ -116,6 +140,17 @@ export function* requestGetSoloData() {
   } catch (error) {
     console.log(error);
   }
+
+  // try {
+  //   const response = yield call(getMarketData, baseCurrency);
+  //   if (response.ok) {
+  //     yield put(getMarketDataSuccess(response.data.markets[0]));
+  //   } else {
+  //     yield put(getMarketDataError(response.data));
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 }
 
 const mediatorApi = create({
@@ -183,6 +218,7 @@ const getBalances = address => {
 function* requestGetBalance(action) {
   try {
     const { id, address } = action;
+    // yield call(requestGetReserve, address);
     // const response = yield call(getAccountInfo, address);
     // console.log("action ----", action);
     // console.log("id ----", id);
@@ -208,6 +244,27 @@ function* requestGetBalance(action) {
     }
   } catch (error) {
     console.log("REQUEST_GET_BALANCE_ERROR", error);
+  }
+}
+
+function* requestGetReserve(action) {
+  const { payload } = action;
+  const reserve = yield call(calculateReserve, payload);
+  if (reserve) {
+    yield put(getReserveSuccess(reserve));
+  } else {
+    yield put(getReserveError());
+  }
+}
+
+function* requestGetAccountObjects(action) {
+  const { payload } = action;
+  const accountObjects = yield call(getAccountObjects, payload);
+  const state = yield call(setAccountObjects, accountObjects.account_objects);
+  if (state) {
+    yield put(updateAccountObjects(state));
+  } else {
+    console.log("requestGetAccountObjects ERROR");
   }
 }
 
@@ -377,11 +434,12 @@ function* requestTransferXrp(action) {
       salt,
       encrypted,
       publicKey,
+      reserve,
     } = action;
     // const secret = keypair ? keypair : "";
-    console.log("REQUEST_TRANSFER_XRP account ", account);
-    console.log("REQUEST_TRANSFER_XRP destination ", destination);
-    console.log("REQUEST_TRANSFER_XRP value ", value);
+    // console.log("REQUEST_TRANSFER_XRP account ", account);
+    // console.log("REQUEST_TRANSFER_XRP destination ", destination);
+    // console.log("REQUEST_TRANSFER_XRP value ", value);
     // passphrase, salt, encrypted, publicKey
     const validCredentials = yield call(
       setAccount,
@@ -400,11 +458,12 @@ function* requestTransferXrp(action) {
       );
     } else {
       const tx = yield call(transferXrp, account, destination, tag, value);
-      console.log("REQUEST_TRANSFER_XRP BEFORE ", tx);
+      // console.log("REQUEST_TRANSFER_XRP BEFORE ", tx);
       const response = yield tx.promise;
-      console.log("REQUEST_TRANSFER_XRP AFTER", response);
+      // console.log("REQUEST_TRANSFER_XRP AFTER", response);
       if (response.result && response.result.status === "failed") {
-        console.log("REQUEST_TRANSFER_XRP_ERROR");
+        console.log("REQUEST_TRANSFER_XRP ERROR", response.result);
+        console.log("REQUEST_TRANSFER_XRP ERROR", response.result.reason);
         // yield put(transferXrpError(response.result.reason));
         if (response.result.reason === "tecPATH_DRY") {
           yield put(
@@ -415,13 +474,32 @@ function* requestTransferXrp(action) {
         } else if (response.result.reason === "tecUNFUNDED_PAYMENT") {
           yield put(
             transferXrpError(
-              "Transfer failed. Please make sure you have enough funds in your wallet.",
+              `Please make sure you have a minimum of ${Number(value) +
+                Number(
+                  reserve,
+                )} XRP in your wallet to make this transaction. \n\nNote: Network Reserve = ${reserve}`,
+            ),
+          );
+        } else if (
+          response.result.reason.includes(
+            "is not a valid hex representation of a byte",
+          )
+        ) {
+          yield put(
+            transferXrpError(
+              "Transfer failed due to invalid destination address. Please try again.",
+            ),
+          );
+        } else if (response.result.reason === "temBAD_AMOUNT") {
+          yield put(
+            transferXrpError(
+              "Transfer failed due to invalid amount. Please try again.",
             ),
           );
         } else if (response.result.reason === "tecNO_DST_INSUF_XRP") {
           yield put(
             transferXrpError(
-              "Transfer failed. You must send at least 21 XRP to activate your wallet.",
+              "Transfer failed. You must have enough XRP in your wallet to cover the network reserve.",
             ),
           );
         } else if (response.result.reason === "tefMAX_LEDGER") {
@@ -451,6 +529,7 @@ function* requestTransferXrp(action) {
 }
 
 const transferSolo = (account, destination, tag, value) => {
+  console.log("tag= ", tag);
   return tag
     ? sologenic.submit({
         TransactionType: "Payment",
@@ -471,8 +550,7 @@ const transferSolo = (account, destination, tag, value) => {
     : sologenic.submit({
         TransactionType: "Payment",
         Account: account,
-        Destination:
-          tag !== "" ? Number(`${destination}?dt=${tag}`) : destination,
+        Destination: destination,
         SendMax: {
           currency: appConfig.soloHash,
           issuer: appConfig.soloIssuer,
@@ -535,6 +613,16 @@ function* requestTransferSolo(action) {
               "Transfer failed. Please make sure you have enough funds in your wallet.",
             ),
           );
+        } else if (
+          response.result.reason.includes(
+            "is not a valid hex representation of a byte",
+          )
+        ) {
+          yield put(
+            transferXrpError(
+              "Transfer failed due to invalid destination address. Please try again.",
+            ),
+          );
         } else if (response.result.reason === "tecPATH_PARTIAL") {
           yield put(
             transferSoloError(
@@ -542,6 +630,7 @@ function* requestTransferSolo(action) {
             ),
           );
         } else {
+          console.log("REQUEST_TRANSFER_SOLO_ERROR data", response.result.data);
           yield put(transferSoloError(response.result.reason));
         }
       } else if (response) {
@@ -557,6 +646,7 @@ function* requestTransferSolo(action) {
     }
   } catch (error) {
     console.log("REQUEST_TRANSFER_SOLO_ERROR", error);
+
     yield put(
       transferSoloError(
         "Your transfer could not be processed. Please try again.",
@@ -591,11 +681,34 @@ const getTransactions = async (address, limit = 500, walletType) => {
   // });
 };
 
+const calculateReserve = async address => {
+  try {
+    const rippleApi = sologenic.getRippleApi();
+    const serverInfo = await rippleApi.getServerInfo();
+    const accountInfo = await rippleApi.getAccountInfo(address);
+    const ownerCount = accountInfo.ownerCount;
+    const reserveBaseXRP = serverInfo.validatedLedger.reserveBaseXRP;
+    const reserveIncrementXRP = serverInfo.validatedLedger.reserveIncrementXRP;
+    const additionalReserve = Number(reserveIncrementXRP * ownerCount);
+    return additionalReserve + Number(reserveBaseXRP);
+  } catch (err) {
+    return 20;
+  }
+};
+
+const getAccountObjects = async address => {
+  try {
+    const rippleApi = sologenic.getRippleApi();
+    return await rippleApi.getAccountObjects(address);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const getFormattedTransactions = async transactions => {
   const rippleApi = sologenic.getRippleApi();
   const currentLedger = await rippleApi.getLedgerVersion();
   const formattedTransactions = filterTransactions(transactions, currentLedger);
-  console.log("FORMATTE TRANSAC ++++++++++", formattedTransactions);
   return formattedTransactions;
 };
 
@@ -642,7 +755,7 @@ const getTrustlines = (address, issuer) => {
   const rippleApi = sologenic.getRippleApi();
   return rippleApi.getTrustlines(address, {
     counterparty: issuer,
-  })
+  });
 };
 
 const issuer = appConfig.soloIssuer; //this is a test issuer for solo which is generated by sologenic-issuarance
@@ -657,7 +770,7 @@ function* requestGetTrustlines(action) {
     details,
   } = action;
   try {
-    console.log("HERE 1")
+    console.log("HERE 1");
     const response = yield call(getTrustlines, walletAddress, issuer);
     if (response) {
       const trustline = response.length > 0 ? true : false;
@@ -757,6 +870,8 @@ export default function* rootSaga() {
     takeEvery("GET_MARKET_SEVENS", requestMarketSevens),
     takeEvery("GET_BALANCE", requestGetBalance),
     takeEvery("PULL_TO_REFRESH", requestPullToRefresh),
+    takeEvery("GET_RESERVE", requestGetReserve),
+    takeEvery("GET_ACCOUNT_OBJECTS", requestGetAccountObjects),
     takeEvery("CONNECT_TO_RIPPLE_API", requestConnectToRippleApi),
     takeEvery("CREATE_TRUSTLINE", requestCreateTrustline),
     takeEvery("TRANSFER_XRP", requestTransferXrp),
@@ -765,7 +880,10 @@ export default function* rootSaga() {
     takeEvery("GET_MORE_TRANSACTIONS", requestGetMoreTransactions),
     takeEvery("GET_TRUSTLINES", requestGetTrustlines),
     takeEvery("NEWS_LETTER_SIGNUP", requestNewsLetterSignup),
-    takeEvery("ADD_NEW_WALLET_WITH_TRUSTLINE", requestAddNewWalletWithTrustline),
+    takeEvery(
+      "ADD_NEW_WALLET_WITH_TRUSTLINE",
+      requestAddNewWalletWithTrustline,
+    ),
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),
   ]);

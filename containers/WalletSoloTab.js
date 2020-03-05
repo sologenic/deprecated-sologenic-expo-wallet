@@ -8,6 +8,7 @@ import {
   Text,
   RefreshControl,
   Clipboard,
+  Image,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -32,9 +33,18 @@ import {
 } from "../actions";
 import { headerHeight, screenWidth } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
-import { formatBalance } from "../utils";
+import {
+  formatBalance,
+  groupThousandsInText,
+  formatInput,
+  getPriceChange,
+  getPriceColor,
+} from "../utils";
 import EnterPasswordModal from "../components/shared/EnterPasswordModal";
 import ErrorModal from "../components/shared/ErrorModal";
+import ReserveModal from "../components/shared/ReserveModal";
+import images from "../constants/Images";
+import SevenChart from "../components/shared/SevenChart";
 
 function WalletSoloTab({
   navigation,
@@ -49,7 +59,7 @@ function WalletSoloTab({
   wallet,
   // defaultCurrency,
   // marketData,
-  // marketSevens,
+  marketSevens,
   soloData,
   baseCurrency,
   getTransactionsPending,
@@ -67,8 +77,10 @@ function WalletSoloTab({
   getSoloData,
   getMarketSevens,
   connectToRippleApi,
+  reserve,
 }) {
   const [activateModalVisible, setActivateModalVisible] = useState(false);
+  const [reserveModalVisible, setReserveModalVisible] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [trustlineErrorModalVisible, setTrustlineErrorModalVisible] = useState(
     false,
@@ -82,6 +94,11 @@ function WalletSoloTab({
   const [walletAddressModalVisible, setWalletAddressModalVisible] = useState(
     false,
   );
+  const priceChange =
+    soloData && soloData.last && soloData.open
+      ? getPriceChange(soloData.last, soloData.open)
+      : null;
+  const priceColor = priceChange ? getPriceColor(priceChange) : "";
 
   useEffect(() => {
     if (netinfo) {
@@ -91,7 +108,7 @@ function WalletSoloTab({
 
   const fetchData = () => {
     getMarketData(baseCurrency.value);
-    getSoloData();
+    getSoloData(baseCurrency.value);
     getMarketSevens();
   };
 
@@ -119,11 +136,10 @@ function WalletSoloTab({
     isActive,
   ]);
 
-  console.log("HERE wallet", wallet)
   const { id, isActive, salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
 
-  const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
+  const soloMarketPrice = soloData && soloData.last ? soloData.last : "";
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
@@ -142,6 +158,27 @@ function WalletSoloTab({
           <View>
             <View style={styles.container}>
               <View style={{ marginTop: 50, marginHorizontal: 45 }}>
+                <View
+                  style={[
+                    {
+                      flexDirection: "row",
+                      marginBottom: 5,
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
+                  <Custom_Text
+                    value={`Network Reserve = ${reserve ? reserve : "--"} XRP`}
+                    size={10}
+                    color={Colors.lightGray}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setReserveModalVisible(true)}
+                    style={{ paddingHorizontal: 5 }}
+                  >
+                    <Image source={images.questionIcon} />
+                  </TouchableOpacity>
+                </View>
                 {isActive ? (
                   <Text
                     style={{
@@ -149,6 +186,7 @@ function WalletSoloTab({
                       color: Colors.text,
                       fontSize: Fonts.size.small,
                       textAlign: "center",
+                      marginTop: 15,
                     }}
                     numberOfLines={2}
                     ellipsizeMode="tail"
@@ -163,6 +201,7 @@ function WalletSoloTab({
                       color: Colors.text,
                       fontSize: Fonts.size.small,
                       textAlign: "center",
+                      marginTop: 15,
                     }}
                     numberOfLines={2}
                     ellipsizeMode="tail"
@@ -178,7 +217,7 @@ function WalletSoloTab({
                         textAlign: "center",
                       }}
                     >
-                      21 XRP
+                      20 XRP
                     </Text>
                     <Text> </Text>
                     to this address
@@ -336,6 +375,10 @@ function WalletSoloTab({
             setPasswordValue("");
           }}
         />
+        <ReserveModal
+          modalVisible={reserveModalVisible}
+          onClose={() => setReserveModalVisible(false)}
+        />
       </View>
     );
   }
@@ -356,12 +399,23 @@ function WalletSoloTab({
       >
         <View>
           <View style={styles.container}>
-            <View style={styles.section}>
+            <View
+              style={[
+                styles.section,
+                { flexDirection: "row", marginBottom: 5, marginTop: 50 },
+              ]}
+            >
               <Custom_Text
-                value="Your Balance:"
-                size={Fonts.size.medium}
+                value={`Network Reserve = ${reserve ? reserve : "--"} XRP`}
+                size={10}
                 color={Colors.lightGray}
               />
+              <TouchableOpacity
+                onPress={() => setReserveModalVisible(true)}
+                style={{ paddingHorizontal: 5 }}
+              >
+                <Image source={images.questionIcon} />
+              </TouchableOpacity>
             </View>
             <View>
               <View
@@ -381,6 +435,19 @@ function WalletSoloTab({
                 <View>
                   <Custom_Text value={currency} size={Fonts.size.h4} />
                 </View>
+              </View>
+              <View>
+                <Custom_Text
+                  value={
+                    soloData
+                      ? `${baseCurrency.symbol}${groupThousandsInText(
+                          formatInput(String(soloData.last * soloBalance), 6),
+                        )} ${baseCurrency.label}`
+                      : "0"
+                  }
+                  style={{ textAlign: "center" }}
+                  size={Fonts.size.medium}
+                />
               </View>
             </View>
             {/* <View>
@@ -424,13 +491,21 @@ function WalletSoloTab({
                       style={{ textAlign: "center" }}
                     />
                   </View>
-                  <View>
-                    {/* <Custom_Text
-                    value={`${-0.61}%`}
-                    size={Fonts.size.small}
-                    color={Colors.errorBackground}
-                  /> */}
-                  </View>
+                  {priceChange ? (
+                    <View>
+                      <SevenChart
+                        marketSevens={marketSevens}
+                        color={priceColor}
+                      />
+                      <Custom_Text
+                        value={`${priceChange}`}
+                        size={Fonts.size.small}
+                        color={priceColor}
+                      />
+                    </View>
+                  ) : (
+                    <View />
+                  )}
                 </View>
               </View>
             ) : (
@@ -620,6 +695,10 @@ function WalletSoloTab({
         <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <CopiedModal showModal={copiedModalVisible} />
+      <ReserveModal
+        modalVisible={reserveModalVisible}
+        onClose={() => setReserveModalVisible(false)}
+      />
     </View>
   );
 }
@@ -679,22 +758,27 @@ const mapStateToProps = ({
   createTrustlineError,
   createTrustlineErrorStr,
   netinfo,
-}) => ({
-  createTrustlineSuccess,
-  createTrustlinePending,
-  marketData,
-  marketSevens,
-  baseCurrency,
-  getTransactionsPending,
-  transactionsLength,
-  getMoreTransactionsPending,
-  getBalancePending,
-  pullToRefreshBalancePending,
-  soloData,
-  createTrustlineError,
-  createTrustlineErrorStr,
-  netinfo,
-});
+  reserve,
+}) => {
+  const marketPairId = `solo${baseCurrency.value}`;
+  return {
+    createTrustlineSuccess,
+    createTrustlinePending,
+    marketData,
+    marketSevens: marketSevens ? marketSevens[marketPairId] : {},
+    baseCurrency,
+    getTransactionsPending,
+    transactionsLength,
+    getMoreTransactionsPending,
+    getBalancePending,
+    pullToRefreshBalancePending,
+    soloData,
+    createTrustlineError,
+    createTrustlineErrorStr,
+    netinfo,
+    reserve,
+  };
+};
 const mapDispatchToProps = dispatch => ({
   createTrustline: ({ address, id, passphrase, salt, encrypted, publicKey }) =>
     dispatch(
@@ -706,7 +790,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch(pullToRefreshBalance(id, address)),
   createTrustlineReset: () => dispatch(createTrustlineReset()),
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
-  getSoloData: () => dispatch(getSoloData()),
+  getSoloData: baseCurrency => dispatch(getSoloData(baseCurrency)),
   getMarketSevens: () => dispatch(getMarketSevens()),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
 });

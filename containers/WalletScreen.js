@@ -42,6 +42,8 @@ import {
   getMarketSevens,
   connectToRippleApi,
   getNetInfo,
+  getReserve,
+  getAccountObjects,
 } from "../actions";
 import { formatWalletTotalBalance } from "../utils";
 
@@ -81,6 +83,8 @@ function WalletScreen({
   navigation,
   deleteWallet,
   getBalance,
+  getReserve,
+  getAccountObjects,
   getTransactions,
   activateWallet,
   transactions,
@@ -102,7 +106,7 @@ function WalletScreen({
   const { walletAddress } = navigation.state.params;
   const { id, balance, nickname, rippleClassicAddress, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
-  const soloMarketPrice = soloData ? soloData[defaultCurrency.value] : "";
+  const soloMarketPrice = soloData && soloData.last ? soloData.last : "";
   const xrpBalanceInFiat =
     marketData && marketData.last ? xrp * marketData.last : "";
   const soloBalanceInFiat = soloData ? solo * soloMarketPrice : "";
@@ -139,8 +143,10 @@ function WalletScreen({
 
   const fetchData = () => {
     getBalance(walletAddress, walletAddress);
+    getReserve(walletAddress);
+    getAccountObjects(walletAddress);
     getMarketData(defaultCurrency.value);
-    getSoloData();
+    getSoloData(defaultCurrency.value);
     getMarketSevens();
   };
 
@@ -416,6 +422,8 @@ const mapStateToProps = ({
 const mapDispatchToProps = dispatch => ({
   deleteWallet: id => dispatch(deleteWallet(id)),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
+  getReserve: address => dispatch(getReserve(address)),
+  getAccountObjects: address => dispatch(getAccountObjects(address)),
   getTransactions: (address, limit, walletType) =>
     dispatch(getTransactions(address, limit, walletType)),
   activateWallet: id => dispatch(activateWallet(id)),
@@ -423,7 +431,7 @@ const mapDispatchToProps = dispatch => ({
   setWallet: walletAddress => dispatch(setWallet(walletAddress)),
   resetWallet: () => dispatch(resetWallet()),
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
-  getSoloData: () => dispatch(getSoloData()),
+  getSoloData: baseCurrency => dispatch(getSoloData(baseCurrency)),
   getMarketSevens: () => dispatch(getMarketSevens()),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
   getNetInfo: status => dispatch(getNetInfo(status)),

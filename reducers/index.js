@@ -96,6 +96,16 @@ const defaultState = {
   importingWalletPending: null,
   importingWalletSuccess: null,
   importingWalletError: null,
+  reserve: null,
+  accountObjects: {
+    objs: [],
+    trustlines: 0,
+    offers: 0,
+    escrows: 0,
+    signLists: 0,
+    payChannels: 0,
+    checks: 0,
+  },
 };
 
 const getMarketData = (state, action) => {
@@ -648,9 +658,9 @@ const addNewWalletWithTrustline = (state, action) => {
   return Object.assign({}, state, {
     importingWalletPending: true,
     importingWalletSuccess: false,
-    importingWalletError: false,    
+    importingWalletError: false,
   });
-}
+};
 
 const addNewWalletWithTrustlineSuccess = (state, action) => {
   return Object.assign({}, state, {
@@ -658,7 +668,7 @@ const addNewWalletWithTrustlineSuccess = (state, action) => {
     importingWalletSuccess: true,
     importingWalletError: false,
   });
-}
+};
 
 const addNewWalletWithTrustlineError = (state, action) => {
   return Object.assign({}, state, {
@@ -666,7 +676,7 @@ const addNewWalletWithTrustlineError = (state, action) => {
     importingWalletSuccess: false,
     importingWalletError: true,
   });
-}
+};
 
 const importingWalletReset = state => {
   return Object.assign({}, state, {
@@ -674,7 +684,7 @@ const importingWalletReset = state => {
     importingWalletSuccess: false,
     importingWalletError: false,
   });
-}
+};
 
 const getTrustlines = (state, action) => {
   return Object.assign({}, state, {
@@ -757,8 +767,33 @@ const getNetInfo = (state, action) => {
   });
 };
 
+const getReserve = (state, action) => {
+  return Object.assign({}, state, {});
+};
+
+const getReserveSuccess = (state, action) => {
+  const { payload } = action;
+  return Object.assign({}, state, {
+    reserve: payload,
+  });
+};
+
+const getReserveError = (state, action) => {
+  const { payload } = action;
+  return Object.assign({}, state, {
+    reserve: null,
+  });
+};
+
+const updateAccountObjects = (state, action) => {
+  const { payload } = action;
+  console.log("TRUSTLINES = ", payload);
+  return Object.assign({}, state, {
+    accountObjects: payload,
+  });
+};
+
 const requestNewsLetterSignup = (state, action) => {
-  console.log("hereeeeeee");
   return Object.assign({}, state, {
     requestNewsLetterSignupPending: true,
     requestNewsLetterSignupSuccess: false,
@@ -775,7 +810,6 @@ const requestNewsLetterSignupSuccess = (state, action) => {
 };
 
 const requestNewsLetterSignupError = (state, action) => {
-  console.log("errrrrrrrror");
   return Object.assign({}, state, {
     requestNewsLetterSignupPending: false,
     requestNewsLetterSignupSuccess: false,
@@ -959,6 +993,14 @@ export default (state = defaultState, action) => {
       return addNewWalletWithTrustlineError(state, action);
     case "IMPORTING_WALLET_RESET":
       return importingWalletReset(state, action);
+    case "GET_RESERVE":
+      return getReserve(state, action);
+    case "GET_RESERVE_SUCCESS":
+      return getReserveSuccess(state, action);
+    case "GET_RESERVE_ERROR":
+      return getReserveError(state, action);
+    case "UPDATE_ACCOUNT_OBJECTS":
+      return updateAccountObjects(state, action);
     default:
       return state;
   }
