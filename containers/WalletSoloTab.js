@@ -443,7 +443,7 @@ function WalletSoloTab({
                       ? `${baseCurrency.symbol}${groupThousandsInText(
                           formatInput(String(soloData.last * soloBalance), 6),
                         )} ${baseCurrency.label}`
-                      : "0"
+                      : `${baseCurrency.symbol} - ${baseCurrency.label}`
                   }
                   style={{ textAlign: "center" }}
                   size={Fonts.size.medium}

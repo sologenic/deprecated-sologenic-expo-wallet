@@ -81,6 +81,7 @@ function* requestGetMarketData(action) {
   const baseCurrency = action.payload;
   try {
     const response = yield call(getMarketData, baseCurrency);
+    // console.log("GET MARKET: ", response.data);
     if (response.ok) {
       yield put(getMarketDataSuccess(response.data.markets[0]));
     } else {
@@ -115,7 +116,7 @@ export function* requestGetSoloData(action) {
   const baseCurrency = action.payload;
   try {
     const response = yield call(getSoloData, baseCurrency);
-    console.log("GET SOLO: ", response.data);
+    // console.log("GET SOLO: ", response.data);
     if (response.ok) {
       yield put(getSoloDataSuccess(response.data.markets[0]));
     } else if (!response.ok) {

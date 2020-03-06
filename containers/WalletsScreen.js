@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ActivityIndicator,
   View,
+  RefreshControl
 } from "react-native";
 import { connect } from "react-redux";
 import NetInfo from "@react-native-community/netinfo";
@@ -23,10 +24,9 @@ import {
   getMarketSevens,
   getBalance,
   getSoloData,
-  getNetInfo,
+  getNetInfo
 } from "../actions";
-import { screenWidth } from "../constants/Layout";
-import images from "../constants/Images";
+import { screenWidth, headerHeight } from "../constants/Layout";
 
 function WalletsScreen({
   navigation,
@@ -41,10 +41,14 @@ function WalletsScreen({
   getNetInfo,
   netinfo,
   screenProps: { rootNavigation },
+  // getMarketDataPending,
+  // getSoloDataPending,
+  // getMarketSevenPending
 }) {
   useEffect(() => {
     if (netinfo || netinfo === null) {
       fetchData();
+      fetchAllWalletBalances();
     }
   }, [netinfo]);
 
@@ -68,6 +72,12 @@ function WalletsScreen({
     getMarketSevens();
   };
 
+  const fetchAllWalletBalances = () => {
+    for (let i = 0; i < wallets.length; i += 1) {
+      getBalance(wallets[i].id, wallets[i].walletAddress);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -78,12 +88,12 @@ function WalletsScreen({
               if (navigation) {
                 navigation.navigate({
                   routeName: "SettingsScreen",
-                  key: "SettingsScreen",
+                  key: "SettingsScreen"
                 });
               } else {
                 rootNavigation.navigate({
                   routeName: "SettingsScreen",
-                  key: "SettingsScreen",
+                  key: "SettingsScreen"
                 });
               }
             }}
@@ -94,17 +104,79 @@ function WalletsScreen({
         }
       />
       <ScrollView>
-        {netinfo ? (
-          !marketData || !soloData ? (
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 30,
-              }}
-            >
-              <ActivityIndicator size="small" color={Colors.darkRed} />
-            </View>
+        {wallets.length > 0 ? (
+          <View style={styles.section}>
+            {wallets.map((item, index) => {
+              return (
+                <View key={index} style={{ marginBottom: 20 }}>
+                  <WalletCard
+                    navigation={navigation ? navigation : rootNavigation}
+                    baseCurrency={baseCurrency}
+                    wallet={item}
+                    key={index}
+                    marketData={marketData}
+                    soloData={soloData}
+                  />
+                </View>
+              );
+            })}
+          </View>
+        ) : (
+          <View
+            style={[
+              styles.section,
+              { justifyContent: "center", alignItems: "center" }
+            ]}
+          >
+            <Custom_Text
+              value="No Wallets Added"
+              size={Fonts.size.large}
+              color={Colors.text}
+            />
+          </View>
+        )}
+        {/* {netinfo ? (
+            !marketData || !soloData ? (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 30,
+                }}
+              >
+                <ActivityIndicator size="small" color={Colors.darkRed} />
+              </View>
+            ) : wallets.length > 0 ? (
+              <View style={styles.section}>
+                {wallets.map((item, index) => {
+                  return (
+                    <View key={index} style={{ marginBottom: 20 }}>
+                      <WalletCard
+                        navigation={navigation ? navigation : rootNavigation}
+                        baseCurrency={baseCurrency}
+                        wallet={item}
+                        key={index}
+                        marketData={marketData}
+                        soloData={soloData}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+            ) : (
+              <View
+                style={[
+                  styles.section,
+                  { justifyContent: "center", alignItems: "center" },
+                ]}
+              >
+                <Custom_Text
+                  value="No Wallets Added"
+                  size={Fonts.size.large}
+                  color={Colors.text}
+                />
+              </View>
+            )
           ) : wallets.length > 0 ? (
             <View style={styles.section}>
               {wallets.map((item, index) => {
@@ -112,7 +184,6 @@ function WalletsScreen({
                   <View key={index} style={{ marginBottom: 20 }}>
                     <WalletCard
                       navigation={navigation ? navigation : rootNavigation}
-                      // defaultCurrency="usd"
                       baseCurrency={baseCurrency}
                       wallet={item}
                       key={index}
@@ -136,85 +207,9 @@ function WalletsScreen({
                 color={Colors.text}
               />
             </View>
-          )
-        ) : wallets.length > 0 ? (
-          <View style={styles.section}>
-            {wallets.map((item, index) => {
-              return (
-                <View key={index} style={{ marginBottom: 20 }}>
-                  <WalletCard
-                    navigation={navigation ? navigation : rootNavigation}
-                    baseCurrency={baseCurrency}
-                    wallet={item}
-                    key={index}
-                    marketData={marketData}
-                    soloData={soloData}
-                  />
-                </View>
-              );
-            })}
-          </View>
-        ) : (
-          <View
-            style={[
-              styles.section,
-              { justifyContent: "center", alignItems: "center" },
-            ]}
-          >
-            <Custom_Text
-              value="No Wallets Added"
-              size={Fonts.size.large}
-              color={Colors.text}
-            />
-          </View>
-        )}
-        {/* {!marketData || !soloData ? (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 30,
-            }}
-          >
-            <ActivityIndicator size="small" color={Colors.darkRed} />
-          </View>
-        ) : wallets.length > 0 ? (
-          <View style={styles.section}>
-            {wallets.map((item, index) => {
-              return (
-                <View key={index} style={{ marginBottom: 20 }}>
-                  <WalletCard
-                    navigation={navigation ? navigation : rootNavigation}
-                    // defaultCurrency="usd"
-                    baseCurrency={baseCurrency}
-                    wallet={item}
-                    key={index}
-                    marketData={marketData}
-                    soloData={soloData}
-                  />
-                </View>
-              );
-            })}
-          </View>
-        ) : (
-          <View
-            style={[
-              styles.section,
-              { justifyContent: "center", alignItems: "center" },
-            ]}
-          >
-            <Custom_Text
-              value="No Wallets Added"
-              size={Fonts.size.large}
-              color={Colors.text}
-            />
-          </View>
-        )} */}
+          )} */}
         <View style={{ height: 100, width: screenWidth }} />
       </ScrollView>
-      {/* <View style={styles.footer}>
-        <Image source={images.gradient} style={styles.gradient} />
-      </View> */}
       <Custom_IconButton
         icon="md-add"
         color={Colors.text}
@@ -222,12 +217,12 @@ function WalletsScreen({
           if (navigation) {
             navigation.navigate({
               routeName: "AddWalletScreen",
-              key: "AddWalletScreen",
+              key: "AddWalletScreen"
             });
           } else {
             rootNavigation.navigate({
               routeName: "AddWalletScreen",
-              key: "AddWalletScreen",
+              key: "AddWalletScreen"
             });
           }
         }}
@@ -240,7 +235,7 @@ function WalletsScreen({
           position: "absolute",
           right: 20,
           bottom: 30,
-          zIndex: 3,
+          zIndex: 3
         }}
       />
     </View>
@@ -249,29 +244,29 @@ function WalletsScreen({
 }
 
 WalletsScreen.navigationOptions = {
-  header: null,
+  header: null
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.background,
-    zIndex: 2,
+    zIndex: 2
   },
   section: {
     marginHorizontal: 20,
-    marginTop: 20,
+    marginTop: 20
   },
   footer: {
     flex: 1,
     position: "absolute",
-    bottom: 0,
+    bottom: 0
   },
   gradient: {
     height: 100,
     width: screenWidth,
-    zIndex: 1,
-  },
+    zIndex: 1
+  }
 });
 
 const mapStateToProps = ({
@@ -280,12 +275,18 @@ const mapStateToProps = ({
   baseCurrency,
   soloData,
   netinfo,
+  getMarketDataPending,
+  getSoloDataPending,
+  getMarketSevenPending
 }) => ({
   marketData,
   wallets,
   baseCurrency,
   soloData,
   netinfo,
+  getMarketDataPending,
+  getSoloDataPending,
+  getMarketSevenPending
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -294,10 +295,7 @@ const mapDispatchToProps = dispatch => ({
   getMarketSevens: () => dispatch(getMarketSevens()),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
-  getNetInfo: status => dispatch(getNetInfo(status)),
+  getNetInfo: status => dispatch(getNetInfo(status))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(WalletsScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(WalletsScreen);

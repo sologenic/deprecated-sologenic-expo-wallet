@@ -100,7 +100,7 @@ function WalletScreen({
   connectToRippleApi,
   getNetInfo,
 }) {
-  const [tab, handleTabView] = useState(1);
+  const [tab, handleTabView] = useState(navigation.state.params.tab ? navigation.state.params.tab : 1);
   const [modalVisible, setModalVisible] = useState(false);
   const [transactionCount, setTransactionCount] = useState(30);
   const { walletAddress } = navigation.state.params;

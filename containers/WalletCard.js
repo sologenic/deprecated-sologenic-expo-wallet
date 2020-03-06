@@ -55,6 +55,7 @@ function WalletCard({
               navigation,
               walletAddress,
               nickname,
+              wallet,
             },
           });
         }}
@@ -163,11 +164,23 @@ function WalletCard({
       </TouchableOpacity>
       <View style={styles.lowerStyle}>
         <View style={{ flexDirection: "row" }}>
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate({
+                routeName: "WalletScreen",
+                key: "WalletName",
+                params: {
+                  navigation,
+                  walletAddress,
+                  nickname,
+                  tab: 1,
+                },
+              });
+            }}
+            activeOpacity={0.5}
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
             <Image source={Images.xrp} style={{ marginBottom: 5 }} />
-            {/* <Image source={Images.xrp} /> */}
             {xrp === 0 ? (
               <Custom_Text value="Not activated" size={Fonts.size.normal} />
             ) : (
@@ -189,34 +202,24 @@ function WalletCard({
                 </View>
               </View>
             )}
-            {/* {wallet.isActive ? (
-              <View style={{ flexDirection: "row", paddingTop: 5 }}>
-                <View style={{ marginRight: 5 }}>
-                  <Custom_Text
-                    value={`${xrp}`}
-                    size={Fonts.size.normal}
-                    isBold
-                  />
-                </View>
-                <View>
-                  <Custom_Text
-                    value="XRP"
-                    size={Fonts.size.normal}
-                    color={Colors.lighterGray}
-                    isBold
-                  />
-                </View>
-              </View>
-            ) : (
-              <View style={{ paddingTop: 5 }}>
-                <Custom_Text value="Not activated" />
-              </View>
-            )} */}
-          </View>
+          </TouchableOpacity>
           <View
             style={{ width: 1, height: 88, backgroundColor: Colors.gray }}
           />
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate({
+                routeName: "WalletScreen",
+                key: "WalletName",
+                params: {
+                  navigation,
+                  walletAddress,
+                  nickname,
+                  tab: 2,
+                },
+              });
+            }}
+            activeOpacity={0.5}
             style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
           >
             <Image source={Images.solo} style={{ marginBottom: 5 }} />
@@ -241,30 +244,7 @@ function WalletCard({
                 </View>
               </View>
             )}
-            {/* {wallet.trustline ? (
-              <View style={{ flexDirection: "row", paddingTop: 5 }}>
-                <View style={{ marginRight: 5 }}>
-                  <Custom_Text
-                    value={`${solo}`}
-                    size={Fonts.size.normal}
-                    isBold
-                  />
-                </View>
-                <View>
-                  <Custom_Text
-                    value="SOLO"
-                    size={Fonts.size.normal}
-                    color={Colors.lighterGray}
-                    isBold
-                  />
-                </View>
-              </View>
-            ) : (
-              <View style={{ paddingTop: 5 }}>
-                <Custom_Text value="Not activated" />
-              </View>
-            )} */}
-          </View>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
