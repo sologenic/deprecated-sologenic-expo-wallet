@@ -113,6 +113,27 @@ export const pullToRefreshBalanceError = data => {
   };
 };
 
+export const pullToRefreshAll = data => {
+  return {
+    type: "PULL_TO_REFRESH_ALL",
+    payload: data,
+  };
+};
+
+export const pullToRefreshAllSuccess = data => {
+  return {
+    type: "PULL_TO_REFRESH_ALL_SUCCESS",
+    payload: data,
+  };
+};
+
+export const pullToRefreshAllError = data => {
+  return {
+    type: "PULL_TO_REFRESH_ALL_ERROR",
+    payload: data,
+  };
+};
+
 export const getBalance = (id, address) => {
   return {
     type: "GET_BALANCE",

@@ -461,7 +461,18 @@ function WalletTab({
   }
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={pullToRefreshBalancePending}
+            onRefresh={() => {
+              pullToRefreshBalance(id, walletAddress);
+              getMoreTransactions(walletAddress, transactionCount, "xrp");
+            }}
+            progressViewOffset={headerHeight + 100}
+          />
+        }
+      >
         <View>
           <View style={styles.container}>
             <View style={{ marginTop: 50, marginHorizontal: 45 }}>

@@ -115,13 +115,11 @@ export function* requestGetSoloData(action) {
   const baseCurrency = action.payload;
   try {
     const response = yield call(getSoloData, baseCurrency);
-    console.log("GET SOLO: ", response.data);
     if (response.ok) {
       yield put(getSoloDataSuccess(response.data.markets[0]));
     } else if (!response.ok) {
       const xrpInBaseCurrency = yield call(getMarketData, baseCurrency);
       const xrpInUsd = yield call(getMarketData, "usd");
-      console.log("GET xrpInBaseCurrency: ", xrpInBaseCurrency.data.markets[0]);
       const soloInUsd = yield call(getSoloData, "usd");
       if (xrpInBaseCurrency.ok && xrpInUsd.ok && soloInUsd.ok) {
         const soloData = yield call(
@@ -271,18 +269,12 @@ function* requestGetAccountObjects(action) {
 function* requestPullToRefresh(action) {
   try {
     const { id, address } = action;
-    // const response = yield call(getAccountInfo, address);
-    // console.log("action ----", action);
-    // console.log("id ----", id);
-    // console.log("add----", address);
     const response = yield call(getBalances, address);
-    // console.log("----", response);
     const xrpBalance = response.find(item => item.currency === "XRP");
     const soloBalance = response.find(
       item => item.currency === appConfig.soloHash,
     );
     if (response) {
-      // const { xrpBalance, soloBalance } = yield call(filterBalances, response);
       yield put(
         pullToRefreshBalanceSuccess(id, {
           xrp: xrpBalance ? Number(xrpBalance.value) : 0,
@@ -293,6 +285,7 @@ function* requestPullToRefresh(action) {
       yield put(pullToRefreshBalanceError());
     }
   } catch (error) {
+    yield put(pullToRefreshBalanceError());
     console.log("REQUEST_PULL_TO_REFRESH_ERROR", error);
   }
 }

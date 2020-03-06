@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  Image,
-  ImageBackground,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   ActivityIndicator,
@@ -24,6 +23,7 @@ import {
   getBalance,
   getSoloData,
   getNetInfo,
+  pullToRefreshBalance,
 } from "../actions";
 import { screenWidth } from "../constants/Layout";
 import images from "../constants/Images";
@@ -38,7 +38,8 @@ function WalletsScreen({
   soloData,
   wallets,
   baseCurrency,
-  getNetInfo,
+  pullToRefreshBalancePending,
+  pullToRefreshBalance,
   netinfo,
   screenProps: { rootNavigation },
 }) {
@@ -93,7 +94,18 @@ function WalletsScreen({
           />
         }
       />
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl
+            refreshing={pullToRefreshBalancePending}
+            onRefresh={() => {
+              wallets.forEach(wallet => {
+                pullToRefreshBalance(wallet.id, wallet.walletAddress);
+              });
+            }}
+          />
+        }
+      >
         {netinfo ? (
           !marketData || !soloData ? (
             <View
@@ -280,17 +292,21 @@ const mapStateToProps = ({
   baseCurrency,
   soloData,
   netinfo,
+  pullToRefreshBalancePending,
 }) => ({
   marketData,
   wallets,
   baseCurrency,
   soloData,
   netinfo,
+  pullToRefreshBalancePending,
 });
 
 const mapDispatchToProps = dispatch => ({
   getMarketData: baseCurrency => dispatch(getMarketData(baseCurrency)),
   getSoloData: baseCurrency => dispatch(getSoloData(baseCurrency)),
+  pullToRefreshBalance: (id, address) =>
+    dispatch(pullToRefreshBalance(id, address)),
   getMarketSevens: () => dispatch(getMarketSevens()),
   getBalance: (id, address) => dispatch(getBalance(id, address)),
   connectToRippleApi: () => dispatch(connectToRippleApi()),
