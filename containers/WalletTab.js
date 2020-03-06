@@ -83,6 +83,12 @@ function WalletTab({
   const priceColor = getPriceColor(priceChange);
   const { id, isActive } = wallet;
   const [isWalletActive, setIsWalletActive] = useState(isActive);
+  
+  const fetchData = () => {
+    getMarketData(defaultCurrency.value);
+    getSoloData(defaultCurrency.value);
+    getMarketSevens();
+  };
 
   useEffect(() => {
     if (netinfo) {
@@ -90,11 +96,9 @@ function WalletTab({
     }
   }, [netinfo]);
 
-  const fetchData = () => {
-    getMarketData(defaultCurrency.value);
-    getSoloData(defaultCurrency.value);
-    getMarketSevens();
-  };
+  useEffect(() => {
+    setIsWalletActive(isActive);
+  }, [isActive]);
 
   useEffect(() => {
     getBalance(id, walletAddress);
@@ -211,7 +215,7 @@ function WalletTab({
                               6,
                             ),
                           )} ${defaultCurrency.label}`
-                        : "0"
+                        : `${defaultCurrency.symbol} - ${defaultCurrency.label}`
                     }
                     style={{ textAlign: "center" }}
                     size={Fonts.size.medium}

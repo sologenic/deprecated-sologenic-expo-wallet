@@ -25,8 +25,7 @@ import {
   getNetInfo,
   pullToRefreshBalance,
 } from "../actions";
-import { screenWidth } from "../constants/Layout";
-import images from "../constants/Images";
+import { screenWidth, headerHeight } from "../constants/Layout";
 
 function WalletsScreen({
   navigation,
@@ -42,10 +41,14 @@ function WalletsScreen({
   pullToRefreshBalance,
   netinfo,
   screenProps: { rootNavigation },
+  // getMarketDataPending,
+  // getSoloDataPending,
+  // getMarketSevenPending
 }) {
   useEffect(() => {
     if (netinfo || netinfo === null) {
       fetchData();
+      fetchAllWalletBalances();
     }
   }, [netinfo]);
 
@@ -67,6 +70,12 @@ function WalletsScreen({
     getMarketData(baseCurrency.value);
     getSoloData(baseCurrency.value);
     getMarketSevens();
+  };
+
+  const fetchAllWalletBalances = () => {
+    for (let i = 0; i < wallets.length; i += 1) {
+      getBalance(wallets[i].id, wallets[i].walletAddress);
+    }
   };
 
   return (
@@ -106,50 +115,7 @@ function WalletsScreen({
           />
         }
       >
-        {netinfo ? (
-          !marketData || !soloData ? (
-            <View
-              style={{
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: 30,
-              }}
-            >
-              <ActivityIndicator size="small" color={Colors.darkRed} />
-            </View>
-          ) : wallets.length > 0 ? (
-            <View style={styles.section}>
-              {wallets.map((item, index) => {
-                return (
-                  <View key={index} style={{ marginBottom: 20 }}>
-                    <WalletCard
-                      navigation={navigation ? navigation : rootNavigation}
-                      // defaultCurrency="usd"
-                      baseCurrency={baseCurrency}
-                      wallet={item}
-                      key={index}
-                      marketData={marketData}
-                      soloData={soloData}
-                    />
-                  </View>
-                );
-              })}
-            </View>
-          ) : (
-            <View
-              style={[
-                styles.section,
-                { justifyContent: "center", alignItems: "center" },
-              ]}
-            >
-              <Custom_Text
-                value="No Wallets Added"
-                size={Fonts.size.large}
-                color={Colors.text}
-              />
-            </View>
-          )
-        ) : wallets.length > 0 ? (
+        {wallets.length > 0 ? (
           <View style={styles.section}>
             {wallets.map((item, index) => {
               return (
@@ -180,53 +146,81 @@ function WalletsScreen({
             />
           </View>
         )}
-        {/* {!marketData || !soloData ? (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: 30,
-            }}
-          >
-            <ActivityIndicator size="small" color={Colors.darkRed} />
-          </View>
-        ) : wallets.length > 0 ? (
-          <View style={styles.section}>
-            {wallets.map((item, index) => {
-              return (
-                <View key={index} style={{ marginBottom: 20 }}>
-                  <WalletCard
-                    navigation={navigation ? navigation : rootNavigation}
-                    // defaultCurrency="usd"
-                    baseCurrency={baseCurrency}
-                    wallet={item}
-                    key={index}
-                    marketData={marketData}
-                    soloData={soloData}
-                  />
-                </View>
-              );
-            })}
-          </View>
-        ) : (
-          <View
-            style={[
-              styles.section,
-              { justifyContent: "center", alignItems: "center" },
-            ]}
-          >
-            <Custom_Text
-              value="No Wallets Added"
-              size={Fonts.size.large}
-              color={Colors.text}
-            />
-          </View>
-        )} */}
+        {/* {netinfo ? (
+            !marketData || !soloData ? (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 30,
+                }}
+              >
+                <ActivityIndicator size="small" color={Colors.darkRed} />
+              </View>
+            ) : wallets.length > 0 ? (
+              <View style={styles.section}>
+                {wallets.map((item, index) => {
+                  return (
+                    <View key={index} style={{ marginBottom: 20 }}>
+                      <WalletCard
+                        navigation={navigation ? navigation : rootNavigation}
+                        baseCurrency={baseCurrency}
+                        wallet={item}
+                        key={index}
+                        marketData={marketData}
+                        soloData={soloData}
+                      />
+                    </View>
+                  );
+                })}
+              </View>
+            ) : (
+              <View
+                style={[
+                  styles.section,
+                  { justifyContent: "center", alignItems: "center" },
+                ]}
+              >
+                <Custom_Text
+                  value="No Wallets Added"
+                  size={Fonts.size.large}
+                  color={Colors.text}
+                />
+              </View>
+            )
+          ) : wallets.length > 0 ? (
+            <View style={styles.section}>
+              {wallets.map((item, index) => {
+                return (
+                  <View key={index} style={{ marginBottom: 20 }}>
+                    <WalletCard
+                      navigation={navigation ? navigation : rootNavigation}
+                      baseCurrency={baseCurrency}
+                      wallet={item}
+                      key={index}
+                      marketData={marketData}
+                      soloData={soloData}
+                    />
+                  </View>
+                );
+              })}
+            </View>
+          ) : (
+            <View
+              style={[
+                styles.section,
+                { justifyContent: "center", alignItems: "center" },
+              ]}
+            >
+              <Custom_Text
+                value="No Wallets Added"
+                size={Fonts.size.large}
+                color={Colors.text}
+              />
+            </View>
+          )} */}
         <View style={{ height: 100, width: screenWidth }} />
       </ScrollView>
-      {/* <View style={styles.footer}>
-        <Image source={images.gradient} style={styles.gradient} />
-      </View> */}
       <Custom_IconButton
         icon="md-add"
         color={Colors.text}
@@ -293,6 +287,9 @@ const mapStateToProps = ({
   soloData,
   netinfo,
   pullToRefreshBalancePending,
+  getMarketDataPending,
+  getSoloDataPending,
+  getMarketSevenPending,
 }) => ({
   marketData,
   wallets,
@@ -300,6 +297,9 @@ const mapStateToProps = ({
   soloData,
   netinfo,
   pullToRefreshBalancePending,
+  getMarketDataPending,
+  getSoloDataPending,
+  getMarketSevenPending,
 });
 
 const mapDispatchToProps = dispatch => ({
