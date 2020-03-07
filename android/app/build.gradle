@@ -103,7 +103,7 @@ android {
         applicationId "com.sologenicwallet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 15
+        versionCode 16
         versionName "1.4.1"
     }
     splits {
