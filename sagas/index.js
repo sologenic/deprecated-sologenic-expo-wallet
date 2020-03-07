@@ -260,7 +260,9 @@ function* requestGetReserve(action) {
 function* requestGetAccountObjects(action) {
   const { payload } = action;
   const accountObjects = yield call(getAccountObjects, payload);
-  const state = yield call(setAccountObjects, accountObjects.account_objects);
+  const state = yield accountObjects
+    ? call(setAccountObjects, accountObjects.account_objects)
+    : null;
   if (state) {
     yield put(updateAccountObjects(state));
   } else {
