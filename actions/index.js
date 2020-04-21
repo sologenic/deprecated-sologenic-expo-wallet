@@ -669,3 +669,10 @@ export const updateAccountObjects = data => {
     payload: data,
   };
 };
+
+export const updateXumm = status => {
+  return {
+    type: "UPDATE_XUMM",
+    status,
+  }
+}

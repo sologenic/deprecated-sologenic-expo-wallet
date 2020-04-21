@@ -106,6 +106,7 @@ const defaultState = {
     payChannels: 0,
     checks: 0,
   },
+  xummEnabled: false,
 };
 
 const getMarketData = (state, action) => {
@@ -822,6 +823,13 @@ const purgeStore = state => {
   return Object.assign({}, state, defaultState);
 };
 
+const updateXumm = (state, action) => {
+  const { status } = action;
+  return Object.assign({}, state, {
+    xummEnabled: status,
+  });
+}
+
 // const postEmailNewsLetter = state => {
 //   return Object.assign({}, state, {
 //     postEmailNewsLetterPending: true,
@@ -1002,6 +1010,8 @@ export default (state = defaultState, action) => {
       return getReserveError(state, action);
     case "UPDATE_ACCOUNT_OBJECTS":
       return updateAccountObjects(state, action);
+    case "UPDATE_XUMM":
+      return updateXumm(state, action);
     default:
       return state;
   }

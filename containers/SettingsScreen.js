@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import * as WebBrowser from "expo-web-browser";
 import * as LocalAuthentication from "expo-local-authentication";
 import { persistStore } from "redux-persist";
+import ToggleSwitch from 'toggle-switch-react-native-plus';
 
 import Custom_Text from "../components/shared/Custom_Text";
 import Custom_Header from "../components/shared/Custom_Header";
@@ -13,7 +14,7 @@ import Colors from "../constants/Colors";
 import Custom_NavButton from "../components/shared/Custom_NavButton";
 import Custom_MultiSelectInput from "../components/shared/Custom_MultiSelectInput";
 import currencies from "../constants/currencies";
-import { updateBaseCurrency, getMarketData, purgeStore } from "../actions";
+import { updateBaseCurrency, getMarketData, purgeStore, updateXumm } from "../actions";
 import config from "../constants/config";
 import appConfig from "../app.config";
 import ResetDataModal from "../components/shared/ResetDataModal";
@@ -27,6 +28,8 @@ function SettingsScreen({
   getMarketData,
   pin,
   purgeStore,
+  xummEnabled,
+  updateXumm,
 }) {
   // console.log(persistor);
   const [availableUnlockMethods, setAvailableUnlockMethods] = useState(null);
@@ -34,6 +37,8 @@ function SettingsScreen({
   const [showModal, setShowModal] = useState(false);
   const [showPinError, setShowPinError] = useState(false);
   const [code, setCode] = useState("");
+  // const [toggleSwitch, setToggleSwitch] = useState(false);
+
   useEffect(() => {
     getAvailableUnlockMethods();
     getMarketData(baseCurrency.value);
@@ -94,6 +99,37 @@ function SettingsScreen({
             options={currencies}
             onValueChange={updateAccountBaseCurrency}
           />
+        </View>
+        <View style={{ marginTop: 15, marginHorizontal: 15 }}>
+          <Custom_Text
+            value="Turn XUMM on/off for sending your transaction"
+            style={{ marginLeft: 15, marginBottom: 10 }}
+            isBold
+          />
+          <View 
+            style={{ 
+              marginBottom: 10,
+              flex: 1,
+              justifyContent: "center",
+              borderRadius: 25,
+              backgroundColor: Colors.headerBackground,
+              paddingLeft: 25,
+              height: 40,
+            }}
+          >
+            <Custom_Text value={xummEnabled ? "Enabled" : "Disabled"} size={12}/>
+            <View style={{ position: "absolute", right: 15 }}>
+              <ToggleSwitch
+                isOn={xummEnabled}
+                size="small"
+                onColor={Colors.darkRed}
+                offColor={Colors.background}
+                onToggle={isOn => {
+                  updateXumm(isOn);
+                }}
+              />
+            </View>
+          </View>
         </View>
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
@@ -242,6 +278,7 @@ const mapStateToProps = store => ({
   unlockMethod: store.unlockMethod,
   baseCurrency: store.baseCurrency,
   pin: store.pin,
+  xummEnabled: store.xummEnabled,
   // persistor: store.persistor,
 });
 
@@ -252,6 +289,7 @@ const mapDispatchToProps = dispatch => ({
   purgeStore: () => dispatch(purgeStore()),
   saveUnlockMethod: data => dispatch(updateUnlockMethod(data)),
   updateAccountBaseCurrency: data => dispatch(updateBaseCurrency(data)),
+  updateXumm: isOn => dispatch(updateXumm(isOn)),
 });
 
 export default connect(

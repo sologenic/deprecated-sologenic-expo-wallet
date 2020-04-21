@@ -25,6 +25,7 @@ const persistConfig = {
     "authSetupComplete",
     "unlockMethod",
     "wallets",
+    "xummEnabled",
   ],
   // transforms: [persistedUserState],
   // blacklist: ["isAuthenticated"],

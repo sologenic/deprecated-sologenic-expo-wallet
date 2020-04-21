@@ -139,6 +139,23 @@ export const sologenic = new s.SologenicTxHandler(
     hash: {},
   },
 );
+
+export const initializeSologenicTxHandler = (clientType, xummOn) => {
+  return new s.SologenicTxHandler(
+    // RippleAPI Options
+    {
+      server: appConfig.server, // Kudos to Wietse Wind
+    },
+    // Sologenic Options, hash or redis
+    {
+      queueType: "hash",
+      hash: {},
+      clientType,
+      signingMechanism: xummOn ? {} : {},
+    },
+  );  
+}
+
 export const isValidSecret = secret => {
   const rippleApi = sologenic.getRippleApi();
   return secret ? rippleApi.isValidSecret(secret) : false;

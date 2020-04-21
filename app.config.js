@@ -16,4 +16,4 @@ const dev = {
   version: "1.4.1",
 };
 
-export default prod;
+export default dev;

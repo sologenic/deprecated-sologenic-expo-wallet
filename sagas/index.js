@@ -1,5 +1,6 @@
 import { call, put, takeEvery, all, take, select } from "redux-saga/effects";
 import { create } from "apisauce";
+import * as s from "sologenic-xrpl-stream-js";
 
 import {
   getBalanceSuccess,
@@ -42,7 +43,8 @@ import {
 } from "../actions";
 import {
   createSevensObj,
-  sologenic,
+  // sologenic,
+  initializeSologenicTxHandler,
   filterTransactions,
   decrypt,
   roundDown,
@@ -176,8 +178,13 @@ export function* requestMarketSevens() {
   }
 }
 
+let sologenic;
 function* requestConnectToRippleApi() {
   try {
+    const xummEnabled = yield select(state => state.xummEnabled);
+    console.log("HEREEEE", xummEnabled)
+    sologenic = initializeSologenicTxHandler("mobile", xummEnabled);
+
     yield sologenic.connect();
 
     yield sologenic.on("queued", (id, tx) => {
@@ -205,10 +212,10 @@ function* requestConnectToRippleApi() {
   }
 }
 
-const getAccountInfo = address => {
-  const rippleApi = sologenic.getRippleApi();
-  return rippleApi.getAccountInfo(address);
-};
+// const getAccountInfo = address => {
+//   const rippleApi = sologenic.getRippleApi();
+//   return rippleApi.getAccountInfo(address);
+// };
 
 const getBalances = address => {
   const rippleApi = sologenic.getRippleApi();
