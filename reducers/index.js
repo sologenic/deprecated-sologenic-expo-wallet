@@ -107,6 +107,7 @@ const defaultState = {
     checks: 0,
   },
   xummEnabled: false,
+  issuedUserToken: null,
 };
 
 const getMarketData = (state, action) => {
@@ -828,7 +829,14 @@ const updateXumm = (state, action) => {
   return Object.assign({}, state, {
     xummEnabled: status,
   });
-}
+};
+
+const storeXummUserToken = (state, action) => {
+  const { token } = action;
+  return Object.assign({}, state, {
+    issuedUserToken: token,
+  });
+};
 
 // const postEmailNewsLetter = state => {
 //   return Object.assign({}, state, {
@@ -1012,6 +1020,8 @@ export default (state = defaultState, action) => {
       return updateAccountObjects(state, action);
     case "UPDATE_XUMM":
       return updateXumm(state, action);
+    case "STORE_XUMM_USER_TOKEN":
+      return storeXummUserToken(state, action);
     default:
       return state;
   }

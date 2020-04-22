@@ -675,4 +675,11 @@ export const updateXumm = status => {
     type: "UPDATE_XUMM",
     status,
   }
-}
+};
+
+export const storeXummUserToken = token => {
+  return {
+    type: "STORE_XUMM_USER_TOKEN",
+    token,
+  }
+};

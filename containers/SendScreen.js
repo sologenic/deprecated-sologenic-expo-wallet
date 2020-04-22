@@ -32,7 +32,7 @@ import {
   getBalance,
   transferXrpReset,
   transferSolo,
-  transferSoloReset
+  transferSoloReset,
 } from "../actions";
 import {
   formatWalletTotalBalance,
@@ -64,7 +64,8 @@ function SendScreen({
   soloData,
   wallet,
   netinfo,
-  reserve
+  reserve,
+  issuedUserToken,
 }) {
   const [completed, handleIsCompleted] = useState(false);
   const [amountToSend, handleChangeAmountToSend] = useState("");
@@ -129,11 +130,11 @@ function SendScreen({
   }, [amountToSend, destination, passphrase, tag, isUsingXAddress]);
 
   useEffect(() => {
-    if (transferXrpPending) {
-      // setTxInProgressModalVisible(true);
-      setGoToXummModalVisible(true);
-      setSummaryModalVisible(false);
-    }
+    // if (transferXrpPending) {
+    //   // setTxInProgressModalVisible(true);
+    //   setGoToXummModalVisible(true);
+    //   setSummaryModalVisible(false);
+    // }
     if (transferXrpSuccess) {
       setTransferSuccessfulModalVisible(true);
       setSummaryModalVisible(false);
@@ -166,7 +167,6 @@ function SendScreen({
     summaryModalVisible,
     // txInProgressModalVisible,
   ]);
-
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -551,7 +551,8 @@ const mapStateToProps = ({
   wallet,
   netinfo,
   soloData,
-  reserve
+  reserve,
+  issuedUserToken,
 }) => ({
   transferXrpSuccess,
   transferXrpError,
@@ -567,7 +568,8 @@ const mapStateToProps = ({
   soloData,
   wallet,
   netinfo,
-  reserve
+  reserve,
+  issuedUserToken,
 });
 const mapDispatchToProps = dispatch => ({
   transferXrp: ({
@@ -620,7 +622,7 @@ const mapDispatchToProps = dispatch => ({
     ),
   getBalance: (id, walletAddress) => dispatch(getBalance(id, walletAddress)),
   transferXrpReset: () => dispatch(transferXrpReset()),
-  transferSoloReset: () => dispatch(transferSoloReset())
+  transferSoloReset: () => dispatch(transferSoloReset()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendScreen);

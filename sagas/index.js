@@ -40,6 +40,7 @@ import {
   getReserveSuccess,
   getReserveError,
   updateAccountObjects,
+  storeXummUserToken,
 } from "../actions";
 import {
   createSevensObj,
@@ -181,6 +182,9 @@ export function* requestMarketSevens() {
 let sologenic;
 function* requestConnectToRippleApi() {
   try {
+    //it should be removed after testing is done
+    yield put(storeXummUserToken(null));
+
     const xummEnabled = yield select(state => state.xummEnabled);
     console.log("HEREEEE", xummEnabled)
     sologenic = initializeSologenicTxHandler("mobile", xummEnabled);
@@ -406,11 +410,20 @@ function* requestCreateTrustline(action) {
   }
 }
 
-const transferXrp = (account, destination, tag, value) => {
+const transferXrp = (account, destination, tag, value, xummEnabled, issuedUserToken) => {
   const valueAmount = (value / 0.000001).toFixed(0);
   console.log(
     "#$%^$#%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^#$%^",
   );
+  //if XUMM is enabled and issuedUserToken exists, submit() is done with the param of token
+  // if (xummEnabled && issuedUserToken) {
+
+  // };
+  
+  // if (xummEnabled && !issuedUserToken) {
+
+  // };
+
   return tag
     ? sologenic.submit({
         TransactionType: "Payment",
@@ -440,11 +453,9 @@ function* requestTransferXrp(action) {
       publicKey,
       reserve,
     } = action;
-    // const secret = keypair ? keypair : "";
-    // console.log("REQUEST_TRANSFER_XRP account ", account);
-    // console.log("REQUEST_TRANSFER_XRP destination ", destination);
-    // console.log("REQUEST_TRANSFER_XRP value ", value);
-    // passphrase, salt, encrypted, publicKey
+
+    const xummEnabled =  yield select(state => state.xummEnabled);
+    const issuedUserToken = yield select(state => state.issuedUserToken);  
     const validCredentials = yield call(
       setAccount,
       account,
@@ -461,7 +472,7 @@ function* requestTransferXrp(action) {
         ),
       );
     } else {
-      const tx = yield call(transferXrp, account, destination, tag, value);
+      const tx = yield call(transferXrp, account, destination, tag, value, xummEnabled, issuedUserToken);
       // console.log("REQUEST_TRANSFER_XRP BEFORE ", tx);
       const response = yield tx.promise;
       // console.log("REQUEST_TRANSFER_XRP AFTER", response);
@@ -520,6 +531,11 @@ function* requestTransferXrp(action) {
           address: destination,
         });
         console.log("REQUEST_TRANSFER_XRP_SUCCESS: ", response);
+        const issuedUserToken = yield select(state => state.issuedUserToken);
+        //if this tx is the first time, the issued_user_token is stored into redux store
+        if (!issuedUserToken) {
+          yield put(storeXummUserToken("USER_TOKEN"));
+        };
       }
     }
   } catch (error) {
@@ -534,6 +550,8 @@ function* requestTransferXrp(action) {
 
 const transferSolo = (account, destination, tag, value) => {
   console.log("tag= ", tag);
+  //if XUMM is enabled and issuedUserToken exists, submit() is done with the param of token
+  // const issuedUserToken = yield(state => state.issuedUserToken) 
   return tag
     ? sologenic.submit({
         TransactionType: "Payment",
@@ -646,6 +664,11 @@ function* requestTransferSolo(action) {
           id: destination,
           address: destination,
         });
+        const issuedUserToken = yield select(state => state.issuedUserToken);
+        //if this tx is the first time, the issued_user_token is stored into redux store
+        if (!issuedUserToken) {
+          yield put(storeXummUserToken("USER_TOKEN"));
+        };
       }
     }
   } catch (error) {
