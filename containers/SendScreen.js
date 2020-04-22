@@ -25,6 +25,8 @@ import TransferSummaryModal from "../components/shared/TransferSummaryModal";
 import TransferSuccessfulModal from "../components/shared/TransferSuccessfulModal";
 import TransferFailedModal from "../components/shared/TransferFailedModal";
 import ErrorModal from "../components/shared/ErrorModal";
+import TxInProgressModal from "../components/shared/TxInProgressModal";
+import GoToXummModal from "../components/shared/GoToXummModal";
 import {
   transferXrp,
   getBalance,
@@ -75,6 +77,8 @@ function SendScreen({
   const [tag, handleChangeTag] = useState("");
   const [passphrase, handleChangePassphrase] = useState("");
   const [summaryModalVisible, setSummaryModalVisible] = useState(false);
+  const [txInProgressModalVisible, setTxInProgressModalVisible] = useState(false);
+  const [goToXummModalVisible, setGoToXummModalVisible] = useState(false);
   const [
     transferSuccessfulModalVisible,
     setTransferSuccessfulModalVisible
@@ -125,6 +129,11 @@ function SendScreen({
   }, [amountToSend, destination, passphrase, tag, isUsingXAddress]);
 
   useEffect(() => {
+    if (transferXrpPending) {
+      // setTxInProgressModalVisible(true);
+      setGoToXummModalVisible(true);
+      setSummaryModalVisible(false);
+    }
     if (transferXrpSuccess) {
       setTransferSuccessfulModalVisible(true);
       setSummaryModalVisible(false);
@@ -154,7 +163,8 @@ function SendScreen({
     transferSoloSuccess,
     transferSoloError,
     transferSuccessfulModalVisible,
-    summaryModalVisible
+    summaryModalVisible,
+    // txInProgressModalVisible,
   ]);
 
   return (
@@ -454,6 +464,14 @@ function SendScreen({
         address={destination}
         amountToSend={amountToSend}
         tag={tag ? tag : ""}
+      />
+      <GoToXummModal
+        modalVisible={goToXummModalVisible}
+        deepLink="exp://expo.io"
+      />
+      <TxInProgressModal
+        modalVisible={txInProgressModalVisible}
+        deepLink="exp://expo.io"
       />
       <TransferSuccessfulModal
         modalVisible={transferSuccessfulModalVisible}
