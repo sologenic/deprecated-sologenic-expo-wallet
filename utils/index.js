@@ -423,24 +423,6 @@ export const decrypt = (encrypted, salt, address, passphrase) => {
   return decipher.output.data;
 };
 
-// console.log(
-//   encrypt(
-//     "PRIVATE KEY123",
-//     salt,
-//     "rGfRVfHBdAiwveepHTy1vJbqugUfmdYMSP",
-//     "aB123456",
-//   ),
-// );
-
-// console.log(
-//   decrypt(
-//     "rBuyaAXf8G9uqVxpHdVSBg==",
-//     salt,
-//     "rGfRVfHBdAiwveepHTy1vJbqugUfmdYMSP",
-//     "aB123456",
-//   ),
-// );
-
 export const formatRecoveryWord = string => {
   return string.replace(/\s+/g, "");
 };
