@@ -69,6 +69,7 @@ const colors = {
   chartGradient1: "#CDE3F8",
   chartGradient2: "#eef6fd",
   chartGradient3: "#f5f6f8",
+  xummBlue: "#0024E8"
 };
 
 export default colors;

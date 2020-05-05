@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Linking,
 } from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 
 import Colors from "../../constants/Colors";
 import Fonts from "../../constants/Fonts";
@@ -41,25 +42,64 @@ export default function GoToXummModal({
                   isBold
                 />
               </View>
+              {/* <View style={[styles.section], { marginBottom: 20, alignItems: "center" }}>
+                <View 
+                  style={{ 
+                    borderColor: Colors.xummBlue,
+                    borderWidth: 4,
+                    borderRadius: 8,
+                    height: 50,
+                    width: 55,
+                    backgroundColor: Colors.ricePaper,
+                  }}
+                >
+                  <View 
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      left: 8
+                    }}
+                  >
+                    <FontAwesome
+                      name="close"
+                      size={20}
+                      color={Colors.xummBlue}
+                    />
+                  </View>
+                  <View
+                    style={{
+                      position: "absolute",
+                      top: 10,
+                      left: 21
+                    }}
+                  >
+                    <FontAwesome
+                      name="check"
+                      size={20}
+                      color={Colors.xummBlue}
+                    />
+                  </View>
+                </View>
+              </View> */}
               <View style={[styles.section, { marginTop: 10, marginBottom: 20 }]}>
                 <ActivityIndicator size="small" color={Colors.freshGreen} />
-                <View style={{ marginVertical: 10 }}>
+                {/* <View style={{ marginVertical: 10 }}>
                   <Custom_Text
                     value={`Progressing`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
-                </View>
+                </View> */}
               </View>
               <View style={[styles.section, { marginBottom: 20 }]}>
                 <View style={{ marginBottom: 10 }}>
                   <Custom_Text
-                    value={`Press the bottun below and open the XUMM app to proceed with your first transaction with XUMM.`}
+                    value={`Press the bottun below and open the XUMM app to proceed.`}
                     size={Fonts.size.small}
                     color={Colors.text}
                   />
                 </View>
-                <View>
+                <View style={{ marginTop: 5 }}>
                   <Custom_Text
                     value={deepLink}
                     size={Fonts.size.small}
@@ -76,11 +116,12 @@ export default function GoToXummModal({
                 ]}
               >
                 <Custom_Button
-                  text="GO TO XUMM"
-                  onPress={() => {
-                    console.log("GO TO XUMM")
-                    Linking.openURL(deepLink);
-                  }}
+                  text="OPEN XUMM"
+                  // onPress={() => {
+                  //   console.log("GO TO XUMM")
+                  //   Linking.openURL(deepLink);
+                  // }}
+                  onPress={onPress}
                   color={Colors.freshGreen}
                   size={16}
                   textStyle={{ letterSpacing: 1.2 }}

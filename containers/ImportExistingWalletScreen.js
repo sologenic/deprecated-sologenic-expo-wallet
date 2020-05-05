@@ -10,6 +10,7 @@ import Fonts from "../constants/Fonts";
 import Colors from "../constants/Colors";
 import PassphraseTab from "./PassphraseTab";
 import WalletAddressSecretTab from "./WalletAddressSecretTab";
+import XummTab from "./XummTab";
 import { screenWidth } from "../constants/Layout";
 
 export default function ImportExistingWalletScreen({ navigation }) {
@@ -19,6 +20,42 @@ export default function ImportExistingWalletScreen({ navigation }) {
     importSuccessfulModalVisible,
     setImportSuccessfulModalVisible,
   ] = useState(false);
+
+  const switchTabView = tab => {
+    if (tab === 1) {
+      return (
+        <PassphraseTab
+          navigation={navigation}
+          errorModalVisible={errorModalVisible}
+          setErrorModalVisible={setErrorModalVisible}
+          importSuccessfulModalVisible={importSuccessfulModalVisible}
+          setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+        />
+      );
+    } else if (tab === 2) {
+      console.log("hey tab === 2")
+      return (
+        <WalletAddressSecretTab
+          navigation={navigation}
+          errorModalVisible={errorModalVisible}
+          setErrorModalVisible={setErrorModalVisible}
+          importSuccessfulModalVisible={importSuccessfulModalVisible}
+          setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+        />
+      );
+    } else if (tab === 3) {
+      console.log("hey tab === 3")
+      return (
+        <XummTab
+          navigation={navigation}
+          errorModalVisible={errorModalVisible}
+          setErrorModalVisible={setErrorModalVisible}
+          importSuccessfulModalVisible={importSuccessfulModalVisible}
+          setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
+        />
+      );
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -86,10 +123,33 @@ export default function ImportExistingWalletScreen({ navigation }) {
             size={Fonts.size.normal}
           />
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            handleTabView(3);
+          }}
+          style={[
+            {
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            },
+            tab === 3
+              ? {
+                  borderBottomColor: Colors.text,
+                  borderBottomWidth: 2,
+                }
+              : {},
+          ]}
+        >
+          <Custom_Text
+            value="XUMM"
+            size={Fonts.size.normal}
+          />
+        </TouchableOpacity>
       </View>
       <ScrollView>
         <KeyboardAwareScrollView>
-          {tab === 1 ? (
+          {/* {tab === 1 ? (
             <PassphraseTab
               navigation={navigation}
               errorModalVisible={errorModalVisible}
@@ -105,7 +165,8 @@ export default function ImportExistingWalletScreen({ navigation }) {
               importSuccessfulModalVisible={importSuccessfulModalVisible}
               setImportSuccessfulModalVisible={setImportSuccessfulModalVisible}
             />
-          )}
+          )} */}
+            {switchTabView(tab)}
           <View style={{ height: 40, width: screenWidth }} />
         </KeyboardAwareScrollView>
       </ScrollView>
