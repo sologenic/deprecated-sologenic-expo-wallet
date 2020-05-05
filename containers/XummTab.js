@@ -48,7 +48,7 @@ function XummTab({
   const [passphrase, setPassphrase] = useState("");
   const [completed, handleIsCompleted] = useState(false);
   const [existingWalletError, setExistingWalletError] = useState(false);
-  const [xAddressError, setXAddressError] = useState(false);
+  const [timeoutError, setTimeoutError] = useState(false);
   const [goToXummModalVisible, setGoToXummModal] = useState(false);
 
   useEffect(() => {
@@ -244,8 +244,8 @@ function XummTab({
         }}
       />
       <ErrorModal
-        value="We noticed you're using an X-Address format. We currently only support Legacy Addresses. Please use your Classic XRP Address instead."
-        modalVisible={xAddressError}
+        value="You failed to import this wallet. This request has expired."
+        modalVisible={timeoutError}
         onClose={() => {
           // setXAddressError(false);
         }}
