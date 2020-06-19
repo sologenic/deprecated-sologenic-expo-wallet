@@ -458,17 +458,17 @@ function* requestTransferXrp(action) {
       // console.log("REQUEST_TRANSFER_XRP BEFORE ", tx);
       const response = yield tx.promise;
       // console.log("REQUEST_TRANSFER_XRP AFTER", response);
-      if (response.result && response.result.status === "failed") {
-        console.log("REQUEST_TRANSFER_XRP ERROR", response.result);
-        console.log("REQUEST_TRANSFER_XRP ERROR", response.result.reason);
+      if (response.cause && response.cause.status === "failed") {
+        console.log("REQUEST_TRANSFER_XRP ERROR", response.cause);
+        console.log("REQUEST_TRANSFER_XRP ERROR", response.cause.reason);
         // yield put(transferXrpError(response.result.reason));
-        if (response.result.reason === "tecPATH_DRY") {
+        if (response.cause.reason === "tecPATH_DRY") {
           yield put(
             transferXrpError(
               "Transfer failed. Please make sure the address you're sending to has activated their wallet.",
             ),
           );
-        } else if (response.result.reason === "tecUNFUNDED_PAYMENT") {
+        } else if (response.cause.reason === "tecUNFUNDED_PAYMENT") {
           yield put(
             transferXrpError(
               `Please make sure you have a minimum of ${Number(value) +
@@ -478,7 +478,7 @@ function* requestTransferXrp(action) {
             ),
           );
         } else if (
-          response.result.reason.includes(
+          response.cause.reason.includes(
             "is not a valid hex representation of a byte",
           )
         ) {
@@ -487,22 +487,28 @@ function* requestTransferXrp(action) {
               "Transfer failed due to invalid destination address. Please try again.",
             ),
           );
-        } else if (response.result.reason === "temBAD_AMOUNT") {
+        } else if (response.cause.reason === "temBAD_AMOUNT") {
           yield put(
             transferXrpError(
               "Transfer failed due to invalid amount. Please try again.",
             ),
           );
-        } else if (response.result.reason === "tecNO_DST_INSUF_XRP") {
+        } else if (response.cause.reason === "tecNO_DST_INSUF_XRP") {
           yield put(
             transferXrpError(
               "Transfer failed. You must have enough XRP in your wallet to cover the network reserve.",
             ),
           );
-        } else if (response.result.reason === "tefMAX_LEDGER") {
+        } else if (response.cause.reason === "tefMAX_LEDGER") {
           yield put(transferXrpError("Transfer failed. Please try again."));
+        } else if (response.cause.reason === "unable_to_sign_transaction") {
+          yield put(
+            transferXrpError(
+              "Unable to sign transaction. Please check the destination address",
+            ),
+          );
         } else {
-          yield put(transferXrpError(response.result.reason));
+          yield put(transferXrpError(response.cause.reason));
         }
       } else if (response) {
         yield put(transferXrpSuccess(response));
@@ -596,34 +602,46 @@ function* requestTransferSolo(action) {
       const tx = yield call(transferSolo, account, destination, tag, value);
       const response = yield tx.promise;
       console.log("REQUEST_TRANSFER_SOLO ", response);
-      if (response.result && response.result.status === "failed") {
+      if (response.cause && response.cause.status === "failed") {
         console.log("REQUEST_TRANSFER_SOLO_ERROR", response);
-        if (response.result.reason === "tecPATH_DRY") {
+        if (response.cause.status === "tecPATH_DRY") {
           yield put(
             transferSoloError(
               "Transfer failed. Please make sure you have enough funds, or that the address you're sending to has activated their Solo wallet.",
             ),
           );
-        } else if (response.result.reason === "tecUNFUNDED_PAYMENT") {
+        } else if (response.cause.status === "tecUNFUNDED_PAYMENT") {
           yield put(
             transferSoloError(
               "Transfer failed. Please make sure you have enough funds in your wallet.",
             ),
           );
         } else if (
-          response.result.reason.includes(
+          response.cause.status.includes(
             "is not a valid hex representation of a byte",
           )
         ) {
           yield put(
-            transferXrpError(
+            transferSoloError(
               "Transfer failed due to invalid destination address. Please try again.",
             ),
           );
-        } else if (response.result.reason === "tecPATH_PARTIAL") {
+        } else if (response.cause.status === "tecPATH_PARTIAL") {
           yield put(
             transferSoloError(
-              "Transfer failed. Please make sure you have enough funds in your wallet.",
+              "The transaction failed because the provided paths did not have enough liquidity to send the full amount.",
+            ),
+          );
+        } else if (response.cause.reason === "unable_to_sign_transaction") {
+          yield put(
+            transferSoloError(
+              "Unable to sign transaction. Please check the destination address",
+            ),
+          );
+        } else if (response.cause.reason === "tecNO_DST_INSUF_XRP") {
+          yield put(
+            transferSoloError(
+              "Transfer failed. You must have enough XRP in your wallet to cover the network reserve.",
             ),
           );
         } else {
