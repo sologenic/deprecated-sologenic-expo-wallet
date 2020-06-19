@@ -18,7 +18,10 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Give permission to use Face Id on device."
+      }
     },
     "description": "",
     "entryPoint": "node_modules/expo/AppEntry.js"
