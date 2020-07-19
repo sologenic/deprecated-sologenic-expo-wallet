@@ -35,7 +35,7 @@
     "expo-web-browser": "~8.0.0",
     "glamorous-native": "^2.0.0",
     "https-browserify": "0.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "moment-timezone": "^0.5.27",
     "node-forge": "^0.9.1",
     "numbro": "^2.1.2",
