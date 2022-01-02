@@ -24,6 +24,7 @@ import ChangeWalletNicknameScreen from "../containers/ChangeWalletNicknameScreen
 import ConfirmUnlockMethodScreen from "../containers/ConfirmUnlockMethodScreen";
 import TermsScreen from "../containers/TermsScreen";
 import LicenseAgreementScreen from "../containers/LicenseAgreementScreen";
+import ReceiveEmailUpdatesScreen from "../containers/ReceiveEmailUpdatesScreen";
 
 const MainStack = createStackNavigator(
   {
@@ -100,6 +101,7 @@ const MainStack = createStackNavigator(
     ChangeWalletNicknameScreen: ChangeWalletNicknameScreen,
     TermsScreen: TermsScreen,
     LicenseAgreementScreen: LicenseAgreementScreen,
+    ReceiveEmailUpdatesScreen: ReceiveEmailUpdatesScreen,
   },
   {
     headerMode: "none",

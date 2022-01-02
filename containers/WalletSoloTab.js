@@ -30,7 +30,7 @@ import {
   getMarketSevens,
   connectToRippleApi,
 } from "../actions";
-import { headerHeight } from "../constants/Layout";
+import { headerHeight, screenWidth } from "../constants/Layout";
 import CopiedModal from "../components/shared/CopiedModal";
 import { formatBalance } from "../utils";
 import EnterPasswordModal from "../components/shared/EnterPasswordModal";
@@ -86,7 +86,6 @@ function WalletSoloTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
-      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -105,7 +104,6 @@ function WalletSoloTab({
       setActivateModalVisible(true);
     }
     if (createTrustlineError) {
-      console.log("yayayayaya");
       setActivateModalVisible(false);
       setTrustlineErrorModalVisible(true);
     }
@@ -121,23 +119,19 @@ function WalletSoloTab({
     isActive,
   ]);
 
-  // useEffect(() => {
-  //   if (isActive && !isWalletActive) {
-  //     setIsWalletActive(true);
-  //   }
-  // }, [wallet]);
-
   const { id, isActive, salt, encrypted, details } = wallet;
   const { publicKey } = details.wallet;
 
   const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
-  // const priceChange = getPriceChange(marketData.last, marketData.open);
-  // const priceColor = getPriceColor(priceChange);
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    setCopiedModalVisible(true);
-    setTimeout(() => setCopiedModalVisible(false), 2500);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
   };
 
   if (!soloActive) {
@@ -256,7 +250,11 @@ function WalletSoloTab({
                   color={Colors.grayText}
                   style={{ marginBottom: 3 }}
                 />
-                <Custom_Text value={walletAddress} size={Fonts.size.small} />
+                <Custom_Text
+                  value={walletAddress}
+                  size={Fonts.size.small}
+                  numberOfLines={1}
+                />
               </View>
               <View style={{ flex: 1 }}>
                 <View style={{ paddingVertical: 2.5 }}>
@@ -506,7 +504,11 @@ function WalletSoloTab({
                 size={Fonts.size.small}
                 color={Colors.grayText}
               />
-              <Custom_Text value={walletAddress} size={Fonts.size.small} />
+              <Custom_Text
+                value={walletAddress}
+                size={Fonts.size.small}
+                numberOfLines={1}
+              />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>
@@ -573,6 +575,7 @@ function WalletSoloTab({
                         key={`${item.address}${index}`}
                         transaction={item}
                         walletAddress={id}
+                        writeToClipboard={writeToClipboard}
                       />
                     );
                   }
@@ -613,6 +616,7 @@ function WalletSoloTab({
           modalVisible={walletAddressModalVisible}
           onClose={() => setWalletAddressModalVisible(false)}
         />
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <CopiedModal showModal={copiedModalVisible} />
     </View>

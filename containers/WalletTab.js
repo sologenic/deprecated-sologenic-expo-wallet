@@ -21,7 +21,7 @@ import Why21XRPModal from "../components/shared/Why21XrpModal";
 import ActivationSuccessfulModal from "../components/shared/ActivationSuccessfulModal";
 import WalletAddressModal from "../components/shared/WalletAddressModal";
 import XrpWarningModal from "../components/shared/XrpWarningModal";
-import { getPriceChange, getPriceColor, getAddress } from "../utils";
+import { getPriceChange, getPriceColor, formatBalance } from "../utils";
 import SevenChart from "../components/shared/SevenChart";
 import { screenWidth, headerHeight } from "../constants/Layout";
 import {
@@ -66,7 +66,10 @@ function WalletTab({
   const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const [xrpBalanceWarning, setXrpBalanceWarning] = useState(false);
   const [xrpWarningModalVisible, setXrpWarningModalVisible] = useState(false);
-  const priceChange = marketData ? getPriceChange(marketData.last, marketData.open) : "";
+  const priceChange =
+    marketData && marketData.last
+      ? getPriceChange(marketData.last, marketData.open)
+      : "";
   const priceColor = getPriceColor(priceChange);
   const { id, isActive } = wallet;
   const [isWalletActive, setIsWalletActive] = useState(isActive);
@@ -74,7 +77,6 @@ function WalletTab({
   useEffect(() => {
     if (netinfo) {
       fetchData();
-      // connectToRippleApi();
     }
   }, [netinfo]);
 
@@ -99,7 +101,7 @@ function WalletTab({
   }, [xrpBalanceWarning, transactions, getTransactionsPending]);
 
   useEffect(() => {
-    if (isActive && !isWalletActive) {
+    if (isActive && !isWalletActive && marketData) {
       setIsWalletActive(true);
     }
   }, [wallet]);
@@ -118,8 +120,12 @@ function WalletTab({
 
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
-    setCopiedModalVisible(true);
-    setTimeout(() => setCopiedModalVisible(false), 2500);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
   };
 
   if (isWalletActive) {
@@ -156,6 +162,7 @@ function WalletTab({
                 >
                   <View style={{ paddingRight: 10 }}>
                     <Custom_Text
+                      // value={`${formatBalance(xrpBalance)}`}
                       value={`${xrpBalance}`}
                       size={Fonts.size.h3}
                       isBold
@@ -182,7 +189,11 @@ function WalletTab({
                         color={Colors.lightGray}
                       />
                       <Custom_Text
-                        value={`${defaultCurrency.symbol} ${marketData.last}`}
+                        value={
+                          marketData && marketData.last
+                            ? `${defaultCurrency.symbol} ${marketData.last}`
+                            : "0"
+                        }
                         size={Fonts.size.medium}
                       />
                     </View>
@@ -201,7 +212,13 @@ function WalletTab({
                   </View>
                 </View>
               ) : (
-                <View style={{ height: 100, justifyContent: "center", alignItems: "center" }}>
+                <View
+                  style={{
+                    height: 100,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
                   <View>
                     <Custom_Text
                       value="Your device is now offline."
@@ -272,7 +289,11 @@ function WalletTab({
                   size={Fonts.size.small}
                   color={Colors.grayText}
                 />
-                <Custom_Text value={walletAddress} size={Fonts.size.small} />
+                <Custom_Text
+                  value={walletAddress}
+                  size={Fonts.size.small}
+                  numberOfLines={1}
+                />
               </View>
               <View style={{ flex: 1 }}>
                 <View style={{ paddingVertical: 2.5 }}>
@@ -332,6 +353,7 @@ function WalletTab({
                           key={`${item.address}${index}`}
                           transaction={item}
                           walletAddress={id}
+                          writeToClipboard={writeToClipboard}
                         />
                       );
                     }
@@ -380,7 +402,7 @@ function WalletTab({
             modalVisible={xrpWarningModalVisible}
             onClose={() => setXrpWarningModalVisible(false)}
           />
-          <View style={{ height: 30, width: screenWidth }} />
+          <View style={{ height: 40, width: screenWidth }} />
         </ScrollView>
         <CopiedModal showModal={copiedModalVisible} />
       </View>
@@ -502,7 +524,11 @@ function WalletTab({
                 color={Colors.grayText}
                 style={{ marginBottom: 3 }}
               />
-              <Custom_Text value={walletAddress} size={Fonts.size.small} />
+              <Custom_Text
+                value={walletAddress}
+                size={Fonts.size.small}
+                numberOfLines={1}
+              />
             </View>
             <View style={{ flex: 1 }}>
               <View style={{ paddingVertical: 2.5 }}>

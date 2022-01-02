@@ -20,6 +20,7 @@ import {
 } from "../actions";
 import WalletCreationSuccessfulModal from "../components/shared/WalletCreationSuccessfulModal";
 import { encrypt, decrypt } from "../utils";
+import { screenWidth } from "../constants/Layout";
 
 function RecoveryPhraseTestScreen({
   navigation,
@@ -56,7 +57,7 @@ function RecoveryPhraseTestScreen({
     updatePhraseTestValue2("");
     updatePhraseTestValue3("");
   }, []);
-  console.log("testResult", testResult)
+  console.log("testResult", testResult);
   console.log(phraseTestValue1, phraseTestValue2, phraseTestValue3);
 
   console.log(
@@ -97,7 +98,11 @@ function RecoveryPhraseTestScreen({
       phrase[sortedRandomNumbers[2] - 1] === phraseTestValue3
     );
   };
-
+  console.log(
+    phraseTestValue1,
+    phraseTestValue2,
+    phraseTestValue3,
+  )
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -187,10 +192,6 @@ function RecoveryPhraseTestScreen({
                   walletAddress,
                   passphrase,
                 );
-                console.log(
-                  "PRIVATE KEY =========================>",
-                  newWallet.wallet.privateKey,
-                );
                 const secureNewWallet = {
                   derivationPath: newWallet.derivationPath,
                   wallet: {
@@ -226,6 +227,7 @@ function RecoveryPhraseTestScreen({
             disabled={!pressed}
           />
         </View>
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <ExitProcessModal
         modalVisible={modalVisible}

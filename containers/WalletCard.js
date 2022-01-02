@@ -21,7 +21,8 @@ function WalletCard({
   const { nickname, balance, walletAddress, id, trustline } = wallet;
   const { xrp, solo, tokenizedAssets } = balance;
   const soloMarketPrice = soloData ? soloData[baseCurrency.value] : "";
-  const xrpBalanceInFiat = marketData ? xrp * marketData.last : "";
+  const xrpBalanceInFiat =
+    marketData && marketData.last ? xrp * marketData.last : "";
   const soloBalanceInFiat = soloMarketPrice ? solo * soloMarketPrice : "";
   const totalBalance =
     xrp === 0 && solo === 0
@@ -60,42 +61,43 @@ function WalletCard({
         activeOpacity={0.5}
         style={styles.upperStyle}
       >
-        <View
-          style={{ flexDirection: "row", marginHorizontal: 12, marginTop: 15 }}
-        >
+        <View style={{ position: "absolute", left: 15, top: 18 }}>
           <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            style={{
+              backgroundColor: Colors.lighterGray,
+              height: 12,
+              width: 12,
+              borderRadius: 6,
+            }}
+          />
+        </View>
+        <View style={{ flexDirection: "row", marginLeft: 40, marginTop: 15 }}>
+          <View
+            style={{
+              flex: 10,
+              justifyContent: "center",
+              alignItems: "flex-start",
+              // paddingLeft: 5,
+            }}
           >
-            <View
-              style={{
-                backgroundColor: Colors.lighterGray,
-                height: 12,
-                width: 12,
-                borderRadius: 6,
-              }}
+            <Custom_Text
+              value={nickname}
+              size={Fonts.size.medium}
+              numberOfLines={1}
+              isBold
             />
           </View>
           <View
-            style={{
-              flex: 8,
-              justifyContent: "center",
-              alignItems: "flex-start",
-              paddingLeft: 5,
-            }}
-          >
-            <Custom_Text value={nickname} size={Fonts.size.medium} numberOfLines={1} isBold />
-          </View>
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+            style={{ justifyContent: "center", alignItems: "center", flex: 2 }}
           >
             <Ionicons name="ios-arrow-forward" size={16} color={Colors.text} />
           </View>
         </View>
-        <View style={{ flexDirection: "row", marginTop: 5 }}>
+        <View style={{ flexDirection: "row", marginTop: 5, marginLeft: 40 }}>
+          {/* <View style={{ flex: 1 }} /> */}
           <View
             style={{
-              flex: 1,
-              paddingLeft: 47,
+              flex: 6,
             }}
           >
             <Custom_Text
@@ -105,17 +107,13 @@ function WalletCard({
               isBold
             />
             <Custom_Text
-              value="Toknized Assets:"
+              value="Tokenized Assets:"
               size={Fonts.size.small}
               color={Colors.lighterGray}
               isBold
             />
           </View>
-          <View
-            style={{
-              flex: 1,
-            }}
-          >
+          <View style={{ flex: 6 }}>
             {totalBalance || totalBalance === 0 ? (
               <View style={{ flexDirection: "row" }}>
                 <View style={{ marginRight: 5, flexDirection: "row" }}>

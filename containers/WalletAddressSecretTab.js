@@ -38,6 +38,7 @@ function WalletAddressSecretTab({
   const [passphrase, setPassphrase] = useState("");
   const [completed, handleIsCompleted] = useState(false);
   const [existingWalletError, setExistingWalletError] = useState(false);
+  const [xAddressError, setXAddressError] = useState(false);
 
   useEffect(() => {
     if (
@@ -120,61 +121,59 @@ function WalletAddressSecretTab({
           secureTextEntry
         />
       </View>
-      <Custom_Text value="Note: You will need to enter your password every time you want to make a transaction." style={{ marginHorizontal: 40, marginTop: 5  }} size={10} />
+      <Custom_Text
+        value="Note: You will need this password to make transactions with this wallet. Please, write down the password and store it in a safe place, if you lose it, there is no way to recover it."
+        style={{ marginHorizontal: 40, marginTop: 5 }}
+        size={10}
+      />
       <View style={[styles.addWalletContainer, { marginTop: 70 }]}>
         <Custom_Button
           text="Add Wallet"
           onPress={() => {
-            const result = handleValidation(addressValue, secretValue);
-            if (!result) {
-              setErrorModalVisible(true);
+            if (addressValue.startsWith("X")) {
+              setXAddressError(true);
             } else {
-              // const walletAddress = getXAddressFromRippleClassicAddress(addressValue);
-              const walletAddress = addressValue;
-              const walletAlreadyExists = checkWalletExists(
-                walletAddress,
-                wallets,
-              );
-              if (!walletAlreadyExists) {
-                const rippleClassicAddress = addressValue;
-                const salt = Math.random()
-                  .toString(36)
-                  .slice(2);
-                const encrypted = encrypt(
-                  secretValue,
-                  salt,
-                  rippleClassicAddress,
-                  passphrase,
-                );
-                const secureNewWallet = {
-                  wallet: {},
-                };
-                getTrustlinesWithAddNewWallet({
-                  walletAddress: rippleClassicAddress,
-                  rippleClassicAddress,
-                  nickname: nicknameValue ? nicknameValue : "",
-                  details: secureNewWallet,
-                  encrypted,
-                  salt,
-                });
-                // getTrustlinesWithAddNewWallet(
-                //   walletAddress,
-                //   rippleClassicAddress,
-                //   nicknameValue ? nicknameValue : "",
-                //   "",
-                //   {
-                //     secret: secretValue,
-                //   },
-                // );
+              const result = handleValidation(addressValue, secretValue);
+              if (!result) {
+                setErrorModalVisible(true);
               } else {
-                setExistingWalletError(true);
+                // const walletAddress = getXAddressFromRippleClassicAddress(addressValue);
+                const walletAddress = addressValue;
+                const walletAlreadyExists = checkWalletExists(
+                  walletAddress,
+                  wallets,
+                );
+                if (!walletAlreadyExists) {
+                  const rippleClassicAddress = addressValue;
+                  const salt = Math.random()
+                    .toString(36)
+                    .slice(2);
+                  const encrypted = encrypt(
+                    secretValue,
+                    salt,
+                    rippleClassicAddress,
+                    passphrase,
+                  );
+                  const secureNewWallet = {
+                    wallet: {},
+                  };
+                  getTrustlinesWithAddNewWallet({
+                    walletAddress: rippleClassicAddress,
+                    rippleClassicAddress,
+                    nickname: nicknameValue ? nicknameValue : "",
+                    details: secureNewWallet,
+                    encrypted,
+                    salt,
+                  });
+                } else {
+                  setExistingWalletError(true);
+                }
               }
-              // setImportSuccessfulModalVisible(true);
             }
           }}
           style={{
             height: 40,
-            width: 100,
+            width: 120,
             backgroundColor: !completed
               ? Colors.headerBackground
               : Colors.darkRed,
@@ -197,6 +196,13 @@ function WalletAddressSecretTab({
         modalVisible={existingWalletError}
         onClose={() => {
           setExistingWalletError(false);
+        }}
+      />
+      <ErrorModal
+        value="We noticed you're using an X-Address format. We currently only support Legacy Addresses. Please use your Classic XRP Address instead."
+        modalVisible={xAddressError}
+        onClose={() => {
+          setXAddressError(false);
         }}
       />
       <ImportSuccessfulModal

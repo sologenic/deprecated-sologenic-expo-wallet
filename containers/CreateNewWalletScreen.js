@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  ActivityIndicator,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -26,11 +27,14 @@ import {
 } from "../utils";
 import { generateNewWallet, saveNickname } from "../actions";
 import Custom_Text from "../components/shared/Custom_Text";
+import colors from "../constants/Colors";
 
 function CreateNewWallet({ navigation, generateNewWallet }) {
   const [textValue, onChangeText] = useState("");
   const [passphraseValue, onChangePassphrase] = useState("");
   const [secureEntry, setSecureEntry] = useState(true);
+  const [pressed, onChangePressed] = useState(false);
+  console.log("pressed next!!!!!!!!!!", pressed)
   return (
     <View style={styles.container}>
       <Custom_Header
@@ -94,54 +98,73 @@ function CreateNewWallet({ navigation, generateNewWallet }) {
             /> */}
           </TouchableOpacity>
         </View>
-          <Custom_Text value="Note: You will need to enter your password every time you want to make a transaction." style={{ marginHorizontal: 40, marginTop: 5 }} size={10} />
+        <Custom_Text
+          value="Note: You will need this password to make transactions with this wallet. Please, write down the password and store it in a safe place, if you lose it, there is no way to recover it."
+          style={{ marginHorizontal: 40, marginTop: 5 }}
+          size={10}
+        />
       </View>
       <View style={styles.footer}>
-        <Custom_Button
-          text="Next"
-          onPress={() => {
-            const result = generateNewRandomWallet();
-            console.log("==generateWalletAddress==", result);
-            const walletAddress = getAddress(result);
-            console.log("==address==", walletAddress);
-            const rippleClassicAddress = getRippleClassicAddressFromXAddress(
-              walletAddress,
-            );
-            console.log("==rippleClassicAddress==", rippleClassicAddress);
-            // const { address } = rippleClassicAddress;
-            generateNewWallet(result);
-            const nickname = textValue;
-            console.log("nickname", nickname);
-            saveNickname(nickname);
-            const mnemonic = generateMnemonicArray(result.mnemonic);
-            navigation.navigate({
-              routeName: "YourRecoveryPhraseScreen",
-              key: "YourRecoveryPhraseScreen",
-              params: {
-                mnemonic,
-                nickname,
-                passphrase: passphraseValue,
-                walletAddress: rippleClassicAddress,
-                rippleClassicAddress: rippleClassicAddress,
-              },
-            });
+        {pressed ? (
+          <View>
+            <ActivityIndicator size="small" color="#FFF" />
+          </View>
+        ) : (
+          <Custom_Button
+            text="Next"
+            onPress={() => {
+              onChangePressed(true);
+              const result = generateNewRandomWallet();
+              console.log("==generateWalletAddress==", result);
+              const walletAddress = getAddress(result);
+              console.log("==address==", walletAddress);
+              const rippleClassicAddress = getRippleClassicAddressFromXAddress(
+                walletAddress,
+              );
+              console.log("==rippleClassicAddress==", rippleClassicAddress);
+              // const { address } = rippleClassicAddress;
+              generateNewWallet(result);
+              const nickname = textValue;
+              console.log("nickname", nickname);
+              saveNickname(nickname);
+              const mnemonic = generateMnemonicArray(result.mnemonic);
+              navigation.navigate({
+                routeName: "YourRecoveryPhraseScreen",
+                key: "YourRecoveryPhraseScreen",
+                params: {
+                  mnemonic,
+                  nickname,
+                  passphrase: passphraseValue,
+                  walletAddress: rippleClassicAddress,
+                  rippleClassicAddress: rippleClassicAddress,
+                  onChangePressed,
+                },
+              });
 
-            // const mnemonic = result.mnemonic;
-            // console.log("==mnemonic==", mnemonic);
-            // const walletFromMnemonic = getWalletFromMnemonic(mnemonic);
-            // console.log("==wallet from mnemonic==", walletFromMnemonic);
-            // console.log(
-            //   "==address from mnemonic==",
-            //   walletFromMnemonic.getAddress()
-            // );
-            // console.log(
-            //   "Is it the same as the one from mnemonic?",
-            //   address === walletFromMnemonic.getAddress()
-            // );
-          }}
-          style={{ height: 40, width: 80 }}
-          icon="ios-arrow-forward"
-        />
+              // const mnemonic = result.mnemonic;
+              // console.log("==mnemonic==", mnemonic);
+              // const walletFromMnemonic = getWalletFromMnemonic(mnemonic);
+              // console.log("==wallet from mnemonic==", walletFromMnemonic);
+              // console.log(
+              //   "==address from mnemonic==",
+              //   walletFromMnemonic.getAddress()
+              // );
+              // console.log(
+              //   "Is it the same as the one from mnemonic?",
+              //   address === walletFromMnemonic.getAddress()
+              // );
+            }}
+            disabled={passphraseValue === ""}
+            style={{
+              height: 40,
+              width: 80,
+              backgroundColor:
+                passphraseValue === "" ? colors.headerBackground : colors.darkRed,
+            }}
+            color={passphraseValue === "" ? colors.grayText : colors.text}
+            icon="ios-arrow-forward"
+          />
+        )}
       </View>
     </View>
   );

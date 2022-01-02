@@ -77,7 +77,11 @@ class ChangeUnlockScreen extends React.Component {
                   .catch(err => console.log("err: ", err));
               } else {
                 this.showAuthError(
-                  `To use this feature you need to first\nset up Face ID on your device.`,
+                  `To use this feature you need to first\nset up ${
+                    availableUnlockMethods === "fingerprint"
+                      ? "Fingerprint"
+                      : "Face"
+                  } ID on your device.`,
                 );
               }
             })
@@ -300,8 +304,8 @@ class ChangeUnlockScreen extends React.Component {
                 <TouchableOpacity
                   onPress={() => {
                     this.resetAuth();
-                    this.authenticateAsync();
                     this.setState({ isModalVisible: false });
+                    navigation.goBack();
                   }}
                   style={{ flex: 1 }}
                 >

@@ -99,6 +99,7 @@ export default function WalletTokenizedAssetTab({
               <Custom_Text
                 value="r4K9RYkqsaDvdPeAeAMDXfjjIH76vUI6gdi47Uh"
                 size={Fonts.size.small}
+                numberOfLines={1}
               />
             </View>
             <View style={{ flex: 1 }}>

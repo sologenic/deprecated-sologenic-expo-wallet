@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
-  Clipboard
+  Clipboard,
 } from "react-native";
 import { connect } from "react-redux";
 
@@ -19,7 +19,7 @@ import {
   getRippleClassicAddressFromXAddress,
   checkWalletExists,
   checkMnemoicExists,
-  encrypt
+  encrypt,
 } from "../utils";
 import ErrorModal from "../components/shared/ErrorModal";
 import { getTrustlines, getTrustlinesReset } from "../actions";
@@ -38,7 +38,7 @@ function PassphraseTab({
   getTrustlinesError,
   getTrustlinesErrorStr,
   getTrustlinesSuccess,
-  getTrustlinesPending
+  getTrustlinesPending,
 }) {
   const [textValue, onChangeText] = useState("");
   const [completed, handleIsCompleted] = useState(false);
@@ -75,10 +75,11 @@ function PassphraseTab({
 
   return (
     <View>
+      {/* <ScrollView> */}
       <View
         style={[
           styles.section,
-          { marginHorizontal: 40, marginTop: 30, marginBottom: 10 }
+          { marginHorizontal: 40, marginTop: 30, marginBottom: 10 },
         ]}
       >
         <Custom_Text
@@ -90,7 +91,7 @@ function PassphraseTab({
       <View
         style={[
           styles.section,
-          { marginHorizontal: 40, marginTop: 10, marginBottom: 10 }
+          { marginHorizontal: 40, marginTop: 10, marginBottom: 10 },
         ]}
       >
         <Custom_Text
@@ -123,7 +124,7 @@ function PassphraseTab({
               fontSize: Fonts.size.medium,
               color: Colors.text,
               height: 60,
-              marginBottom: 5
+              marginBottom: 5,
             }}
           />
         </View>
@@ -131,7 +132,7 @@ function PassphraseTab({
           style={{
             justifyContent: "center",
             alignItems: "flex-end",
-            marginVertical: 5
+            marginVertical: 5,
           }}
         >
           <TouchableOpacity onPress={getContentFromClipboard}>
@@ -143,7 +144,7 @@ function PassphraseTab({
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{ marginBottom: 30 }}>
+      <View style={{ marginBottom: 15 }}>
         <Custom_TextInput
           value={nicknameValue}
           onChangeText={text => {
@@ -171,7 +172,7 @@ function PassphraseTab({
         />
       </View>
       <Custom_Text
-        value="Note: You will need to enter your password every time you want to make a transaction."
+        value="Note: You will need this password to make transactions with this wallet. Please, write down the password and store it in a safe place, if you lose it, there is no way to recover it."
         style={{ marginHorizontal: 40, marginTop: 5, marginBottom: 30 }}
         size={10}
       />
@@ -184,16 +185,16 @@ function PassphraseTab({
               setErrorModalVisible(true);
             } else {
               const importedWallet = getWalletFromMnemonic(
-                textValue.toLowerCase()
+                textValue.toLowerCase(),
               );
               if (importedWallet) {
                 const walletAddress = importedWallet.getAddress();
                 const rippleClassicAddress = getRippleClassicAddressFromXAddress(
-                  walletAddress
+                  walletAddress,
                 );
                 const walletAlreadyExists = checkWalletExists(
                   rippleClassicAddress,
-                  wallets
+                  wallets,
                 );
 
                 if (!walletAlreadyExists) {
@@ -204,12 +205,12 @@ function PassphraseTab({
                     importedWallet.privateKey,
                     salt,
                     rippleClassicAddress,
-                    passphrase
+                    passphrase,
                   );
                   const secureNewWallet = {
                     wallet: {
-                      publicKey: importedWallet.publicKey
-                    }
+                      publicKey: importedWallet.publicKey,
+                    },
                   };
                   getTrustlinesWithAddNewWallet({
                     walletAddress: rippleClassicAddress,
@@ -217,7 +218,7 @@ function PassphraseTab({
                     nickname: nicknameValue ? nicknameValue : "",
                     details: secureNewWallet,
                     encrypted,
-                    salt
+                    salt,
                   });
                 } else {
                   setExistingWalletError(true);
@@ -229,16 +230,17 @@ function PassphraseTab({
           }}
           style={{
             height: 40,
-            width: 100,
+            width: 120,
             backgroundColor: !completed
               ? Colors.headerBackground
-              : Colors.darkRed
+              : Colors.darkRed,
           }}
           color={!completed ? Colors.grayText : Colors.text}
           disabled={getTrustlinesPending || !completed}
           isPending={getTrustlinesPending}
         />
       </View>
+      {/* </ScrollView> */}
       <ErrorModal
         value="You have entered invalid mnemonic recovery words. It should consist of 12 words, each separated by a space. Please check your words and try again. Your XRP wallet needs at least 21 XRP."
         modalVisible={errorModalVisible}
@@ -261,7 +263,7 @@ function PassphraseTab({
           setImportSuccessfulModalVisible(false);
           navigation.navigate({
             routeName: "WalletsScreen",
-            key: "WalletsScreen"
+            key: "WalletsScreen",
           });
         }}
       />
@@ -272,21 +274,21 @@ function PassphraseTab({
 const styles = StyleSheet.create({
   addWalletContainer: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   section: {
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   passphraseTextInputContainer: {
     marginHorizontal: 40,
     marginTop: 30,
-    marginBottom: 30
+    marginBottom: 20,
   },
   passphraseTextInput: {
     borderBottomColor: Colors.text,
-    borderBottomWidth: 1
-  }
+    borderBottomWidth: 1,
+  },
 });
 
 const mapStateToProps = ({
@@ -294,13 +296,13 @@ const mapStateToProps = ({
   getTrustlinesPending,
   getTrustlinesError,
   getTrustlinesErrorStr,
-  wallets
+  wallets,
 }) => ({
   getTrustlinesError,
   getTrustlinesErrorStr,
   getTrustlinesSuccess,
   getTrustlinesPending,
-  wallets
+  wallets,
 });
 const mapDispatchToProps = dispatch => ({
   getTrustlinesWithAddNewWallet: ({
@@ -309,7 +311,7 @@ const mapDispatchToProps = dispatch => ({
     nickname,
     details,
     salt,
-    encrypted
+    encrypted,
   }) =>
     dispatch(
       getTrustlines({
@@ -318,10 +320,13 @@ const mapDispatchToProps = dispatch => ({
         nickname,
         details,
         salt,
-        encrypted
-      })
+        encrypted,
+      }),
     ),
-  getTrustlinesReset: () => dispatch(getTrustlinesReset())
+  getTrustlinesReset: () => dispatch(getTrustlinesReset()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PassphraseTab);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(PassphraseTab);

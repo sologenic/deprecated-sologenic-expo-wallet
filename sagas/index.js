@@ -33,6 +33,8 @@ import {
   getSoloDataSuccess,
   getSoloDataError,
   createTrustlineReset,
+  requestNewsLetterSignupSuccess,
+  requestNewsLetterSignupError,
 } from "../actions";
 import {
   createSevensObj,
@@ -53,6 +55,16 @@ const api = create({
   timeout: 10000,
 });
 
+const sologenicApi = create({
+  baseURL: "https://sologenic.com/",
+  headers: {
+    post: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  },
+  timeout: 10000,
+});
+
 const getMarketData = defaultCurrency =>
   api.get(`tickers/xrp${defaultCurrency}`);
 
@@ -64,6 +76,24 @@ function* requestGetMarketData(action) {
       yield put(getMarketDataSuccess(response.data.markets[0]));
     } else {
       yield put(getMarketDataError(response.data));
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const postNewsLetterSignup = email =>
+  sologenicApi.post(`newsletter-solo-wallet?email=${email}`);
+
+function* requestNewsLetterSignup(action) {
+  const { email } = action;
+  try {
+    const response = yield call(postNewsLetterSignup, email);
+    console.log("post email for newsletter response", response);
+    if (response.ok) {
+      yield put(requestNewsLetterSignupSuccess(response.data));
+    } else {
+      yield put(requestNewsLetterSignupError(response.data));
     }
   } catch (error) {
     console.log(error);
@@ -221,10 +251,6 @@ const setAccount = (address, passphrase, salt, encrypted, publicKey) => {
   const rippleApi = sologenic.getRippleApi();
   const isValidSecret = rippleApi.isValidSecret(decrypted);
   const isValidPrivateKey = /[0-9A-Fa-f]{66}/g;
-  console.log("SET ACCOUNT DESCRYPTED =====", {
-    decrypted,
-    isValidSecret,
-  });
   if (isValidSecret) {
     return sologenic.setAccount({
       address,
@@ -656,128 +682,6 @@ function* requestGetTrustlines(action) {
   }
 }
 
-// const preparePayment = (address, payment) => {
-//   return rippleLibApi.preparePayment(address, payment);
-// };
-
-// const sign = (txJSON, secret) => {
-//   return rippleLibApi.sign(txJSON, secret);
-// };
-
-// const submit = signedTransaction => {
-//   return rippleLibApi.submit(signedTransaction);
-// };
-
-// function* requestPostPaymentTransaction(action) {
-//   yield rippleLibApi.connect();
-//   try {
-//     const { address, destinationAddress, amountValue, secret } = action;
-
-//     const payment = {
-//       source: {
-//         address: address,
-//         maxAmount: {
-//           value: amountValue,
-//           currency: "XRP"
-//         }
-//       },
-//       destination: {
-//         address: destinationAddress,
-//         amount: {
-//           value: amountValue,
-//           currency: "XRP"
-//         }
-//       }
-//     };
-
-//     const prepared = yield call(preparePayment, address, payment);
-//     console.log("prepared", prepared);
-//     try {
-//       const responseSign = yield call(sign, prepared.txJSON, secret);
-//       console.log("sign", responseSign);
-//       try {
-//         const { signedTransaction } = responseSign;
-//         const responseSubmit = yield call(submit, signedTransaction);
-//         console.log("submit", responseSubmit);
-//         try {
-//           yield put(postPaymentTransactionSuccess(responseSubmit));
-//           // yield rippleLibApi.disconnect();
-//           // console.log("done and disconnected.");
-//         } catch (error) {
-//           console.log("Put postpostPaymentTransaction failed.", error);
-//           yield put(postPaymentTransactionError(error));
-//         }
-//       } catch (error) {
-//         console.log("submit failed", error);
-//       }
-//     } catch (error) {
-//       console.log("sign failed", error);
-//     }
-//   } catch (error) {
-//     console.log("REQUEST_PAYMENT_PREPARE_ERROR", error);
-//   }
-// }
-
-// const requestSubscribe = account => {
-//   return rippleLibApi.request("subscribe", {
-//     accounts: [account]
-//   });
-// };
-
-// const requestUnsubscribe = account => {
-//   return rippleLibApi.request("unsubscribe", {
-//     accounts: [account]
-//   });
-// };
-
-// function* requestListenToTransaction(action) {
-//   yield rippleLibApi.connect();
-//   const { account } = action;
-//   try {
-//     yield rippleLibApi.connection.on("transaction", event => {
-//       console.log(
-//         JSON.stringify(event, null, 2),
-//         "------------------------------"
-//       );
-
-//       return rippleLibApi
-//         .request("unsubscribe", {
-//           accounts: [account]
-//         })
-//         .then(response => {
-//           console.log("Successfully unsubscribed", response);
-//           rippleLibApi.disconnect();
-//         })
-//         .catch(error => {
-//           console.log("unsubscription error", error);
-//         });
-//     });
-//     try {
-//       const response = yield call(requestSubscribe, account);
-//       try {
-//         console.log(
-//           "Listen to transactions",
-//           JSON.stringify(response, null, 2)
-//         );
-//         // if (response.status) {
-//         yield put(getListenToTransactionSuccess(response));
-//         console.log("Successfully subscribed");
-
-//         // yield rippleLibApi.disconnect();
-//         // console.log("done and disconnected.");
-//         // }
-//       } catch (error) {
-//         console.log("Put getListenToTransactionSuccess failed.", error);
-//         yield put(getListenToTransactionError(error));
-//       }
-//     } catch (error) {
-//       console.log("subscribed failed.", error);
-//     }
-//   } catch (error) {
-//     console.log("REQUEST_LISTEN_TO_TRANSACTION", error);
-//   }
-// }
-
 export default function* rootSaga() {
   yield all([
     takeEvery("GET_MARKET_DATA", requestGetMarketData),
@@ -792,6 +696,7 @@ export default function* rootSaga() {
     takeEvery("GET_TRANSACTIONS", requestGetTransactions),
     takeEvery("GET_MORE_TRANSACTIONS", requestGetMoreTransactions),
     takeEvery("GET_TRUSTLINES", requestGetTrustlines),
+    takeEvery("NEWS_LETTER_SIGNUP", requestNewsLetterSignup),
     // takeEvery("POST_PAYMENT_TRANSACTION", requestPostPaymentTransaction),
     // takeEvery("GET_LISTEN_TO_TRANSACTION", requestListenToTransaction),
   ]);

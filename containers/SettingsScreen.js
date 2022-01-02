@@ -17,6 +17,7 @@ import { updateBaseCurrency, getMarketData, purgeStore } from "../actions";
 import config from "../constants/config";
 import appConfig from "../app.config";
 import ResetDataModal from "../components/shared/ResetDataModal";
+import { screenWidth } from "../constants/Layout";
 
 function SettingsScreen({
   navigation,
@@ -146,17 +147,21 @@ function SettingsScreen({
             isBold
           />
           <Custom_NavButton
-            value="Terms & Conditions"
+            value="License Agreement"
             handleOnPress={() => {
-              handleOpenWithWebBrowser(config.termsUrl);
+              // handleOpenWithWebBrowser(config.termsUrl);
+              navigation.navigate({
+                key: "LicenseAgreementScreen",
+                routeName: "LicenseAgreementScreen",
+              });
             }}
           />
-          <Custom_NavButton
+          {/* <Custom_NavButton
             value="Privacy Policy"
             handleOnPress={() => {
               handleOpenWithWebBrowser(config.privacyUrl);
             }}
-          />
+          /> */}
         </View>
         <View style={{ marginTop: 15, marginHorizontal: 15 }}>
           <Custom_Text
@@ -192,6 +197,7 @@ function SettingsScreen({
             isBold
           />
         </View>
+        <View style={{ height: 40, width: screenWidth }} />
       </ScrollView>
       <ResetDataModal
         modalVisible={showModal}

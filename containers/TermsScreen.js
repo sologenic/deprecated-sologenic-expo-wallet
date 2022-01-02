@@ -37,20 +37,20 @@ function TermsScreen({ navigation, completeOrientation }) {
             iconColor={Colors.text}
           />
         }
-        center={<Custom_HeaderTitle text="Terms & Conditions" />}
+        center={<Custom_HeaderTitle text="License Agreement" />}
         right={<View />}
       />
       <View
         style={{
           flex: 8,
           marginHorizontal: 15,
-          borderBottomWidth: borderWidth,
-          borderColor: Colors.borderColor,
+          // borderBottomWidth: borderWidth,
+          // borderColor: Colors.borderColor,
         }}
       >
         <ScrollView>
           <View style={{ height: 15, width: screenWidth }} />
-          <Text style={[styles.textStyle, { marginBottom: 10 }]}>
+          <Text style={[styles.textStyle, { marginBottom: 5 }]}>
             <Text style={styles.textBoldStyle}>NOTICE:</Text> There is a{" "}
             <Text style={styles.textBoldStyle}>20 XRP </Text>
             reserve requirement to activate any XRP wallets. Once an XRP address
@@ -63,7 +63,7 @@ function TermsScreen({ navigation, completeOrientation }) {
             Transferring SOLO or trading SOLO on the decentralized exchange
             incurs a transaction fee of 0.01%.
           </Text>
-          <Text style={[styles.textStyle, { marginBottom: 10 }]}>
+          <Text style={[styles.textStyle, { marginBottom: 5 }]}>
             The 100% of this transaction fee will be burned instantly by being
             sent to the gateway’s issuing address. The system practices this
             deflationary mechanism to bring down the total supply of SOLO coins.
@@ -96,14 +96,15 @@ function TermsScreen({ navigation, completeOrientation }) {
               borderTopWidth: StyleSheet.hairlineWidth,
               borderBottomWidth: StyleSheet.hairlineWidth,
               borderColor: colors.borderColor,
-              marginTop: 15,
-              paddingBottom: 7.5,
+              marginTop: 10,
+              paddingVertical: 10,
+              // paddingBottom: 2,
             }}
           >
             <Text
               style={[
                 styles.textStyle,
-                { marginTop: 15, textAlign: "center", fontSize: 11 },
+                { marginTop: 5, textAlign: "center", fontSize: 11 },
               ]}
             >
               THIS SOFTWARE IS LICENSED UNDER THE GPL 3.0
@@ -125,19 +126,19 @@ function TermsScreen({ navigation, completeOrientation }) {
               SOLOGENIC DECENTRALIZED WALLET
             </Text>
           </View>
-          <View>
-            {/* <Text
-              style={[
-                styles.textBoldStyle,
-                { fontSize: 16, textAlign: "center", marginTop: 11 },
-              ]}
-            >
-              License Agreement
-            </Text> */}
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: 15,
+              borderBottomWidth: StyleSheet.hairlineWidth,
+              borderColor: colors.borderColor,
+              paddingBottom: 15,
+            }}
+          >
             <Custom_Button
               text="View License Agreement"
               onPress={() => {
-                console.log(navigation);
                 navigation.navigate({
                   key: "LicenseAgreementScreen",
                   routeName: "LicenseAgreementScreen",
@@ -147,7 +148,6 @@ function TermsScreen({ navigation, completeOrientation }) {
               size={14}
               textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
               style={{
-                marginTop: 25,
                 backgroundColor: Colors.darkRed,
                 paddingHorizontal: 15,
                 paddingVertical: 10,
@@ -158,136 +158,139 @@ function TermsScreen({ navigation, completeOrientation }) {
       </View>
       <View
         style={{
-          flex: 2.5,
+          flex: 6,
           marginTop: 20,
           marginHorizontal: 15,
         }}
       >
-        <View>
-          <Text
-            style={[
-              styles.textStyle,
-              {
-                fontSize: 9,
-                width: "90%",
-              },
-            ]}
-          >
-            By clicking on the button below or using this decentralized wallet,
-            I confirm that I agree with the above{" "}
-            <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
-              “License Agreement”
-            </Text>{" "}
-            and{" "}
-            <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
-              “Disclaimer"
+        <ScrollView>
+          <View>
+            <Text
+              style={[
+                styles.textStyle,
+                {
+                  fontSize: 9,
+                  width: "90%",
+                },
+              ]}
+            >
+              By clicking on the button below or using this decentralized
+              wallet, I confirm that I agree with the above{" "}
+              <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
+                “License Agreement”
+              </Text>{" "}
+              and{" "}
+              <Text style={[styles.textBoldStyle, { fontSize: 9 }]}>
+                “Disclaimer"
+              </Text>
             </Text>
-          </Text>
 
-          <Custom_RadioButton
-            pressed={isActive}
-            onPress={() => (!isActive ? setIsActive(true) : setIsActive(false))}
-            style={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              height: 20,
-              width: 20,
-              borderRadius: 10,
-            }}
-            imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
-          />
-        </View>
-        <View style={{ marginTop: 10 }}>
-          <Text
-            style={[
-              styles.textStyle,
-              {
-                fontSize: 9,
-                width: "90%",
-              },
-            ]}
-          >
-            By clicking on the button below or using this decentralized wallet,
-            I understand that If I lose my passwords, pins, phrases or backup
-            keys, they will not be retrievable and there is NO support team to
-            help me.
-          </Text>
+            <Custom_RadioButton
+              pressed={isActive}
+              onPress={() =>
+                !isActive ? setIsActive(true) : setIsActive(false)
+              }
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 0,
+                height: 20,
+                width: 20,
+                borderRadius: 10,
+              }}
+              imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
+            />
+          </View>
+          <View style={{ marginTop: 10 }}>
+            <Text
+              style={[
+                styles.textStyle,
+                {
+                  fontSize: 9,
+                  width: "90%",
+                },
+              ]}
+            >
+              By clicking on the button below or using this decentralized
+              wallet, I understand that If I lose my passwords, pins, phrases or
+              backup keys, they will not be retrievable and there is NO support
+              team to help me.
+            </Text>
 
-          <Custom_RadioButton
-            pressed={isSecondActive}
-            onPress={() =>
-              !isSecondActive
-                ? setIsSecondActive(true)
-                : setIsSecondActive(false)
-            }
+            <Custom_RadioButton
+              pressed={isSecondActive}
+              onPress={() =>
+                !isSecondActive
+                  ? setIsSecondActive(true)
+                  : setIsSecondActive(false)
+              }
+              style={{
+                position: "absolute",
+                right: 0,
+                top: 5,
+                height: 20,
+                width: 20,
+                borderRadius: 10,
+              }}
+              imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
+            />
+          </View>
+          <View
             style={{
-              position: "absolute",
-              right: 0,
-              top: 5,
-              height: 20,
-              width: 20,
-              borderRadius: 10,
+              flex: 1,
             }}
-            imageStyle={{ height: 10, width: 10, borderRadius: 5 }}
-          />
-        </View>
-        <View style={{ alignItems: "flex-end", zIndex: 100 }}>
-          <Custom_Button
-            text="Next"
-            onPress={() => completeOrientation(true)}
-            color={isActive && isSecondActive ? Colors.text : Colors.grayText}
-            size={14}
-            textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
-            style={{
-              marginTop: 15,
-              backgroundColor:
-                isActive && isSecondActive
-                  ? Colors.darkRed
-                  : Colors.headerBackground,
-              paddingHorizontal: 15,
-              paddingVertical: 10,
-              zIndex: 100,
-            }}
-            disabled={!isActive || !isSecondActive}
-          />
-        </View>
-        <View
-          style={{
-            alignItems: "center",
-            position: "absolute",
-            bottom: 30,
-            zIndex: 10,
-            // backgroundColor: "red",
-          }}
-        >
-          <Text
-            style={[
-              styles.textBoldStyle,
-              {
-                fontSize: 9,
-                textAlign: "center",
-                width: "80%",
-                marginBottom: 5,
-              },
-            ]}
           >
-            {`If you do NOT agree, please close and remove this application immediately.`}
-          </Text>
-          <Text
-            style={[
-              styles.textStyle,
-              {
-                fontSize: 8,
-                textAlign: "center",
-                width: "80%",
-              },
-            ]}
-          >
-            {`© 2019-2020 SOLO CORE TEAM. All Rights Reserved. 
-           Software Version ${appConfig.version}`}
-          </Text>
-        </View>
+            <View>
+              <Text
+                style={[
+                  styles.textBoldStyle,
+                  {
+                    fontSize: 9,
+                    marginTop: 10,
+                    marginBottom: 5,
+                  },
+                ]}
+              >
+                {`If you do NOT agree, please close and remove this application immediately.`}
+              </Text>
+              <Text
+                style={[
+                  styles.textStyle,
+                  {
+                    fontSize: 8,
+                    marginBottom: 5,
+                  },
+                ]}
+              >
+                {`© 2019-2020 SOLO CORE TEAM. All Rights Reserved. Software Version ${appConfig.version}`}
+              </Text>
+            </View>
+            <Custom_Button
+              text="Next"
+              onPress={() => {
+                navigation.navigate({
+                  key: "ReceiveEmailUpdatesScreen",
+                  routeName: "ReceiveEmailUpdatesScreen",
+                });
+              }}
+              color={isActive && isSecondActive ? Colors.text : Colors.grayText}
+              size={14}
+              textStyle={{ letterSpacing: 0.24, color: Colors.darkRed }}
+              style={{
+                marginTop: 5,
+                backgroundColor:
+                  isActive && isSecondActive
+                    ? Colors.darkRed
+                    : Colors.headerBackground,
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                width: 100,
+                alignSelf: "flex-end",
+              }}
+              disabled={!isActive || !isSecondActive}
+            />
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -308,12 +311,12 @@ const styles = StyleSheet.create({
   },
   textStyle: {
     fontFamily: "DMSans",
-    fontSize: 11,
+    fontSize: 9,
     color: colors.text,
   },
   textBoldStyle: {
     fontFamily: "DMSansBold",
-    fontSize: 11,
+    fontSize: 9,
     color: colors.text,
   },
 });

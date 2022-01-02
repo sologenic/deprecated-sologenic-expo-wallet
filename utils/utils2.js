@@ -9,31 +9,26 @@ var mnemonic =
 // mnemonic = bip39.generateMnemonic();
 // console.log(mnemonic);
 
-export const generateSeedFromMnemonic = (mnemonic) => {
+export const generateSeedFromMnemonic = mnemonic => {
   const seed = bip39.mnemonicToSeedSync(mnemonic);
-  console.log("seed", seed)
+  console.log("seed", seed);
   const m = bip32.fromSeedBuffer(seed);
   const keyPair = m.derivePath("m/44'/144'/0'/0/0").keyPair.getKeyPairs();
-  console.log("keypair", keypair)
   const address = RippleKeypairs.deriveAddress(keyPair.publicKey);
-  console.log("privateKey: " + keyPair.privateKey);
   console.log("publicKey: " + keyPair.publicKey);
   console.log("address: " + address);
-}
+};
 const seed = bip39.mnemonicToSeedSync(mnemonic);
 const m = bip32.fromSeedBuffer(seed);
 const keyPair = m.derivePath("m/44'/144'/0'/0/0").keyPair.getKeyPairs();
 const address = RippleKeypairs.deriveAddress(keyPair.publicKey);
 
-console.log("privateKey: " + keyPair.privateKey);
-console.log("publicKey: " + keyPair.publicKey);
 console.log("address: " + address);
 
 // for signing and sending tx
 // const RippleKeypairs = require("ripple-keypairs");
 // const RippleBinaryCodec = require("ripple-binary-codec");
 // const RippleHashes = require("ripple-hashes");
-
 
 // const SignTransaction = (Transaction, keypair) => {
 //   let TxBlob;

@@ -26,12 +26,20 @@ import Colors from "../constants/Colors";
 import Images from "../constants/Images";
 import { headerHeight } from "../constants/Layout";
 import { generateQRCode } from "../utils";
+import CopiedModal from "../components/shared/CopiedModal";
 
 export default function ActivateWalletScreen({ navigation }) {
   const { currency, walletAddress } = navigation.state.params;
   const uri = generateQRCode(walletAddress);
+  const [copiedModalVisible, setCopiedModalVisible] = useState(false);
   const writeToClipboard = async address => {
     await Clipboard.setString(address);
+    if (!copiedModalVisible) {
+      setCopiedModalVisible(true);
+      setTimeout(() => {
+        setCopiedModalVisible(false);
+      }, 2500);
+    }
   };
   return (
     <View style={styles.container}>
@@ -162,7 +170,11 @@ export default function ActivateWalletScreen({ navigation }) {
             size={Fonts.size.small}
             color={Colors.grayText}
           />
-          <Custom_Text value={walletAddress} size={Fonts.size.small} />
+          <Custom_Text
+            value={walletAddress}
+            size={Fonts.size.small}
+            numberOfLines={1}
+          />
         </View>
         <View style={{ flex: 1 }}>
           <View style={{ paddingVertical: 2.5 }}>
@@ -180,6 +192,7 @@ export default function ActivateWalletScreen({ navigation }) {
           </View>
         </View>
       </View>
+      <CopiedModal showModal={copiedModalVisible} />
     </View>
   );
 }

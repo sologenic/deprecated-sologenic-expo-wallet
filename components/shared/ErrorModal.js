@@ -13,6 +13,7 @@ import Colors from "../../constants/Colors";
 import Fonts from "../../constants/Fonts";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
+import { screenWidth } from "../../constants/Layout";
 
 export default function ErrorModal({
   onPress,
@@ -30,7 +31,11 @@ export default function ErrorModal({
               <View
                 style={[
                   styles.section,
-                  { height: 70, alignItems: "flex-start" },
+                  {
+                    paddingTop: 24,
+                    paddingBottom: 10,
+                    alignItems: "flex-start",
+                  },
                 ]}
               >
                 <Custom_Text
@@ -66,28 +71,6 @@ export default function ErrorModal({
                   style={{ backgroundColor: "transparent" }}
                 />
               </View>
-              {/* <View style={{ flexDirection: 'row'}}>
-                <View style={[ styles.section, { height: 50, position: 'absolute', right: 110, bottom: 0 }]}>
-                  <Custom_Button
-                    text="CANCEL"
-                    onPress={onClose}
-                    color={Colors.lightGray}
-                    size={16}
-                    textStyle={{ letterSpacing: 1.2 }}
-                    style={{ backgroundColor: "transparent" }}
-                  />
-                </View>
-                <View style={[ styles.section, { height: 50, position: 'absolute', right: 0, bottom: 0 }]}>
-                  <Custom_Button
-                    text="CONFIRM"
-                    onPress={onClose}
-                    color={Colors.lightGray}
-                    size={16}
-                    textStyle={{ letterSpacing: 1.2 }}
-                    style={{ backgroundColor: "transparent" }}
-                  />
-                </View>
-              </View> */}
             </View>
           </TouchableWithoutFeedback>
         </View>
@@ -116,20 +99,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.cloud,
     // zIndex: 50,
-    // opacity: 0.8,
     paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
-    // backgroundColor: 'red',
+    width: screenWidth - 60,
     borderRadius: 10,
-    // height: 100,
-    // width: 200,
-    // zIndex: 20,
   },
   section: {
     justifyContent: "center",
-    alignItems: "center",
     marginHorizontal: 20,
   },
   line: {

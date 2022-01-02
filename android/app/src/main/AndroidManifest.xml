@@ -46,6 +46,7 @@
         android:name=".MainActivity"
         android:label="@string/app_name"
         android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+        android:screenOrientation="portrait"
         android:windowSoftInputMode="adjustResize"
         android:exported="true" />
       <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />

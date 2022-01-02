@@ -14,6 +14,7 @@ import Colors from "../../constants/Colors";
 import Fonts from "../../constants/Fonts";
 import Custom_Text from "../../components/shared/Custom_Text";
 import Custom_Button from "../../components/shared/Custom_Button";
+import { screenWidth } from "../../constants/Layout";
 
 export default function WalletCreationSuccessfulModal({
   onPress,
@@ -32,18 +33,19 @@ export default function WalletCreationSuccessfulModal({
                 style={[
                   styles.section,
                   {
-                    width: 230,
-                    height: 100,
+                    paddingTop: 24,
                     alignItems: "flex-start",
-                    marginRight: 60,
                   },
                 ]}
               >
                 <Custom_Text
-                  value="Wallet Creation Successful"
+                  value={`Wallet Creation \nSuccessful`}
                   size={20}
                   color={Colors.text}
                   isBold
+                  style={{
+                    marginBottom: 15,
+                  }}
                 />
               </View>
               <View
@@ -113,14 +115,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.cloud,
     // zIndex: 50,
     // opacity: 0.8,
-    paddingHorizontal: 40,
+    // paddingHorizontal: 40,
   },
   modalBody: {
     backgroundColor: Colors.darkerGray,
-    // backgroundColor: 'red',
     borderRadius: 10,
     // height: 100,
-    // width: 200,
+    width: screenWidth - 60,
     // zIndex: 20,
   },
   section: {

@@ -18,7 +18,7 @@ export default function InstructionsModal({
   onPress,
   onClose,
   modalVisible,
-  style,
+  currency,
 }) {
   return (
     <Modal visible={modalVisible} animationType="none" transparent={true}>
@@ -64,7 +64,9 @@ export default function InstructionsModal({
                   </View>
                   <View>
                     <Custom_Text
-                      value={`Enter the amount of XRP you want to withdraw.`}
+                      value={`Enter the amount of ${
+                        currency === "xrp" ? "XRP" : "SOLO"
+                      } you want to send.`}
                       size={Fonts.size.small}
                       color={Colors.text}
                     />
@@ -89,7 +91,11 @@ export default function InstructionsModal({
                   </View>
                   <View>
                     <Custom_Text
-                      value={`Enter the destination wallet address that you want to send your XRP to. Please double check that you have entered the correct address or your funds will be lost forever. XRP addresses begin with an 'r' or 'X'.`}
+                      value={`Enter the destination wallet address that you want to send your ${
+                        currency === "xrp" ? "XRP" : "SOLO"
+                      } to. Please double check that you have entered the correct address or your funds will be lost forever. ${
+                        currency === "xrp" ? "XRP" : "SOLO"
+                      } addresses begin with an 'r' or 'X'.`}
                       size={Fonts.size.small}
                       color={Colors.text}
                     />

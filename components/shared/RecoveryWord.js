@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Platform } from "react-native";
 
 import Custom_Text from "./Custom_Text";
 import Colors from "../../constants/Colors";
@@ -25,7 +25,7 @@ export default function RecoveryWord({ word, index }) {
 const styles = StyleSheet.create({
   wordContainer: {
     height: 30,
-    width: 95,
+    width: Platform.OS === "android" ? 90 : 95,
     borderRadius: 15,
     borderColor: Colors.lightGray,
     borderWidth: 0.5,

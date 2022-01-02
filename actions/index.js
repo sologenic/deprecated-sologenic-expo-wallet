@@ -542,10 +542,32 @@ export const getNetInfo = status => {
   return {
     type: "GET_NET_INFO",
     netinfo: status,
-  }
-}
+  };
+};
+
 export const purgeStore = () => {
   return {
     type: "PURGE_STORE",
+  };
+};
+
+export const requestNewsLetterSignup = (data) => {
+  return {
+    type: "NEWS_LETTER_SIGNUP",
+    email: data
+  };
+};
+
+export const requestNewsLetterSignupSuccess = data => {
+  return {
+    type: "NEWS_LETTER_SIGNUP_SUCCESS",
+    payload: data,
+  };
+};
+
+export const requestNewsLetterSignupError = data => {
+  return {
+    type: "NEWS_LETTER_SIGNUP_ERROR",
+    payload: data,
   };
 };
