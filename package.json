@@ -36,7 +36,7 @@
     "glamorous-native": "^2.0.0",
     "https-browserify": "0.0.1",
     "lodash": "^4.17.15",
-    "moment-timezone": "^0.5.27",
+    "moment-timezone": "^0.5.35",
     "node-forge": "^0.9.1",
     "numbro": "^2.1.2",
     "path-browserify": "0.0.0",
